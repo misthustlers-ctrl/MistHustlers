@@ -436,7 +436,7 @@ const App: React.FC = () => {
     updateServicesField(['pricing', 'tiers', String(tierIndex), 'features'], features);
   };
 
-  const updateContentField = (content: any, setContent: (v: any) => void, path: string[], value: any) => {
+  const updateContentField = (setContent: (v: any) => void, path: string[], value: any) => {
     setContent((prev: any) => {
       if (!prev) return prev;
       const copy = JSON.parse(JSON.stringify(prev));
