@@ -7,7 +7,7 @@ import rateLimit from "express-rate-limit";
 import crypto from "crypto";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
-import { existsSync, mkdirSync } from "fs";
+import { existsSync, mkdirSync, writeFileSync } from "fs";
 import inquiryRoutes from "./routes/inquiry.routes.js";
 import contentRoutes from "./routes/content.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
@@ -22,6 +22,14 @@ const PORT = process.env.PORT || 9000;
 
 const uploadsDir = join(__dirname, "uploads");
 if (!existsSync(uploadsDir)) mkdirSync(uploadsDir, { recursive: true });
+
+const dataDir = join(__dirname, "data");
+if (!existsSync(dataDir)) mkdirSync(dataDir, { recursive: true });
+const runtimeFiles = ["bin-files.json", "applicants.json", "inquiries.json", "opportunities.json", "projects.json"];
+for (const f of runtimeFiles) {
+  const fp = join(dataDir, f);
+  if (!existsSync(fp)) writeFileSync(fp, "[]", "utf-8");
+}
 
 const required = ["ADMIN_USERNAME", "ADMIN_PASSWORD", "DATABASE_URL"];
 const missing = required.filter((k) => !process.env[k]);

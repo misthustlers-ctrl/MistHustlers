@@ -6,4 +6,8 @@ dist/
 .DS_Store
 Thumbs.db
 uploads/
-data/
+backend/data/bin-files.json
+backend/data/applicants.json
+backend/data/inquiries.json
+backend/data/opportunities.json
+backend/data/projects.json

@@ -1,0 +1,54 @@
+{
+  "filters": [
+    { "label": "All", "value": "All" },
+    { "label": "Jobs", "value": "Job" },
+    { "label": "Internships", "value": "Internship" },
+    { "label": "Events", "value": "Event" },
+    { "label": "Programs", "value": "Program" },
+    { "label": "Hackathons", "value": "Hackathon" },
+    { "label": "Freelance Gigs", "value": "Freelance Gig" }
+  ],
+  "opportunities": [
+    { "id": 1, "title": "Frontend Developer Intern", "type": "Internship", "description": "Ship polished landing pages and product experiences for builder-led brands inside the MistHustlers ecosystem.", "skills": ["React", "HTML", "CSS"], "duration": "8 weeks", "level": "Beginner", "mode": "Remote", "cta": "Apply Now" },
+    { "id": 2, "title": "Community Growth Associate", "type": "Job", "description": "Help grow partnerships, improve community activation, and support campaigns across emerging creator and startup programs.", "skills": ["Partnerships", "CRM", "Operations"], "duration": "Full-time", "level": "Intermediate", "mode": "Hybrid", "cta": "Apply Now" },
+    { "id": 3, "title": "AI Automation Workshop", "type": "Event", "description": "A live hands-on workshop on building repeatable AI workflows for solopreneurs, interns, and early-stage teams.", "skills": ["Prompting", "Automation", "Workflows"], "duration": "90 mins", "dateTime": "Sat, 20 Jul · 7:00 PM IST", "level": "Beginner", "mode": "Live online", "cta": "Register" },
+    { "id": 4, "title": "Coding Bootcamp — 30 Days", "type": "Program", "description": "An intensive builder program focused on shipping, feedback cycles, portfolio proof, and real execution discipline.", "skills": ["JavaScript", "Git", "Shipping"], "duration": "30 days", "level": "Intermediate", "mode": "Cohort-based", "cta": "Join Program" },
+    { "id": 5, "title": "Builder Sprint Hackathon", "type": "Hackathon", "description": "Build, demo, and iterate on startup-ready concepts in a high-energy sprint guided by product-first mentors.", "skills": ["Product Thinking", "No-code", "Pitching"], "duration": "48 hours", "dateTime": "2–4 Aug · Weekend Sprint", "level": "Intermediate", "mode": "Online", "cta": "Register" },
+    { "id": 6, "title": "Landing Page Design Project", "type": "Freelance Gig", "description": "Design and polish a conversion-led landing page for a growth-stage service brand launching a fresh offer.", "skills": ["Figma", "Framer", "Copy"], "duration": "1–2 weeks", "budget": "₹2k–₹10k", "level": "Intermediate", "mode": "Remote", "cta": "Apply" },
+    { "id": 7, "title": "Product Research Internship", "type": "Internship", "description": "Support founder discovery sprints with market mapping, competitor tracking, insight synthesis, and user feedback reviews.", "skills": ["Research", "Notion", "Analysis"], "duration": "6 weeks", "level": "Beginner", "mode": "Remote", "cta": "Apply Now" },
+    { "id": 8, "title": "Creator Partnerships Lead", "type": "Job", "description": "Own outreach and collaboration pipelines for creators, communities, and startup allies aligned with MistHustlers growth.", "skills": ["Outreach", "Negotiation", "Strategy"], "duration": "Contract-to-hire", "level": "Advanced", "mode": "Remote-first", "cta": "Apply Now" },
+    { "id": 9, "title": "Zero to Launch Founder Lab", "type": "Program", "description": "A guided execution track for first-time founders to validate offers, package services, and launch with confidence.", "skills": ["Positioning", "Offer Design", "Execution"], "duration": "6 weeks", "level": "Advanced", "mode": "Mentor-led", "cta": "Join Program" },
+    { "id": 10, "title": "Remote Growth Jam", "type": "Event", "description": "A live networking and strategy session where builders exchange launch feedback, tactics, and accountability plays.", "skills": ["Networking", "Growth", "Feedback"], "duration": "2 hours", "dateTime": "Thu, 1 Aug · 6:30 PM IST", "level": "Intermediate", "mode": "Community live room", "cta": "Register" },
+    { "id": 11, "title": "Startup Weekend Buildathon", "type": "Hackathon", "description": "Form teams, validate ideas, and present a working build during a curated weekend challenge for serious builders.", "skills": ["Rapid Prototyping", "Collaboration", "Storytelling"], "duration": "36 hours", "dateTime": "9–11 Aug · Fri to Sun", "level": "Advanced", "mode": "Hybrid sprint", "cta": "Register" },
+    { "id": 12, "title": "Motion Graphics Explainer Project", "type": "Freelance Gig", "description": "Create a sharp, startup-style explainer reel for a product launch campaign with fast review and delivery cycles.", "skills": ["Motion Design", "After Effects", "Storyboarding"], "duration": "10 days", "budget": "₹5k–₹18k", "level": "Advanced", "mode": "Remote", "cta": "Apply" },
+    { "id": 13, "title": "Mentorship Program", "type": "Program", "description": "Get paired with an industry practitioner for 1:1 sessions covering career roadmapping, project reviews, accountability check-ins, and growth strategy.", "skills": ["Career Planning", "Project Reviews", "Accountability"], "duration": "4 weeks", "level": "Beginner", "mode": "1:1 Remote", "cta": "Apply Now" }
+  ],
+  "hero": {
+    "badge": "Live opportunity hub for ambitious builders",
+    "title": "Opportunities for Builders",
+    "description": "Explore jobs, internships, events, and programs designed for real-world growth inside the MistHustlers ecosystem.",
+    "ctaPrimary": "Explore Opportunities",
+    "ctaSecondary": "Join Now"
+  },
+  "steps": [
+    { "title": "Explore Opportunities", "desc": "Browse curated roles, gigs, workshops, and programs aligned with your next move." },
+    { "title": "Click Apply", "desc": "Every call-to-action routes you into one inquiry experience built for quick conversion." },
+    { "title": "Submit Application", "desc": "Share your details, links, and context so the team can review with clarity." },
+    { "title": "Get Shortlisted", "desc": "Relevant candidates receive a follow-up for interviews, confirmations, or program access." },
+    { "title": "Start Work / Event / Program", "desc": "Move into the work, event, or cohort with the right expectations from day one." }
+  ],
+  "trustStats": [
+    { "value": "1.2K+", "label": "Active Builders" },
+    { "value": "160+", "label": "Real Projects Delivered" },
+    { "value": "35+", "label": "Growing Community Pods" }
+  ],
+  "ecosystemPlaceholders": ["Partner Studio", "Build Circle", "Creator Pod", "Startup Desk", "Hack Lab", "Talent Loop"],
+  "badgeStyles": {
+    "Job": "bg-[#070607]/6 text-[#070607] ring-1 ring-[#070607]/10",
+    "Internship": "bg-[#524ae9]/10 text-[#524ae9] ring-1 ring-[#524ae9]/15",
+    "Event": "bg-[#524ae9]/10 text-[#524ae9] ring-1 ring-[#524ae9]/15",
+    "Program": "bg-[#070607]/6 text-[#070607] ring-1 ring-[#070607]/10",
+    "Hackathon": "bg-[#fc5000]/10 text-[#fc5000] ring-1 ring-[#fc5000]/15",
+    "Freelance Gig": "bg-[#fc5000]/10 text-[#fc5000] ring-1 ring-[#fc5000]/15"
+  }
+}

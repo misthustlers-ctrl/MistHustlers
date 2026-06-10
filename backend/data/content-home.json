@@ -1,0 +1,78 @@
+{
+  "hero": {
+    "badge": "Premium Ecosystem",
+    "title": ["LEARN.", "BUILD.", "EARN.", "GROW."],
+    "highlightWord": "GROW.",
+    "description": "A Premium Ecosystem for Ambitious Students, Developers & Future Builders.",
+    "tagline": "No fluff. Real skills. Real execution.",
+    "ctaPrimary": "Join MistHustlers",
+    "ctaSecondary": "Explore Careers"
+  },
+  "stats": [
+    { "value": 10000, "suffix": "+", "label": "Students Guided" },
+    { "value": 1200, "suffix": "+", "label": "Projects Built" },
+    { "value": 5000, "suffix": "+", "label": "Mentorship Hours" },
+    { "value": 80, "suffix": "+", "label": "Career Opportunities" }
+  ],
+  "brands": ["STRIPE", "LINEAR", "VERCEL", "GITHUB", "NOTION"],
+  "journeySteps": [
+    { "step": "01", "title": "Learn", "desc": "Master in-demand skills through our structured bootcamps, workshops, and curated learning paths designed by industry experts." },
+    { "step": "02", "title": "Build", "desc": "Apply your knowledge by building real projects. From automation pipelines to full-stack apps — your portfolio grows here." },
+    { "step": "03", "title": "Earn", "desc": "Monetize your skills through freelancing, internships, and career placements. We connect you directly to opportunities." },
+    { "step": "04", "title": "Grow", "desc": "Scale your career with ongoing mentorship, advanced projects, leadership skills, and a network of ambitious builders." }
+  ],
+  "servicesTeaser": {
+    "badge": "Services",
+    "title": "Build premium products",
+    "description": "From automation to full-stack development — we ship production-grade work for startups and founders.",
+    "cta": "Explore Services"
+  },
+  "careerTeaser": {
+    "badge": "Career",
+    "title": "Your career, accelerated",
+    "description": "Jobs, internships, events, programs, and mentorship — all in one place.",
+    "cta": "Explore Career"
+  },
+  "mentorship": {
+    "badge": "Mentorship",
+    "title": "Guided by those who've done it.",
+    "description": "Our mentors are active practitioners who share real, actionable guidance. No theory. Just practice.",
+    "cta": "Find a Mentor",
+    "features": [
+      { "title": "1:1 Guidance", "desc": "Personalized sessions with practitioners who've been where you want to go." },
+      { "title": "Career Roadmap", "desc": "A custom growth plan designed around your goals and timeline." },
+      { "title": "Accountability", "desc": "Weekly check-ins to keep you on track and moving forward." },
+      { "title": "Project Reviews", "desc": "Get expert feedback on your code, design, and architecture decisions." }
+    ]
+  },
+  "projectsShowcase": {
+    "badge": "Project Showcase",
+    "title": "Built by the community",
+    "projects": [
+      { "title": "Automation Dashboard", "category": "Automation", "visual": "⚡" },
+      { "title": "E-Commerce Platform", "category": "Development", "visual": "🛒" },
+      { "title": "AI Content Pipeline", "category": "AI", "visual": "🤖" },
+      { "title": "Portfolio Builder App", "category": "Tooling", "visual": "🎨" },
+      { "title": "Client CRM System", "category": "Freelancing", "visual": "📊" },
+      { "title": "Career Match Engine", "category": "Platform", "visual": "🔗" }
+    ]
+  },
+  "faq": {
+    "badge": "FAQ",
+    "title": ["You ask.", "We answer."],
+    "items": [
+      { "q": "What exactly is MistHustlers?", "a": "MistHustlers is a premium ecosystem that combines learning, building, earning, and career growth into one seamless experience. We're not a course platform — we're a launchpad for ambitious builders." },
+      { "q": "Is this only for students?", "a": "No. While we welcome students, MistHustlers is for anyone ambitious — developers, career-switchers, freelancers, and future founders who want to build real skills and real income." },
+      { "q": "How does the mentorship work?", "a": "You get paired with an industry practitioner for 1:1 sessions. We cover career roadmapping, project reviews, accountability check-ins, and growth strategy — all tailored to your goals." },
+      { "q": "What kind of projects will I build?", "a": "Real-world projects: automation systems, full-stack web apps, AI integrations, portfolio sites, and client work. Everything is designed to be portfolio-worthy and career-relevant." },
+      { "q": "How do I get career opportunities?", "a": "Through our talent matching engine. Once you've built skills and projects, we connect you with internships, freelance gigs, and full-time roles from our partner network." },
+      { "q": "Is there a fee to join?", "a": "We offer different tiers based on your goals. Fill out the inquiry form and we'll match you with the right program. No hidden fees — everything is transparent." }
+    ]
+  },
+  "finalCta": {
+    "title": ["STOP WATCHING.", "START BUILDING."],
+    "highlightWord": "START BUILDING.",
+    "description": "Join the premium ecosystem built for ambitious future builders.",
+    "cta": "JOIN MISTHUSTLERS"
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "hero": {
+    "badge": "Transparent Pricing for Real Execution",
+    "title": ["Build with clarity.", "Ship with precision."],
+    "subtitle": "Premium development services for startups, founders, and businesses who demand execution over promises. No agency overhead. Direct access. Real outcomes.",
+    "ctaPrimary": "Get a Quote",
+    "ctaSecondary": "Start a Project",
+    "stats": [
+      { "value": "127", "label": "projects shipped" },
+      { "value": "48h", "label": "avg response" }
+    ]
+  },
+  "pricing": {
+    "badge": "Service Pricing",
+    "title": "Pick your execution level",
+    "description": "Final pricing depends on project complexity. All projects include source code, documentation, and direct communication.",
+    "tiers": [
+      {
+        "id": "starter",
+        "name": "STARTER",
+        "price": "₹999 – ₹4,999",
+        "description": "Essential presence for new founders",
+        "features": ["Landing Page Design", "Portfolio Website", "Basic Automation Setup", "14-Day Support"],
+        "popular": false,
+        "accent": "#070607",
+        "imageUrl": ""
+      },
+      {
+        "id": "growth",
+        "name": "GROWTH",
+        "price": "₹5,000 – ₹15,000",
+        "description": "Complete digital identity for scaling",
+        "features": ["Business Website", "Web App UI", "Automation Systems", "Basic Backend", "30-Day Support"],
+        "popular": true,
+        "accent": "#fc5000",
+        "imageUrl": ""
+      },
+      {
+        "id": "premium",
+        "name": "PREMIUM",
+        "price": "₹15,000 – ₹50,000+",
+        "description": "Full product development for serious ventures",
+        "features": ["Full Stack App", "MVP Development", "AI Automation Systems", "Scalable Platforms", "90-Day Partnership"],
+        "popular": false,
+        "accent": "#524ae9",
+        "imageUrl": ""
+      }
+    ],
+    "notice": "Final pricing confirmed after requirement review. No hidden costs."
+  },
+  "process": {
+    "title": "How execution happens",
+    "description": "Five steps from inquiry to delivery. No middlemen. Direct communication throughout.",
+    "steps": [
+      { "step": "01", "title": "Apply via Inquiry", "desc": "Share requirements, timeline, and budget range" },
+      { "step": "02", "title": "Requirement Review", "desc": "We analyze scope and technical feasibility" },
+      { "step": "03", "title": "Proposal Finalized", "desc": "Fixed price, clear deliverables, exact timeline" },
+      { "step": "04", "title": "Execution Begins", "desc": "Daily updates, direct access, zero bureaucracy" },
+      { "step": "05", "title": "Delivery & Support", "desc": "Handover with documentation + ongoing help" }
+    ],
+    "metrics": [
+      { "metric": "48h", "label": "Avg response time" },
+      { "metric": "100%", "label": "Fixed price guarantee" },
+      { "metric": "0%", "label": "Bureaucracy overhead" }
+    ]
+  },
+  "trust": {
+    "title": "Built for builders, by builders",
+    "subtitle": "Projects shipped, people grown, startups launched",
+    "stats": [
+      { "value": "127", "label": "Real Projects Delivered", "desc": "Landing pages to full-stack platforms" },
+      { "value": "43", "label": "Student Growth Stories", "desc": "From learners to paid contributors" },
+      { "value": "18", "label": "Startup Collaborations", "desc": "Pre-seed to Series A partners" }
+    ],
+    "brandsLabel": "Trusted by founders across",
+    "brands": ["FyntOps", "ShopLogic", "CredVantage", "Taskable", "Flowwise", "BuildZero"]
+  },
+  "finalCta": {
+    "title": "Ready to start your project?",
+    "description": "Tell us what you're building. Get a fixed-price proposal in 48 hours. No calls, no pressure.",
+    "ctaPrimary": "Apply Now",
+    "ctaSecondary": "Join MistHustlers",
+    "features": [
+      { "label": "Fixed pricing", "color": "#fc5000" },
+      { "label": "48h response", "color": "#524ae9" },
+      { "label": "Zero bureaucracy", "color": "rgba(247, 246, 242, 0.7)" }
+    ]
+  }
+}
