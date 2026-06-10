@@ -24,11 +24,17 @@ const PORT = process.env.PORT || 9000;
 const uploadsDir = join(__dirname, "uploads");
 if (!existsSync(uploadsDir)) mkdirSync(uploadsDir, { recursive: true });
 
-const required = ["SMTP_EMAIL", "SMTP_PASSWORD", "EMAIL_TO", "API_KEY", "ADMIN_USERNAME", "ADMIN_PASSWORD", "DATABASE_URL"];
+const required = ["API_KEY", "ADMIN_USERNAME", "ADMIN_PASSWORD", "DATABASE_URL"];
 const missing = required.filter((k) => !process.env[k]);
 if (missing.length) {
   console.error(`[FATAL] Missing required env vars: ${missing.join(", ")}`);
   process.exit(1);
+}
+
+const smtpOptional = ["SMTP_EMAIL", "SMTP_PASSWORD", "EMAIL_TO"];
+const smtpMissing = smtpOptional.filter((k) => !process.env[k]);
+if (smtpMissing.length) {
+  console.warn(`[WARN] SMTP not configured (${smtpMissing.join(", ")}). Emails will be logged instead of sent.`);
 }
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
@@ -81,10 +87,6 @@ if (existsSync(adminDist)) {
     res.status(503).send("Admin dashboard not built yet. Run: cd admin-ui && npm install && npm run build");
   });
 }
-
-app.get("/", (_, res) => {
-  res.redirect("/admin");
-});
 
 const frontendDist = join(__dirname, "..", "dist");
 if (existsSync(frontendDist)) {
