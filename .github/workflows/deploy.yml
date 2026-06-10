@@ -10,6 +10,6 @@ jobs:
     container: ghcr.io/railwayapp/cli:latest
     steps:
       - uses: actions/checkout@v4
-      - run: railway up --service=${{ secrets.RAILWAY_SERVICE_ID }}
+      - run: railway up
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
