@@ -62,7 +62,7 @@ async function api<T>(url: string, init?: RequestInit): Promise<T> {
   const response = await fetch(url, { ...init, headers });
   if (response.status === 401) {
     sessionStorage.removeItem('admin_credentials');
-    window.location.reload();
+    window.dispatchEvent(new Event('auth-cleared'));
     throw new Error('Please login again');
   }
   if (!response.ok) {
@@ -154,6 +154,7 @@ const App: React.FC = () => {
   const [loginUser, setLoginUser] = useState('');
   const [loginPass, setLoginPass] = useState('');
   const [loginError, setLoginError] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
 
   const fetchAll = async () => {
     setError('');
@@ -190,6 +191,12 @@ const App: React.FC = () => {
       setError('Failed to load content');
     }
   };
+
+  useEffect(() => {
+    const handler = () => setIsLoggedIn(false);
+    window.addEventListener('auth-cleared', handler);
+    return () => window.removeEventListener('auth-cleared', handler);
+  }, []);
 
   useEffect(() => {
     if (isLoggedIn) fetchAll(); else setLoading(false);
@@ -1270,7 +1277,7 @@ const App: React.FC = () => {
           <h1 className="text-2xl font-semibold">Admin Login</h1>
           <p className="text-sm text-white/50 mt-1">MistHustlers Founder Platform</p>
         </div>
-        <form onSubmit={(e) => { e.preventDefault(); if (!loginUser || !loginPass) { setLoginError('Please enter username and password'); return; } sessionStorage.setItem('admin_credentials', JSON.stringify({ username: loginUser, password: loginPass })); setIsLoggedIn(true); setLoginError(''); }} className="space-y-4">
+        <form onSubmit={async (e) => { e.preventDefault(); setLoginError(''); if (!loginUser || !loginPass) { setLoginError('Please enter username and password'); return; } setLoginLoading(true); const testAuth = 'Basic ' + btoa(`${loginUser}:${loginPass}`); try { const r = await fetch(`${API}/inquiries`, { headers: { Authorization: testAuth } }); if (!r.ok) throw new Error('Invalid'); sessionStorage.setItem('admin_credentials', JSON.stringify({ username: loginUser, password: loginPass })); setIsLoggedIn(true); setLoginLoading(false); } catch { setLoginError('Invalid username or password'); setLoginLoading(false); } }} className="space-y-4">
           <div>
             <label className="block text-xs text-white/50 mb-1.5">Username</label>
             <input type="text" value={loginUser} onChange={(e) => setLoginUser(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-white/30" placeholder="Enter username" autoFocus />
@@ -1280,7 +1287,7 @@ const App: React.FC = () => {
             <input type="password" value={loginPass} onChange={(e) => setLoginPass(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-white/30" placeholder="Enter password" />
           </div>
           {loginError && <p className="text-red-400 text-xs text-center">{loginError}</p>}
-          <button type="submit" className="w-full py-3 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 transition-colors">Sign in</button>
+          <button type="submit" disabled={loginLoading} className="w-full py-3 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 disabled:opacity-50 transition-colors">{loginLoading ? 'Signing in...' : 'Sign in'}</button>
         </form>
       </div>
     </div>

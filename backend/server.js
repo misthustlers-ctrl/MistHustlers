@@ -12,7 +12,6 @@ import inquiryRoutes from "./routes/inquiry.routes.js";
 import contentRoutes from "./routes/content.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import publicRoutes from "./routes/public.routes.js";
-import { authenticateApiKey } from "./middleware/auth.middleware.js";
 import { adminAuth } from "./middleware/admin-auth.middleware.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 
@@ -24,7 +23,7 @@ const PORT = process.env.PORT || 9000;
 const uploadsDir = join(__dirname, "uploads");
 if (!existsSync(uploadsDir)) mkdirSync(uploadsDir, { recursive: true });
 
-const required = ["API_KEY", "ADMIN_USERNAME", "ADMIN_PASSWORD", "DATABASE_URL"];
+const required = ["ADMIN_USERNAME", "ADMIN_PASSWORD", "DATABASE_URL"];
 const missing = required.filter((k) => !process.env[k]);
 if (missing.length) {
   console.error(`[FATAL] Missing required env vars: ${missing.join(", ")}`);
@@ -37,13 +36,27 @@ if (smtpMissing.length) {
   console.warn(`[WARN] SMTP not configured (${smtpMissing.join(", ")}). Emails will be logged instead of sent.`);
 }
 
-app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
-app.use(morgan("short"));
-
 const corsOrigins = (process.env.CORS_ORIGIN || "http://localhost:5173").split(",").map(s => s.trim());
 app.use(cors({ origin: corsOrigins }));
+app.use(morgan("short"));
 
-app.use(express.json({ limit: "50mb" }));
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "blob:"],
+      fontSrc: ["'self'", "data:"],
+      objectSrc: ["'none'"],
+      baseUri: ["'self'"],
+      formAction: ["'self'"],
+    },
+  },
+}));
+
+app.use(express.json({ limit: "10mb" }));
 app.use("/uploads", express.static(join(__dirname, "uploads")));
 app.disable("x-powered-by");
 
@@ -52,18 +65,24 @@ app.use((req, _, next) => {
   next();
 });
 
-const limiter = rateLimit({
+const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 20,
+  max: 100,
   message: { success: false, message: "Too many requests. Try again later." },
 });
 
-app.use("/api/admin", adminAuth);
+const adminLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 60,
+  message: { success: false, message: "Too many requests. Try again later." },
+});
+
+app.use("/api", generalLimiter);
+
+app.use("/api/admin", adminLimiter, adminAuth);
 app.use("/api/admin", adminRoutes);
 
 app.use("/api/content", contentRoutes);
-
-app.use("/api", limiter);
 
 app.get("/api/health", (_, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
@@ -71,7 +90,6 @@ app.get("/api/health", (_, res) => {
 
 app.use("/api", publicRoutes);
 
-app.use("/api", authenticateApiKey);
 app.use("/api", inquiryRoutes);
 
 const adminDist = join(__dirname, "admin-ui", "dist");

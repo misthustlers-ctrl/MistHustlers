@@ -4,10 +4,13 @@ import { readFile, writeFile, readdir } from "fs/promises";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { upload, uploadImage, deleteImage } from "../controllers/upload.controller.js";
+import { auditLog } from "../middleware/audit.middleware.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, "..", "data");
 const router = Router();
+
+router.use(auditLog);
 
 async function readJSON(file) {
   return JSON.parse(await readFile(join(DATA_DIR, file), "utf-8"));
@@ -216,7 +219,7 @@ router.get("/media", async (_, res, next) => {
   try {
     const uploadsDir = join(__dirname, "..", process.env.UPLOAD_DIR || "uploads");
     const files = await readdir(uploadsDir).catch(() => []);
-    const urls = files.filter(f => /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(f)).map(f => `/uploads/${f}`);
+    const urls = files.filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f)).map(f => `/uploads/${f}`);
     res.json(urls);
   } catch (err) { next(err); }
 });

@@ -5,8 +5,6 @@ const DEFAULT_TIERS = [
   { id: "growth", name: "GROWTH", price: "", description: "", features: [], popular: true, accent: "#fc5000" as const, imageUrl: "" },
   { id: "premium", name: "PREMIUM", price: "", description: "", features: [], popular: false, accent: "#524ae9" as const, imageUrl: "" },
 ];
-const INQUIRY_API_KEY = import.meta.env.VITE_API_KEY || "";
-
 export default function ServiceInquiryForm() {
   const [pricingTiers, setPricingTiers] = useState(DEFAULT_TIERS);
   const [contact, setContact] = useState({ email: "misthustlers@gmail.com", phone: "888 993 7648" });
@@ -37,7 +35,7 @@ export default function ServiceInquiryForm() {
 
     fetch("/api/inquiry", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-api-key": INQUIRY_API_KEY },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     }).catch((err) => console.error("Inquiry email failed:", err));
 
