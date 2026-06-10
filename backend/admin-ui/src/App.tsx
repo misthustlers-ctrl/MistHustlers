@@ -34,10 +34,15 @@ type TabType = 'dashboard' | 'leads' | 'career' | 'projects' | 'content' | 'medi
 type ModalType = 'job' | 'event' | 'program' | 'applicant' | 'project' | null;
 
 const API = '/api/admin';
-const ADMIN_USER = import.meta.env.VITE_ADMIN_USERNAME || 'admin';
-const ADMIN_PASS = import.meta.env.VITE_ADMIN_PASSWORD || 'admin';
-const AUTH = 'Basic ' + btoa(`${ADMIN_USER}:${ADMIN_PASS}`);
-const authHeaders = { Authorization: AUTH, 'Content-Type': 'application/json' };
+
+function getAuth(): string {
+  try {
+    const s = sessionStorage.getItem('admin_credentials');
+    if (!s) return '';
+    const { username, password } = JSON.parse(s);
+    return 'Basic ' + btoa(`${username}:${password}`);
+  } catch { return ''; }
+}
 const statusFlow = ['planning', 'in-progress', 'review', 'completed'];
 
 function nextStatus(status: string) {
@@ -46,10 +51,20 @@ function nextStatus(status: string) {
 }
 
 async function api<T>(url: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(url, {
-    ...init,
-    headers: init?.headers || authHeaders,
-  });
+  const headers = new Headers(init?.headers);
+  const auth = getAuth();
+  if (auth) headers.set('Authorization', auth);
+  if (init?.body instanceof FormData) {
+    headers.delete('Content-Type');
+  } else if (!headers.has('Content-Type')) {
+    headers.set('Content-Type', 'application/json');
+  }
+  const response = await fetch(url, { ...init, headers });
+  if (response.status === 401) {
+    sessionStorage.removeItem('admin_credentials');
+    window.location.reload();
+    throw new Error('Please login again');
+  }
   if (!response.ok) {
     const text = await response.text().catch(() => '');
     throw new Error(text || `Request failed: ${response.status}`);
@@ -80,7 +95,6 @@ function ImageUpload({ onUploaded, currentUrl }: { onUploaded: (url: string) => 
       fd.append('image', file);
       const res = await api<{ success: boolean; url: string }>(`${API}/upload`, {
         method: 'POST',
-        headers: { Authorization: AUTH },
         body: fd,
       });
       if (res.success) onUploaded(res.url);
@@ -136,15 +150,20 @@ const App: React.FC = () => {
   const [deleting, setDeleting] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
 
+  const [isLoggedIn, setIsLoggedIn] = useState(() => !!sessionStorage.getItem('admin_credentials'));
+  const [loginUser, setLoginUser] = useState('');
+  const [loginPass, setLoginPass] = useState('');
+  const [loginError, setLoginError] = useState('');
+
   const fetchAll = async () => {
     setError('');
     try {
       const [inq, opp, app, proj, bin] = await Promise.all([
-        api<Inquiry[]>(`${API}/inquiries`, { headers: { Authorization: AUTH } }),
-        api<Opportunity[]>(`${API}/opportunities`, { headers: { Authorization: AUTH } }),
-        api<Applicant[]>(`${API}/applicants`, { headers: { Authorization: AUTH } }),
-        api<Project[]>(`${API}/projects`, { headers: { Authorization: AUTH } }),
-        api<BinItem[]>(`${API}/bin`, { headers: { Authorization: AUTH } }),
+        api<Inquiry[]>(`${API}/inquiries`),
+        api<Opportunity[]>(`${API}/opportunities`),
+        api<Applicant[]>(`${API}/applicants`),
+        api<Project[]>(`${API}/projects`),
+        api<BinItem[]>(`${API}/bin`),
       ]);
       setInquiries(inq);
       setOpportunities(opp);
@@ -160,7 +179,7 @@ const App: React.FC = () => {
 
   const fetchContent = async (page: string) => {
     try {
-      const res = await api<{ success: boolean; data: any }>(`${API}/content/${page}`, { headers: { Authorization: AUTH } });
+      const res = await api<{ success: boolean; data: any }>(`${API}/content/${page}`);
       if (res.success) {
         if (page === 'services') setServicesContent(res.data);
         if (page === 'home') setHomeContent(res.data);
@@ -172,20 +191,23 @@ const App: React.FC = () => {
     }
   };
 
-  useEffect(() => { fetchAll(); }, []);
+  useEffect(() => {
+    if (isLoggedIn) fetchAll(); else setLoading(false);
+  }, [isLoggedIn]);
 
   useEffect(() => {
     if (activeTab === 'content') fetchContent(contentTab);
   }, [activeTab, contentTab]);
 
-  const fetchMedia = () => {
-    fetch(`${API}/media`, { headers: { Authorization: AUTH } })
-      .then(r => r.json())
-      .then(d => { if (Array.isArray(d)) setImages(d); })
-      .catch(() => {})
-      .finally(() => setLoadingMedia(false));
+  const fetchMedia = async () => {
+    try {
+      const d = await api<unknown>(`${API}/media`);
+      if (Array.isArray(d)) setImages(d);
+    } catch {} finally {
+      setLoadingMedia(false);
+    }
   };
-  useEffect(() => { fetchMedia(); }, []);
+  useEffect(() => { if (isLoggedIn) fetchMedia(); }, [isLoggedIn]);
 
   const notifications = useMemo(() => [
     ...inquiries.filter((item) => item.status === 'new').map((item) => `${item.name} sent a new inquiry`),
@@ -220,47 +242,47 @@ const App: React.FC = () => {
   const closeModal = () => { setFormData({}); setModalType(null); };
 
   const updateInquiry = async (id: number, updates: Partial<Inquiry>) => {
-    await api<Inquiry>(`${API}/inquiries`, { method: 'PUT', headers: authHeaders, body: JSON.stringify({ id, ...updates }) });
+    await api<Inquiry>(`${API}/inquiries`, { method: 'PUT', body: JSON.stringify({ id, ...updates }) });
     fetchAll();
   };
 
   const deleteInquiry = async (id: number) => {
     if (!window.confirm('Move this lead to Bin Files?')) return;
-    await api<{ ok: boolean }>(`${API}/inquiries`, { method: 'DELETE', headers: authHeaders, body: JSON.stringify({ id }) });
+    await api<{ ok: boolean }>(`${API}/inquiries`, { method: 'DELETE', body: JSON.stringify({ id }) });
     setSelectedInquiry(null);
     fetchAll();
   };
 
   const updateOpportunity = async (id: number, updates: Partial<Opportunity>) => {
-    await api<Opportunity>(`${API}/opportunities`, { method: 'PUT', headers: authHeaders, body: JSON.stringify({ id, ...updates }) });
+    await api<Opportunity>(`${API}/opportunities`, { method: 'PUT', body: JSON.stringify({ id, ...updates }) });
     fetchAll();
   };
 
   const deleteOpportunity = async (id: number) => {
     if (!window.confirm('Move this opportunity to Bin Files?')) return;
-    await api<{ ok: boolean }>(`${API}/opportunities`, { method: 'DELETE', headers: authHeaders, body: JSON.stringify({ id }) });
+    await api<{ ok: boolean }>(`${API}/opportunities`, { method: 'DELETE', body: JSON.stringify({ id }) });
     fetchAll();
   };
 
   const updateApplicant = async (id: number, updates: Partial<Applicant>) => {
-    await api<Applicant>(`${API}/applicants`, { method: 'PUT', headers: authHeaders, body: JSON.stringify({ id, ...updates }) });
+    await api<Applicant>(`${API}/applicants`, { method: 'PUT', body: JSON.stringify({ id, ...updates }) });
     fetchAll();
   };
 
   const deleteApplicant = async (id: number) => {
     if (!window.confirm('Move this applicant to Bin Files?')) return;
-    await api<{ ok: boolean }>(`${API}/applicants`, { method: 'DELETE', headers: authHeaders, body: JSON.stringify({ id }) });
+    await api<{ ok: boolean }>(`${API}/applicants`, { method: 'DELETE', body: JSON.stringify({ id }) });
     fetchAll();
   };
 
   const updateProject = async (id: number, updates: Partial<Project>) => {
-    await api<Project>(`${API}/projects`, { method: 'PUT', headers: authHeaders, body: JSON.stringify({ id, ...updates }) });
+    await api<Project>(`${API}/projects`, { method: 'PUT', body: JSON.stringify({ id, ...updates }) });
     fetchAll();
   };
 
   const deleteProject = async (id: number) => {
     if (!window.confirm('Move this project to Bin Files?')) return;
-    await api<{ ok: boolean }>(`${API}/projects`, { method: 'DELETE', headers: authHeaders, body: JSON.stringify({ id }) });
+    await api<{ ok: boolean }>(`${API}/projects`, { method: 'DELETE', body: JSON.stringify({ id }) });
     fetchAll();
   };
 
@@ -268,7 +290,7 @@ const App: React.FC = () => {
     if (!selectedProject) return;
     try {
       await api<Project>(`${API}/projects`, {
-        method: 'PUT', headers: authHeaders,
+        method: 'PUT',
         body: JSON.stringify({ id: selectedProject.id, name: formData.name, clientName: formData.client || null, description: formData.description || null, status: formData.status }),
       });
       setSelectedProject(null);
@@ -283,7 +305,7 @@ const App: React.FC = () => {
     if (!selectedOpportunity) return;
     try {
       await api<Opportunity>(`${API}/opportunities`, {
-        method: 'PUT', headers: authHeaders,
+        method: 'PUT',
         body: JSON.stringify({ id: selectedOpportunity.id, title: formData.title, description: formData.description, department: formData.department, type: formData.type, location: formData.location || null, status: formData.status }),
       });
       setSelectedOpportunity(null);
@@ -298,7 +320,7 @@ const App: React.FC = () => {
     if (!selectedApplicant) return;
     try {
       await api<Applicant>(`${API}/applicants`, {
-        method: 'PUT', headers: authHeaders,
+        method: 'PUT',
         body: JSON.stringify({ id: selectedApplicant.id, name: formData.name, email: formData.email, phone: formData.phone || null, status: formData.status, resumeUrl: formData.resumeUrl || null, coverLetter: formData.coverLetter || null }),
       });
       setSelectedApplicant(null);
@@ -311,13 +333,13 @@ const App: React.FC = () => {
 
   const clearBin = async () => {
     if (!window.confirm('Clear all Bin Files permanently?')) return;
-    await api<{ ok: boolean }>(`${API}/bin`, { method: 'DELETE', headers: authHeaders, body: JSON.stringify({}) });
+    await api<{ ok: boolean }>(`${API}/bin`, { method: 'DELETE', body: JSON.stringify({}) });
     fetchAll();
   };
 
   const removeBinItem = async (id: string) => {
     if (!window.confirm('Remove this Bin item permanently?')) return;
-    await api<{ ok: boolean }>(`${API}/bin`, { method: 'DELETE', headers: authHeaders, body: JSON.stringify({ id }) });
+    await api<{ ok: boolean }>(`${API}/bin`, { method: 'DELETE', body: JSON.stringify({ id }) });
     fetchAll();
   };
 
@@ -336,7 +358,7 @@ const App: React.FC = () => {
       if (modalType === 'project') {
         if (!formData.title) throw new Error('Project name is required');
         await api<Project>(`${API}/projects`, {
-          method: 'POST', headers: authHeaders,
+          method: 'POST',
           body: JSON.stringify({ name: formData.title, clientName: formData.client || 'Internal', description: formData.description || '', status: formData.status || 'planning' }),
         });
       } else if (modalType === 'applicant') {
@@ -344,19 +366,19 @@ const App: React.FC = () => {
         const opportunityId = Number(formData.opportunityId || opportunities[0]?.id);
         if (!opportunityId) throw new Error('Create an opportunity before adding applicants');
         await api<Applicant>(`${API}/applicants`, {
-          method: 'POST', headers: authHeaders,
+          method: 'POST',
           body: JSON.stringify({ opportunityId, name: formData.name, email: formData.email, phone: formData.phone || null, resumeUrl: formData.resumeUrl || null, coverLetter: formData.coverLetter || null, status: 'new' }),
         });
       } else {
         if (!formData.title) throw new Error('Opportunity title is required');
         const typeMap: Record<string, string> = { job: 'full-time', event: 'event', program: 'program' };
         const opportunity = await api<Opportunity>(`${API}/opportunities`, {
-          method: 'POST', headers: authHeaders,
+          method: 'POST',
           body: JSON.stringify({ title: formData.title, description: formData.description || '', department: formData.department || (modalType === 'event' ? 'Event' : 'General'), type: typeMap[modalType || 'job'] || 'full-time', location: formData.location || 'Remote', status: 'open', applicants: 0 }),
         });
         if (modalType === 'event') {
           await api<Project>(`${API}/projects`, {
-            method: 'POST', headers: authHeaders,
+            method: 'POST',
             body: JSON.stringify({ name: opportunity.title, clientName: 'Event', description: opportunity.description || 'MistHustlers community event.', status: 'planning' }),
           });
         }
@@ -373,7 +395,7 @@ const App: React.FC = () => {
     setContentSaving(true);
     try {
       await api(`${API}/content/services`, {
-        method: 'PUT', headers: authHeaders,
+        method: 'PUT',
         body: JSON.stringify(servicesContent),
       });
       setError('');
@@ -424,7 +446,7 @@ const App: React.FC = () => {
   const saveContent = async (page: string, data: any) => {
     setContentSaving(true);
     try {
-      await api(`${API}/content/${page}`, { method: 'PUT', headers: authHeaders, body: JSON.stringify(data) });
+      await api(`${API}/content/${page}`, { method: 'PUT', body: JSON.stringify(data) });
       setError('');
       alert(`${page} content saved!`);
     } catch (err) {
@@ -492,7 +514,8 @@ const App: React.FC = () => {
               <div className="absolute right-0 mt-2 w-56 rounded-xl border border-white/10 bg-[#111] p-4 shadow-2xl">
                 <UserCircle className="w-6 h-6 text-white/60 mb-2" />
                 <div className="text-sm font-semibold">Admin</div>
-                <div className="text-[11px] text-white/45">admin@misthustlers.local</div>
+                <div className="text-[11px] text-white/45 mb-3">admin@misthustlers.local</div>
+                <button onClick={() => { sessionStorage.removeItem('admin_credentials'); setIsLoggedIn(false); setShowProfile(false); }} className="w-full py-2 text-[11px] rounded-xl border border-white/20 hover:bg-white hover:text-black transition-colors">Sign out</button>
               </div>
             )}
           </div>
@@ -694,7 +717,7 @@ const App: React.FC = () => {
       if (!filename) return;
       setDeleting(url);
       try {
-        await api<{ ok: boolean }>(`${API}/upload/${filename}`, { method: 'DELETE', headers: { Authorization: AUTH } });
+        await api<{ ok: boolean }>(`${API}/upload/${filename}`, { method: 'DELETE' });
         setImages(prev => prev.filter(i => i !== url));
       } catch (err) {
         setError('Failed to delete image');
@@ -1237,6 +1260,32 @@ const App: React.FC = () => {
     </section>
   );
 
+  const renderLogin = () => (
+    <div className="min-h-screen bg-[#0A0A0A] text-white flex items-center justify-center p-4">
+      <div className="w-full max-w-sm">
+        <div className="text-center mb-8">
+          <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center mx-auto mb-4">
+            <span className="text-[#0A0A0A] text-xl font-bold">MH</span>
+          </div>
+          <h1 className="text-2xl font-semibold">Admin Login</h1>
+          <p className="text-sm text-white/50 mt-1">MistHustlers Founder Platform</p>
+        </div>
+        <form onSubmit={(e) => { e.preventDefault(); if (!loginUser || !loginPass) { setLoginError('Please enter username and password'); return; } sessionStorage.setItem('admin_credentials', JSON.stringify({ username: loginUser, password: loginPass })); setIsLoggedIn(true); setLoginError(''); }} className="space-y-4">
+          <div>
+            <label className="block text-xs text-white/50 mb-1.5">Username</label>
+            <input type="text" value={loginUser} onChange={(e) => setLoginUser(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-white/30" placeholder="Enter username" autoFocus />
+          </div>
+          <div>
+            <label className="block text-xs text-white/50 mb-1.5">Password</label>
+            <input type="password" value={loginPass} onChange={(e) => setLoginPass(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-white/30" placeholder="Enter password" />
+          </div>
+          {loginError && <p className="text-red-400 text-xs text-center">{loginError}</p>}
+          <button type="submit" className="w-full py-3 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 transition-colors">Sign in</button>
+        </form>
+      </div>
+    </div>
+  );
+
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard': return renderDashboard();
@@ -1249,6 +1298,10 @@ const App: React.FC = () => {
       default: return renderDashboard();
     }
   };
+
+  if (!isLoggedIn) {
+    return renderLogin();
+  }
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white font-sans flex">
