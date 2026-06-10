@@ -8,6 +8,7 @@ import crypto from "crypto";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { existsSync, mkdirSync, writeFileSync } from "fs";
+import { execSync } from "child_process";
 import inquiryRoutes from "./routes/inquiry.routes.js";
 import contentRoutes from "./routes/content.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
@@ -126,6 +127,12 @@ if (existsSync(frontendDist)) {
 }
 
 app.use(errorHandler);
+
+try {
+  execSync("npx prisma db seed", { cwd: __dirname, stdio: "inherit" });
+} catch {
+  console.warn("[BOOT] Seed skipped (already seeded or failed)");
+}
 
 app.listen(PORT, () => {
   console.log(`[MistHustlers Backend] Running on http://localhost:${PORT}`);
