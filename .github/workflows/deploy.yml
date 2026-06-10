@@ -15,7 +15,15 @@ jobs:
         run: |
           echo "RAILWAY_TOKEN is set: ${{ secrets.RAILWAY_TOKEN != '' }}"
           echo "RAILWAY_SERVICE_ID is set: ${{ secrets.RAILWAY_SERVICE_ID != '' }}"
+      - name: Debug Railway CLI
+        run: |
+          ~/.railway/bin/railway version
+          echo "---"
+          ~/.railway/bin/railway status 2>&1 || echo "status failed with exit code $?"
       - name: Deploy to Railway
-        run: ~/.railway/bin/railway up --service ${{ secrets.RAILWAY_SERVICE_ID }} --ci
+        run: |
+          set -x
+          ~/.railway/bin/railway up --ci 2>&1
+          echo "exit code: $?"
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
