@@ -1,0 +1,106 @@
+import "dotenv/config";
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import morgan from "morgan";
+import rateLimit from "express-rate-limit";
+import crypto from "crypto";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
+import { existsSync, mkdirSync } from "fs";
+import inquiryRoutes from "./routes/inquiry.routes.js";
+import contentRoutes from "./routes/content.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
+import publicRoutes from "./routes/public.routes.js";
+import { authenticateApiKey } from "./middleware/auth.middleware.js";
+import { adminAuth } from "./middleware/admin-auth.middleware.js";
+import { errorHandler } from "./middleware/error.middleware.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const app = express();
+const PORT = process.env.PORT || 9000;
+
+const uploadsDir = join(__dirname, "uploads");
+if (!existsSync(uploadsDir)) mkdirSync(uploadsDir, { recursive: true });
+
+const required = ["SMTP_EMAIL", "SMTP_PASSWORD", "EMAIL_TO", "API_KEY", "ADMIN_USERNAME", "ADMIN_PASSWORD", "DATABASE_URL"];
+const missing = required.filter((k) => !process.env[k]);
+if (missing.length) {
+  console.error(`[FATAL] Missing required env vars: ${missing.join(", ")}`);
+  process.exit(1);
+}
+
+app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
+app.use(morgan("short"));
+
+const corsOrigins = (process.env.CORS_ORIGIN || "http://localhost:5173").split(",").map(s => s.trim());
+app.use(cors({ origin: corsOrigins }));
+
+app.use(express.json({ limit: "50mb" }));
+app.use("/uploads", express.static(join(__dirname, "uploads")));
+app.disable("x-powered-by");
+
+app.use((req, _, next) => {
+  req.id = crypto.randomUUID();
+  next();
+});
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: { success: false, message: "Too many requests. Try again later." },
+});
+
+app.use("/api/admin", adminAuth);
+app.use("/api/admin", adminRoutes);
+
+app.use("/api/content", contentRoutes);
+
+app.use("/api", limiter);
+
+app.get("/api/health", (_, res) => {
+  res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+app.use("/api", publicRoutes);
+
+app.use("/api", authenticateApiKey);
+app.use("/api", inquiryRoutes);
+
+const adminDist = join(__dirname, "admin-ui", "dist");
+
+if (existsSync(adminDist)) {
+  app.use("/admin", express.static(adminDist));
+  app.get("/admin/*", (req, res, next) => {
+    if (req.path.startsWith("/api")) return next();
+    res.sendFile(join(adminDist, "index.html"));
+  });
+} else {
+  app.use("/admin", (_, res) => {
+    res.status(503).send("Admin dashboard not built yet. Run: cd admin-ui && npm install && npm run build");
+  });
+}
+
+app.get("/", (_, res) => {
+  res.redirect("/admin");
+});
+
+const frontendDist = join(__dirname, "..", "dist");
+if (existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api") || req.path.startsWith("/admin") || req.path.startsWith("/uploads")) {
+      return next();
+    }
+    res.sendFile(join(frontendDist, "index.html"));
+  });
+}
+
+app.use(errorHandler);
+
+app.listen(PORT, () => {
+  console.log(`[MistHustlers Backend] Running on http://localhost:${PORT}`);
+  console.log(`[Admin Dashboard]    http://localhost:${PORT}/admin`);
+  console.log(`[Content API]        http://localhost:${PORT}/api/content/home`);
+});

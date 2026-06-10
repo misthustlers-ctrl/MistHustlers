@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Inquiry {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String
+  company   String?
+  service   String
+  budget    String
+  message   String
+  status    String   @default("new")
+  notes     String?
+  emailStatus String @default("pending") @map("email_status")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("inquiries")
+}
+
+model Opportunity {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  department  String
+  type        String    @default("full-time")
+  location    String?
+  status      String    @default("open")
+  applicants  Int       @default(0)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  applicantsRel Applicant[]
+
+  @@map("opportunities")
+}
+
+model Applicant {
+  id            Int       @id @default(autoincrement())
+  opportunityId Int       @map("opportunity_id")
+  name          String
+  email         String
+  phone         String?
+  resumeUrl     String?   @map("resume_url")
+  coverLetter   String?   @map("cover_letter")
+  status        String    @default("new")
+  notes         String?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  opportunity   Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+
+  @@map("applicants")
+}
+
+model Project {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  clientName  String?   @map("client_name")
+  status      String    @default("planning")
+  startDate   DateTime? @map("start_date")
+  endDate     DateTime? @map("end_date")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("projects")
+}

@@ -1,0 +1,33 @@
+{
+  "name": "misthustlers-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "build-admin": "cd admin-ui && npm run build",
+    "build-all": "npm run build-admin && cd .. && npm install && npm run build",
+    "db:seed": "node prisma/seed.js",
+    "db:seed-content": "node prisma/seed-content.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "express-validator": "^7.2.1",
+    "helmet": "^8.2.0",
+    "morgan": "^1.10.1",
+    "multer": "^2.1.1",
+    "nodemailer": "^6.10.0",
+    "sharp": "^0.34.5"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "devDependencies": {
+    "prisma": "^5.22.0"
+  }
+}

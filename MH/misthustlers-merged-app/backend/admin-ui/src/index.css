@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif;
+}
+
+body {
+  background: #0A0A0A;
+  color: white;
+  -webkit-font-smoothing: antialiased;
+}
+
+button { transition: all 0.1s cubic-bezier(0.23, 1, 0.32, 1); }
+button:active { transform: scale(0.985); }
+
+.field {
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #050505;
+  padding: 0.875rem 1.25rem;
+  font-size: 0.875rem;
+  color: white;
+  outline: none;
+}
+
+.field::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.field:focus {
+  border-color: rgba(255, 255, 255, 0.35);
+}
