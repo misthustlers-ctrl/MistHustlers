@@ -7,12 +7,15 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/railwayapp/cli:latest
-      options: --entrypoint ""
-    env:
-      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
     steps:
       - uses: actions/checkout@v4
+      - name: Install Railway CLI
+        run: bash <(curl -fsSL railway.com/install.sh) -y
+      - name: Debug secrets
+        run: |
+          echo "RAILWAY_TOKEN is set: ${{ secrets.RAILWAY_TOKEN != '' }}"
+          echo "RAILWAY_SERVICE_ID is set: ${{ secrets.RAILWAY_SERVICE_ID != '' }}"
       - name: Deploy to Railway
-        run: railway up --service=${{ secrets.RAILWAY_SERVICE_ID }} --ci
+        run: ~/.railway/bin/railway up --service ${{ secrets.RAILWAY_SERVICE_ID }} --ci
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
