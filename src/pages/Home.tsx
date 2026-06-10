@@ -18,29 +18,29 @@ function EmojiIcon({ src, alt, className }: { src: string; alt: string; classNam
 
 function Hero3DVisual({ emojiLightning, emojiTools, emojiGrowth, emojiRocket }: { emojiLightning?: string; emojiTools?: string; emojiGrowth?: string; emojiRocket?: string }) {
   return (
-    <div className="perspective-3d relative w-full h-[500px] flex items-center justify-center">
+    <div className="perspective-3d relative w-full h-[300px] md:h-[500px] flex items-center justify-center">
       <div className="animate-float3d preserve-3d relative z-10">
         <div className="w-36 h-36 rounded-[40px] bg-ash-white border border-abyssal-ink/5 flex items-center justify-center shadow-2xl shadow-abyssal-ink/5">
           <span className="font-display text-5xl tracking-[0.02em] text-abyssal-ink leading-none">MH</span>
         </div>
         <div className="absolute -inset-4 rounded-[50px] border border-digital-orange/20 animate-pulse-glow" />
       </div>
-      <div className="absolute top-8 right-12 animate-float-slow preserve-3d" style={{ animationDelay: "0.3s" }}>
+      <div className="hidden md:block absolute top-8 right-12 animate-float-slow preserve-3d" style={{ animationDelay: "0.3s" }}>
         <div className="w-24 h-32 rounded-2xl bg-white/80 backdrop-blur border border-abyssal-ink/5 shadow-lg rotate-6 flex items-center justify-center">
           {emojiLightning ? <EmojiIcon src={emojiLightning} alt="Lightning" className="w-8 h-8" /> : <span className="text-2xl">⚡</span>}
         </div>
       </div>
-      <div className="absolute top-20 left-8 animate-float-slow preserve-3d" style={{ animationDelay: "1s" }}>
+      <div className="hidden md:block absolute top-20 left-8 animate-float-slow preserve-3d" style={{ animationDelay: "1s" }}>
         <div className="w-20 h-28 rounded-2xl bg-white/80 backdrop-blur border border-abyssal-ink/5 shadow-lg -rotate-3 flex items-center justify-center">
           {emojiTools ? <EmojiIcon src={emojiTools} alt="Tools" className="w-7 h-7" /> : <span className="text-xl">🛠</span>}
         </div>
       </div>
-      <div className="absolute bottom-16 right-20 animate-float-slow preserve-3d" style={{ animationDelay: "1.8s" }}>
+      <div className="hidden md:block absolute bottom-16 right-20 animate-float-slow preserve-3d" style={{ animationDelay: "1.8s" }}>
         <div className="w-28 h-20 rounded-2xl bg-white/80 backdrop-blur border border-abyssal-ink/5 shadow-lg -rotate-6 flex items-center justify-center">
           {emojiGrowth ? <EmojiIcon src={emojiGrowth} alt="Growth" className="w-7 h-7" /> : <span className="text-xl">📈</span>}
         </div>
       </div>
-      <div className="absolute bottom-24 left-16 animate-float-slow preserve-3d" style={{ animationDelay: "2.4s" }}>
+      <div className="hidden md:block absolute bottom-24 left-16 animate-float-slow preserve-3d" style={{ animationDelay: "2.4s" }}>
         <div className="w-20 h-20 rounded-full bg-cyber-violet/10 backdrop-blur border border-cyber-violet/20 shadow-lg flex items-center justify-center">
           {emojiRocket ? <EmojiIcon src={emojiRocket} alt="Rocket" className="w-7 h-7" /> : <span className="text-lg">🚀</span>}
         </div>
@@ -87,7 +87,7 @@ export default function Home() {
       <GlobalNavbar />
       <main>
 
-      <section ref={heroRef} className="relative pt-32 pb-20 overflow-hidden">
+      <section ref={heroRef} className="relative pt-20 md:pt-32 pb-20 overflow-hidden">
         <motion.div style={{ opacity: heroOpacity, y: heroY }} className="max-w-[1200px] mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
@@ -99,7 +99,7 @@ export default function Home() {
                 <span className="inline-block px-4 py-1.5 rounded-full bg-abyssal-ink/5 text-abyssal-ink/60 text-xs font-semibold tracking-wider uppercase mb-6 font-body">
                   Web Development Agency — Indore
                 </span>
-                <h1 className="font-display text-[clamp(64px,8vw,120px)] leading-[0.9] tracking-[0.02em] text-abyssal-ink">
+                <h1 className="font-display text-[clamp(36px,6vw,110px)] leading-[0.9] tracking-[0.02em] text-abyssal-ink">
                   Web Development &amp;<br />Automation Services<br />
                   <span className="text-digital-orange">in Indore</span>
                 </h1>
@@ -109,7 +109,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.15, ease: [0.33, 1, 0.68, 1] }}
-                className="text-lg text-abyssal-ink/60 max-w-md leading-relaxed font-body"
+                className="text-base md:text-lg text-abyssal-ink/60 max-w-md leading-relaxed font-body"
               >
                 We build websites, MVPs, and automation systems for startups and founders in Indore. Fixed pricing. 48h response. No bureaucracy.
               </motion.p>
@@ -160,13 +160,13 @@ export default function Home() {
         </motion.div>
       </section>
 
-      <section className="py-16 border-t border-abyssal-ink/5">
+      <section className="py-12 md:py-16 border-t border-abyssal-ink/5">
         <div className="max-w-[1200px] mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {stats.map((stat, i) => (
               <ScrollReveal key={stat.label} delay={i * 0.1}>
                 <div className="text-center">
-                  <div className="font-display text-[clamp(40px,5vw,56px)] tracking-[0.02em] text-abyssal-ink leading-none">
+                  <div className="font-display text-[clamp(32px,5vw,56px)] tracking-[0.02em] text-abyssal-ink leading-none">
                     <AnimatedCounter target={stat.value} suffix={stat.suffix} />
                   </div>
                   <p className="text-sm text-abyssal-ink/50 mt-2 font-medium font-body">{stat.label}</p>
@@ -186,7 +186,7 @@ export default function Home() {
       </section>
 
       {/* SERVICES TEASER */}
-      <section className="py-24 bg-ash-white">
+      <section className="py-16 md:py-20 bg-ash-white">
         <div className="max-w-[1200px] mx-auto px-6">
           <ScrollReveal>
             <div className="mb-12 text-center">
@@ -213,7 +213,7 @@ export default function Home() {
       </section>
 
       {/* JOURNEY */}
-      <section className="py-24">
+      <section className="py-16 md:py-24">
         <div className="max-w-[1200px] mx-auto px-6">
           <ScrollReveal>
             <div className="mb-16 text-center">
@@ -230,11 +230,11 @@ export default function Home() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {journeySteps.map((step, i) => (
               <ScrollReveal key={step.step} delay={i * 0.12}>
-                <div className="relative bg-ash-white rounded-[40px] p-8 border border-abyssal-ink/5 h-full group card-lift">
-                  <span className="font-display text-5xl tracking-[0.02em] text-abyssal-ink/10 group-hover:text-digital-orange/20 transition-colors duration-300">
+                <div className="relative bg-ash-white rounded-[40px] p-5 md:p-10 border border-abyssal-ink/5 h-full group card-lift">
+                  <span className="font-display text-4xl md:text-5xl tracking-[0.02em] text-abyssal-ink/10 group-hover:text-digital-orange/20 transition-colors duration-300">
                     {step.step}
                   </span>
-                  <h3 className="font-body font-bold text-2xl tracking-[0.02em] text-abyssal-ink mt-3 mb-3">{step.title}</h3>
+                  <h3 className="font-body font-bold text-xl md:text-2xl tracking-[0.02em] text-abyssal-ink mt-3 mb-3">{step.title}</h3>
                   <p className="text-sm text-abyssal-ink/60 leading-relaxed font-body">{step.desc}</p>
                 </div>
               </ScrollReveal>
@@ -244,7 +244,7 @@ export default function Home() {
       </section>
 
       {/* CAREER TEASER */}
-      <section className="py-24 bg-ash-white">
+      <section className="py-16 md:py-20 bg-ash-white">
         <div className="max-w-[1200px] mx-auto px-6">
           <ScrollReveal>
             <div className="mb-12 text-center">
@@ -271,9 +271,9 @@ export default function Home() {
       </section>
 
       {/* MENTORSHIP TEASER */}
-      <section className="py-24">
+      <section className="py-16 md:py-24">
         <div className="max-w-[1200px] mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-10 md:gap-16 items-center">
             <ScrollReveal>
               <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">Mentorship</span>
               <h2 className="font-body font-bold text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05] mb-6">
@@ -291,7 +291,7 @@ export default function Home() {
             </ScrollReveal>
 
             <ScrollReveal delay={0.15}>
-              <div className="bg-ash-white rounded-[40px] p-10 border border-abyssal-ink/5 relative overflow-hidden">
+              <div className="bg-ash-white rounded-[40px] p-6 md:p-10 border border-abyssal-ink/5 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-cyber-violet/5 rounded-full -translate-y-1/2 translate-x-1/2" />
                 <div className="relative space-y-6">
                   {(c.mentorship?.features ?? []).map((item, i) => (
@@ -311,7 +311,7 @@ export default function Home() {
       </section>
 
       {/* PROJECT PREVIEW */}
-      <section className="py-24 bg-ash-white">
+      <section className="py-16 md:py-24 bg-ash-white">
         <div className="max-w-[1200px] mx-auto px-6">
           <ScrollReveal>
             <div className="mb-12 flex flex-col gap-5 text-center md:flex-row md:items-end md:justify-between md:text-left">
@@ -334,7 +334,7 @@ export default function Home() {
             {projectPreview.map((proj, i) => (
               <ScrollReveal key={proj.title} delay={i * 0.08}>
                 <div className="card-lift h-full overflow-hidden rounded-[32px] border border-abyssal-ink/5 bg-basalt-canvas">
-                  <div className="flex h-44 items-center justify-center bg-abyssal-ink/3">
+                  <div className="flex h-32 md:h-44 items-center justify-center bg-abyssal-ink/3">
                     <span className="text-5xl opacity-30">{proj.visual}</span>
                   </div>
                   <div className="p-6">
@@ -349,7 +349,7 @@ export default function Home() {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="py-24">
+      <section id="faq" className="py-16 md:py-24">
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="max-w-2xl mx-auto">
             <ScrollReveal>
@@ -361,7 +361,7 @@ export default function Home() {
               </div>
             </ScrollReveal>
 
-            <div className="bg-ash-white rounded-[40px] p-8 border border-abyssal-ink/5">
+            <div className="bg-ash-white rounded-[24px] md:rounded-[40px] p-5 md:p-8 border border-abyssal-ink/5">
               {faqData.map((faq, i) => (
                 <FAQItem
                   key={i}
@@ -377,19 +377,19 @@ export default function Home() {
       </section>
 
       {/* FINAL CTA */}
-      <section className="py-24 bg-abyssal-ink text-white">
+      <section className="py-16 md:py-20 bg-abyssal-ink text-white">
         <div className="max-w-[1200px] mx-auto px-6 text-center">
           <ScrollReveal>
-            <h2 className="font-body font-bold text-[clamp(48px,8vw,96px)] tracking-[0.02em] leading-[0.95] mb-6">
+            <h2 className="font-body font-bold text-[clamp(32px,6vw,80px)] tracking-[0.02em] leading-[0.95] mb-6">
               READY TO SHIP<br />
               <span className="text-digital-orange">YOUR PROJECT?</span>
             </h2>
-            <p className="text-white/50 text-lg mb-10 max-w-md mx-auto font-body">
+            <p className="text-white/50 text-base md:text-lg mb-10 max-w-md mx-auto font-body">
               Get a fixed-price proposal in 48 hours. No calls. No pressure. Real execution.
             </p>
             <button
               onClick={() => navigate("/contact")}
-              className="magnetic-btn bg-digital-orange text-white px-10 py-5 rounded-[800px] text-lg font-bold cursor-pointer font-body"
+              className="magnetic-btn bg-digital-orange text-white px-6 py-4 md:px-10 md:py-5 rounded-[800px] text-base md:text-lg font-bold cursor-pointer font-body"
             >
               GET A QUOTE
             </button>
