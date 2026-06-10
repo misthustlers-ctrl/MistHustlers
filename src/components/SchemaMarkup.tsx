@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { SITE_URL, SITE_NAME } from "@/utils/metadata";
+import { useContent } from "@/utils/useContent";
 
 interface FAQItem {
   question: string;
@@ -11,6 +12,10 @@ interface SchemaProps {
   faq?: FAQItem[];
 }
 
+const LOGO_DEFAULTS = {
+  logoSchema: "",
+};
+
 const SITE_ADDRESS = {
   "@type": "PostalAddress",
   streetAddress: "Indore, Madhya Pradesh",
@@ -18,60 +23,6 @@ const SITE_ADDRESS = {
   addressRegion: "Madhya Pradesh",
   postalCode: "452001",
   addressCountry: "IN",
-};
-
-const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: SITE_NAME,
-  url: SITE_URL,
-  logo: `${SITE_URL}/Favicon.png`,
-  email: "misthustlers@gmail.com",
-  telephone: "+91 888 993 7648",
-  description: "Premium web development and automation services for startups and founders in Indore. We build websites, MVPs, and AI automation pipelines.",
-  address: SITE_ADDRESS,
-  sameAs: [
-    "https://github.com/NaveenSalve",
-    "https://misthustlers.up.railway.app",
-  ],
-};
-
-const localBusinessSchema = {
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  name: SITE_NAME,
-  image: `${SITE_URL}/Favicon.png`,
-  email: "misthustlers@gmail.com",
-  telephone: "+918889937648",
-  address: SITE_ADDRESS,
-  geo: {
-    "@type": "GeoCoordinates",
-    latitude: 22.7196,
-    longitude: 75.8577,
-  },
-  url: SITE_URL,
-  priceRange: "₹999-₹50000+",
-  openingHoursSpecification: [
-    { "@type": "OpeningHoursSpecification", dayOfWeek: "Monday", opens: "09:00", closes: "18:00" },
-    { "@type": "OpeningHoursSpecification", dayOfWeek: "Tuesday", opens: "09:00", closes: "18:00" },
-    { "@type": "OpeningHoursSpecification", dayOfWeek: "Wednesday", opens: "09:00", closes: "18:00" },
-    { "@type": "OpeningHoursSpecification", dayOfWeek: "Thursday", opens: "09:00", closes: "18:00" },
-    { "@type": "OpeningHoursSpecification", dayOfWeek: "Friday", opens: "09:00", closes: "18:00" },
-    { "@type": "OpeningHoursSpecification", dayOfWeek: "Saturday", opens: "10:00", closes: "14:00" },
-  ],
-  areaServed: [
-    { "@type": "City", name: "Indore" },
-    { "@type": "State", name: "Madhya Pradesh" },
-  ],
-  hasOfferCatalog: {
-    "@type": "OfferCatalog",
-    name: "Web Development Services",
-    itemListElement: [
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Web Development" } },
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "MVP Development" } },
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Automation Systems" } },
-    ],
-  },
 };
 
 const websiteSchema = {
@@ -149,6 +100,63 @@ const breadcrumbSchemas: Record<string, object> = {
 };
 
 export default function SchemaMarkup({ page, faq }: SchemaProps) {
+  const logo = useContent("logo", LOGO_DEFAULTS);
+  const logoUrl = logo.logoSchema || `${SITE_URL}/Favicon.png`;
+
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: logoUrl,
+    email: "misthustlers@gmail.com",
+    telephone: "+91 888 993 7648",
+    description: "Premium web development and automation services for startups and founders in Indore. We build websites, MVPs, and AI automation pipelines.",
+    address: SITE_ADDRESS,
+    sameAs: [
+      "https://github.com/NaveenSalve",
+      "https://misthustlers.up.railway.app",
+    ],
+  };
+
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: SITE_NAME,
+    image: logoUrl,
+    email: "misthustlers@gmail.com",
+    telephone: "+918889937648",
+    address: SITE_ADDRESS,
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 22.7196,
+      longitude: 75.8577,
+    },
+    url: SITE_URL,
+    priceRange: "₹999-₹50000+",
+    openingHoursSpecification: [
+      { "@type": "OpeningHoursSpecification", dayOfWeek: "Monday", opens: "09:00", closes: "18:00" },
+      { "@type": "OpeningHoursSpecification", dayOfWeek: "Tuesday", opens: "09:00", closes: "18:00" },
+      { "@type": "OpeningHoursSpecification", dayOfWeek: "Wednesday", opens: "09:00", closes: "18:00" },
+      { "@type": "OpeningHoursSpecification", dayOfWeek: "Thursday", opens: "09:00", closes: "18:00" },
+      { "@type": "OpeningHoursSpecification", dayOfWeek: "Friday", opens: "09:00", closes: "18:00" },
+      { "@type": "OpeningHoursSpecification", dayOfWeek: "Saturday", opens: "10:00", closes: "14:00" },
+    ],
+    areaServed: [
+      { "@type": "City", name: "Indore" },
+      { "@type": "State", name: "Madhya Pradesh" },
+    ],
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Web Development Services",
+      itemListElement: [
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Web Development" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "MVP Development" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Automation Systems" } },
+      ],
+    },
+  };
+
   const schemas: object[] = [organizationSchema, localBusinessSchema, websiteSchema, breadcrumbSchemas[page]];
 
   if (page === "services") {

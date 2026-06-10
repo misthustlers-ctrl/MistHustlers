@@ -1,4 +1,11 @@
 import { Link } from "react-router-dom";
+import { useContent } from "@/utils/useContent";
+
+const LOGO_DEFAULTS = {
+  logoFooter: "",
+  brandPrefix: "MIST",
+  brandHighlight: "HUSTLERS",
+};
 
 const FOOTER_LINKS = [
   { label: "Home", to: "/" },
@@ -9,15 +16,20 @@ const FOOTER_LINKS = [
 ];
 
 export default function Footer() {
+  const logo = useContent("logo", LOGO_DEFAULTS);
   return (
     <footer id="contact" className="py-16 border-t border-abyssal-ink/5 bg-basalt-canvas">
       <div className="max-w-[1200px] mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex flex-col items-center md:items-start gap-2">
             <Link to="/" className="flex items-center gap-2">
-              <span className="font-display text-xl tracking-[0.02em] text-abyssal-ink">
-                MIST<span className="text-digital-orange">HUSTLERS</span>
-              </span>
+              {logo.logoFooter ? (
+                <img src={logo.logoFooter} alt="MistHustlers" className="h-7 w-auto" />
+              ) : (
+                <span className="font-display text-xl tracking-[0.02em] text-abyssal-ink">
+                  {logo.brandPrefix}<span className="text-digital-orange">{logo.brandHighlight}</span>
+                </span>
+              )}
             </Link>
             <p className="text-sm text-abyssal-ink/40 font-body">&copy; {new Date().getFullYear()} MistHustlers. All rights reserved.</p>
           </div>

@@ -11,7 +11,12 @@ import SEO from "@/components/SEO";
 import SchemaMarkup from "@/components/SchemaMarkup";
 import { useContent } from "@/utils/useContent";
 
-function Hero3DVisual() {
+function EmojiIcon({ src, alt, className }: { src: string; alt: string; className: string }) {
+  if (!src) return null;
+  return <img src={src} alt={alt} className={className} />;
+}
+
+function Hero3DVisual({ emojiLightning, emojiTools, emojiGrowth, emojiRocket }: { emojiLightning?: string; emojiTools?: string; emojiGrowth?: string; emojiRocket?: string }) {
   return (
     <div className="perspective-3d relative w-full h-[500px] flex items-center justify-center">
       <div className="animate-float3d preserve-3d relative z-10">
@@ -22,22 +27,22 @@ function Hero3DVisual() {
       </div>
       <div className="absolute top-8 right-12 animate-float-slow preserve-3d" style={{ animationDelay: "0.3s" }}>
         <div className="w-24 h-32 rounded-2xl bg-white/80 backdrop-blur border border-abyssal-ink/5 shadow-lg rotate-6 flex items-center justify-center">
-          <span className="text-2xl">⚡</span>
+          {emojiLightning ? <EmojiIcon src={emojiLightning} alt="Lightning" className="w-8 h-8" /> : <span className="text-2xl">⚡</span>}
         </div>
       </div>
       <div className="absolute top-20 left-8 animate-float-slow preserve-3d" style={{ animationDelay: "1s" }}>
         <div className="w-20 h-28 rounded-2xl bg-white/80 backdrop-blur border border-abyssal-ink/5 shadow-lg -rotate-3 flex items-center justify-center">
-          <span className="text-xl">🛠</span>
+          {emojiTools ? <EmojiIcon src={emojiTools} alt="Tools" className="w-7 h-7" /> : <span className="text-xl">🛠</span>}
         </div>
       </div>
       <div className="absolute bottom-16 right-20 animate-float-slow preserve-3d" style={{ animationDelay: "1.8s" }}>
         <div className="w-28 h-20 rounded-2xl bg-white/80 backdrop-blur border border-abyssal-ink/5 shadow-lg -rotate-6 flex items-center justify-center">
-          <span className="text-xl">📈</span>
+          {emojiGrowth ? <EmojiIcon src={emojiGrowth} alt="Growth" className="w-7 h-7" /> : <span className="text-xl">📈</span>}
         </div>
       </div>
       <div className="absolute bottom-24 left-16 animate-float-slow preserve-3d" style={{ animationDelay: "2.4s" }}>
         <div className="w-20 h-20 rounded-full bg-cyber-violet/10 backdrop-blur border border-cyber-violet/20 shadow-lg flex items-center justify-center">
-          <span className="text-lg">🚀</span>
+          {emojiRocket ? <EmojiIcon src={emojiRocket} alt="Rocket" className="w-7 h-7" /> : <span className="text-lg">🚀</span>}
         </div>
       </div>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-40 rounded-3xl glass-card -rotate-2 opacity-60" />
@@ -51,10 +56,18 @@ function Hero3DVisual() {
   );
 }
 
+const LOGO_DEFAULTS = {
+  emojiLightning: "",
+  emojiTools: "",
+  emojiGrowth: "",
+  emojiRocket: "",
+};
+
 export default function Home() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
+  const logoData = useContent("logo", LOGO_DEFAULTS);
   const c = useContent("home", { stats: [{ value: 127, suffix: "+", label: "Projects Delivered" }, { value: 43, suffix: "+", label: "Happy Clients" }, { value: 18, suffix: "+", label: "Startups Launched" }, { value: 48, suffix: "h", label: "Avg Response Time" }], journeySteps: [{ step: "01", title: "Requirements", desc: "Share your project idea, timeline, and budget. We analyze scope and feasibility within 24 hours." }, { step: "02", title: "Proposal", desc: "Receive a fixed-price proposal with clear deliverables, milestones, and exact timeline. No hidden costs." }, { step: "03", title: "Execution", desc: "We build your project with daily updates and direct communication. Zero bureaucracy. Full transparency." }, { step: "04", title: "Delivery", desc: "Handover with complete source code, documentation, and ongoing support. Your project, fully shipped." }], mentorship: { features: [{ title: "Fixed Pricing", desc: "Know exactly what you pay upfront. No hourly billing, no scope creep, no surprises." }, { title: "Direct Access", desc: "Communicate directly with the developers building your project. No account managers." }, { title: "48h Response", desc: "We respond to every inquiry within 48 hours. Async-first, all timezones." }, { title: "Source Code Included", desc: "You own everything we build. Full source code, documentation, and rights." }] }, faqData: [{ q: "What services does MistHustlers offer?", a: "We offer web development, MVP development, automation systems, full-stack application development, and UI/UX design services in Indore. From landing pages to complex platforms." }, { q: "How much does it cost to build a website?", a: "Our pricing starts at Rs 999 for basic landing pages and goes up to Rs 50,000+ for full-stack applications. We provide a fixed-price quote after reviewing your requirements." }, { q: "Where is MistHustlers based?", a: "We are based in Indore, Madhya Pradesh, and serve clients across India and globally. We work async-first via email, WhatsApp, and calls." }, { q: "How long does it take to build a project?", a: "A landing page can be delivered in 3-5 days. A full-stack MVP typically takes 2-4 weeks. We provide exact timelines in our proposal." }, { q: "Do you offer support after delivery?", a: "Yes. Every project includes post-delivery support from 14 to 90 days depending on plan. We also offer ongoing maintenance and feature additions." }], projects: [] });
   const stats = c.stats ?? [];
   const journeySteps = c.journeySteps ?? [];
@@ -136,7 +149,12 @@ export default function Home() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.2, ease: [0.33, 1, 0.68, 1] }}
             >
-              <Hero3DVisual />
+              <Hero3DVisual
+                emojiLightning={logoData.emojiLightning}
+                emojiTools={logoData.emojiTools}
+                emojiGrowth={logoData.emojiGrowth}
+                emojiRocket={logoData.emojiRocket}
+              />
             </motion.div>
           </div>
         </motion.div>

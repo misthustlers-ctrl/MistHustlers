@@ -30,7 +30,7 @@ interface BinItem {
   id: string; type: string; deletedAt: string; data: Record<string, unknown>;
 }
 
-type TabType = 'dashboard' | 'leads' | 'career' | 'projects' | 'content' | 'media' | 'bin';
+type TabType = 'dashboard' | 'leads' | 'career' | 'projects' | 'content' | 'media' | 'logo' | 'bin';
 type ModalType = 'job' | 'event' | 'program' | 'applicant' | 'project' | null;
 
 const API = '/api/admin';
@@ -79,6 +79,7 @@ const tabs: { id: TabType; label: string; icon: React.ElementType }[] = [
   { id: 'projects', label: 'Projects', icon: FolderKanban },
   { id: 'content', label: 'Content', icon: FileText },
   { id: 'media', label: 'Media', icon: Image },
+  { id: 'logo', label: 'Logo', icon: Settings },
   { id: 'bin', label: 'Bin', icon: Trash },
 ];
 
@@ -138,6 +139,7 @@ const App: React.FC = () => {
   const [homeContent, setHomeContent] = useState<any>(null);
   const [careerContent, setCareerContent] = useState<any>(null);
   const [projectsContent, setProjectsContent] = useState<any>(null);
+  const [logoContent, setLogoContent] = useState<any>(null);
   const [contentSaving, setContentSaving] = useState(false);
   const [contentTab, setContentTab] = useState<string>('services');
   const [contentSideTab, setContentSideTab] = useState<string>('pricing');
@@ -186,6 +188,7 @@ const App: React.FC = () => {
         if (page === 'home') setHomeContent(res.data);
         if (page === 'career') setCareerContent(res.data);
         if (page === 'projects') setProjectsContent(res.data);
+        if (page === 'logo') setLogoContent(res.data);
       }
     } catch (err) {
       setError('Failed to load content');
@@ -204,6 +207,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (activeTab === 'content') fetchContent(contentTab);
+    if (activeTab === 'logo') fetchContent('logo');
   }, [activeTab, contentTab]);
 
   const fetchMedia = async () => {
@@ -1247,6 +1251,79 @@ const App: React.FC = () => {
     );
   };
 
+  const renderLogoEditor = () => {
+    if (!logoContent) return <div className="text-center text-white/40 py-10">Loading...</div>;
+    const c = logoContent;
+    const upd = (path: string[], val: any) => updateContentField(setLogoContent, path, val);
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
+          <h3 className="text-sm font-semibold mb-4">Logo Images</h3>
+          <p className="text-[11px] text-white/40 mb-4">Upload your brand logo images. They will replace the text-based "MISTHUSTLERS" branding on the site.</p>
+          <div className="space-y-5">
+            <div>
+              <label className="block text-[11px] text-white/50 mb-1.5">Main Logo (Navbar)</label>
+              <ImageUpload currentUrl={c.logoMain || ''} onUploaded={(url) => upd(['logoMain'], url)} />
+              <p className="text-[10px] text-white/30 mt-1">Appears in the top navigation bar. Recommended: 180×40px or similar aspect ratio.</p>
+            </div>
+            <div>
+              <label className="block text-[11px] text-white/50 mb-1.5">Footer Logo</label>
+              <ImageUpload currentUrl={c.logoFooter || ''} onUploaded={(url) => upd(['logoFooter'], url)} />
+              <p className="text-[10px] text-white/30 mt-1">Appears in the footer section. Same aspect ratio as main logo preferred.</p>
+            </div>
+            <div>
+              <label className="block text-[11px] text-white/50 mb-1.5">Schema Logo (JSON-LD)</label>
+              <ImageUpload currentUrl={c.logoSchema || ''} onUploaded={(url) => upd(['logoSchema'], url)} />
+              <p className="text-[10px] text-white/30 mt-1">Used in schema.org structured data for search engines. Should be 112×112px minimum.</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
+          <h3 className="text-sm font-semibold mb-4">Brand Text</h3>
+          <p className="text-[11px] text-white/40 mb-4">Customize the text-based brand name shown when no logo image is uploaded.</p>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[11px] text-white/50 mb-1">Brand Prefix</label>
+              <input className="field text-sm" value={c.brandPrefix || ''} onChange={e => upd(['brandPrefix'], e.target.value)} placeholder="MIST" />
+              <p className="text-[10px] text-white/30 mt-1">First part of brand name (shown in default color)</p>
+            </div>
+            <div>
+              <label className="block text-[11px] text-white/50 mb-1">Brand Highlight</label>
+              <input className="field text-sm" value={c.brandHighlight || ''} onChange={e => upd(['brandHighlight'], e.target.value)} placeholder="HUSTLERS" />
+              <p className="text-[10px] text-white/30 mt-1">Second part (shown in brand accent color)</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
+          <h3 className="text-sm font-semibold mb-4">Emoji Replacements</h3>
+          <p className="text-[11px] text-white/40 mb-4">Upload custom icons to replace the emoji decorations on the homepage hero section. Leave empty to keep the default emoji characters.</p>
+          <div className="grid grid-cols-2 gap-5">
+            {[
+              { key: 'emojiLightning', label: '⚡ Lightning', hint: '24×24px or larger, transparent BG preferred' },
+              { key: 'emojiTools', label: '🛠 Tools', hint: '24×24px or larger, transparent BG preferred' },
+              { key: 'emojiGrowth', label: '📈 Growth Chart', hint: '24×24px or larger, transparent BG preferred' },
+              { key: 'emojiRocket', label: '🚀 Rocket', hint: '24×24px or larger, transparent BG preferred' },
+            ].map(({ key, label, hint }) => (
+              <div key={key}>
+                <label className="block text-[11px] text-white/50 mb-1.5">{label}</label>
+                <ImageUpload currentUrl={c[key] || ''} onUploaded={(url) => upd([key], url)} />
+                <p className="text-[10px] text-white/30 mt-1">{hint}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex justify-end">
+          <button onClick={() => saveContent('logo', c)} disabled={contentSaving} className="flex items-center gap-2 px-5 py-2.5 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 disabled:opacity-50">
+            <Save className="w-4 h-4" /> {contentSaving ? 'Saving...' : 'Save Logo'}
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   const renderContentEditor = () => (
     <section>
       <div className="flex justify-between mb-4 items-end">
@@ -1301,6 +1378,7 @@ const App: React.FC = () => {
       case 'projects': return renderProjects();
       case 'content': return renderContentEditor();
       case 'media': return renderMedia();
+      case 'logo': return renderLogoEditor();
       case 'bin': return renderBin();
       default: return renderDashboard();
     }

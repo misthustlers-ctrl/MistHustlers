@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import JoinEcosystemModal from "./JoinEcosystemModal";
+import { useContent } from "@/utils/useContent";
 
 const NAV_LINKS = [
   { label: "Home", to: "/" },
@@ -11,11 +12,18 @@ const NAV_LINKS = [
   { label: "Contact", to: "/contact" },
 ];
 
+const LOGO_DEFAULTS = {
+  logoMain: "",
+  brandPrefix: "MIST",
+  brandHighlight: "HUSTLERS",
+};
+
 export default function GlobalNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const location = useLocation();
+  const logo = useContent("logo", LOGO_DEFAULTS);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -58,9 +66,13 @@ export default function GlobalNavbar() {
       >
         <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 group">
-            <span className="font-display text-2xl tracking-[0.02em] text-abyssal-ink">
-              MIST<span className="text-digital-orange">HUSTLERS</span>
-            </span>
+            {logo.logoMain ? (
+              <img src={logo.logoMain} alt="MistHustlers" className="h-8 w-auto" />
+            ) : (
+              <span className="font-display text-2xl tracking-[0.02em] text-abyssal-ink">
+                {logo.brandPrefix}<span className="text-digital-orange">{logo.brandHighlight}</span>
+              </span>
+            )}
           </Link>
 
           <div className="hidden lg:flex items-center gap-8">
