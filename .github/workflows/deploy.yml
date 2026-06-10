@@ -7,11 +7,14 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/railwayapp/cli:latest
+      options: --entrypoint ""
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy to Railway
-        uses: docker://ghcr.io/railwayapp/cli:latest
-        with:
-          args: railway up
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      - name: Railway Login
+        run: railway login --token $RAILWAY_TOKEN
+      - name: Railway Deploy
+        run: railway up
