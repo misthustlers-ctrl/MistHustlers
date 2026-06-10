@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import GlobalNavbar from "@/components/GlobalNavbar";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
+import SchemaMarkup from "@/components/SchemaMarkup";
 import { useContent } from "@/utils/useContent";
 
 type OpportunityType = "Job" | "Internship" | "Event" | "Program" | "Hackathon" | "Freelance Gig";
@@ -168,6 +170,8 @@ function Career() {
         <div className="mist-grid absolute inset-0 opacity-50" />
       </div>
 
+      <SEO page="career" />
+      <SchemaMarkup page="career" />
       <GlobalNavbar />
 
       <main id="top" className="px-4 pb-16 pt-24">
@@ -180,9 +184,9 @@ function Career() {
             </div>
 
             <div className="space-y-5">
-              <p className="mh-heading max-w-4xl text-5xl leading-[0.95] sm:text-6xl lg:text-8xl">
+              <h1 className="mh-heading max-w-4xl text-5xl leading-[0.95] sm:text-6xl lg:text-8xl">
                 {hero.title || "Opportunities for Builders"}
-              </p>
+              </h1>
               <p className="max-w-2xl text-lg leading-8 text-[#070607]/70 sm:text-xl">
                 {hero.description || "Explore jobs, internships, events, and programs designed for real-world growth inside the MistHustlers ecosystem."}
               </p>

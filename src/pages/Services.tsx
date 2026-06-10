@@ -2,6 +2,8 @@ import { useRef } from "react";
 import GlobalNavbar from "@/components/GlobalNavbar";
 import ServiceInquiryForm from "@/components/ServiceInquiryForm";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
+import SchemaMarkup from "@/components/SchemaMarkup";
 import { useContent } from "@/utils/useContent";
 
 export default function Services() {
@@ -18,7 +20,10 @@ export default function Services() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#e2e2df", color: "#070607" }}>
+      <SEO page="services" />
+      <SchemaMarkup page="services" />
       <GlobalNavbar />
+      <main>
 
       {/* HERO */}
       <section className="relative overflow-hidden pt-20">
@@ -129,6 +134,53 @@ export default function Services() {
         <div className="h-[1px] mx-auto max-w-[1200px] px-6 md:px-8" style={{ background: "linear-gradient(90deg, transparent, rgba(7, 6, 7, 0.08), transparent)" }}></div>
       </section>
 
+      {/* SERVICE CATEGORIES */}
+      <section className="mx-auto max-w-[1200px] px-6 md:px-8 py-[88px] md:py-[120px]">
+        <div className="max-w-[720px] mb-[64px] md:mb-[84px]">
+          <div className="inline-flex items-center gap-[8px] mb-[24px]">
+            <div className="h-[4px] w-[4px] rounded-full" style={{ backgroundColor: "#fc5000" }}></div>
+            <span className="text-[12px] font-[700] uppercase tracking-[0.14em]" style={{ color: "rgba(7, 6, 7, 0.55)" }}>Our Services</span>
+          </div>
+          <h2 className="display text-[40px] md:text-[52px] leading-[1.05] tracking-[-0.03em] mb-[20px]" style={{ color: "#070607" }}>
+            What we build
+          </h2>
+          <p className="text-[17px] leading-[1.6] font-[450]" style={{ color: "rgba(7, 6, 7, 0.68)" }}>
+            Web development, AI automation, and MVP development for founders and startups.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-[20px] lg:gap-[24px]">
+          {[
+            { title: "Web Development", desc: "Business websites, landing pages, full-stack web apps. Built with modern tech and deployed fast.", href: "/services/web-development", accent: "#070607" },
+            { title: "AI & Automation", desc: "Workflow automation, AI chatbots, data pipelines, and custom automation systems.", href: "/services/automation", accent: "#524ae9" },
+            { title: "MVP Development", desc: "From idea to working product in 2-4 weeks. Fixed pricing, full source code.", href: "/services/mvp-development", accent: "#fc5000" },
+          ].map((svc) => (
+            <a
+              key={svc.title}
+              href={svc.href}
+              className="group rounded-[28px] p-[28px] border transition-all hover:-translate-y-1"
+              style={{ backgroundColor: "#f7f6f2", borderColor: "rgba(7, 6, 7, 0.08)" }}
+            >
+              <div className="h-[48px] w-[48px] rounded-[18px] flex items-center justify-center mb-[24px]" style={{ backgroundColor: `${svc.accent}14` }}>
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                  <path d="M11 3L18 8L18 14L11 19L4 14L4 8L11 3Z" stroke={svc.accent} strokeWidth="1.5" strokeLinejoin="round"/>
+                  <path d="M4 8L11 13L18 8" stroke={svc.accent} strokeWidth="1.5"/>
+                  <path d="M11 13L11 19" stroke={svc.accent} strokeWidth="1.5"/>
+                </svg>
+              </div>
+              <h3 className="text-[22px] font-[700] tracking-[-0.02em] mb-[12px]" style={{ color: "#070607" }}>{svc.title}</h3>
+              <p className="text-[14.5px] leading-[1.55] font-[450] mb-[20px]" style={{ color: "rgba(7, 6, 7, 0.68)" }}>{svc.desc}</p>
+              <span className="text-[13.5px] font-[600] inline-flex items-center gap-[6px] group-hover:gap-[10px] transition-all" style={{ color: svc.accent }}>
+                Learn more
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M5 3L9 7L5 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+
       {/* PRICING TIERS */}
       <section id="tiers" className="mx-auto max-w-[1200px] px-6 md:px-8 py-[88px] md:py-[120px]">
         <div className="max-w-[720px] mb-[64px] md:mb-[84px]">
@@ -171,7 +223,7 @@ export default function Services() {
                       </div>
                       <div className="h-[36px] w-[36px] rounded-[14px] flex items-center justify-center" style={{ backgroundColor: `${tier.accent}14`, color: tier.accent }}>
                         {tier.imageUrl ? (
-                          <img src={tier.imageUrl} className="w-full h-full rounded-[13px] object-cover" />
+                          <img src={tier.imageUrl} alt={tier.name} loading="lazy" width="36" height="36" className="w-full h-full rounded-[13px] object-cover" />
                         ) : (
                           <div className="h-[8px] w-[8px] rounded-[3px]" style={{ backgroundColor: tier.accent }}></div>
                         )}
@@ -182,7 +234,7 @@ export default function Services() {
 
                   {tier.imageUrl && (
                     <div className="mb-4 rounded-[16px] overflow-hidden border" style={{ borderColor: "rgba(7, 6, 7, 0.08)" }}>
-                      <img src={tier.imageUrl} alt={tier.name} className="w-full h-32 object-cover" />
+                      <img src={tier.imageUrl} alt={tier.name} loading="lazy" width="400" height="128" className="w-full h-32 object-cover" />
                     </div>
                   )}
 
@@ -385,6 +437,8 @@ export default function Services() {
           </div>
         </div>
       </section>
+
+      </main>
 
       <Footer />
     </div>

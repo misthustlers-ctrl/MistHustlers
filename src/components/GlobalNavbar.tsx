@@ -6,9 +6,9 @@ import JoinEcosystemModal from "./JoinEcosystemModal";
 const NAV_LINKS = [
   { label: "Home", to: "/" },
   { label: "Services", to: "/services" },
-  { label: "Career", to: "/career" },
   { label: "Projects", to: "/projects" },
-  { label: "FAQ", to: "/#faq" },
+  { label: "About", to: "/about" },
+  { label: "Contact", to: "/contact" },
 ];
 
 export default function GlobalNavbar() {

@@ -65,9 +65,32 @@ app.use(helmet({
   },
 }));
 
+const oneYear = 365 * 24 * 60 * 60;
+const oneDay = 24 * 60 * 60;
+
+const staticOptions = {
+  maxAge: oneDay * 1000,
+  setHeaders(res, filePath) {
+    if (filePath.endsWith(".html")) {
+      res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    } else if (/\.(js|css)$/i.test(filePath)) {
+      res.setHeader("Cache-Control", `public, max-age=${oneYear}, immutable`);
+    } else if (/\.(jpg|jpeg|png|webp|avif|gif|svg|ico)$/i.test(filePath)) {
+      res.setHeader("Cache-Control", `public, max-age=${oneDay}`);
+    }
+  },
+};
+
 app.use(express.json({ limit: "10mb" }));
-app.use("/uploads", express.static(join(__dirname, "uploads")));
+app.use("/uploads", express.static(join(__dirname, "uploads"), staticOptions));
 app.disable("x-powered-by");
+
+app.use((req, res, next) => {
+  if (req.path.startsWith("/api") || req.path.startsWith("/admin") || req.path.startsWith("/uploads")) {
+    res.setHeader("X-Robots-Tag", "noindex, nofollow");
+  }
+  next();
+});
 
 app.use((req, _, next) => {
   req.id = crypto.randomUUID();
@@ -104,7 +127,7 @@ app.use("/api", inquiryRoutes);
 const adminDist = join(__dirname, "admin-ui", "dist");
 
 if (existsSync(adminDist)) {
-  app.use("/admin", express.static(adminDist));
+  app.use("/admin", express.static(adminDist, staticOptions));
   app.get("/admin/*", (req, res, next) => {
     if (req.path.startsWith("/api")) return next();
     res.sendFile(join(adminDist, "index.html"));
@@ -117,7 +140,23 @@ if (existsSync(adminDist)) {
 
 const frontendDist = join(__dirname, "..", "dist");
 if (existsSync(frontendDist)) {
-  app.use(express.static(frontendDist));
+  app.use(express.static(frontendDist, staticOptions));
+
+  const prerenderedDir = join(frontendDist, "__prerendered");
+  if (existsSync(prerenderedDir)) {
+    app.use((req, res, next) => {
+      if (req.path.startsWith("/api") || req.path.startsWith("/admin") || req.path.startsWith("/uploads")) {
+        return next();
+      }
+      const routeKey = req.path === "/" ? "index" : req.path.slice(1).replace(/\//g, "-");
+      const filePath = join(prerenderedDir, routeKey + ".html");
+      if (existsSync(filePath)) {
+        return res.sendFile(filePath);
+      }
+      next();
+    });
+  }
+
   app.get("*", (req, res, next) => {
     if (req.path.startsWith("/api") || req.path.startsWith("/admin") || req.path.startsWith("/uploads")) {
       return next();

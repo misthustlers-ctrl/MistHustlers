@@ -7,6 +7,8 @@ import AnimatedCounter from "@/components/AnimatedCounter";
 import FAQItem from "@/components/FAQItem";
 import Footer from "@/components/Footer";
 import JoinEcosystemModal from "@/components/JoinEcosystemModal";
+import SEO from "@/components/SEO";
+import SchemaMarkup from "@/components/SchemaMarkup";
 import { useContent } from "@/utils/useContent";
 
 function Hero3DVisual() {
@@ -53,11 +55,11 @@ export default function Home() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
-  const c = useContent("home", { stats: [{ value: 10000, suffix: "+", label: "Students Guided" }, { value: 1200, suffix: "+", label: "Projects Built" }, { value: 5000, suffix: "+", label: "Mentorship Hours" }, { value: 80, suffix: "+", label: "Career Opportunities" }], journeySteps: [{ step: "01", title: "Learn", desc: "Master in-demand skills through our structured bootcamps, workshops, and curated learning paths designed by industry experts." }, { step: "02", title: "Build", desc: "Apply your knowledge by building real projects. From automation pipelines to full-stack apps — your portfolio grows here." }, { step: "03", title: "Earn", desc: "Monetize your skills through freelancing, internships, and career placements. We connect you directly to opportunities." }, { step: "04", title: "Grow", desc: "Scale your career with ongoing mentorship, advanced projects, leadership skills, and a network of ambitious builders." }], mentorship: { features: [{ title: "1:1 Guidance", desc: "Personalized sessions with practitioners who've been where you want to go." }, { title: "Career Roadmap", desc: "A custom growth plan designed around your goals and timeline." }, { title: "Accountability", desc: "Weekly check-ins to keep you on track and moving forward." }, { title: "Project Reviews", desc: "Get expert feedback on your code, design, and architecture decisions." }] }, faqData: [{ q: "What exactly is MistHustlers?", a: "MistHustlers is a premium ecosystem that combines learning, building, earning, and career growth into one seamless experience. We're not a course platform — we're a launchpad for ambitious builders." }, { q: "Is this only for students?", a: "No. While we welcome students, MistHustlers is for anyone ambitious — developers, career-switchers, freelancers, and future founders who want to build real skills and real income." }, { q: "How does the mentorship work?", a: "You get paired with an industry practitioner for 1:1 sessions. We cover career roadmapping, project reviews, accountability check-ins, and growth strategy — all tailored to your goals." }, { q: "What kind of projects will I build?", a: "Real-world projects: automation systems, full-stack web apps, AI integrations, portfolio sites, and client work. Everything is designed to be portfolio-worthy and career-relevant." }, { q: "How do I get career opportunities?", a: "Through our talent matching engine. Once you've built skills and projects, we connect you with internships, freelance gigs, and full-time roles from our partner network." }, { q: "Is there a fee to join?", a: "We offer different tiers based on your goals. Fill out the inquiry form and we'll match you with the right program. No hidden fees — everything is transparent." }], projects: [{ title: "Automation Dashboard", category: "Automation", visual: "⚡" }, { title: "E-Commerce Platform", category: "Development", visual: "🛒" }, { title: "AI Content Pipeline", category: "AI", visual: "🤖" }, { title: "Portfolio Builder App", category: "Tooling", visual: "🎨" }, { title: "Client CRM System", category: "Freelancing", visual: "📊" }, { title: "Career Match Engine", category: "Platform", visual: "🔗" }] });
+  const c = useContent("home", { stats: [{ value: 127, suffix: "+", label: "Projects Delivered" }, { value: 43, suffix: "+", label: "Happy Clients" }, { value: 18, suffix: "+", label: "Startups Launched" }, { value: 48, suffix: "h", label: "Avg Response Time" }], journeySteps: [{ step: "01", title: "Requirements", desc: "Share your project idea, timeline, and budget. We analyze scope and feasibility within 24 hours." }, { step: "02", title: "Proposal", desc: "Receive a fixed-price proposal with clear deliverables, milestones, and exact timeline. No hidden costs." }, { step: "03", title: "Execution", desc: "We build your project with daily updates and direct communication. Zero bureaucracy. Full transparency." }, { step: "04", title: "Delivery", desc: "Handover with complete source code, documentation, and ongoing support. Your project, fully shipped." }], mentorship: { features: [{ title: "Fixed Pricing", desc: "Know exactly what you pay upfront. No hourly billing, no scope creep, no surprises." }, { title: "Direct Access", desc: "Communicate directly with the developers building your project. No account managers." }, { title: "48h Response", desc: "We respond to every inquiry within 48 hours. Async-first, all timezones." }, { title: "Source Code Included", desc: "You own everything we build. Full source code, documentation, and rights." }] }, faqData: [{ q: "What services does MistHustlers offer?", a: "We offer web development, MVP development, automation systems, full-stack application development, and UI/UX design services in Indore. From landing pages to complex platforms." }, { q: "How much does it cost to build a website?", a: "Our pricing starts at Rs 999 for basic landing pages and goes up to Rs 50,000+ for full-stack applications. We provide a fixed-price quote after reviewing your requirements." }, { q: "Where is MistHustlers based?", a: "We are based in Indore, Madhya Pradesh, and serve clients across India and globally. We work async-first via email, WhatsApp, and calls." }, { q: "How long does it take to build a project?", a: "A landing page can be delivered in 3-5 days. A full-stack MVP typically takes 2-4 weeks. We provide exact timelines in our proposal." }, { q: "Do you offer support after delivery?", a: "Yes. Every project includes post-delivery support from 14 to 90 days depending on plan. We also offer ongoing maintenance and feature additions." }], projects: [] });
   const stats = c.stats ?? [];
   const journeySteps = c.journeySteps ?? [];
-  const faqData = c.faq?.items ?? [];
-  const projectPreview = (c.projectsShowcase?.projects ?? []).slice(0, 3);
+  const faqData = c.faqData ?? [];
+  const projectPreview = (c.projects ?? []).slice(0, 3);
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.3]);
@@ -67,7 +69,10 @@ export default function Home() {
 
   return (
     <div className="bg-basalt-canvas min-h-screen">
+      <SEO page="home" />
+      <SchemaMarkup page="home" faq={faqData} />
       <GlobalNavbar />
+      <main>
 
       <section ref={heroRef} className="relative pt-32 pb-20 overflow-hidden">
         <motion.div style={{ opacity: heroOpacity, y: heroY }} className="max-w-[1200px] mx-auto px-6">
@@ -79,11 +84,11 @@ export default function Home() {
                 transition={{ duration: 0.7, ease: [0.33, 1, 0.68, 1] }}
               >
                 <span className="inline-block px-4 py-1.5 rounded-full bg-abyssal-ink/5 text-abyssal-ink/60 text-xs font-semibold tracking-wider uppercase mb-6 font-body">
-                  Premium Ecosystem
+                  Web Development Agency — Indore
                 </span>
                 <h1 className="font-display text-[clamp(64px,8vw,120px)] leading-[0.9] tracking-[0.02em] text-abyssal-ink">
-                  LEARN.<br />BUILD.<br />EARN.<br />
-                  <span className="text-digital-orange">GROW.</span>
+                  Web Development &amp;<br />Automation Services<br />
+                  <span className="text-digital-orange">in Indore</span>
                 </h1>
               </motion.div>
 
@@ -93,7 +98,7 @@ export default function Home() {
                 transition={{ duration: 0.7, delay: 0.15, ease: [0.33, 1, 0.68, 1] }}
                 className="text-lg text-abyssal-ink/60 max-w-md leading-relaxed font-body"
               >
-                A Premium Ecosystem for Ambitious Students, Developers & Future Builders.
+                We build websites, MVPs, and automation systems for startups and founders in Indore. Fixed pricing. 48h response. No bureaucracy.
               </motion.p>
 
               <motion.p
@@ -102,7 +107,7 @@ export default function Home() {
                 transition={{ duration: 0.7, delay: 0.25 }}
                 className="text-sm text-abyssal-ink/40 font-medium tracking-wider uppercase font-body"
               >
-                No fluff. Real skills. Real execution.
+                From landing pages to full-stack platforms. Starting at ₹999.
               </motion.p>
 
               <motion.div
@@ -115,13 +120,13 @@ export default function Home() {
                   onClick={() => setModalOpen(true)}
                   className="magnetic-btn bg-digital-orange text-white px-8 py-4 rounded-[800px] text-base font-semibold cursor-pointer font-body"
                 >
-                  Join MistHustlers
+                  Get a Quote
                 </button>
                 <button
-                  onClick={() => navigate("/career")}
+                  onClick={() => navigate("/services")}
                   className="magnetic-btn bg-transparent border-2 border-abyssal-ink text-abyssal-ink px-8 py-4 rounded-[800px] text-base font-semibold cursor-pointer hover:bg-abyssal-ink hover:text-white transition-colors duration-300 font-body"
                 >
-                  Explore Careers
+                  View Services
                 </button>
               </motion.div>
             </div>
@@ -167,12 +172,12 @@ export default function Home() {
         <div className="max-w-[1200px] mx-auto px-6">
           <ScrollReveal>
             <div className="mb-12 text-center">
-              <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">Services</span>
+              <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">Services in Indore</span>
               <h2 className="font-display text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
-                Build premium products
+                Websites, MVPs &amp; Automation
               </h2>
               <p className="text-abyssal-ink/50 mt-4 max-w-lg mx-auto font-body">
-                From automation to full-stack development — we ship production-grade work for startups and founders.
+                From landing pages to full-stack platforms and AI automation pipelines — we ship production-grade work for startups and founders in Indore.
               </p>
             </div>
           </ScrollReveal>
@@ -194,12 +199,12 @@ export default function Home() {
         <div className="max-w-[1200px] mx-auto px-6">
           <ScrollReveal>
             <div className="mb-16 text-center">
-              <span className="text-sm font-semibold tracking-wider uppercase text-digital-orange font-body">The Journey</span>
+              <span className="text-sm font-semibold tracking-wider uppercase text-digital-orange font-body">How We Work</span>
               <h2 className="font-display text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
-                Learn &rarr; Build &rarr; Earn &rarr; Grow
+                From Idea to Launch
               </h2>
               <p className="text-abyssal-ink/50 mt-4 max-w-lg mx-auto font-body">
-                A proven pathway from skill acquisition to professional success.
+                A streamlined process from requirements to delivery. Direct communication. No middlemen.
               </p>
             </div>
           </ScrollReveal>
@@ -358,21 +363,23 @@ export default function Home() {
         <div className="max-w-[1200px] mx-auto px-6 text-center">
           <ScrollReveal>
             <h2 className="font-display text-[clamp(48px,8vw,96px)] tracking-[0.02em] leading-[0.95] mb-6">
-              STOP WATCHING.<br />
-              <span className="text-digital-orange">START BUILDING.</span>
+              READY TO SHIP<br />
+              <span className="text-digital-orange">YOUR PROJECT?</span>
             </h2>
             <p className="text-white/50 text-lg mb-10 max-w-md mx-auto font-body">
-              Join the premium ecosystem built for ambitious future builders.
+              Get a fixed-price proposal in 48 hours. No calls. No pressure. Real execution.
             </p>
             <button
-              onClick={() => setModalOpen(true)}
+              onClick={() => navigate("/contact")}
               className="magnetic-btn bg-digital-orange text-white px-10 py-5 rounded-[800px] text-lg font-bold cursor-pointer font-body"
             >
-              JOIN MISTHUSTLERS
+              GET A QUOTE
             </button>
           </ScrollReveal>
         </div>
       </section>
+
+      </main>
 
       <Footer />
       <JoinEcosystemModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />

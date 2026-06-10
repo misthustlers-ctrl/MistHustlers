@@ -2,27 +2,42 @@ import { motion } from "framer-motion";
 import GlobalNavbar from "@/components/GlobalNavbar";
 import ScrollReveal from "@/components/ScrollReveal";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
+import SchemaMarkup from "@/components/SchemaMarkup";
 import { useContent } from "@/utils/useContent";
 
 type ProjectCard = {
   id?: number;
   title: string;
   category: string;
-  visual?: string;
   imageUrl?: string;
   desc: string;
 };
 
-const DEFAULT_PROJECTS: ProjectCard[] = [
-  { title: "Automation Dashboard", category: "Automation", visual: "⚡", desc: "Real-time workflow monitoring and automation control panel for enterprise operations." },
-  { title: "E-Commerce Platform", category: "Development", visual: "🛒", desc: "Full-stack online marketplace with payment integration, inventory management, and analytics." },
-  { title: "AI Content Pipeline", category: "AI", visual: "🤖", desc: "Automated content generation system leveraging LLMs for marketing and documentation." },
-  { title: "Portfolio Builder App", category: "Tooling", visual: "🎨", desc: "Drag-and-drop portfolio builder with custom themes, SEO optimization, and hosting." },
-  { title: "Client CRM System", category: "Freelancing", visual: "📊", desc: "Client management platform with invoicing, project tracking, and communication tools." },
-  { title: "Career Match Engine", category: "Platform", visual: "🔗", desc: "AI-powered talent matching platform connecting builders with relevant opportunities." },
+const GRADIENTS = [
+  "linear-gradient(135deg, #fc5000, #ff7a33)",
+  "linear-gradient(135deg, #524ae9, #7b75f0)",
+  "linear-gradient(135deg, #070607, #333333)",
+  "linear-gradient(135deg, #1f9d55, #3bca6e)",
+  "linear-gradient(135deg, #e74c3c, #f0746a)",
+  "linear-gradient(135deg, #3498db, #6ab0e6)",
 ];
 
-const FALLBACK_EMOJIS = ["⚡", "🛒", "🤖", "🎨", "📊", "🔗"];
+const ICONS = [
+  "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5",
+  "M3 3h18v18H3V3zm2 2v14h14V5H5zm3 3h8v2H8V8zm0 4h8v2H8v-2zm0 4h5v2H8v-2z",
+  "M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm1-13h-2v6l5.25 3.15L17 14.3l-4-2.4V7z",
+  "M21 16v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2m4-4l4 4 4-4m-4-4v8",
+];
+
+const DEFAULT_PROJECTS: ProjectCard[] = [
+  { title: "Automation Dashboard", category: "Automation", desc: "Real-time workflow monitoring and automation control panel for enterprise operations." },
+  { title: "E-Commerce Platform", category: "Development", desc: "Full-stack online marketplace with payment integration, inventory management, and analytics." },
+  { title: "AI Content Pipeline", category: "AI", desc: "Automated content generation system leveraging LLMs for marketing and documentation." },
+  { title: "Portfolio Builder App", category: "Tooling", desc: "Drag-and-drop portfolio builder with custom themes, SEO optimization, and hosting." },
+  { title: "Client CRM System", category: "Freelancing", desc: "Client management platform with invoicing, project tracking, and communication tools." },
+  { title: "Career Match Engine", category: "Platform", desc: "AI-powered talent matching platform connecting builders with relevant opportunities." },
+];
 
 export default function Projects() {
   const c = useContent("projects", {
@@ -36,7 +51,10 @@ export default function Projects() {
 
   return (
     <div className="bg-basalt-canvas min-h-screen">
+      <SEO page="projects" />
+      <SchemaMarkup page="projects" />
       <GlobalNavbar />
+      <main>
 
       <section className="pt-32 pb-20">
         <div className="max-w-[1200px] mx-auto px-6">
@@ -58,21 +76,26 @@ export default function Projects() {
             </p>
           </motion.div>
 
+          <h2 className="font-display text-3xl tracking-[0.02em] text-abyssal-ink mb-8 text-center">Featured Projects</h2>
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map((proj: ProjectCard, i: number) => (
               <ScrollReveal key={proj.title} delay={i * 0.08}>
                 <div className="card-lift bg-ash-white rounded-[40px] border border-abyssal-ink/5 overflow-hidden group h-full flex flex-col">
-                  <div className="bg-abyssal-ink/3 flex items-center justify-center h-48 overflow-hidden">
+                  <div className="flex items-center justify-center h-48 overflow-hidden" style={{ background: GRADIENTS[i % GRADIENTS.length] }}>
                     {proj.imageUrl ? (
                       <img
                         src={proj.imageUrl}
                         alt={proj.title}
+                        loading="lazy"
+                        width="400"
+                        height="192"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (
-                      <span className="text-6xl opacity-40 group-hover:opacity-60 transition-opacity duration-300">
-                        {FALLBACK_EMOJIS[i % FALLBACK_EMOJIS.length]}
-                      </span>
+                      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="opacity-50">
+                        <path d={ICONS[i % ICONS.length]} />
+                      </svg>
                     )}
                   </div>
                   <div className="p-6 flex flex-col flex-1">
@@ -86,6 +109,8 @@ export default function Projects() {
           </div>
         </div>
       </section>
+
+      </main>
 
       <Footer />
     </div>
