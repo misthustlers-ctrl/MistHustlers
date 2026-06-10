@@ -8,12 +8,12 @@ import crypto from "crypto";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { existsSync, mkdirSync, writeFileSync } from "fs";
-import { execSync } from "child_process";
 import inquiryRoutes from "./routes/inquiry.routes.js";
 import contentRoutes from "./routes/content.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import publicRoutes from "./routes/public.routes.js";
 import { adminAuth } from "./middleware/admin-auth.middleware.js";
+import { seed } from "./prisma/seed.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -129,7 +129,7 @@ if (existsSync(frontendDist)) {
 app.use(errorHandler);
 
 try {
-  execSync("node prisma/seed.js", { cwd: __dirname, stdio: "inherit", timeout: 30000 });
+  await seed();
   console.log("[BOOT] Seed completed");
 } catch (e) {
   console.error("[BOOT] Seed failed:", e.message);

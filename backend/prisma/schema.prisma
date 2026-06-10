@@ -7,6 +7,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Content {
+  id        String   @id @default(uuid())
+  page      String   @unique
+  data      Json
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("content")
+}
+
 model Inquiry {
   id        Int      @id @default(autoincrement())
   name      String

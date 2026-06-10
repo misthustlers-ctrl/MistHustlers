@@ -20,13 +20,7 @@ async function writeJSON(file, data) {
   await writeFile(join(DATA_DIR, file), JSON.stringify(data, null, 2), "utf-8");
 }
 
-const CONTENT_FILES = {
-  home: "content-home.json",
-  services: "content-services.json",
-  career: "content-career.json",
-  projects: "content-projects.json",
-  contact: "contact.json",
-};
+const CONTENT_PAGES = ["home", "services", "career", "projects", "contact"];
 
 async function moveToBin(type, data) {
   const current = await readJSON("bin-files.json").catch(() => []);
@@ -225,18 +219,25 @@ router.get("/media", async (_, res, next) => {
 });
 
 router.get("/content/:page", async (req, res, next) => {
-  const file = CONTENT_FILES[req.params.page];
-  if (!file) return res.status(404).json({ error: "Page not found" });
-  try { res.json({ success: true, data: await readJSON(file) }); }
-  catch (err) { next(err); }
+  const page = req.params.page;
+  if (!CONTENT_PAGES.includes(page)) return res.status(404).json({ error: "Page not found" });
+  try {
+    const entry = await prisma.content.findUnique({ where: { page } });
+    if (!entry) return res.status(404).json({ error: "Content not found" });
+    res.json({ success: true, data: entry.data });
+  } catch (err) { next(err); }
 });
 
 router.put("/content/:page", async (req, res, next) => {
-  const file = CONTENT_FILES[req.params.page];
-  if (!file) return res.status(404).json({ error: "Page not found" });
+  const page = req.params.page;
+  if (!CONTENT_PAGES.includes(page)) return res.status(404).json({ error: "Page not found" });
   try {
-    await writeJSON(file, req.body);
-    res.json({ success: true, message: "Content updated" });
+    const entry = await prisma.content.upsert({
+      where: { page },
+      update: { data: req.body },
+      create: { page, data: req.body },
+    });
+    res.json({ success: true, data: entry.data });
   } catch (err) { next(err); }
 });
 

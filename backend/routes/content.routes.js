@@ -1,39 +1,26 @@
 import { Router } from "express";
-import { readFile } from "fs/promises";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
+import prisma from "../prisma/client.js";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const router = Router();
 
 const PAGES = ["home", "services", "career", "projects"];
 
-router.get("/:page", async (req, res) => {
+router.get("/:page", async (req, res, next) => {
   const { page } = req.params;
 
-  if (page === "contact") {
-    try {
-      const data = JSON.parse(
-        await readFile(join(__dirname, "..", "data", "contact.json"), "utf-8")
-      );
-      return res.json({ success: true, data });
-    } catch {
-      return res.status(500).json({ success: false, message: "Failed to read contact data" });
-    }
-  }
-
-  if (!PAGES.includes(page)) {
+  const allowed = page === "contact" || PAGES.includes(page);
+  if (!allowed) {
     return res.status(404).json({ success: false, message: "Page not found" });
   }
 
   try {
-    const data = JSON.parse(
-      await readFile(join(__dirname, "..", "data", `content-${page}.json`), "utf-8")
-    );
-    res.json({ success: true, data });
+    const entry = await prisma.content.findUnique({ where: { page } });
+    if (!entry) {
+      return res.status(404).json({ success: false, message: "Content not found" });
+    }
+    res.json({ success: true, data: entry.data });
   } catch (err) {
-    console.error(`[CONTENT API] Error reading ${page}:`, err.message);
-    res.status(500).json({ success: false, message: "Failed to read content" });
+    next(err);
   }
 });
 

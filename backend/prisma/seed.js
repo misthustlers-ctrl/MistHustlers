@@ -31,7 +31,7 @@ const OPPORTUNITIES = [
   { title: "Mentorship Program", description: "Get paired with an industry practitioner for 1:1 sessions covering career roadmapping, project reviews, accountability check-ins, and growth strategy.", department: "Education", type: "Program", location: "1:1 Remote", status: "open", applicants: 0 },
 ];
 
-async function seed() {
+export async function seed() {
   const contentCount = await prisma.content.count();
   const oppCount = await prisma.opportunity.count();
   const projCount = await prisma.project.count();
@@ -78,7 +78,10 @@ async function seed() {
   await prisma.$disconnect();
 }
 
-seed().catch((err) => {
-  console.error("[SEED] Failed:", err);
-  process.exit(1);
-});
+const isMain = process.argv[1] === fileURLToPath(import.meta.url);
+if (isMain) {
+  seed().catch((err) => {
+    console.error("[SEED] Failed:", err);
+    process.exit(1);
+  });
+}
