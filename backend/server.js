@@ -129,9 +129,10 @@ if (existsSync(frontendDist)) {
 app.use(errorHandler);
 
 try {
-  execSync("npx prisma db seed", { cwd: __dirname, stdio: "inherit" });
-} catch {
-  console.warn("[BOOT] Seed skipped (already seeded or failed)");
+  execSync("node prisma/seed.js", { cwd: __dirname, stdio: "inherit", timeout: 30000 });
+  console.log("[BOOT] Seed completed");
+} catch (e) {
+  console.error("[BOOT] Seed failed:", e.message);
 }
 
 app.listen(PORT, () => {
