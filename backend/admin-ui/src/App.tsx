@@ -141,6 +141,7 @@ const App: React.FC = () => {
   const [projectsContent, setProjectsContent] = useState<any>(null);
   const [logoContent, setLogoContent] = useState<any>(null);
   const [contentSaving, setContentSaving] = useState(false);
+  const [seoContent, setSeoContent] = useState<any>(null);
   const [contentTab, setContentTab] = useState<string>('services');
   const [contentSideTab, setContentSideTab] = useState<string>('pricing');
   const [selectedOpportunity, setSelectedOpportunity] = useState<Opportunity | null>(null);
@@ -189,10 +190,13 @@ const App: React.FC = () => {
         if (page === 'career') setCareerContent(res.data);
         if (page === 'projects') setProjectsContent(res.data);
         if (page === 'logo') setLogoContent(res.data);
+        if (page === 'seo') setSeoContent(res.data);
       }
     } catch (err) {
       if (page === 'logo') {
         setLogoContent({});
+      } else if (page === 'seo') {
+        setSeoContent({});
       } else {
         setError('Failed to load content');
       }
@@ -1328,12 +1332,44 @@ const App: React.FC = () => {
     );
   };
 
+  const renderSeoEditor = () => {
+    if (!seoContent) return <div className="text-center text-white/40 py-10">Loading...</div>;
+    const c = seoContent;
+    const upd = (path: string[], val: any) => updateContentField(setSeoContent, path, val);
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
+          <h3 className="text-sm font-semibold mb-4">Global SEO Settings</h3>
+          <p className="text-[11px] text-white/40 mb-4">These values override the default site name and OG image used across all pages. Change "MistHustlers" to your preferred business name.</p>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[11px] text-white/50 mb-1">Site Name</label>
+              <input className="field text-sm" value={c.siteName || ''} onChange={e => upd(['siteName'], e.target.value)} placeholder="MistHustlers" />
+              <p className="text-[10px] text-white/30 mt-1">Appears in SEO titles, schema markup, and og:site_name</p>
+            </div>
+            <div>
+              <label className="block text-[11px] text-white/50 mb-1">OG Image</label>
+              <ImageUpload currentUrl={c.ogImage || ''} onUploaded={(url) => upd(['ogImage'], url)} />
+              <p className="text-[10px] text-white/30 mt-1">Default Open Graph image for social sharing (1200×630px)</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-end">
+          <button onClick={() => saveContent('seo', c)} disabled={contentSaving} className="flex items-center gap-2 px-5 py-2.5 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 disabled:opacity-50">
+            <Save className="w-4 h-4" /> {contentSaving ? 'Saving...' : 'Save SEO Settings'}
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   const renderContentEditor = () => (
     <section>
       <div className="flex justify-between mb-4 items-end">
         <div><div className="text-[11px] tracking-[1px] text-white/50">CONTENT MANAGEMENT</div><div className="text-lg font-semibold">Edit Page Content</div></div>
         <div className="flex gap-1.5">
-          {['services', 'home', 'career', 'projects'].map((page) => (
+          {['services', 'home', 'career', 'projects', 'seo'].map((page) => (
             <button key={page} onClick={() => { setContentTab(page); fetchContent(page); }} className={`px-3 py-1.5 text-[11px] rounded-lg border ${contentTab === page ? 'bg-white text-black border-white' : 'border-white/10 text-white/60 hover:bg-white/5'}`}>
               {page.charAt(0).toUpperCase() + page.slice(1)}
             </button>
@@ -1345,6 +1381,7 @@ const App: React.FC = () => {
       {contentTab === 'home' && renderHomeEditor()}
       {contentTab === 'career' && renderCareerEditor()}
       {contentTab === 'projects' && renderProjectsEditor()}
+      {contentTab === 'seo' && renderSeoEditor()}
     </section>
   );
 

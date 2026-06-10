@@ -2,6 +2,8 @@ import { Helmet } from "react-helmet-async";
 import { SITE_URL, SITE_NAME } from "@/utils/metadata";
 import { useContent } from "@/utils/useContent";
 
+const SEO_DEFAULTS = { siteName: SITE_NAME, ogImage: "" };
+
 interface FAQItem {
   question: string;
   answer: string;
@@ -25,12 +27,12 @@ const SITE_ADDRESS = {
   addressCountry: "IN",
 };
 
-const websiteSchema = {
+const websiteSchema = (name: string) => ({
   "@context": "https://schema.org",
   "@type": "WebSite",
   url: SITE_URL,
-  name: SITE_NAME,
-};
+  name,
+});
 
 function faqSchema(items: FAQItem[]) {
   return {
@@ -47,11 +49,11 @@ function faqSchema(items: FAQItem[]) {
   };
 }
 
-const serviceSchema = {
+const serviceSchema = (name: string) => ({
   "@context": "https://schema.org",
   "@type": "Service",
-  name: "MistHustlers Services",
-  provider: { "@type": "Organization", name: SITE_NAME },
+  name: `${name} Services`,
+  provider: { "@type": "Organization", name },
   description: "Build with clarity. Ship with precision. Transparent pricing for real execution — STARTER, GROWTH & PREMIUM tiers for ambitious builders and startups.",
   areaServed: "IN",
   hasOfferCatalog: {
@@ -63,7 +65,7 @@ const serviceSchema = {
       { "@type": "Offer", itemOffered: { "@type": "Service", name: "PREMIUM" }, price: "₹15,000", priceCurrency: "INR" },
     ],
   },
-};
+});
 
 const breadcrumbSchemas: Record<string, object> = {
   home: {
@@ -101,12 +103,14 @@ const breadcrumbSchemas: Record<string, object> = {
 
 export default function SchemaMarkup({ page, faq }: SchemaProps) {
   const logo = useContent("logo", LOGO_DEFAULTS);
+  const seo = useContent("seo", SEO_DEFAULTS);
+  const siteName = seo.siteName || SITE_NAME;
   const logoUrl = logo.logoSchema || `${SITE_URL}/Favicon.png`;
 
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: SITE_NAME,
+    name: siteName,
     url: SITE_URL,
     logo: logoUrl,
     email: "misthustlers@gmail.com",
@@ -122,7 +126,7 @@ export default function SchemaMarkup({ page, faq }: SchemaProps) {
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    name: SITE_NAME,
+    name: siteName,
     image: logoUrl,
     email: "misthustlers@gmail.com",
     telephone: "+918889937648",
@@ -154,13 +158,13 @@ export default function SchemaMarkup({ page, faq }: SchemaProps) {
         { "@type": "Offer", itemOffered: { "@type": "Service", name: "MVP Development" } },
         { "@type": "Offer", itemOffered: { "@type": "Service", name: "Automation Systems" } },
       ],
-    },
-  };
+  },
+};
 
-  const schemas: object[] = [organizationSchema, localBusinessSchema, websiteSchema, breadcrumbSchemas[page]];
+  const schemas: object[] = [organizationSchema, localBusinessSchema, websiteSchema(siteName), breadcrumbSchemas[page]];
 
   if (page === "services") {
-    schemas.push(serviceSchema);
+    schemas.push(serviceSchema(siteName));
   }
 
   if (page === "home" && faq && faq.length > 0) {

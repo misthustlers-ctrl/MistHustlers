@@ -3,7 +3,7 @@ import prisma from "../prisma/client.js";
 
 const router = Router();
 
-const PAGES = ["home", "services", "career", "projects"];
+const PAGES = ["home", "services", "career", "projects", "seo"];
 
 router.get("/:page", async (req, res, next) => {
   const { page } = req.params;

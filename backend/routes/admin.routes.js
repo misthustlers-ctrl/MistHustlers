@@ -20,7 +20,7 @@ async function writeJSON(file, data) {
   await writeFile(join(DATA_DIR, file), JSON.stringify(data, null, 2), "utf-8");
 }
 
-const CONTENT_PAGES = ["home", "services", "career", "projects", "contact", "logo"];
+const CONTENT_PAGES = ["home", "services", "career", "projects", "contact", "logo", "seo"];
 
 async function moveToBin(type, data) {
   const current = await readJSON("bin-files.json").catch(() => []);
