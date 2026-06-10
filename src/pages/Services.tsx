@@ -37,7 +37,7 @@ export default function Services() {
                 </span>
               </div>
 
-              <h1 className="display text-[52px] md:text-[68px] leading-[0.92] tracking-[-0.04em] mb-[24px]" style={{ color: "#070607" }}>
+              <h1 className="font-display text-[52px] md:text-[68px] leading-[0.92] tracking-[-0.04em] mb-[24px]" style={{ color: "#070607" }}>
                 Build with clarity.<br />
                 <span style={{ color: "rgba(7, 6, 7, 0.35)" }}>Ship with precision.</span>
               </h1>
@@ -141,7 +141,7 @@ export default function Services() {
             <div className="h-[4px] w-[4px] rounded-full" style={{ backgroundColor: "#fc5000" }}></div>
             <span className="text-[12px] font-[700] uppercase tracking-[0.14em]" style={{ color: "rgba(7, 6, 7, 0.55)" }}>Our Services</span>
           </div>
-          <h2 className="display text-[40px] md:text-[52px] leading-[1.05] tracking-[-0.03em] mb-[20px]" style={{ color: "#070607" }}>
+          <h2 className="font-body font-bold text-[40px] md:text-[52px] leading-[1.05] tracking-[-0.03em] mb-[20px]" style={{ color: "#070607" }}>
             What we build
           </h2>
           <p className="text-[17px] leading-[1.6] font-[450]" style={{ color: "rgba(7, 6, 7, 0.68)" }}>
@@ -188,7 +188,7 @@ export default function Services() {
             <div className="h-[4px] w-[4px] rounded-full" style={{ backgroundColor: "#fc5000" }}></div>
             <span className="text-[12px] font-[700] uppercase tracking-[0.14em]" style={{ color: "rgba(7, 6, 7, 0.55)" }}>Service Pricing</span>
           </div>
-          <h2 className="display text-[40px] md:text-[52px] leading-[1.05] tracking-[-0.03em] mb-[20px]" style={{ color: "#070607" }}>
+          <h2 className="font-body font-bold text-[40px] md:text-[52px] leading-[1.05] tracking-[-0.03em] mb-[20px]" style={{ color: "#070607" }}>
             Pick your execution level
           </h2>
           <p className="text-[17px] leading-[1.6] font-[450]" style={{ color: "rgba(7, 6, 7, 0.68)" }}>
@@ -287,7 +287,7 @@ export default function Services() {
       {/* HOW IT WORKS */}
       <section id="process" className="mx-auto max-w-[1200px] px-6 md:px-8 py-[88px] md:py-[112px]">
         <div className="max-w-[720px] mb-[72px]">
-          <h2 className="display text-[40px] md:text-[48px] leading-[1.06] tracking-[-0.03em] mb-[18px]" style={{ color: "#070607" }}>
+          <h2 className="font-body font-bold text-[40px] md:text-[48px] leading-[1.06] tracking-[-0.03em] mb-[18px]" style={{ color: "#070607" }}>
             How execution happens
           </h2>
           <p className="text-[17px] leading-[1.6] font-[450]" style={{ color: "rgba(7, 6, 7, 0.68)" }}>
@@ -343,7 +343,7 @@ export default function Services() {
       {/* TRUST */}
       <section className="mx-auto max-w-[1200px] px-6 md:px-8 py-[64px] md:py-[84px]">
         <div className="text-center mb-[56px] max-w-[640px] mx-auto">
-          <h2 className="display text-[32px] md:text-[40px] leading-[1.1] tracking-[-0.03em] mb-[14px]" style={{ color: "#070607" }}>
+          <h2 className="font-body font-bold text-[32px] md:text-[40px] leading-[1.1] tracking-[-0.03em] mb-[14px]" style={{ color: "#070607" }}>
             Built for builders, by builders
           </h2>
           <p className="text-[16px] leading-[1.6] font-[450]" style={{ color: "rgba(7, 6, 7, 0.68)" }}>
@@ -392,7 +392,7 @@ export default function Services() {
           }}></div>
 
           <div className="relative px-[36px] md:px-[72px] py-[64px] md:py-[88px] text-center">
-            <h2 className="display text-[40px] md:text-[56px] leading-[1.04] tracking-[-0.035em] mb-[22px] text-white max-w-[720px] mx-auto">
+            <h2 className="font-body font-bold text-[40px] md:text-[56px] leading-[1.04] tracking-[-0.035em] mb-[22px] text-white max-w-[720px] mx-auto">
               Ready to start your project?
             </h2>
             <p className="text-[17px] md:text-[18px] leading-[1.6] mb-[40px] max-w-[560px] mx-auto font-[450]" style={{ color: "rgba(247, 246, 242, 0.78)" }}>

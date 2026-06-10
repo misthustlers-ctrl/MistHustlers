@@ -8,8 +8,8 @@
   --color-cyber-violet: #524ae9;
   --color-pixel-glare: #f5f28e;
 
-  --font-display: 'Bebas Neue', 'PP Neue Corp Compact Ultrabold', sans-serif;
-  --font-body: 'DM Sans', 'Inter', sans-serif;
+  --font-display: 'Cormorant Garamond', 'Bebas Neue', serif;
+  --font-body: 'Libre Baskerville', 'DM Sans', serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   --radius-card: 40px;
@@ -23,8 +23,12 @@
   --mh-text: #070607;
   --mh-cta: #fc5000;
   --mh-accent: #524ae9;
-  --font-body: "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-heading: "PP Neue Corp Compact Ultrabold", "Archivo Narrow", "Arial Narrow", sans-serif;
+  --font-body: "Libre Baskerville", "DM Sans", serif;
+  --font-heading: "Libre Baskerville", "PP Neue Corp Compact Ultrabold", serif;
+}
+
+.font-display {
+  font-weight: 700;
 }
 
 html {
@@ -33,7 +37,7 @@ html {
 }
 
 body {
-  font-family: 'DM Sans', 'Inter', sans-serif;
+  font-family: 'Libre Baskerville', 'DM Sans', serif;
   color: #070607;
   background-color: #e2e2df;
   -webkit-font-smoothing: antialiased;
@@ -189,6 +193,7 @@ input:focus, textarea:focus, select:focus {
 
 .mh-heading {
   font-family: var(--font-heading);
+  font-weight: 700;
   letter-spacing: -0.04em;
   text-transform: uppercase;
 }

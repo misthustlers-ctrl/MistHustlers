@@ -76,7 +76,7 @@ export default function Projects() {
             </p>
           </motion.div>
 
-          <h2 className="font-display text-3xl tracking-[0.02em] text-abyssal-ink mb-8 text-center">Featured Projects</h2>
+          <h2 className="font-body font-bold text-3xl tracking-[0.02em] text-abyssal-ink mb-8 text-center">Featured Projects</h2>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map((proj: ProjectCard, i: number) => (
@@ -100,7 +100,7 @@ export default function Projects() {
                   </div>
                   <div className="p-6 flex flex-col flex-1">
                     <span className="text-xs font-semibold tracking-wider uppercase text-abyssal-ink/40 font-body">{proj.category}</span>
-                    <h3 className="font-display text-2xl tracking-[0.02em] text-abyssal-ink mt-1 mb-3">{proj.title}</h3>
+                    <h3 className="font-body font-bold text-2xl tracking-[0.02em] text-abyssal-ink mt-1 mb-3">{proj.title}</h3>
                     <p className="text-sm text-abyssal-ink/60 font-body leading-relaxed flex-1">{proj.desc}</p>
                   </div>
                 </div>

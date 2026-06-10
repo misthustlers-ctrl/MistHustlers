@@ -191,7 +191,11 @@ const App: React.FC = () => {
         if (page === 'logo') setLogoContent(res.data);
       }
     } catch (err) {
-      setError('Failed to load content');
+      if (page === 'logo') {
+        setLogoContent({});
+      } else {
+        setError('Failed to load content');
+      }
     }
   };
 

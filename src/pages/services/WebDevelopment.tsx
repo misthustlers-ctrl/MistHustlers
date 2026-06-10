@@ -39,14 +39,14 @@ export default function WebDevelopment() {
                 { title: "Corporate Sites", desc: "Professional company websites with team pages, service listings, and blog integration." },
               ].map((s) => (
                 <div key={s.title} className="bg-ash-white rounded-[32px] p-6 border border-abyssal-ink/5">
-                  <h3 className="font-display text-xl tracking-[0.01em] text-abyssal-ink mb-3">{s.title}</h3>
+                  <h3 className="font-body font-bold text-xl tracking-[0.01em] text-abyssal-ink mb-3">{s.title}</h3>
                   <p className="text-sm text-abyssal-ink/60 font-body leading-relaxed">{s.desc}</p>
                 </div>
               ))}
             </div>
 
             <div className="text-center mb-16">
-              <h2 className="font-display text-3xl tracking-[0.02em] text-abyssal-ink mb-4">Pricing</h2>
+              <h2 className="font-body font-bold text-3xl tracking-[0.02em] text-abyssal-ink mb-4">Pricing</h2>
               <p className="text-abyssal-ink/50 mb-8 font-body">Starting from Rs 999 for landing pages, custom quotes for larger projects.</p>
               <Link to="/contact" className="inline-block magnetic-btn bg-digital-orange text-white px-8 py-4 rounded-[800px] text-base font-semibold font-body">
                 Get a Quote

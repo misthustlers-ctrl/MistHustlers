@@ -38,7 +38,7 @@ export default function About() {
                   <div className="w-20 h-20 rounded-full bg-abyssal-ink flex items-center justify-center mb-6">
                     <span className="font-display text-3xl text-white">NS</span>
                   </div>
-                  <h2 className="font-display text-2xl tracking-[0.02em] text-abyssal-ink mb-2">Naveen Salve</h2>
+                  <h2 className="font-body font-bold text-2xl tracking-[0.02em] text-abyssal-ink mb-2">Naveen Salve</h2>
                   <p className="text-sm text-abyssal-ink/50 font-semibold mb-4">Founder, MistHustlers</p>
                   <p className="text-abyssal-ink/60 font-body leading-relaxed">
                     Naveen is a developer and entrepreneur based in Indore. He founded MistHustlers to bridge the gap
@@ -50,7 +50,7 @@ export default function About() {
 
               <ScrollReveal delay={0.15}>
                 <div className="space-y-6">
-                  <h2 className="font-display text-3xl tracking-[0.02em] text-abyssal-ink">What We Do</h2>
+                  <h2 className="font-body font-bold text-3xl tracking-[0.02em] text-abyssal-ink">What We Do</h2>
                   <p className="text-abyssal-ink/60 font-body leading-relaxed">
                     MistHustlers is a web development and automation agency based in Indore, Madhya Pradesh.
                     We build websites, MVPs, full-stack applications, and AI automation systems for startups and founders
@@ -69,7 +69,7 @@ export default function About() {
 
             <ScrollReveal>
               <div className="bg-ash-white rounded-[40px] p-10 border border-abyssal-ink/5 mb-20">
-                <h2 className="font-display text-3xl tracking-[0.02em] text-abyssal-ink mb-8 text-center">Why Choose MistHustlers</h2>
+                <h2 className="font-body font-bold text-3xl tracking-[0.02em] text-abyssal-ink mb-8 text-center">Why Choose MistHustlers</h2>
                 <div className="grid md:grid-cols-3 gap-8">
                   {[
                     { title: "Fixed Pricing", desc: "Know exactly what you pay upfront. No hourly billing, no scope creep, no surprises." },
@@ -90,7 +90,7 @@ export default function About() {
 
             <ScrollReveal>
               <div className="text-center">
-                <h2 className="font-display text-3xl tracking-[0.02em] text-abyssal-ink mb-4">Our Tech Stack</h2>
+                <h2 className="font-body font-bold text-3xl tracking-[0.02em] text-abyssal-ink mb-4">Our Tech Stack</h2>
                 <p className="text-abyssal-ink/50 mb-8 font-body">Technologies we use to ship your projects</p>
                 <div className="flex flex-wrap justify-center gap-4">
                   {["React", "Next.js", "Node.js", "TypeScript", "Python", "PostgreSQL", "MongoDB", "AWS", "Docker", "Tailwind CSS", "Prisma", "OpenAI"].map((tech) => (

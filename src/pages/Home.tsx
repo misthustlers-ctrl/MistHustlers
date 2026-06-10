@@ -191,7 +191,7 @@ export default function Home() {
           <ScrollReveal>
             <div className="mb-12 text-center">
               <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">Services in Indore</span>
-              <h2 className="font-display text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
+              <h2 className="font-body font-bold text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
                 Websites, MVPs &amp; Automation
               </h2>
               <p className="text-abyssal-ink/50 mt-4 max-w-lg mx-auto font-body">
@@ -218,7 +218,7 @@ export default function Home() {
           <ScrollReveal>
             <div className="mb-16 text-center">
               <span className="text-sm font-semibold tracking-wider uppercase text-digital-orange font-body">How We Work</span>
-              <h2 className="font-display text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
+              <h2 className="font-body font-bold text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
                 From Idea to Launch
               </h2>
               <p className="text-abyssal-ink/50 mt-4 max-w-lg mx-auto font-body">
@@ -234,7 +234,7 @@ export default function Home() {
                   <span className="font-display text-5xl tracking-[0.02em] text-abyssal-ink/10 group-hover:text-digital-orange/20 transition-colors duration-300">
                     {step.step}
                   </span>
-                  <h3 className="font-display text-2xl tracking-[0.02em] text-abyssal-ink mt-3 mb-3">{step.title}</h3>
+                  <h3 className="font-body font-bold text-2xl tracking-[0.02em] text-abyssal-ink mt-3 mb-3">{step.title}</h3>
                   <p className="text-sm text-abyssal-ink/60 leading-relaxed font-body">{step.desc}</p>
                 </div>
               </ScrollReveal>
@@ -249,7 +249,7 @@ export default function Home() {
           <ScrollReveal>
             <div className="mb-12 text-center">
               <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">Career</span>
-              <h2 className="font-display text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
+              <h2 className="font-body font-bold text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
                 Your career, accelerated
               </h2>
               <p className="text-abyssal-ink/50 mt-4 max-w-lg mx-auto font-body">
@@ -276,7 +276,7 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <ScrollReveal>
               <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">Mentorship</span>
-              <h2 className="font-display text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05] mb-6">
+              <h2 className="font-body font-bold text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05] mb-6">
                 Guided by those<br />who've done it.
               </h2>
               <p className="text-abyssal-ink/60 mb-8 leading-relaxed font-body">
@@ -317,7 +317,7 @@ export default function Home() {
             <div className="mb-12 flex flex-col gap-5 text-center md:flex-row md:items-end md:justify-between md:text-left">
               <div>
                 <span className="text-sm font-semibold tracking-wider uppercase text-digital-orange font-body">Project Preview</span>
-                <h2 className="font-display text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
+                <h2 className="font-body font-bold text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
                   Recent community builds
                 </h2>
               </div>
@@ -339,7 +339,7 @@ export default function Home() {
                   </div>
                   <div className="p-6">
                     <span className="text-xs font-semibold tracking-wider uppercase text-abyssal-ink/40 font-body">{proj.category}</span>
-                    <h3 className="font-display mt-1 text-xl tracking-[0.02em] text-abyssal-ink">{proj.title}</h3>
+                    <h3 className="font-body font-bold mt-1 text-xl tracking-[0.02em] text-abyssal-ink">{proj.title}</h3>
                   </div>
                 </div>
               </ScrollReveal>
@@ -355,7 +355,7 @@ export default function Home() {
             <ScrollReveal>
               <div className="mb-12 text-center">
                 <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">FAQ</span>
-                <h2 className="font-display text-[clamp(36px,5vw,48px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
+                <h2 className="font-body font-bold text-[clamp(36px,5vw,48px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
                   You ask.<br />We answer.
                 </h2>
               </div>
@@ -380,7 +380,7 @@ export default function Home() {
       <section className="py-24 bg-abyssal-ink text-white">
         <div className="max-w-[1200px] mx-auto px-6 text-center">
           <ScrollReveal>
-            <h2 className="font-display text-[clamp(48px,8vw,96px)] tracking-[0.02em] leading-[0.95] mb-6">
+            <h2 className="font-body font-bold text-[clamp(48px,8vw,96px)] tracking-[0.02em] leading-[0.95] mb-6">
               READY TO SHIP<br />
               <span className="text-digital-orange">YOUR PROJECT?</span>
             </h2>

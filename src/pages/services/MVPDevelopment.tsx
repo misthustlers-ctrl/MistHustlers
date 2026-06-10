@@ -39,14 +39,14 @@ export default function MVPDevelopment() {
                 { title: "AI-Integrated MVPs", desc: "MVPs with AI features: chatbots, content generation, recommendation engines, and more." },
               ].map((s) => (
                 <div key={s.title} className="bg-ash-white rounded-[32px] p-6 border border-abyssal-ink/5">
-                  <h3 className="font-display text-xl tracking-[0.01em] text-abyssal-ink mb-3">{s.title}</h3>
+                  <h3 className="font-body font-bold text-xl tracking-[0.01em] text-abyssal-ink mb-3">{s.title}</h3>
                   <p className="text-sm text-abyssal-ink/60 font-body leading-relaxed">{s.desc}</p>
                 </div>
               ))}
             </div>
 
             <div className="text-center mb-16">
-              <h2 className="font-display text-3xl tracking-[0.02em] text-abyssal-ink mb-4">MVP Process</h2>
+              <h2 className="font-body font-bold text-3xl tracking-[0.02em] text-abyssal-ink mb-4">MVP Process</h2>
               <div className="grid md:grid-cols-4 gap-4 max-w-3xl mx-auto mb-8">
                 {[
                   { step: "01", title: "Requirements", desc: "You share your idea. We clarify scope." },

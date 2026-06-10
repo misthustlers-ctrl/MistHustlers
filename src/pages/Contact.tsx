@@ -27,7 +27,7 @@ export default function Contact() {
 
             <div className="grid md:grid-cols-2 gap-12 mb-16">
               <div className="bg-ash-white rounded-[40px] p-8 border border-abyssal-ink/5 space-y-6">
-                <h2 className="font-display text-2xl tracking-[0.02em] text-abyssal-ink">Contact Information</h2>
+                <h2 className="font-body font-bold text-2xl tracking-[0.02em] text-abyssal-ink">Contact Information</h2>
 
                 <div>
                   <p className="text-sm font-semibold text-abyssal-ink/50 uppercase tracking-wider mb-1">Address</p>

@@ -48,7 +48,7 @@ export default function JoinEcosystemModal({ isOpen, onClose }: { isOpen: boolea
               </span>
             </div>
 
-            <h2 className="font-display text-3xl tracking-[0.02em] text-abyssal-ink mb-3">
+            <h2 className="font-body font-bold text-3xl tracking-[0.02em] text-abyssal-ink mb-3">
               What brings you here?
             </h2>
             <p className="text-abyssal-ink/60 mb-8 font-body text-sm">
