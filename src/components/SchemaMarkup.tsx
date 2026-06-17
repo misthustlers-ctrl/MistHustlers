@@ -10,7 +10,7 @@ interface FAQItem {
 }
 
 interface SchemaProps {
-  page: "home" | "services" | "career" | "projects" | "notFound";
+  page: string;
   faq?: FAQItem[];
 }
 
@@ -161,19 +161,24 @@ export default function SchemaMarkup({ page, faq }: SchemaProps) {
   },
 };
 
-  const schemas: object[] = [organizationSchema, localBusinessSchema, websiteSchema(siteName), breadcrumbSchemas[page]];
+  const allSchemas: (object | undefined)[] = [
+    organizationSchema,
+    localBusinessSchema,
+    websiteSchema(siteName),
+    breadcrumbSchemas[page],
+  ];
 
   if (page === "services") {
-    schemas.push(serviceSchema(siteName));
+    allSchemas.push(serviceSchema(siteName));
   }
 
   if (page === "home" && faq && faq.length > 0) {
-    schemas.push(faqSchema(faq));
+    allSchemas.push(faqSchema(faq));
   }
 
   return (
     <Helmet>
-      {schemas.map((schema, i) => (
+      {allSchemas.filter(Boolean).map((schema, i) => (
         <script key={i} type="application/ld+json">
           {JSON.stringify(schema)}
         </script>

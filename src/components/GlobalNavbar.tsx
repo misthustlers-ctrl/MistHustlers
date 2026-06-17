@@ -81,7 +81,8 @@ export default function GlobalNavbar() {
                 key={link.label}
                 to={link.to}
                 onClick={() => handleNavClick(link.to)}
-                className="text-sm font-medium text-abyssal-ink/70 hover:text-abyssal-ink transition-colors duration-200 font-body"
+                aria-current={location.pathname === link.to ? "page" : undefined}
+                className="text-sm font-medium text-abyssal-ink/70 hover:text-abyssal-ink transition-colors duration-200 font-body min-h-[44px] flex items-center"
               >
                 {link.label}
               </Link>

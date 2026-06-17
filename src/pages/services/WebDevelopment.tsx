@@ -1,5 +1,3 @@
-import GlobalNavbar from "@/components/GlobalNavbar";
-import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import SchemaMarkup from "@/components/SchemaMarkup";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -9,9 +7,8 @@ import { Link } from "react-router-dom";
 export default function WebDevelopment() {
   return (
     <div className="bg-basalt-canvas min-h-screen">
-      <SEO page="services" />
-      <SchemaMarkup page="notFound" />
-      <GlobalNavbar />
+      <SEO page="webDevelopment" />
+      <SchemaMarkup page="webDevelopment" />
       <Breadcrumbs />
       <main>
         <section className="pt-16 pb-20">
@@ -59,7 +56,6 @@ export default function WebDevelopment() {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   );
 }

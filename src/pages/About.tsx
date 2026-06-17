@@ -1,6 +1,4 @@
 import { motion } from "framer-motion";
-import GlobalNavbar from "@/components/GlobalNavbar";
-import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import SchemaMarkup from "@/components/SchemaMarkup";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -9,8 +7,7 @@ export default function About() {
   return (
     <div className="bg-basalt-canvas min-h-screen">
       <SEO page="about" />
-      <SchemaMarkup page="notFound" />
-      <GlobalNavbar />
+      <SchemaMarkup page="about" />
       <main>
         <section className="pt-32 pb-20">
           <div className="max-w-[1200px] mx-auto px-6">
@@ -104,7 +101,6 @@ export default function About() {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   );
 }

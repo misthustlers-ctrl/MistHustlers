@@ -1,6 +1,4 @@
 import { useState } from "react";
-import GlobalNavbar from "@/components/GlobalNavbar";
-import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import SchemaMarkup from "@/components/SchemaMarkup";
 import FAQItem from "@/components/FAQItem";
@@ -31,8 +29,7 @@ export default function FAQ() {
   return (
     <div className="bg-basalt-canvas min-h-screen">
       <SEO page="faq" />
-      <SchemaMarkup page="notFound" faq={FAQ_DATA} />
-      <GlobalNavbar />
+      <SchemaMarkup page="faq" faq={FAQ_DATA} />
       <main>
         <section className="pt-32 pb-20">
           <div className="max-w-[800px] mx-auto px-6">
@@ -73,7 +70,6 @@ export default function FAQ() {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   );
 }

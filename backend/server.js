@@ -21,6 +21,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 9000;
 
+app.set("trust proxy", 1);
+
 const uploadsDir = join(__dirname, "uploads");
 if (!existsSync(uploadsDir)) mkdirSync(uploadsDir, { recursive: true });
 
@@ -99,22 +101,29 @@ app.use((req, _, next) => {
 
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: 500,
+  skip: (req) => req.path.startsWith("/api/content") || req.path.startsWith("/api/health"),
+  message: { success: false, message: "Too many requests. Try again later." },
+});
+
+const contentLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
   message: { success: false, message: "Too many requests. Try again later." },
 });
 
 const adminLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 60,
+  max: 100,
   message: { success: false, message: "Too many requests. Try again later." },
 });
 
 app.use("/api", generalLimiter);
 
+app.use("/api/content", contentLimiter, contentRoutes);
+
 app.use("/api/admin", adminLimiter, adminAuth);
 app.use("/api/admin", adminRoutes);
-
-app.use("/api/content", contentRoutes);
 
 app.get("/api/health", (_, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });

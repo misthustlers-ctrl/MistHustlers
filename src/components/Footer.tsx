@@ -12,7 +12,7 @@ const FOOTER_LINKS = [
   { label: "Services", to: "/services" },
   { label: "Career", to: "/career" },
   { label: "Projects", to: "/projects" },
-  { label: "FAQ", to: "/#faq" },
+  { label: "FAQ", to: "/faq" },
 ];
 
 export default function Footer() {
@@ -53,7 +53,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-abyssal-ink/5 flex flex-wrap items-center justify-center gap-6 text-xs text-abyssal-ink/40 font-body">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <Link to="/privacy-policy" className="hover:text-abyssal-ink/60 transition-colors">Privacy Policy</Link>
           <Link to="/terms-of-service" className="hover:text-abyssal-ink/60 transition-colors">Terms of Service</Link>
           <Link to="/refund-policy" className="hover:text-abyssal-ink/60 transition-colors">Refund Policy</Link>

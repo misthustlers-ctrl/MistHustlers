@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SaaS Startup MVP Website Demo - MistHustlers Indore</title>
+  <meta name="description" content="Premium high-converting SaaS MVP landing page demo for Indore startups. Waitlist, features, pricing, early access CTA. Built by MistHustlers.">
+  <link rel="canonical" href="https://misthustlers.up.railway.app/demo/startup/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%237C3AED'/%3E%3Ctext x='50' y='65' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3EM%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    :root {
+      --startup-purple: #7C3AED;
+      --startup-purple-light: #A78BFA;
+      --startup-purple-dark: #5B21B6;
+      --startup-obsidian: #09090B;
+      --startup-light: #FAFAFA;
+      --startup-dark: #18181B;
+    }
+    body { background: var(--startup-obsidian); color: #fff; font-family: 'Inter', sans-serif; }
+    h1, h2, h3, .display { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+    .code { font-family: 'Fira Code', monospace; }
+    
+.hero {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center;
+      background: radial-gradient(circle at 50% 30%, rgba(124,58,237,0.15), transparent 50%), var(--startup-obsidian);
+      position: relative; padding: 140px 0; overflow: hidden;
+    }
+    .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(124,58,237,0.08) 0%, transparent 60%), url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%237C3AED' fill-opacity='0.15' fill-rule='evenodd'%3E%3Ccircle cx='2' cy='2' r='1'/%3E%3C/g%3E%3C/svg%3E"); z-index: 0; }
+    .hero .container { position: relative; z-index: 1; }
+    .hero h1 { font-size: clamp(2.6rem, 7vw, 5.5rem); line-height: 1.05; margin-bottom: 20px; }
+    .hero p { font-size: 1.2rem; opacity: 0.8; max-width: 620px; margin: 0 auto 32px; }
+    .waitlist-form { display: flex; gap: 12px; justify-content: center; max-width: 520px; margin: 0 auto; flex-wrap: wrap; }
+    .waitlist-form input { flex: 1; min-width: 260px; padding: 16px 18px; border-radius: 16px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; }
+    .waitlist-form input::placeholder { color: rgba(255,255,255,0.45); }
+    .waitlist-form input:focus { border-color: var(--startup-purple); box-shadow: 0 0 0 3px rgba(124,58,237,0.2); }
+    .btn-purple { background: var(--startup-purple); color: #fff; font-weight: 700; }
+    .btn-purple:hover { background: var(--startup-purple-dark); box-shadow: 0 12px 32px rgba(124,58,237,0.35); }
+    .social-proof { margin-top: 24px; font-size: 0.9rem; opacity: 0.7; }
+    .social-proof strong { color: var(--startup-purple-light); }
+
+    .metrics-section { background: rgba(255,255,255,0.03); border-top: 1px solid rgba(255,255,255,0.08); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 48px 0; }
+    .metrics-grid { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; }
+    .metric-item { text-align: center; }
+    .metric-item h4 { font-size: 2rem; color: var(--startup-purple-light); font-family: 'Space Grotesk', sans-serif; margin-bottom: 4px; }
+    .metric-item p { font-size: 0.85rem; opacity: 0.7; max-width: 100%; }
+
+    .problem-solution { background: #0c0c0e; padding: 96px 0; }
+    .ps-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
+    @media (min-width: 900px) { .ps-grid { grid-template-columns: 1fr 1fr; } }
+    .ps-card { border-radius: 24px; padding: 32px; }
+    .problem { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); }
+    .solution { background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.2); }
+    .ps-card h3 { font-size: 1.5rem; margin-bottom: 20px; }
+    .ps-list li { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: flex-start; gap: 10px; }
+    .ps-list li:last-child { border-bottom: none; }
+    .problem .ps-list li::before { content: '✗'; color: #EF4444; font-weight: 700; }
+    .solution .ps-list li::before { content: '✓'; color: var(--startup-purple-light); font-weight: 700; }
+
+    .section-title { color: #fff; }
+    .section-subtitle { color: rgba(255,255,255,0.65); }
+    .features-section { padding: 96px 0; }
+    .feature-block { display: grid; gap: 40px; align-items: center; margin-bottom: 80px; }
+    @media (min-width: 900px) { .feature-block { grid-template-columns: 1fr 1fr; } }
+    .feature-block.reverse { direction: rtl; }
+    .feature-block.reverse > * { direction: ltr; }
+    .feature-visual { border-radius: 24px; overflow: hidden; aspect-ratio: 4 / 3; background: linear-gradient(135deg, #18181B, #2d2d33); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 24px 60px rgba(0,0,0,0.4); }
+    .feature-visual img { width: 100%; height: 100%; object-fit: cover; }
+    .feature-content h3 { font-size: 1.8rem; margin-bottom: 14px; }
+    .feature-content p { opacity: 0.75; margin-bottom: 16px; }
+    .feature-content li { padding: 8px 0; opacity: 0.85; }
+    .feature-content li::before { content: '✦'; color: var(--startup-purple-light); margin-right: 8px; }
+
+    .how-section { background: #0c0c0e; padding: 96px 0; }
+    .steps { display: flex; justify-content: space-between; gap: 24px; max-width: 900px; margin: 0 auto; position: relative; flex-wrap: wrap; }
+    .steps::before { content: ''; position: absolute; top: 28px; left: 15%; right: 15%; height: 2px; background: linear-gradient(90deg, var(--startup-purple), rgba(124,58,237,0.2)); z-index: 0; }
+    .step { position: relative; z-index: 1; text-align: center; flex: 1; min-width: 160px; }
+    .step-number { width: 56px; height: 56px; border-radius: 50%; background: var(--startup-purple); color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-weight: 700; font-size: 1.2rem; }
+    .step h4 { font-size: 1.1rem; margin-bottom: 6px; }
+    .step p { font-size: 0.9rem; opacity: 0.7; max-width: 100%; }
+
+    .pricing-section { padding: 96px 0; }
+    .pricing-grid { display: grid; gap: 24px; grid-template-columns: 1fr; max-width: 800px; margin: 0 auto; }
+    @media (min-width: 768px) { .pricing-grid { grid-template-columns: repeat(2, 1fr); } }
+    .pricing-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 32px; transition: transform 0.3s, border-color 0.3s; }
+    .pricing-card:hover { transform: translateY(-5px); border-color: var(--startup-purple); }
+    .pricing-card.featured { border: 2px solid var(--startup-purple); transform: scale(1.02); }
+    .pricing-card h3 { font-size: 1.3rem; margin-bottom: 8px; }
+    .pricing-card .price { font-size: 2.5rem; font-weight: 700; margin-bottom: 16px; }
+    .pricing-card .price small { font-size: 0.9rem; opacity: 0.6; font-weight: 400; }
+    .pricing-card ul { margin-bottom: 24px; }
+    .pricing-card li { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.95rem; }
+    .pricing-card li::before { content: '✓'; color: var(--startup-purple-light); margin-right: 8px; font-weight: 700; }
+    .badge { display: inline-block; background: rgba(124,58,237,0.2); color: var(--startup-purple-light); padding: 4px 10px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 12px; }
+
+    .waitlist-section { padding: 120px 0; background: linear-gradient(135deg, rgba(124,58,237,0.25), rgba(9,9,11,0.9)); text-align: center; }
+    .waitlist-section h2 { font-size: clamp(2.2rem, 5vw, 3.5rem); margin-bottom: 12px; }
+    .waitlist-section p { opacity: 0.8; margin-bottom: 32px; margin-left: auto; margin-right: auto; }
+    .final-form { max-width: 520px; margin: 0 auto; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .final-form input { flex: 1; min-width: 280px; padding: 16px; border-radius: 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; }
+    .form-success { background: rgba(124,58,237,0.15); color: var(--startup-purple-light); border: 1px solid rgba(124,58,237,0.3); }
+
+    .footer-note { text-align: center; padding: 40px 0; background: #050507; color: rgba(255,255,255,0.4); font-size: 0.9rem; }
+.sticky-footer { background: rgba(5,5,7,0.95); border-top: 1px solid rgba(124,58,237,0.25); }
+    .sticky-footer .btn-primary { background: var(--startup-purple); color: #fff; }
+    .sticky-footer .btn-secondary { background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+  </style>
+</head>
+<body>
+<section class="hero">
+    <div class="container">
+      <h1 class="reveal">FlowSync</h1>
+      <p class="reveal">The project management tool that keeps your remote team aligned without the endless meetings.</p>
+      <form class="waitlist-form reveal" data-demo="startup">
+        <input type="email" placeholder="Enter your email" required>
+        <button type="submit" class="btn btn-purple no-arrow" data-track="startup_hero_waitlist">Join Waitlist</button>
+      </form>
+      <p class="social-proof reveal"><strong>47 founders</strong> already joined the early access list.</p>
+    </div>
+  </section>
+
+  <section class="metrics-section">
+    <div class="container">
+      <div class="metrics-grid reveal-stagger">
+        <div class="metric-item reveal"><h4>47+</h4><p>Founders Joined</p></div>
+        <div class="metric-item reveal"><h4>3x</h4><p>Faster Meetings</p></div>
+        <div class="metric-item reveal"><h4>98%</h4><p>Uptime</p></div>
+        <div class="metric-item reveal"><h4>24h</h4><p>Support</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="problem-solution">
+    <div class="container">
+      <h2 class="section-title text-center reveal">Built for Founders, Not Bureaucracy</h2>
+      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">We solve the real problems early teams face.</p>
+      <div class="ps-grid">
+        <div class="ps-card problem reveal">
+          <h3>The Problem</h3>
+          <ul class="ps-list">
+            <li>Scattered tasks across 5 apps</li>
+            <li>Status meetings eat half the day</li>
+            <li>No clarity on who's blocked</li>
+          </ul>
+        </div>
+        <div class="ps-card solution reveal">
+          <h3>Our Solution</h3>
+          <ul class="ps-list">
+            <li>One unified workspace</li>
+            <li>Async updates and auto-sync</li>
+            <li>Real-time blockers dashboard</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features-section">
+    <div class="container">
+      <h2 class="section-title text-center reveal">Powerful Features</h2>
+      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">Everything you need to ship faster.</p>
+      <div class="feature-block reveal">
+        <div class="feature-visual"><img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=800&q=80" alt="Smart task boards UI" width="800" height="600" loading="lazy" decoding="async"></div>
+        <div class="feature-content">
+          <h3>Smart Task Boards</h3>
+          <p>Kanban and list views that adapt to your workflow. Drag, drop, and done.</p>
+          <ul>
+            <li>Custom columns and filters</li>
+            <li>Subtasks and dependencies</li>
+            <li>Priority scoring</li>
+          </ul>
+        </div>
+      </div>
+      <div class="feature-block reverse reveal">
+        <div class="feature-content">
+          <h3>Async Standups</h3>
+          <p>Replace daily meetings with automated check-ins your team actually fills.</p>
+          <ul>
+            <li>Slack / email integration</li>
+            <li>Blocker highlighting</li>
+            <li>Weekly summaries</li>
+          </ul>
+        </div>
+        <div class="feature-visual"><img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80" alt="Team async updates interface" width="800" height="600" loading="lazy" decoding="async"></div>
+      </div>
+      <div class="feature-block reveal">
+        <div class="feature-visual"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80" alt="Velocity analytics dashboard" width="800" height="600" loading="lazy" decoding="async"></div>
+        <div class="feature-content">
+          <h3>Velocity Insights</h3>
+          <p>Track sprint velocity, cycle time, and team health with one dashboard.</p>
+          <ul>
+            <li>Real-time analytics</li>
+            <li>Team performance trends</li>
+            <li>Exportable reports</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="how-section">
+    <div class="container">
+      <h2 class="section-title text-center reveal">How It Works</h2>
+      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">Get started in three simple steps.</p>
+      <div class="steps reveal">
+        <div class="step reveal"><div class="step-number">1</div><h4>Sign Up</h4><p>Create your workspace in 60 seconds.</p></div>
+        <div class="step reveal"><div class="step-number">2</div><h4>Invite Team</h4><p>Add members via email or Slack.</p></div>
+        <div class="step reveal"><div class="step-number">3</div><h4>Ship Faster</h4><p>Track tasks and ship with clarity.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pricing-section">
+    <div class="container">
+      <h2 class="section-title text-center reveal">Pricing Preview</h2>
+      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">Simple plans for growing teams.</p>
+      <div class="pricing-grid reveal-stagger">
+        <div class="pricing-card reveal">
+          <h3>Free</h3>
+          <div class="price">$0<small>/month</small></div>
+          <ul>
+            <li>Up to 5 team members</li>
+            <li>3 projects</li>
+            <li>Basic task boards</li>
+            <li>Email support</li>
+          </ul>
+          <span class="badge">Coming Soon</span>
+        </div>
+        <div class="pricing-card featured reveal">
+          <h3>Pro</h3>
+          <div class="price">$12<small>/user/month</small></div>
+          <ul>
+            <li>Unlimited projects</li>
+            <li>Async standups</li>
+            <li>Velocity insights</li>
+            <li>Priority support</li>
+          </ul>
+          <a href="#waitlist" class="btn btn-purple btn-block no-arrow" data-track="startup_pricing_pro">Join Waitlist</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="waitlist" class="waitlist-section">
+    <div class="container">
+      <h2 class="reveal">Be First. Launch is Coming.</h2>
+      <p class="reveal">Reserve your spot and get 50% off for the first year.</p>
+      <form class="final-form reveal" data-demo="startup">
+        <input type="email" placeholder="Enter your email" required>
+        <button type="submit" class="btn btn-purple btn-xl no-arrow" data-track="startup_final_waitlist">Reserve My Spot</button>
+      </form>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    <div class="container">© 2025 MistHustlers Indore — Startup / SaaS Demo</div>
+  </div>
+  <div class="sticky-footer">
+    <div class="container">
+      <span class="text">Want this for your business?</span>
+      <a href="tel:XXXXXXXXXX" class="btn btn-sm btn-secondary no-arrow" data-track="startup_footer_call">Call</a>
+      <a href="#" class="btn btn-sm btn-primary no-arrow" data-whatsapp="I saw your startup demo, interested!" data-demo="startup" data-track="startup_footer_whatsapp">WhatsApp</a>
+    </div>
+  </div>
+
+  <script src="../js/shared.js"></script>
+</body>
+</html>

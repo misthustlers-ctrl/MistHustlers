@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CA / Law Firm Website Demo - MistHustlers Indore</title>
+  <meta name="description" content="Premium CA firm, law firm, and consultant website demo for Indore. Services, credentials, stats, and consultation booking. Built by MistHustlers.">
+  <link rel="canonical" href="https://misthustlers.up.railway.app/demo/ca-lawyer/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%237C3AED'/%3E%3Ctext x='50' y='65' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3EM%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    :root {
+      --ca-blue: #4A90D9;
+      --ca-blue-light: #6BA5E7;
+      --ca-midnight: #0A1628;
+      --ca-silver: #E8EDF5;
+      --ca-navy: #1E3A5F;
+    }
+    body { background: var(--ca-midnight); color: var(--ca-silver); font-family: 'IBM Plex Sans', sans-serif; }
+    h1, h2, h3 { font-family: 'IBM Plex Serif', serif; }
+    .mono { font-family: 'IBM Plex Mono', monospace; }
+    
+.hero {
+      min-height: 92vh; display: flex; align-items: center; padding: 140px 0 80px;
+      background: linear-gradient(135deg, #0A1628 0%, #1E3A5F 100%); position: relative; overflow: hidden;
+    }
+    .hero::before { content: ''; position: absolute; right: 0; top: 0; width: 50%; height: 100%; background: url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&q=80') center/cover; opacity: 0.15; z-index: 0; }
+    .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(10,22,40,0.95) 0%, rgba(10,22,40,0.7) 60%, rgba(10,22,40,0.4) 100%); z-index: 0; }
+    .hero .container { position: relative; z-index: 1; }
+    .hero h1 { font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1.1; margin-bottom: 16px; max-width: 700px; }
+    .hero p { font-size: 1.2rem; opacity: 0.85; max-width: 600px; margin-bottom: 32px; }
+    .btn-blue { background: var(--ca-blue); color: #fff; font-weight: 600; }
+    .btn-blue:hover { background: var(--ca-blue-light); box-shadow: 0 12px 32px rgba(74,144,217,0.3); }
+    .btn-outline { background: transparent; color: var(--ca-silver); border: 1px solid rgba(232,237,245,0.4); font-weight: 600; }
+    .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+    .doc-line { width: 120px; height: 3px; background: var(--ca-blue); margin-bottom: 24px; }
+
+    .services-section { background: rgba(255,255,255,0.02); padding: 96px 0; }
+    .section-title { color: var(--ca-silver); }
+    .section-subtitle { color: rgba(232,237,245,0.7); }
+    .services-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
+    @media (min-width: 768px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .services-grid { grid-template-columns: repeat(3, 1fr); } }
+    .service-card {
+      background: rgba(30,58,95,0.4); border: 1px solid rgba(74,144,217,0.2); border-radius: 16px; padding: 28px;
+      transition: transform 0.3s var(--ease-out), border-color 0.3s, box-shadow 0.3s;
+    }
+    .service-card:hover { transform: translateY(-5px); border-color: var(--ca-blue); box-shadow: 0 12px 32px rgba(74,144,217,0.15); }
+    .service-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(74,144,217,0.12); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: var(--ca-blue); }
+    .service-icon svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .service-card h3 { font-family: 'IBM Plex Sans', sans-serif; font-size: 1.15rem; font-weight: 600; margin-bottom: 8px; }
+    .service-card p { font-size: 0.95rem; opacity: 0.8; max-width: 100%; }
+
+    .credentials { background: var(--ca-midnight); padding: 56px 0; border-top: 1px solid rgba(74,144,217,0.15); border-bottom: 1px solid rgba(74,144,217,0.15); }
+    .creds-row { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+    .cred { background: rgba(74,144,217,0.1); border: 1px solid rgba(74,144,217,0.2); border-radius: 999px; padding: 12px 24px; font-weight: 600; font-size: 0.9rem; }
+
+    .stats-section { background: linear-gradient(180deg, #0A1628, #102540); padding: 96px 0; }
+    .stats-grid { display: grid; gap: 24px; grid-template-columns: repeat(2, 1fr); }
+    @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+    .stat-block { text-align: center; padding: 32px; background: rgba(255,255,255,0.04); border-radius: 16px; border: 1px solid rgba(74,144,217,0.15); }
+    .stat-block h4 { font-size: 2.4rem; color: var(--ca-blue); font-family: 'IBM Plex Mono', monospace; font-weight: 500; margin-bottom: 8px; }
+    .stat-block p { font-size: 0.95rem; opacity: 0.8; max-width: 100%; }
+
+    .process-section { background: var(--ca-midnight); padding: 96px 0; }
+    .process-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
+    @media (min-width: 768px) { .process-grid { grid-template-columns: repeat(4, 1fr); } }
+    .process-card { background: rgba(30,58,95,0.3); border: 1px solid rgba(74,144,217,0.15); border-radius: 16px; padding: 28px; text-align: center; transition: transform 0.3s, border-color 0.3s; }
+    .process-card:hover { transform: translateY(-4px); border-color: var(--ca-blue); }
+    .process-card .number { width: 48px; height: 48px; border-radius: 50%; background: var(--ca-blue); color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-weight: 700; font-family: 'IBM Plex Mono', monospace; }
+    .process-card h4 { font-size: 1.1rem; margin-bottom: 8px; }
+    .process-card p { font-size: 0.9rem; opacity: 0.75; max-width: 100%; }
+
+    .team-section { background: rgba(255,255,255,0.02); padding: 96px 0; }
+    .team-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
+    @media (min-width: 768px) { .team-grid { grid-template-columns: repeat(3, 1fr); } }
+    .team-card { background: rgba(30,58,95,0.4); border-radius: 16px; overflow: hidden; border: 1px solid rgba(74,144,217,0.2); }
+    .team-photo { aspect-ratio: 1 / 1; overflow: hidden; }
+    .team-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .team-info { padding: 24px; }
+    .team-info h3 { font-size: 1.25rem; margin-bottom: 4px; }
+    .team-info .qual { color: var(--ca-blue); font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; }
+    .team-info p { font-size: 0.9rem; opacity: 0.8; max-width: 100%; }
+
+    .consult-section { background: linear-gradient(135deg, #102540, #0A1628); padding: 96px 0; }
+    .consult-form { max-width: 720px; margin: 0 auto; background: rgba(0,0,0,0.2); border: 1px solid rgba(74,144,217,0.25); border-radius: 24px; padding: 40px; }
+    .submit-btn { width: 100%; background: var(--ca-blue); color: #fff; font-weight: 600; padding: 16px; border-radius: 16px; cursor: pointer; }
+    .submit-btn:hover { opacity: 0.9; }
+    .form-success { background: rgba(74,144,217,0.15); color: var(--ca-blue); border: 1px solid rgba(74,144,217,0.3); }
+    .form-note a { color: var(--ca-blue); }
+
+    .footer-note { text-align: center; padding: 40px 0; background: #070f1c; color: rgba(232,237,245,0.4); font-size: 0.9rem; }
+.sticky-footer { background: rgba(7,15,28,0.95); border-top: 1px solid rgba(74,144,217,0.25); }
+    .sticky-footer .btn-primary { background: var(--ca-blue); color: #fff; }
+    .sticky-footer .btn-secondary { background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+  </style>
+</head>
+<body>
+<section class="hero">
+    <div class="container">
+      <div class="reveal">
+        <div class="doc-line"></div>
+        <h1>Trusted Advisory. Measurable Results.</h1>
+        <p>A professional CA, legal, and business consulting firm helping Indore businesses grow with compliance, strategy, and peace of mind.</p>
+        <div class="hero-ctas">
+          <a href="#services" class="btn btn-lg btn-blue no-arrow" data-track="ca_hero_services">Our Services</a>
+          <a href="#consult" class="btn btn-lg btn-outline no-arrow" data-track="ca_hero_consult">Book Consultation</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="services-section">
+    <div class="container">
+      <h2 class="section-title reveal">Our Services</h2>
+      <p class="section-subtitle reveal">Comprehensive business and legal advisory under one roof.</p>
+      <div class="services-grid reveal-stagger">
+        <div class="service-card reveal">
+          <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <h3>GST Filing</h3>
+          <p>Monthly, quarterly, and annual GST returns with compliance checks.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M16 12a4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4 4 4 0 0 1 4 4z"/><path d="M12 2v20"/></svg></div>
+          <h3>Tax Planning</h3>
+          <p>Strategic tax saving plans for individuals and businesses.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+          <h3>Audit & Assurance</h3>
+          <p>Statutory, internal, and tax audits with detailed reports.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+          <h3>Company Registration</h3>
+          <p>Private limited, LLP, GST, and startup registration support.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <h3>Legal Drafting</h3>
+          <p>Agreements, contracts, deeds, and legal notices.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-6"/></svg></div>
+          <h3>Business Advisory</h3>
+          <p>Financial planning, fundraising, and growth strategy.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="credentials">
+    <div class="container">
+      <div class="creds-row reveal">
+        <span class="cred">ICAI Member</span>
+        <span class="cred">Bar Council Registered</span>
+        <span class="cred">15+ Years Experience</span>
+        <span class="cred">500+ Clients</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats-section">
+    <div class="container">
+      <h2 class="section-title text-center reveal">Numbers That Build Trust</h2>
+      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">Our track record across clients and cases.</p>
+      <div class="stats-grid reveal-stagger">
+        <div class="stat-block reveal"><h4 class="counter" data-counter="500" data-suffix="+">0</h4><p>Clients Served</p></div>
+        <div class="stat-block reveal"><h4 class="counter" data-counter="12" data-suffix="Cr+">0</h4><p>Taxes Saved</p></div>
+        <div class="stat-block reveal"><h4 class="counter" data-counter="98" data-suffix="%">0</h4><p>Cases Resolved</p></div>
+        <div class="stat-block reveal"><h4 class="counter" data-counter="15" data-suffix="+">0</h4><p>Years Experience</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="process-section">
+    <div class="container">
+      <h2 class="section-title text-center reveal">How We Work</h2>
+      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">A simple, transparent process designed for business owners.</p>
+      <div class="process-grid reveal-stagger">
+        <div class="process-card reveal">
+          <div class="number">1</div>
+          <h4>Consult</h4>
+          <p>Understand your business and legal needs.</p>
+        </div>
+        <div class="process-card reveal">
+          <div class="number">2</div>
+          <h4>Plan</h4>
+          <p>Create a clear compliance and strategy roadmap.</p>
+        </div>
+        <div class="process-card reveal">
+          <div class="number">3</div>
+          <h4>Execute</h4>
+          <p>Handle filings, drafts, and submissions.</p>
+        </div>
+        <div class="process-card reveal">
+          <div class="number">4</div>
+          <h4>Support</h4>
+          <p>Ongoing guidance and updates.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="team-section">
+    <div class="container">
+      <h2 class="section-title reveal">Meet the Partners</h2>
+      <p class="section-subtitle reveal">Senior professionals leading your matters.</p>
+      <div class="team-grid reveal-stagger">
+        <div class="team-card reveal">
+          <div class="team-photo"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&q=80" alt="CA Rajesh Gupta" width="600" height="600" loading="lazy" decoding="async"></div>
+          <div class="team-info">
+            <h3>Rajesh Gupta</h3>
+            <div class="qual">CA, ACA | Taxation</div>
+            <p>18 years in direct tax, GST, and audit advisory for SMEs.</p>
+          </div>
+        </div>
+        <div class="team-card reveal">
+          <div class="team-photo"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80" alt="Advocate Meera Joshi" width="600" height="600" loading="lazy" decoding="async"></div>
+          <div class="team-info">
+            <h3>Adv. Meera Joshi</h3>
+            <div class="qual">LLB | Corporate Law</div>
+            <p>Specializes in contracts, company law, and dispute resolution.</p>
+          </div>
+        </div>
+        <div class="team-card reveal">
+          <div class="team-photo"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600&q=80" alt="Advisor Vikram Malhotra" width="600" height="600" loading="lazy" decoding="async"></div>
+          <div class="team-info">
+            <h3>Vikram Malhotra</h3>
+            <div class="qual">MBA, CFA | Advisory</div>
+            <p>Helps startups and MSMEs with growth and funding strategy.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="consult" class="consult-section">
+    <div class="container">
+      <h2 class="section-title text-center reveal">Schedule a Free Call</h2>
+      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">Tell us your business need and we'll get back within 24 hours.</p>
+      <form class="consult-form reveal" data-demo="ca-lawyer">
+        <div class="grid-2">
+          <div class="form-group"><label for="ca-name">Name</label><input id="ca-name" type="text" class="form-control" placeholder="Your name" required></div>
+          <div class="form-group"><label for="ca-phone">Phone</label><input id="ca-phone" type="tel" class="form-control" placeholder="Your phone" pattern="[0-9]{10}" required></div>
+          <div class="form-group"><label for="ca-business">Business Type</label><input id="ca-business" type="text" class="form-control" placeholder="e.g. Retail, Manufacturing, Startup"></div>
+          <div class="form-group">
+            <label for="ca-service">Service Needed</label>
+            <select id="ca-service" class="form-control" required>
+              <option value="">Select Service</option>
+              <option>GST Filing</option>
+              <option>Tax Planning</option>
+              <option>Audit</option>
+              <option>Company Registration</option>
+              <option>Legal Drafting</option>
+              <option>Business Advisory</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn no-arrow" data-track="ca_form_submit">Schedule Free Call</button>
+        <p class="form-note">Prefer WhatsApp? <a href="#" data-whatsapp="I saw your CA/Lawyer demo, interested!" data-demo="ca-lawyer">Chat directly</a></p>
+      </form>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    <div class="container">© 2025 MistHustlers Indore — CA / Law Firm Demo</div>
+  </div>
+  <div class="sticky-footer">
+    <div class="container">
+      <span class="text">Want this for your business?</span>
+      <a href="tel:XXXXXXXXXX" class="btn btn-sm btn-secondary no-arrow" data-track="ca_footer_call">Call</a>
+      <a href="#" class="btn btn-sm btn-primary no-arrow" data-whatsapp="I saw your CA/Lawyer demo, interested!" data-demo="ca-lawyer" data-track="ca_footer_whatsapp">WhatsApp</a>
+    </div>
+  </div>
+
+  <script src="../js/shared.js"></script>
+</body>
+</html>

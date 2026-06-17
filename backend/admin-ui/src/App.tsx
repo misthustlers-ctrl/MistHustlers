@@ -2,7 +2,8 @@ import React, { useEffect, useMemo, useState, useRef } from 'react';
 import {
   Archive, Bell, Briefcase, Check, ExternalLink, Mail, Phone, Plus,
   RefreshCw, Trash2, UserCircle, Users, X, LayoutDashboard, FolderKanban,
-  BriefcaseBusiness, FileText, Image, Trash, Upload, Save, Settings, ChevronDown
+  BriefcaseBusiness, FileText, Image, Trash, Upload, Save, Settings, ChevronDown,
+  UserPlus, Shield
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -29,18 +30,28 @@ interface Project {
 interface BinItem {
   id: string; type: string; deletedAt: string; data: Record<string, unknown>;
 }
+type AdminRole = 'admin' | 'agent' | 'partner';
+interface AdminSessionUser {
+  id: number; username: string; displayName?: string | null; role: AdminRole; source?: string;
+}
+interface AdminAccount {
+  id: number; username: string; displayName?: string | null; role: 'agent' | 'partner'; status: string;
+  createdAt: string; updatedAt?: string;
+}
+interface ToastState {
+  message: string;
+  type: 'success' | 'error';
+}
 
-type TabType = 'dashboard' | 'leads' | 'career' | 'projects' | 'content' | 'media' | 'logo' | 'bin';
+type TabType = 'dashboard' | 'leads' | 'career' | 'projects' | 'content' | 'media' | 'logo' | 'accounts' | 'bin';
 type ModalType = 'job' | 'event' | 'program' | 'applicant' | 'project' | null;
 
 const API = '/api/admin';
 
 function getAuth(): string {
   try {
-    const s = sessionStorage.getItem('admin_credentials');
-    if (!s) return '';
-    const { username, password } = JSON.parse(s);
-    return 'Basic ' + btoa(`${username}:${password}`);
+    const token = sessionStorage.getItem('admin_token');
+    return token ? `Bearer ${token}` : '';
   } catch { return ''; }
 }
 const statusFlow = ['planning', 'in-progress', 'review', 'completed'];
@@ -61,13 +72,19 @@ async function api<T>(url: string, init?: RequestInit): Promise<T> {
   }
   const response = await fetch(url, { ...init, headers });
   if (response.status === 401) {
+    sessionStorage.removeItem('admin_token');
     sessionStorage.removeItem('admin_credentials');
     window.dispatchEvent(new Event('auth-cleared'));
     throw new Error('Please login again');
   }
   if (!response.ok) {
     const text = await response.text().catch(() => '');
-    throw new Error(text || `Request failed: ${response.status}`);
+    let message = text;
+    try {
+      const parsed = JSON.parse(text);
+      message = parsed.message || parsed.error || text;
+    } catch {}
+    throw new Error(message || `Request failed: ${response.status}`);
   }
   return response.json();
 }
@@ -80,8 +97,35 @@ const tabs: { id: TabType; label: string; icon: React.ElementType }[] = [
   { id: 'content', label: 'Content', icon: FileText },
   { id: 'media', label: 'Media', icon: Image },
   { id: 'logo', label: 'Logo', icon: Settings },
+  { id: 'accounts', label: 'Accounts', icon: UserPlus },
   { id: 'bin', label: 'Bin', icon: Trash },
 ];
+
+const roleTabs: Record<AdminRole, TabType[]> = {
+  admin: ['dashboard', 'leads', 'career', 'projects', 'content', 'media', 'logo', 'accounts', 'bin'],
+  agent: ['dashboard', 'leads', 'career'],
+  partner: ['dashboard', 'leads', 'projects'],
+};
+
+function getStoredUser(): AdminSessionUser | null {
+  try {
+    const raw = sessionStorage.getItem('admin_user');
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
+
+const PREVIEW_USER: AdminSessionUser = {
+  id: -1,
+  username: 'preview',
+  displayName: 'Preview Admin',
+  role: 'admin',
+  source: 'local-preview',
+};
+
+function canUsePreviewLogin(username: string, password: string) {
+  const isLocalHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  return isLocalHost && username === 'preview' && password === 'preview123';
+}
 
 function ImageUpload({ onUploaded, currentUrl }: { onUploaded: (url: string) => void; currentUrl?: string }) {
   const [uploading, setUploading] = useState(false);
@@ -126,8 +170,10 @@ const App: React.FC = () => {
   const [applicants, setApplicants] = useState<Applicant[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [binItems, setBinItems] = useState<BinItem[]>([]);
+  const [accounts, setAccounts] = useState<AdminAccount[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [toast, setToast] = useState<ToastState | null>(null);
   const [activeFilter, setActiveFilter] = useState('all');
   const [modalType, setModalType] = useState<ModalType>(null);
   const [selectedInquiry, setSelectedInquiry] = useState<Inquiry | null>(null);
@@ -153,29 +199,63 @@ const App: React.FC = () => {
   const [deleting, setDeleting] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
 
-  const [isLoggedIn, setIsLoggedIn] = useState(() => !!sessionStorage.getItem('admin_credentials'));
+  const [isLoggedIn, setIsLoggedIn] = useState(() => !!sessionStorage.getItem('admin_token') || !!sessionStorage.getItem('admin_credentials'));
+  const [currentUser, setCurrentUser] = useState<AdminSessionUser | null>(() => getStoredUser());
   const [loginUser, setLoginUser] = useState('');
   const [loginPass, setLoginPass] = useState('');
   const [loginError, setLoginError] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
 
+  const currentRole = currentUser?.role || 'admin';
+  const isAdmin = currentRole === 'admin';
+  const isPreviewSession = currentUser?.source === 'local-preview';
+  const visibleTabs = tabs.filter((tab) => roleTabs[currentRole].includes(tab.id));
+
+  const notify = (message: string, type: ToastState['type'] = 'success') => {
+    setToast({ message, type });
+    window.setTimeout(() => setToast(null), 3200);
+  };
+
   const fetchAll = async () => {
     setError('');
+    if (isPreviewSession) {
+      setInquiries([]);
+      setOpportunities([]);
+      setApplicants([]);
+      setProjects([]);
+      setBinItems([]);
+      setAccounts([]);
+      setLoading(false);
+      return;
+    }
+    const role = currentUser?.role || 'admin';
     try {
-      const [inq, opp, app, proj, bin] = await Promise.all([
-        api<Inquiry[]>(`${API}/inquiries`),
-        api<Opportunity[]>(`${API}/opportunities`),
-        api<Applicant[]>(`${API}/applicants`),
-        api<Project[]>(`${API}/projects`),
-        api<BinItem[]>(`${API}/bin`),
+      const [inq, opp, app, proj, bin, acct] = await Promise.all([
+        ['admin', 'agent', 'partner'].includes(role) ? api<Inquiry[]>(`${API}/inquiries`) : Promise.resolve([]),
+        ['admin', 'agent'].includes(role) ? api<Opportunity[]>(`${API}/opportunities`) : Promise.resolve([]),
+        ['admin', 'agent'].includes(role) ? api<Applicant[]>(`${API}/applicants`) : Promise.resolve([]),
+        ['admin', 'partner'].includes(role) ? api<Project[]>(`${API}/projects`) : Promise.resolve([]),
+        role === 'admin' ? api<BinItem[]>(`${API}/bin`) : Promise.resolve([]),
+        role === 'admin' ? api<AdminAccount[]>(`${API}/accounts`) : Promise.resolve([]),
       ]);
       setInquiries(inq);
       setOpportunities(opp);
       setApplicants(app);
       setProjects(proj);
       setBinItems(bin);
+      setAccounts(acct);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Dashboard data failed to load');
+      if (import.meta.env.DEV && currentUser?.source === 'local-preview') {
+        setInquiries([]);
+        setOpportunities([]);
+        setApplicants([]);
+        setProjects([]);
+        setBinItems([]);
+        setAccounts([]);
+        setError('');
+      } else {
+        setError(err instanceof Error ? err.message : 'Dashboard data failed to load');
+      }
     } finally {
       setLoading(false);
     }
@@ -204,21 +284,63 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    const handler = () => setIsLoggedIn(false);
+    const handler = () => {
+      setCurrentUser(null);
+      sessionStorage.removeItem('admin_user');
+      sessionStorage.removeItem('admin_token');
+      sessionStorage.removeItem('admin_credentials');
+      setIsLoggedIn(false);
+    };
     window.addEventListener('auth-cleared', handler);
     return () => window.removeEventListener('auth-cleared', handler);
   }, []);
 
   useEffect(() => {
-    if (isLoggedIn) fetchAll(); else setLoading(false);
+    if (isLoggedIn) {
+      if (isPreviewSession || getStoredUser()?.source === 'local-preview') {
+        setCurrentUser(PREVIEW_USER);
+        setLoading(false);
+        return;
+      }
+      api<{ success: boolean; user: AdminSessionUser; token?: string }>(`${API}/session`)
+        .then((res) => {
+          setCurrentUser(res.user);
+          sessionStorage.setItem('admin_user', JSON.stringify(res.user));
+          if (res.token) sessionStorage.setItem('admin_token', res.token);
+        })
+        .catch(() => {
+          sessionStorage.removeItem('admin_credentials');
+          sessionStorage.removeItem('admin_token');
+          sessionStorage.removeItem('admin_user');
+          setCurrentUser(null);
+          setIsLoggedIn(false);
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
   }, [isLoggedIn]);
 
   useEffect(() => {
+    if (isLoggedIn && currentUser) fetchAll();
+  }, [isLoggedIn, currentUser?.role]);
+
+  useEffect(() => {
+    if (!roleTabs[currentRole].includes(activeTab)) setActiveTab('dashboard');
+  }, [activeTab, currentRole]);
+
+  useEffect(() => {
+    if (!isAdmin || isPreviewSession) return;
     if (activeTab === 'content') fetchContent(contentTab);
     if (activeTab === 'logo') fetchContent('logo');
-  }, [activeTab, contentTab]);
+  }, [activeTab, contentTab, isAdmin, isPreviewSession]);
 
   const fetchMedia = async () => {
+    if (isPreviewSession) {
+      setImages([]);
+      setLoadingMedia(false);
+      return;
+    }
     try {
       const d = await api<unknown>(`${API}/media`);
       if (Array.isArray(d)) setImages(d);
@@ -226,7 +348,7 @@ const App: React.FC = () => {
       setLoadingMedia(false);
     }
   };
-  useEffect(() => { if (isLoggedIn) fetchMedia(); }, [isLoggedIn]);
+  useEffect(() => { if (isLoggedIn && isAdmin) fetchMedia(); }, [isLoggedIn, isAdmin]);
 
   const notifications = useMemo(() => [
     ...inquiries.filter((item) => item.status === 'new').map((item) => `${item.name} sent a new inquiry`),
@@ -418,9 +540,10 @@ const App: React.FC = () => {
         body: JSON.stringify(servicesContent),
       });
       setError('');
-      alert('Services content saved!');
+      notify('Services content saved');
     } catch (err) {
       setError('Failed to save content');
+      notify('Failed to save services content', 'error');
     } finally {
       setContentSaving(false);
     }
@@ -467,11 +590,88 @@ const App: React.FC = () => {
     try {
       await api(`${API}/content/${page}`, { method: 'PUT', body: JSON.stringify(data) });
       setError('');
-      alert(`${page} content saved!`);
+      notify(`${page} content saved`);
     } catch (err) {
       setError(`Failed to save ${page} content`);
+      notify(`Failed to save ${page} content`, 'error');
     } finally {
       setContentSaving(false);
+    }
+  };
+
+  const createAccount = async () => {
+    try {
+      if (!formData.username || !formData.password || !formData.role) throw new Error('Username, password, and account type are required');
+      await api<AdminAccount>(`${API}/accounts`, {
+        method: 'POST',
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password,
+          displayName: formData.displayName || '',
+          role: formData.role,
+        }),
+      });
+      setFormData({});
+      fetchAll();
+      notify('Account created');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create account');
+      notify(err instanceof Error ? err.message : 'Failed to create account', 'error');
+    }
+  };
+
+  const updateAccount = async (account: AdminAccount, updates: Partial<AdminAccount> & { password?: string }) => {
+    try {
+      await api<AdminAccount>(`${API}/accounts`, {
+        method: 'PUT',
+        body: JSON.stringify({ id: account.id, displayName: account.displayName || '', role: account.role, status: account.status, ...updates }),
+      });
+      fetchAll();
+      notify('Account updated');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update account');
+      notify(err instanceof Error ? err.message : 'Failed to update account', 'error');
+    }
+  };
+
+  const deleteAccount = async (account: AdminAccount) => {
+    if (!window.confirm(`Delete ${account.username}? This removes their dashboard login.`)) return;
+    await api<{ ok: boolean }>(`${API}/accounts`, { method: 'DELETE', body: JSON.stringify({ id: account.id }) });
+    fetchAll();
+    notify('Account deleted');
+  };
+
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setLoginError('');
+    if (!loginUser || !loginPass) {
+      setLoginError('Please enter username and password');
+      return;
+    }
+    setLoginLoading(true);
+    if (canUsePreviewLogin(loginUser, loginPass)) {
+      sessionStorage.setItem('admin_token', 'preview');
+      sessionStorage.setItem('admin_user', JSON.stringify(PREVIEW_USER));
+      sessionStorage.removeItem('admin_credentials');
+      setCurrentUser(PREVIEW_USER);
+      setIsLoggedIn(true);
+      setLoginLoading(false);
+      return;
+    }
+    const testAuth = 'Basic ' + btoa(`${loginUser}:${loginPass}`);
+    try {
+      const r = await fetch(`${API}/session`, { headers: { Authorization: testAuth } });
+      if (!r.ok) throw new Error('Invalid');
+      const data = await r.json();
+      sessionStorage.setItem('admin_token', data.token);
+      sessionStorage.setItem('admin_user', JSON.stringify(data.user));
+      sessionStorage.removeItem('admin_credentials');
+      setCurrentUser(data.user);
+      setIsLoggedIn(true);
+    } catch {
+      setLoginError('Invalid username or password');
+    } finally {
+      setLoginLoading(false);
     }
   };
 
@@ -488,7 +688,7 @@ const App: React.FC = () => {
         </div>
       </div>
       <nav className="flex-1 p-3 space-y-1">
-        {tabs.map((tab) => {
+        {visibleTabs.map((tab) => {
           const Icon = tab.icon;
           const count = tab.id === 'leads' ? metrics.leads : tab.id === 'bin' ? binItems.length : undefined;
           return (
@@ -511,7 +711,7 @@ const App: React.FC = () => {
     <nav className="border-b border-white/10 bg-[#0A0A0A]/95 backdrop-blur-xl sticky top-0 z-50">
       <div className="h-14 flex items-center justify-between px-6">
         <div className="text-sm text-white/40">
-          <span className="text-white/70 font-medium">{tabs.find(t => t.id === activeTab)?.label}</span> / <span className="text-white/30">{activeTab}</span>
+          <span className="text-white/70 font-medium">{tabs.find(t => t.id === activeTab)?.label}</span> / <span className="text-white/30">{currentRole}</span>
         </div>
         <div className="flex items-center gap-3 text-sm">
           <button onClick={fetchAll} className="p-1.5 rounded-lg hover:bg-white/10"><RefreshCw className="w-3.5 h-3.5" /></button>
@@ -532,9 +732,9 @@ const App: React.FC = () => {
             {showProfile && (
               <div className="absolute right-0 mt-2 w-56 rounded-xl border border-white/10 bg-[#111] p-4 shadow-2xl">
                 <UserCircle className="w-6 h-6 text-white/60 mb-2" />
-                <div className="text-sm font-semibold">Admin</div>
-                <div className="text-[11px] text-white/45 mb-3">admin@misthustlers.local</div>
-                <button onClick={() => { sessionStorage.removeItem('admin_credentials'); setIsLoggedIn(false); setShowProfile(false); }} className="w-full py-2 text-[11px] rounded-xl border border-white/20 hover:bg-white hover:text-black transition-colors">Sign out</button>
+                <div className="text-sm font-semibold">{currentUser?.displayName || currentUser?.username || 'Admin'}</div>
+                <div className="text-[11px] text-white/45 mb-3 capitalize">{currentRole} access</div>
+                <button onClick={() => { sessionStorage.removeItem('admin_token'); sessionStorage.removeItem('admin_credentials'); sessionStorage.removeItem('admin_user'); setCurrentUser(null); setIsLoggedIn(false); setShowProfile(false); }} className="w-full py-2 text-[11px] rounded-xl border border-white/20 hover:bg-white hover:text-black transition-colors">Sign out</button>
               </div>
             )}
           </div>
@@ -546,9 +746,9 @@ const App: React.FC = () => {
   const renderDashboard = () => (
     <div>
       <div className="mb-6">
-        <div className="text-[11px] tracking-[2px] text-white/40 mb-1">MISTHUSTLERS FOUNDER PLATFORM</div>
+        <div className="text-[11px] tracking-[2px] text-white/40 mb-1">MISTHUSTLERS {currentRole.toUpperCase()} DASHBOARD</div>
         <div className="text-4xl font-semibold tracking-[-1.5px] mb-2">Welcome back.</div>
-        <div className="text-sm text-white/50">{error ? error : 'Everything is running smoothly.'}</div>
+        <div className="text-sm text-white/50">{error ? error : isAdmin ? 'Everything is running smoothly.' : 'Your workspace is limited to the sections assigned by the main admin.'}</div>
         {error && <button onClick={() => setError('')} className="mt-2 px-3 py-1 rounded-lg bg-white text-black text-xs">Dismiss</button>}
       </div>
 
@@ -567,7 +767,7 @@ const App: React.FC = () => {
         ))}
       </div>
 
-      <section className="mb-8">
+      {isAdmin && <section className="mb-8">
         <div className="flex items-end justify-between mb-3">
           <div>
             <div className="text-[11px] tracking-[1px] text-white/50">QUICK ACTIONS</div>
@@ -589,7 +789,7 @@ const App: React.FC = () => {
             <Plus className="w-3.5 h-3.5" /> Create Project
           </button>
         </div>
-      </section>
+      </section>}
     </div>
   );
 
@@ -609,8 +809,8 @@ const App: React.FC = () => {
             <div className="text-xs text-white/60">{inquiry.service} | {inquiry.budget}</div>
             <span className={`w-fit px-2 py-0.5 text-[10px] rounded ${inquiry.status === 'new' ? 'bg-blue-500/20 text-blue-300' : 'bg-white/10 text-white/65'}`}>{inquiry.status || 'new'}</span>
             <div className="flex gap-1.5">
-              <button onClick={() => contactLead(inquiry)} className="px-2.5 py-1 text-[10px] rounded-xl border border-white/15 hover:bg-white hover:text-black"><Mail className="inline w-2.5 h-2.5 mr-0.5" />Contact</button>
-              <button onClick={() => deleteInquiry(inquiry.id)} className="px-2.5 py-1 text-[10px] rounded-xl border border-white/15 hover:bg-red-500"><Trash2 className="w-2.5 h-2.5" /></button>
+              {currentRole !== 'partner' && <button onClick={() => contactLead(inquiry)} className="px-2.5 py-1 text-[10px] rounded-xl border border-white/15 hover:bg-white hover:text-black"><Mail className="inline w-2.5 h-2.5 mr-0.5" />Contact</button>}
+              {isAdmin && <button onClick={() => deleteInquiry(inquiry.id)} className="px-2.5 py-1 text-[10px] rounded-xl border border-white/15 hover:bg-red-500"><Trash2 className="w-2.5 h-2.5" /></button>}
             </div>
           </div>
         ))}
@@ -624,7 +824,7 @@ const App: React.FC = () => {
       <section className="col-span-3">
         <div className="flex justify-between mb-3">
           <div><div className="text-[11px] tracking-[1px] text-white/50">SECTION 02</div><div className="text-lg font-semibold">Career Hub</div></div>
-          <button onClick={() => openModal('job')} className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] border border-white/20 rounded-xl hover:bg-white hover:text-black"><Plus className="w-3 h-3" /> Add</button>
+          {isAdmin && <button onClick={() => openModal('job')} className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] border border-white/20 rounded-xl hover:bg-white hover:text-black"><Plus className="w-3 h-3" /> Add</button>}
         </div>
         <div className="bg-[#111] border border-white/10 rounded-2xl max-h-[460px] overflow-auto text-sm">
           {opportunities.map((item) => (
@@ -635,7 +835,7 @@ const App: React.FC = () => {
               </button>
               <div className="flex gap-1.5 text-[11px]">
                 <button onClick={() => updateOpportunity(item.id, { status: item.status === 'open' ? 'paused' : 'open' })} className="px-3 py-1 border border-white/20 rounded-lg hover:bg-white/5">{item.status}</button>
-                <button onClick={() => deleteOpportunity(item.id)} className="px-3 py-1 border border-white/20 rounded-lg hover:bg-red-500"><Trash2 className="w-2.5 h-2.5" /></button>
+                {isAdmin && <button onClick={() => deleteOpportunity(item.id)} className="px-3 py-1 border border-white/20 rounded-lg hover:bg-red-500"><Trash2 className="w-2.5 h-2.5" /></button>}
               </div>
             </div>
           ))}
@@ -646,7 +846,7 @@ const App: React.FC = () => {
       <section className="col-span-2">
         <div className="mb-3 flex justify-between items-end">
           <div><div className="text-[11px] tracking-[1px] text-white/50">SECTION 03</div><div className="text-lg font-semibold">Applicants</div></div>
-          <button onClick={() => openModal('applicant')} className="px-2.5 py-1.5 text-[11px] border border-white/20 rounded-xl hover:bg-white hover:text-black"><Plus className="inline w-2.5 h-2.5 mr-0.5" />Add</button>
+          {isAdmin && <button onClick={() => openModal('applicant')} className="px-2.5 py-1.5 text-[11px] border border-white/20 rounded-xl hover:bg-white hover:text-black"><Plus className="inline w-2.5 h-2.5 mr-0.5" />Add</button>}
         </div>
         <div className="flex gap-1 mb-2 text-[10px] flex-wrap">
           {['all', 'new', 'reviewed', 'shortlisted', 'accepted', 'rejected'].map((filter) => (
@@ -664,7 +864,7 @@ const App: React.FC = () => {
                 {['reviewed', 'shortlisted', 'accepted', 'rejected'].map((status) => (
                   <button key={status} onClick={() => updateApplicant(item.id, { status })} className={`px-2 py-0.5 ${item.status === status ? 'bg-white text-black' : 'bg-white/5 hover:bg-white/10'}`}>{status}</button>
                 ))}
-                <button onClick={() => deleteApplicant(item.id)} className="px-2 py-0.5 bg-white/5 hover:bg-red-500"><Trash2 className="w-2.5 h-2.5" /></button>
+                {isAdmin && <button onClick={() => deleteApplicant(item.id)} className="px-2 py-0.5 bg-white/5 hover:bg-red-500"><Trash2 className="w-2.5 h-2.5" /></button>}
               </div>
             </div>
           ))}
@@ -678,7 +878,7 @@ const App: React.FC = () => {
     <section>
       <div className="flex justify-between mb-3 items-end">
         <div><div className="text-[11px] tracking-[1px] text-white/50">SECTION 04</div><div className="text-lg font-semibold">Projects</div></div>
-        <button onClick={() => openModal('project')} className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] border border-white/20 rounded-xl hover:bg-white hover:text-black"><Plus className="w-3 h-3" /> Create</button>
+        {isAdmin && <button onClick={() => openModal('project')} className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] border border-white/20 rounded-xl hover:bg-white hover:text-black"><Plus className="w-3 h-3" /> Create</button>}
       </div>
       <div className="grid grid-cols-4 gap-3">
         {statusFlow.map((status) => (
@@ -692,7 +892,7 @@ const App: React.FC = () => {
                 </button>
                 <div className="flex justify-between gap-2 text-[11px]">
                   <button onClick={() => updateProject(project.id, { status: nextStatus(project.status) })} className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white hover:text-black">Move</button>
-                  <button onClick={() => deleteProject(project.id)} className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-red-500"><Trash2 className="w-2.5 h-2.5" /></button>
+                  {isAdmin && <button onClick={() => deleteProject(project.id)} className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-red-500"><Trash2 className="w-2.5 h-2.5" /></button>}
                 </div>
               </div>
             ))}
@@ -783,6 +983,62 @@ const App: React.FC = () => {
       </section>
     );
   };
+
+  const renderAccounts = () => (
+    <section>
+      <div className="flex justify-between mb-4 items-end">
+        <div>
+          <div className="text-[11px] tracking-[1px] text-white/50">ACCESS CONTROL</div>
+          <div className="text-lg font-semibold">Agent & Partner Accounts</div>
+        </div>
+        <div className="text-[11px] text-white/40">{accounts.length} restricted users</div>
+      </div>
+
+      <div className="grid grid-cols-[360px_1fr] gap-4">
+        <div className="bg-[#111] border border-white/10 rounded-2xl p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Shield className="w-4 h-4 text-white/50" />
+            <div className="text-sm font-semibold">Create restricted login</div>
+          </div>
+          <div className="space-y-3">
+            <input className="field text-sm" placeholder="Username" value={formData.username || ''} onChange={(e) => setField('username', e.target.value)} />
+            <input className="field text-sm" placeholder="Display name" value={formData.displayName || ''} onChange={(e) => setField('displayName', e.target.value)} />
+            <input className="field text-sm" type="password" placeholder="Temporary password" value={formData.password || ''} onChange={(e) => setField('password', e.target.value)} />
+            <select className="field text-sm" value={formData.role || 'agent'} onChange={(e) => setField('role', e.target.value)}>
+              <option value="agent">Agent dashboard</option>
+              <option value="partner">Partner dashboard</option>
+            </select>
+            <button onClick={createAccount} className="w-full py-3 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90">
+              <UserPlus className="inline w-4 h-4 mr-1.5" /> Create Account
+            </button>
+          </div>
+        </div>
+
+        <div className="bg-[#111] border border-white/10 rounded-2xl overflow-hidden text-sm">
+          {accounts.map((account) => (
+            <div key={account.id} className="grid grid-cols-[1.3fr_110px_110px_auto] gap-3 items-center px-5 py-4 border-b border-white/10 last:border-b-0">
+              <div className="min-w-0">
+                <div className="font-medium truncate">{account.displayName || account.username}</div>
+                <div className="text-[11px] text-white/45 truncate">{account.username}</div>
+              </div>
+              <span className="capitalize rounded-lg bg-white/10 px-2 py-1 text-[11px] text-center">{account.role}</span>
+              <button onClick={() => updateAccount(account, { status: account.status === 'active' ? 'disabled' : 'active' })} className={`rounded-lg px-2 py-1 text-[11px] capitalize ${account.status === 'active' ? 'bg-emerald-500/15 text-emerald-300' : 'bg-red-500/15 text-red-300'}`}>
+                {account.status}
+              </button>
+              <div className="flex gap-1.5">
+                <button onClick={() => {
+                  const password = window.prompt(`New password for ${account.username} (minimum 8 characters)`);
+                  if (password) updateAccount(account, { password });
+                }} className="px-2.5 py-1.5 rounded-lg border border-white/15 text-[11px] hover:bg-white hover:text-black">Reset</button>
+                <button onClick={() => deleteAccount(account)} className="px-2.5 py-1.5 rounded-lg border border-white/15 text-[11px] hover:bg-red-500"><Trash2 className="w-3 h-3" /></button>
+              </div>
+            </div>
+          ))}
+          {!accounts.length && <div className="p-8 text-center text-white/40 text-sm">No agent or partner accounts yet.</div>}
+        </div>
+      </div>
+    </section>
+  );
 
   const renderServicesEditor = () => {
     if (!servicesContent) return <div className="text-center text-white/40 py-10">Loading...</div>;
@@ -1260,6 +1516,9 @@ const App: React.FC = () => {
   };
 
   const renderLogoEditor = () => {
+    if (isPreviewSession) {
+      return <div className="bg-[#111] border border-white/10 rounded-2xl p-8 text-center text-white/45 text-sm">Logo editor preview is visible after connecting the backend database.</div>;
+    }
     if (!logoContent) return <div className="text-center text-white/40 py-10">Loading...</div>;
     const c = logoContent;
     const upd = (path: string[], val: any) => updateContentField(setLogoContent, path, val);
@@ -1370,18 +1629,19 @@ const App: React.FC = () => {
         <div><div className="text-[11px] tracking-[1px] text-white/50">CONTENT MANAGEMENT</div><div className="text-lg font-semibold">Edit Page Content</div></div>
         <div className="flex gap-1.5">
           {['services', 'home', 'career', 'projects', 'seo'].map((page) => (
-            <button key={page} onClick={() => { setContentTab(page); fetchContent(page); }} className={`px-3 py-1.5 text-[11px] rounded-lg border ${contentTab === page ? 'bg-white text-black border-white' : 'border-white/10 text-white/60 hover:bg-white/5'}`}>
+            <button key={page} onClick={() => { setContentTab(page); if (!isPreviewSession) fetchContent(page); }} className={`px-3 py-1.5 text-[11px] rounded-lg border ${contentTab === page ? 'bg-white text-black border-white' : 'border-white/10 text-white/60 hover:bg-white/5'}`}>
               {page.charAt(0).toUpperCase() + page.slice(1)}
             </button>
           ))}
         </div>
       </div>
 
-      {contentTab === 'services' && renderServicesEditor()}
-      {contentTab === 'home' && renderHomeEditor()}
-      {contentTab === 'career' && renderCareerEditor()}
-      {contentTab === 'projects' && renderProjectsEditor()}
-      {contentTab === 'seo' && renderSeoEditor()}
+      {isPreviewSession && <div className="bg-[#111] border border-white/10 rounded-2xl p-8 text-center text-white/45 text-sm">Content editor preview is visible after connecting the backend database.</div>}
+      {!isPreviewSession && contentTab === 'services' && renderServicesEditor()}
+      {!isPreviewSession && contentTab === 'home' && renderHomeEditor()}
+      {!isPreviewSession && contentTab === 'career' && renderCareerEditor()}
+      {!isPreviewSession && contentTab === 'projects' && renderProjectsEditor()}
+      {!isPreviewSession && contentTab === 'seo' && renderSeoEditor()}
     </section>
   );
 
@@ -1395,7 +1655,7 @@ const App: React.FC = () => {
           <h1 className="text-2xl font-semibold">Admin Login</h1>
           <p className="text-sm text-white/50 mt-1">MistHustlers Founder Platform</p>
         </div>
-        <form onSubmit={async (e) => { e.preventDefault(); setLoginError(''); if (!loginUser || !loginPass) { setLoginError('Please enter username and password'); return; } setLoginLoading(true); const testAuth = 'Basic ' + btoa(`${loginUser}:${loginPass}`); try { const r = await fetch(`${API}/inquiries`, { headers: { Authorization: testAuth } }); if (!r.ok) throw new Error('Invalid'); sessionStorage.setItem('admin_credentials', JSON.stringify({ username: loginUser, password: loginPass })); setIsLoggedIn(true); setLoginLoading(false); } catch { setLoginError('Invalid username or password'); setLoginLoading(false); } }} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <label className="block text-xs text-white/50 mb-1.5">Username</label>
             <input type="text" value={loginUser} onChange={(e) => setLoginUser(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-white/30" placeholder="Enter username" autoFocus />
@@ -1420,6 +1680,7 @@ const App: React.FC = () => {
       case 'content': return renderContentEditor();
       case 'media': return renderMedia();
       case 'logo': return renderLogoEditor();
+      case 'accounts': return renderAccounts();
       case 'bin': return renderBin();
       default: return renderDashboard();
     }
@@ -1440,6 +1701,16 @@ const App: React.FC = () => {
       </div>
 
       <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className={`fixed right-5 top-5 z-[80] rounded-xl border px-4 py-3 text-sm shadow-2xl ${toast.type === 'success' ? 'border-emerald-400/25 bg-emerald-500/15 text-emerald-100' : 'border-red-400/25 bg-red-500/15 text-red-100'}`}
+          >
+            {toast.message}
+          </motion.div>
+        )}
         {modalType && (
           <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[60]" onClick={closeModal}>
             <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.96 }} onClick={(event) => event.stopPropagation()} className="bg-[#111] border border-white/10 rounded-2xl p-6 w-full max-w-sm">
@@ -1488,9 +1759,9 @@ const App: React.FC = () => {
                 <div className="pt-3 border-t border-white/10 text-white/80 text-sm">{selectedInquiry.message}</div>
               </div>
               <div className="flex gap-2 mt-5">
-                <button onClick={() => contactLead(selectedInquiry)} className="flex-1 py-2.5 border border-white/20 rounded-xl text-sm">Email Lead</button>
-                <button onClick={() => { updateInquiry(selectedInquiry.id, { status: 'archived' }); setSelectedInquiry(null); }} className="flex-1 py-2.5 bg-white text-black rounded-xl text-sm">Archive</button>
-                <button onClick={() => deleteInquiry(selectedInquiry.id)} className="flex-1 py-2.5 border border-white/20 rounded-xl text-sm hover:bg-red-500">Delete</button>
+                {currentRole !== 'partner' && <button onClick={() => contactLead(selectedInquiry)} className="flex-1 py-2.5 border border-white/20 rounded-xl text-sm">Email Lead</button>}
+                {currentRole !== 'partner' && <button onClick={() => { updateInquiry(selectedInquiry.id, { status: 'archived' }); setSelectedInquiry(null); }} className="flex-1 py-2.5 bg-white text-black rounded-xl text-sm">Archive</button>}
+                {isAdmin && <button onClick={() => deleteInquiry(selectedInquiry.id)} className="flex-1 py-2.5 border border-white/20 rounded-xl text-sm hover:bg-red-500">Delete</button>}
               </div>
             </div>
           </div>

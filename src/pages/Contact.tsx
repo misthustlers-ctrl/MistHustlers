@@ -1,5 +1,3 @@
-import GlobalNavbar from "@/components/GlobalNavbar";
-import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import SchemaMarkup from "@/components/SchemaMarkup";
 import ServiceInquiryForm from "@/components/ServiceInquiryForm";
@@ -8,8 +6,7 @@ export default function Contact() {
   return (
     <div className="bg-basalt-canvas min-h-screen">
       <SEO page="contact" />
-      <SchemaMarkup page="notFound" />
-      <GlobalNavbar />
+      <SchemaMarkup page="contact" />
       <main>
         <section className="pt-32 pb-20">
           <div className="max-w-[1200px] mx-auto px-6">
@@ -80,7 +77,6 @@ export default function Contact() {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   );
 }

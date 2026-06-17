@@ -4,13 +4,13 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "cd backend && npm install && npx prisma generate && cd admin-ui && npm install && npm run build && cd ../.. && npx vite build",
-    "start": "cd backend && npx prisma migrate deploy && npx prisma db seed && node server.js",
+    "dev": "vite --configLoader native",
+    "build": "cd backend && npm install && npx prisma generate && cd admin-ui && npm install && npm run build && cd ../.. && npx vite build --configLoader native",
+    "start": "cd backend && npx prisma migrate deploy && node server.js",
     "server": "node backend/server.js",
     "prerender": "node scripts/prerender.mjs",
     "verify-seo": "node scripts/verify-seo.mjs",
-    "build:seo": "npx vite build && node scripts/prerender.mjs && node scripts/verify-seo.mjs"
+    "build:seo": "npx vite build --configLoader native && node scripts/prerender.mjs && node scripts/verify-seo.mjs"
   },
   "dependencies": {
     "clsx": "2.1.1",

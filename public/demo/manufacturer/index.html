@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B2B Manufacturer / Trader Website Demo - MistHustlers Indore</title>
+  <meta name="description" content="Premium B2B manufacturer and trader catalogue demo for Indore. Product categories, filters, specs, RFQ form, and certifications. Built by MistHustlers.">
+  <link rel="canonical" href="https://misthustlers.up.railway.app/demo/manufacturer/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%237C3AED'/%3E%3Ctext x='50' y='65' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3EM%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    :root {
+      --mfg-orange: #E65100;
+      --mfg-orange-light: #FF7043;
+      --mfg-gray: #212121;
+      --mfg-light: #F5F5F5;
+      --mfg-dark: #424242;
+    }
+    body { background: var(--mfg-light); color: var(--mfg-gray); font-family: 'Roboto', sans-serif; }
+    h1, h2, h3 { font-family: 'Rajdhani', sans-serif; font-weight: 700; text-transform: uppercase; }
+    .mono { font-family: 'Roboto Mono', monospace; }
+    
+.hero {
+      padding: 150px 0 100px; background: linear-gradient(135deg, var(--mfg-gray) 0%, var(--mfg-dark) 100%);
+      color: var(--mfg-light); position: relative; overflow: hidden;
+    }
+    .hero::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.02) 20px, rgba(255,255,255,0.02) 40px); z-index: 0; }
+    .hero .container { position: relative; z-index: 1; }
+    .hero h1 { font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1.1; margin-bottom: 16px; }
+    .hero p { font-size: 1.15rem; opacity: 0.85; max-width: 600px; margin-bottom: 32px; }
+    .btn-orange { background: var(--mfg-orange); color: #fff; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .btn-orange:hover { background: var(--mfg-orange-light); box-shadow: 0 12px 32px rgba(230,81,0,0.3); }
+    .btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.4); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+    .stats-strip { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 40px; }
+    .stat-pill { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 16px 24px; }
+    .stat-pill strong { display: block; font-family: 'Roboto Mono', monospace; color: var(--mfg-orange-light); font-size: 1.4rem; }
+    .stat-pill span { font-size: 0.75rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .section-title { color: var(--mfg-gray); }
+    .section-subtitle { color: #666; }
+    .categories-section { background: #fff; padding: 96px 0; }
+    .categories-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
+    @media (min-width: 640px) { .categories-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 900px) { .categories-grid { grid-template-columns: repeat(4, 1fr); } }
+    .category-card { background: var(--mfg-light); border: 1px solid #e0e0e0; border-radius: 16px; padding: 28px; text-align: center; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; }
+    .category-card:hover { transform: translateY(-5px); border-color: var(--mfg-orange); box-shadow: 0 12px 32px rgba(230,81,0,0.12); }
+    .category-icon { width: 56px; height: 56px; border-radius: 12px; background: rgba(230,81,0,0.1); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: var(--mfg-orange); }
+    .category-icon svg { width: 28px; height: 28px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .category-card h3 { font-size: 1.2rem; margin-bottom: 6px; text-transform: none; }
+    .category-card p { font-size: 0.85rem; color: #666; margin-bottom: 14px; max-width: 100%; }
+    .category-card .sku { font-family: 'Roboto Mono', monospace; font-size: 0.75rem; color: var(--mfg-orange); font-weight: 500; }
+
+    .products-section { background: var(--mfg-light); padding: 96px 0; }
+    .filter-bar { display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; }
+    .filter-bar select { padding: 12px 16px; border-radius: 12px; border: 1px solid #ccc; background: #fff; color: var(--mfg-gray); font-weight: 500; }
+    .products-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
+    @media (min-width: 640px) { .products-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 900px) { .products-grid { grid-template-columns: repeat(3, 1fr); } }
+    .product-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 16px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s; }
+    .product-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: var(--mfg-orange); }
+    .product-img { aspect-ratio: 4 / 3; overflow: hidden; }
+    .product-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+    .product-card:hover .product-img img { transform: scale(1.05); }
+    .product-info { padding: 20px; }
+    .product-info h3 { font-family: 'Roboto', sans-serif; font-size: 1.1rem; font-weight: 700; text-transform: none; margin-bottom: 6px; }
+    .product-info .meta { font-size: 0.85rem; color: #666; margin-bottom: 4px; }
+    .product-info .btn-inquiry { width: 100%; margin-top: 14px; background: var(--mfg-orange); color: #fff; padding: 12px; border-radius: 12px; font-weight: 600; text-align: center; display: inline-block; }
+
+    .specs-section { background: #fff; padding: 96px 0; }
+    .specs-table { width: 100%; border-collapse: collapse; max-width: 800px; margin: 0 auto; background: var(--mfg-light); border-radius: 16px; overflow: hidden; }
+    .specs-table th, .specs-table td { padding: 16px 18px; text-align: left; border-bottom: 1px solid #e0e0e0; }
+    .specs-table th { background: var(--mfg-gray); color: #fff; font-family: 'Roboto', sans-serif; }
+    .specs-table td { font-family: 'Roboto Mono', monospace; font-size: 0.9rem; }
+    .specs-table tr:last-child td { border-bottom: none; }
+
+    .process-timeline { background: var(--mfg-gray); color: #fff; padding: 96px 0; }
+    .timeline { display: grid; gap: 24px; grid-template-columns: 1fr; }
+    @media (min-width: 768px) { .timeline { grid-template-columns: repeat(4, 1fr); } }
+    .timeline-item { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 28px; text-align: center; transition: border-color 0.3s; }
+    .timeline-item:hover { border-color: var(--mfg-orange); }
+    .timeline-item .step { width: 48px; height: 48px; border-radius: 50%; background: var(--mfg-orange); color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-weight: 700; font-family: 'Roboto Mono', monospace; }
+    .timeline-item h4 { font-size: 1.1rem; margin-bottom: 8px; }
+    .timeline-item p { font-size: 0.9rem; opacity: 0.75; max-width: 100%; }
+
+    .certifications { background: var(--mfg-light); padding: 56px 0; }
+    .cert-row { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+    .cert-badge { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 14px 24px; font-weight: 600; box-shadow: var(--shadow-sm); }
+
+    .qa-section { background: #fff; padding: 96px 0; }
+    .qa-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
+    @media (min-width: 768px) { .qa-grid { grid-template-columns: repeat(3, 1fr); } }
+    .qa-card { background: var(--mfg-light); border-radius: 16px; padding: 28px; text-align: center; border: 1px solid #e0e0e0; }
+    .qa-card h4 { font-size: 2.2rem; color: var(--mfg-orange); font-family: 'Roboto Mono', monospace; font-weight: 500; margin-bottom: 8px; }
+    .qa-card p { font-size: 0.95rem; color: #666; max-width: 100%; }
+
+    .rfq-section { background: var(--mfg-light); padding: 96px 0; }
+    .rfq-form { max-width: 760px; margin: 0 auto; background: #fff; border-radius: 16px; padding: 40px; border: 1px solid #e0e0e0; box-shadow: var(--shadow-sm); }
+    .rfq-form .form-control { background: #fff; border-color: #ddd; color: var(--mfg-gray); }
+    .rfq-form .form-control::placeholder { color: #999; }
+    .rfq-form .form-control:focus { border-color: var(--mfg-orange); }
+    .rfq-form label { color: var(--mfg-gray); }
+    .submit-btn { width: 100%; background: var(--mfg-orange); color: #fff; font-weight: 700; padding: 16px; border-radius: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; }
+    .submit-btn:hover { opacity: 0.9; }
+    .form-success { background: rgba(230,81,0,0.1); color: var(--mfg-orange); border: 1px solid rgba(230,81,0,0.2); }
+    .form-note a { color: var(--mfg-orange); }
+
+    .footer-note { text-align: center; padding: 40px 0; background: #e0e0e0; color: #666; font-size: 0.9rem; }
+.sticky-footer { background: rgba(33,33,33,0.95); border-top: 1px solid rgba(230,81,0,0.25); color: #fff; }
+    .sticky-footer .btn-primary { background: var(--mfg-orange); color: #fff; }
+    .sticky-footer .btn-secondary { background: #fff; color: var(--mfg-gray); }
+  </style>
+</head>
+<body>
+<section class="hero">
+    <div class="container">
+      <h1 class="reveal">Apex Industrial Solutions</h1>
+      <p class="reveal">ISO Certified. Export Ready. Trusted Since 1998. Precision-engineered products for B2B buyers across India.</p>
+      <div class="hero-ctas reveal">
+        <a href="#" class="btn btn-lg btn-outline no-arrow" data-track="mfg_hero_catalogue">Download Catalogue</a>
+        <a href="#rfq" class="btn btn-lg btn-orange no-arrow" data-track="mfg_hero_rfq">Request Quote</a>
+      </div>
+      <div class="stats-strip reveal">
+        <div class="stat-pill"><strong>25+</strong><span>Years</span></div>
+        <div class="stat-pill"><strong>500Cr</strong><span>Capacity</span></div>
+        <div class="stat-pill"><strong>15+</strong><span>Countries</span></div>
+        <div class="stat-pill"><strong>99.8%</strong><span>Quality</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="categories-section">
+    <div class="container">
+      <h2 class="section-title reveal">Product Categories</h2>
+      <p class="section-subtitle reveal">Browse by category and find what you need.</p>
+      <div class="categories-grid reveal-stagger">
+        <div class="category-card reveal">
+          <div class="category-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg></div>
+          <h3>Industrial Valves</h3>
+          <p>Ball, gate, and control valves</p>
+          <span class="sku">42 SKUs</span>
+        </div>
+        <div class="category-card reveal">
+          <div class="category-icon"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></svg></div>
+          <h3>Fasteners</h3>
+          <p>Bolts, nuts, screws, and washers</p>
+          <span class="sku">128 SKUs</span>
+        </div>
+        <div class="category-card reveal">
+          <div class="category-icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+          <h3>Hand Tools</h3>
+          <p>Wrenches, pliers, and cutters</p>
+          <span class="sku">85 SKUs</span>
+        </div>
+        <div class="category-card reveal">
+          <div class="category-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+          <h3>Precision Parts</h3>
+          <p>CNC turned and milled components</p>
+          <span class="sku">64 SKUs</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="products-section">
+    <div class="container">
+      <h2 class="section-title reveal">Product Listings</h2>
+      <p class="section-subtitle reveal">Filter and inquire directly for bulk orders.</p>
+      <div class="filter-bar reveal">
+        <select aria-label="Filter by category"><option>All Categories</option><option>Valves</option><option>Fasteners</option><option>Tools</option><option>Parts</option></select>
+        <select aria-label="Filter by material"><option>All Materials</option><option>SS 304</option><option>SS 316</option><option>Mild Steel</option><option>Brass</option></select>
+        <select aria-label="Filter by size"><option>All Sizes</option><option>M6 - M12</option><option>M12 - M24</option><option>1/2" - 2"</option><option>2"+</option></select>
+      </div>
+      <div class="products-grid reveal-stagger">
+        <div class="product-card reveal">
+          <div class="product-img"><img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80" alt="Stainless steel ball valve" width="800" height="600" loading="lazy" decoding="async"></div>
+          <div class="product-info">
+            <h3>Stainless Steel Ball Valve</h3>
+            <div class="meta">Material: SS 316 | Size: 1/2" - 2"</div>
+            <div class="meta">MOQ: 100 pcs</div>
+            <a href="#rfq" class="btn-inquiry no-arrow" data-track="mfg_inquiry_1">Send Inquiry</a>
+          </div>
+        </div>
+        <div class="product-card reveal">
+          <div class="product-img"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80" alt="Hex bolts DIN 933" width="800" height="600" loading="lazy" decoding="async"></div>
+          <div class="product-info">
+            <h3>Hex Bolts DIN 933</h3>
+            <div class="meta">Material: SS 304 | Size: M6 - M24</div>
+            <div class="meta">MOQ: 500 pcs</div>
+            <a href="#rfq" class="btn-inquiry no-arrow" data-track="mfg_inquiry_2">Send Inquiry</a>
+          </div>
+        </div>
+        <div class="product-card reveal">
+          <div class="product-img"><img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=800&q=80" alt="Adjustable wrench set" width="800" height="600" loading="lazy" decoding="async"></div>
+          <div class="product-info">
+            <h3>Adjustable Wrench Set</h3>
+            <div class="meta">Material: Chrome Vanadium | Size: 6" - 12"</div>
+            <div class="meta">MOQ: 50 sets</div>
+            <a href="#rfq" class="btn-inquiry no-arrow" data-track="mfg_inquiry_3">Send Inquiry</a>
+          </div>
+        </div>
+        <div class="product-card reveal">
+          <div class="product-img"><img src="https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?w=800&q=80" alt="CNC turned brass bushing" width="800" height="600" loading="lazy" decoding="async"></div>
+          <div class="product-info">
+            <h3>CNC Turned Bushing</h3>
+            <div class="meta">Material: Brass | Size: Custom</div>
+            <div class="meta">MOQ: 1000 pcs</div>
+            <a href="#rfq" class="btn-inquiry no-arrow" data-track="mfg_inquiry_4">Send Inquiry</a>
+          </div>
+        </div>
+        <div class="product-card reveal">
+          <div class="product-img"><img src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=800&q=80" alt="Gate valve flanged" width="800" height="600" loading="lazy" decoding="async"></div>
+          <div class="product-info">
+            <h3>Gate Valve Flanged</h3>
+            <div class="meta">Material: Cast Steel | Size: 2" - 8"</div>
+            <div class="meta">MOQ: 20 pcs</div>
+            <a href="#rfq" class="btn-inquiry no-arrow" data-track="mfg_inquiry_5">Send Inquiry</a>
+          </div>
+        </div>
+        <div class="product-card reveal">
+          <div class="product-img"><img src="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=800&q=80" alt="Lock nuts" width="800" height="600" loading="lazy" decoding="async"></div>
+          <div class="product-info">
+            <h3>Lock Nuts</h3>
+            <div class="meta">Material: Mild Steel | Size: M8 - M20</div>
+            <div class="meta">MOQ: 300 pcs</div>
+            <a href="#rfq" class="btn-inquiry no-arrow" data-track="mfg_inquiry_6">Send Inquiry</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="specs-section">
+    <div class="container">
+      <h2 class="section-title text-center reveal">Technical Specifications</h2>
+      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">Featured product: Stainless Steel Ball Valve</p>
+      <table class="specs-table reveal">
+        <tr><th>Property</th><th>Value</th></tr>
+        <tr><td>Material</td><td>SS 316</td></tr>
+        <tr><td>Pressure Rating</td><td>1000 PSI</td></tr>
+        <tr><td>End Connection</td><td>Threaded BSP / NPT</td></tr>
+        <tr><td>Size Range</td><td>1/2" to 2"</td></tr>
+        <tr><td>Working Temperature</td><td>-20°C to 200°C</td></tr>
+        <tr><td>Certification</td><td>ISO 9001:2015</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="process-timeline">
+    <div class="container">
+      <h2 class="section-title text-center reveal">Our Manufacturing Process</h2>
+      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">From raw material to finished product.</p>
+      <div class="timeline reveal-stagger">
+        <div class="timeline-item reveal"><div class="step">1</div><h4>Design</h4><p>CAD modeling and prototyping.</p></div>
+        <div class="timeline-item reveal"><div class="step">2</div><h4>Material</h4><p>Grade-certified raw materials.</p></div>
+        <div class="timeline-item reveal"><div class="step">3</div><h4>Machining</h4><p>CNC precision manufacturing.</p></div>
+        <div class="timeline-item reveal"><div class="step">4</div><h4>QC</h4><p>Multi-stage quality checks.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="certifications">
+    <div class="container">
+      <div class="cert-row reveal">
+        <span class="cert-badge">ISO 9001:2015</span>
+        <span class="cert-badge">BIS Certified</span>
+        <span class="cert-badge">Export Ready</span>
+        <span class="cert-badge">GST: 23AABCU1234B1Z5</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="qa-section">
+    <div class="container">
+      <h2 class="section-title text-center reveal">Quality Assurance</h2>
+      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">We never compromise on quality.</p>
+      <div class="qa-grid reveal-stagger">
+        <div class="qa-card reveal"><h4>12</h4><p>Quality Checks</p></div>
+        <div class="qa-card reveal"><h4>24h</h4><p>Sample Dispatch</p></div>
+        <div class="qa-card reveal"><h4>99.8%</h4><p>Acceptance Rate</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="rfq" class="rfq-section">
+    <div class="container">
+      <h2 class="section-title text-center reveal">Request for Quotation</h2>
+      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">Tell us your requirement and we'll send a detailed quote.</p>
+      <form class="rfq-form reveal" data-demo="manufacturer">
+        <div class="grid-2">
+          <div class="form-group"><label for="mfg-company">Company Name</label><input id="mfg-company" type="text" class="form-control" placeholder="Company name" required></div>
+          <div class="form-group"><label for="mfg-contact">Contact Person</label><input id="mfg-contact" type="text" class="form-control" placeholder="Contact person" required></div>
+          <div class="form-group"><label for="mfg-phone">Phone</label><input id="mfg-phone" type="tel" class="form-control" placeholder="Phone number" pattern="[0-9]{10}" required></div>
+          <div class="form-group"><label for="mfg-email">Email</label><input id="mfg-email" type="email" class="form-control" placeholder="Email address" required></div>
+          <div class="form-group"><label for="mfg-product">Product Interest</label><input id="mfg-product" type="text" class="form-control" placeholder="Product name / category" required></div>
+          <div class="form-group"><label for="mfg-qty">Quantity</label><input id="mfg-qty" type="text" class="form-control" placeholder="e.g. 1000 pcs" required></div>
+        </div>
+        <button type="submit" class="submit-btn no-arrow" data-track="mfg_form_submit">Send Inquiry</button>
+        <p class="form-note">Prefer WhatsApp? <a href="#" data-whatsapp="I saw your manufacturer demo, interested!" data-demo="manufacturer">Chat directly</a></p>
+      </form>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    <div class="container">© 2025 MistHustlers Indore — Manufacturer / B2B Demo</div>
+  </div>
+  <div class="sticky-footer">
+    <div class="container">
+      <span class="text">Want this for your business?</span>
+      <a href="tel:XXXXXXXXXX" class="btn btn-sm btn-secondary no-arrow" data-track="mfg_footer_call">Call</a>
+      <a href="#" class="btn btn-sm btn-primary no-arrow" data-whatsapp="I saw your manufacturer demo, interested!" data-demo="manufacturer" data-track="mfg_footer_whatsapp">WhatsApp</a>
+    </div>
+  </div>
+
+  <script src="../js/shared.js"></script>
+</body>
+</html>

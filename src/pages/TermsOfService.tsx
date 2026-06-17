@@ -1,13 +1,10 @@
 import { Link } from "react-router-dom";
-import GlobalNavbar from "@/components/GlobalNavbar";
-import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 
 export default function TermsOfService() {
   return (
     <div className="bg-basalt-canvas min-h-screen">
       <SEO page="termsOfService" />
-      <GlobalNavbar />
       <main className="pt-32 pb-20">
         <div className="max-w-[800px] mx-auto px-6">
           <h1 className="font-display text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mb-8">Terms of Service</h1>
@@ -30,7 +27,6 @@ export default function TermsOfService() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

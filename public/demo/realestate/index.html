@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real Estate Property Website Demo - MistHustlers Indore</title>
+  <meta name="description" content="Premium real estate property landing page demo for Indore builders. Luxury listings, floor plans, amenities, and site visit booking. Built by MistHustlers.">
+  <link rel="canonical" href="https://misthustlers.up.railway.app/demo/realestate/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%237C3AED'/%3E%3Ctext x='50' y='65' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3EM%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;600&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    :root {
+      --re-copper: #B87333;
+      --re-copper-light: #D4915A;
+      --re-slate: #1B2A4A;
+      --re-slate-light: #2C3E6B;
+      --re-cream: #F8F8F8;
+    }
+    body { background: var(--re-slate); color: #fff; font-family: 'Open Sans', sans-serif; }
+    h1, h2, h3 { font-family: 'Montserrat', sans-serif; font-weight: 700; }
+    .mono { font-family: 'Roboto Mono', monospace; }
+    
+.hero { min-height: 92vh; display: flex; align-items: center; padding: 140px 0 80px; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1600&q=80') center/cover; opacity: 0.35; z-index: 0; }
+    .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(27,42,74,0.6), rgba(27,42,74,0.95)); z-index: 0; }
+    .hero .container { position: relative; z-index: 1; }
+    .hero-grid { display: grid; gap: 48px; align-items: center; }
+    @media (min-width: 900px) { .hero-grid { grid-template-columns: 1fr 1fr; } }
+    .hero .location { color: var(--re-copper-light); font-weight: 600; letter-spacing: 2px; text-transform: uppercase; font-size: 0.85rem; margin-bottom: 16px; display: block; }
+    .hero h1 { font-size: clamp(2.4rem, 5vw, 4.2rem); line-height: 1.05; margin-bottom: 16px; }
+    .hero .price { font-size: clamp(1.4rem, 3vw, 2rem); font-family: 'Roboto Mono', monospace; color: var(--re-copper-light); margin-bottom: 28px; display: block; }
+    .btn-copper { background: var(--re-copper); color: #fff; font-weight: 700; }
+    .btn-copper:hover { background: var(--re-copper-light); box-shadow: 0 12px 32px rgba(184,115,51,0.3); }
+    .btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.35); font-weight: 600; }
+    .btn-outline:hover { background: rgba(255,255,255,0.08); border-color: #fff; }
+
+    .listing-card {
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 24px; padding: 32px; backdrop-filter: blur(10px); box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+    }
+    .listing-card img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 16px; margin-bottom: 20px; }
+    .listing-card h3 { font-size: 1.3rem; margin-bottom: 8px; }
+    .listing-card .address { opacity: 0.8; font-size: 0.95rem; margin-bottom: 16px; }
+    .listing-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .listing-stats .stat { background: rgba(0,0,0,0.25); border-radius: 12px; padding: 12px; text-align: center; }
+    .listing-stats .stat strong { display: block; font-family: 'Roboto Mono', monospace; color: var(--re-copper-light); font-size: 1.1rem; }
+    .listing-stats .stat span { font-size: 0.75rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .highlights { background: var(--re-cream); color: var(--re-slate); padding: 64px 0; }
+    .highlights-grid { display: grid; gap: 24px; grid-template-columns: repeat(2, 1fr); }
+    @media (min-width: 900px) { .highlights-grid { grid-template-columns: repeat(4, 1fr); } }
+    .highlight { text-align: center; }
+    .highlight-icon { width: 56px; height: 56px; border-radius: 50%; background: rgba(184,115,51,0.12); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: var(--re-copper); font-size: 1.4rem; }
+    .highlight h4 { font-size: 1.6rem; font-family: 'Montserrat', sans-serif; margin-bottom: 4px; }
+    .highlight p { font-size: 0.9rem; color: #666; max-width: 100%; }
+
+    .section-title { color: #fff; }
+    .section-subtitle { color: rgba(255,255,255,0.7); }
+    .amenities-section { padding: 96px 0; }
+    .amenities-grid { display: grid; gap: 16px; grid-template-columns: repeat(2, 1fr); }
+    @media (min-width: 640px) { .amenities-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 900px) { .amenities-grid { grid-template-columns: repeat(4, 1fr); } }
+    .amenity { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 24px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
+    .amenity:hover { transform: translateY(-4px); border-color: var(--re-copper); }
+    .amenity-icon { font-size: 1.6rem; margin-bottom: 8px; display: block; }
+    .amenity span { font-size: 0.9rem; font-weight: 600; }
+
+    .floorplans { background: var(--re-cream); color: var(--re-slate); padding: 96px 0; }
+    .tabs { display: flex; gap: 12px; justify-content: center; margin-bottom: 32px; }
+    .tab { padding: 12px 28px; border-radius: 999px; cursor: pointer; font-weight: 600; font-family: 'Montserrat', sans-serif; background: #fff; border: 1px solid #ddd; transition: all 0.2s; }
+    .tab.active { background: var(--re-copper); color: #fff; border-color: var(--re-copper); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .floor-card { background: #fff; border-radius: 24px; padding: 32px; box-shadow: var(--shadow-sm); display: grid; gap: 28px; }
+    @media (min-width: 900px) { .floor-card { grid-template-columns: 1.2fr 1fr; } }
+    .floor-visual { border-radius: 16px; overflow: hidden; aspect-ratio: 4 / 3; }
+    .floor-visual img { width: 100%; height: 100%; object-fit: cover; }
+    .specs-table { width: 100%; border-collapse: collapse; }
+    .specs-table th, .specs-table td { text-align: left; padding: 14px; border-bottom: 1px solid #eee; }
+    .specs-table th { color: #888; font-weight: 600; }
+    .specs-table td { font-weight: 700; }
+
+    .location-section { padding: 96px 0; }
+    .location-grid { display: grid; gap: 32px; align-items: center; }
+    @media (min-width: 900px) { .location-grid { grid-template-columns: 1fr 1fr; } }
+    .map-box { border-radius: 24px; overflow: hidden; aspect-ratio: 4 / 3; box-shadow: var(--shadow-md); }
+    .map-box img { width: 100%; height: 100%; object-fit: cover; }
+    .nearby-list { display: flex; flex-direction: column; gap: 12px; }
+    .nearby-item { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.05); padding: 16px 18px; border-radius: 12px; }
+    .nearby-item .icon { width: 40px; height: 40px; border-radius: 50%; background: rgba(184,115,51,0.15); display: flex; align-items: center; justify-content: center; color: var(--re-copper-light); font-size: 1.1rem; }
+    .nearby-item div { font-weight: 600; }
+    .nearby-item small { color: rgba(255,255,255,0.6); }
+
+    .trust-section { background: rgba(0,0,0,0.15); padding: 80px 0; }
+    .trust-row { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+    .trust-badge { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 999px; padding: 12px 24px; font-weight: 600; }
+
+    .lead-section { background: linear-gradient(180deg, #14203d, var(--re-slate)); padding: 96px 0; }
+    .lead-form { max-width: 720px; margin: 0 auto; background: rgba(255,255,255,0.05); border-radius: 24px; padding: 40px; border: 1px solid rgba(184,115,51,0.3); }
+    .submit-btn { width: 100%; background: var(--re-copper); color: #fff; font-weight: 700; padding: 16px; border-radius: 16px; cursor: pointer; transition: opacity 0.2s; }
+    .submit-btn:hover { opacity: 0.9; }
+    .form-success { background: rgba(184,115,51,0.15); color: var(--re-copper-light); border: 1px solid rgba(184,115,51,0.3); }
+    .form-note a { color: var(--re-copper-light); }
+
+    .footer-note { text-align: center; padding: 40px 0; background: #101c35; color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+.sticky-footer { background: rgba(16,28,53,0.95); border-top: 1px solid rgba(184,115,51,0.25); }
+    .sticky-footer .btn-primary { background: var(--re-copper); color: #fff; }
+    .sticky-footer .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+  </style>
+</head>
+<body>
+<section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="reveal">
+          <span class="location">Premium Residences in Indore</span>
+          <h1>Skyline Heights</h1>
+          <span class="price">Starting Rs. 45 Lakhs*</span>
+          <p>Luxury 2 & 3 BHK apartments in the heart of Indore. Premium amenities, excellent connectivity, and ready-to-move possession.</p>
+          <div class="hero-ctas">
+            <a href="#floorplans" class="btn btn-lg btn-copper no-arrow" data-track="realestate_hero_floorplans">Get Floor Plans</a>
+            <a href="#" class="btn btn-lg btn-outline no-arrow" data-whatsapp="I saw your real estate demo, interested!" data-demo="realestate" data-track="realestate_hero_whatsapp">WhatsApp Now</a>
+          </div>
+        </div>
+        <div class="listing-card reveal reveal-right">
+          <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80" alt="Skyline Heights apartment exterior" width="800" height="500" loading="eager" decoding="async">
+          <h3>Skyline Heights</h3>
+          <p class="address">Vijay Nagar, Indore</p>
+          <div class="listing-stats">
+            <div class="stat"><strong>320</strong><span>Units</span></div>
+            <div class="stat"><strong>2 & 3</strong><span>BHK</span></div>
+            <div class="stat"><strong>950-1650</strong><span>Sq Ft</span></div>
+            <div class="stat"><strong>Dec 2026</strong><span>Possession</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="highlights">
+    <div class="container">
+      <div class="highlights-grid reveal-stagger">
+        <div class="highlight reveal"><div class="highlight-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"></rect><path d="M9 22v-4h6v4"></path><path d="M8 6h8M8 10h8M8 14h8"></path></svg></div><h4 class="mono">320</h4><p>Total Units</p></div>
+        <div class="highlight reveal"><div class="highlight-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4 8 4v14"></path><path d="M9 10h6v5H9z"></path></svg></div><h4 class="mono">2 & 3 BHK</h4><p>Options</p></div>
+        <div class="highlight reveal"><div class="highlight-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 18h16M5 18v-8l7-4 7 4v8"></path><path d="M12 6v6"></path></svg></div><h4 class="mono">950-1650</h4><p>Sq Ft</p></div>
+        <div class="highlight reveal"><div class="highlight-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg></div><h4 class="mono">Dec 2026</h4><p>Possession</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="amenities-section">
+    <div class="container">
+      <h2 class="section-title reveal">Premium Amenities</h2>
+      <p class="section-subtitle reveal">Everything you need for a comfortable lifestyle.</p>
+      <div class="amenities-grid reveal-stagger">
+        <div class="amenity reveal"><span class="amenity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c0 3 2 6 5 6s5-6 5-6-2-6-5-6-5 3-5 6z"></path><path d="M12 12c0 3 2 6 5 6s5-6 5-6-2-6-5-6-5 3-5 6z"></path></svg></span><span>Swimming Pool</span></div>
+        <div class="amenity reveal"><span class="amenity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12M6 20h12M6 12h12M4 8h2M4 16h2M18 8h2M18 16h2M8 4v16M16 4v16"></path></svg></span><span>Gym</span></div>
+        <div class="amenity reveal"><span class="amenity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="10" rx="2"></rect><path d="M6 17v2M18 17v2M7 7v-3h10v3"></path></svg></span><span>Parking</span></div>
+        <div class="amenity reveal"><span class="amenity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></span><span>24/7 Security</span></div>
+        <div class="amenity reveal"><span class="amenity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4 8 4v14"></path><path d="M9 10h6v5H9z"></path></svg></span><span>Clubhouse</span></div>
+        <div class="amenity reveal"><span class="amenity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-8M5 22v-5a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v5"></path><circle cx="12" cy="5" r="3"></circle></svg></span><span>Park</span></div>
+        <div class="amenity reveal"><span class="amenity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></span><span>Power Backup</span></div>
+        <div class="amenity reveal"><span class="amenity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M8 9l4-4 4 4M8 15l4 4 4-4"></path></svg></span><span>Lift</span></div>
+        <div class="amenity reveal"><span class="amenity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v12M8 10s2-2 4-2 4 2 4 2"></path></svg></span><span>Yoga Deck</span></div>
+        <div class="amenity reveal"><span class="amenity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 12h8M12 8v8"></path></svg></span><span>Party Hall</span></div>
+        <div class="amenity reveal"><span class="amenity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4.97 0 9-3.13 9-7 0-3.13-3-6-8-7-1.74-.3-3.41.5-5 2.4-1.59-1.9-3.26-2.7-5-2.4-5 1-8 3.87-8 7 0 3.87 4.03 7 9 7z"></path></svg></span><span>Garden</span></div>
+        <div class="amenity reveal"><span class="amenity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.5"></circle><circle cx="18.5" cy="17.5" r="3.5"></circle><path d="M15 17.5V6l-3-4-3 4v11.5"></path></svg></span><span>Cycling Track</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="floorplans" class="floorplans">
+    <div class="container">
+      <h2 class="section-title text-center reveal" style="color:var(--re-slate);">Floor Plans</h2>
+      <p class="section-subtitle text-center reveal" style="color:#555; margin-left:auto; margin-right:auto;">Choose the layout that fits your family.</p>
+      <div class="tabs reveal">
+        <div class="tab active" onclick="switchTab('bhk2')">2 BHK</div>
+        <div class="tab" onclick="switchTab('bhk3')">3 BHK</div>
+      </div>
+      <div id="bhk2" class="tab-content active reveal">
+        <div class="floor-card">
+          <div class="floor-visual"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80" alt="2 BHK apartment floor plan interior" width="800" height="600" loading="lazy" decoding="async"></div>
+          <div>
+            <h3 style="margin-bottom:12px;color:var(--re-slate); font-size: 1.6rem;">2 BHK Premium</h3>
+            <table class="specs-table">
+              <tr><th>Area</th><td>950 sq ft</td></tr>
+              <tr><th>Bedrooms</th><td>2</td></tr>
+              <tr><th>Bathrooms</th><td>2</td></tr>
+              <tr><th>Balconies</th><td>2</td></tr>
+              <tr><th>Price</th><td>Rs. 45 Lakh*</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div id="bhk3" class="tab-content reveal">
+        <div class="floor-card">
+          <div class="floor-visual"><img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80" alt="3 BHK apartment floor plan interior" width="800" height="600" loading="lazy" decoding="async"></div>
+          <div>
+            <h3 style="margin-bottom:12px;color:var(--re-slate); font-size: 1.6rem;">3 BHK Luxury</h3>
+            <table class="specs-table">
+              <tr><th>Area</th><td>1650 sq ft</td></tr>
+              <tr><th>Bedrooms</th><td>3</td></tr>
+              <tr><th>Bathrooms</th><td>3</td></tr>
+              <tr><th>Balconies</th><td>3</td></tr>
+              <tr><th>Price</th><td>Rs. 78 Lakh*</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="location-section">
+    <div class="container">
+      <h2 class="section-title reveal">Location Advantages</h2>
+      <p class="section-subtitle reveal">Well connected to everything that matters.</p>
+      <div class="location-grid">
+        <div class="map-box reveal">
+          <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80" alt="Location map view of Indore area" width="800" height="600" loading="lazy" decoding="async">
+        </div>
+        <div class="nearby-list reveal">
+          <div class="nearby-item"><div class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16M8 22v-6l4-2 4 2v6"></path><path d="M4 10h16v12H4z"></path><path d="M12 2L2 10h20L12 2z"></path></svg></div><div>Schools <small>2 km away</small></div></div>
+          <div class="nearby-item"><div class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z"></path><path d="M12 22V12"></path><path d="M12 12L2 7"></path><path d="M12 12l10-5"></path></svg></div><div>Hospitals <small>1.5 km away</small></div></div>
+          <div class="nearby-item"><div class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path></svg></div><div>IT Parks <small>4 km away</small></div></div>
+          <div class="nearby-item"><div class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20M2 12l4-4M2 12l4 4"></path></svg></div><div>Highways <small>1 km away</small></div></div>
+          <div class="nearby-item"><div class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg></div><div>Malls <small>3 km away</small></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="trust-section">
+    <div class="container">
+      <div class="trust-row reveal">
+        <span class="trust-badge">✓ RERA Registered</span>
+        <span class="trust-badge">✓ Verified Listings</span>
+        <span class="trust-badge">✓ Legal Clearance</span>
+        <span class="trust-badge">✓ Bank Approved</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="lead-form" class="lead-section">
+    <div class="container">
+      <h2 class="section-title text-center reveal">Schedule a Site Visit</h2>
+      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">Book a free guided tour of the property.</p>
+      <form class="lead-form reveal" data-demo="realestate">
+        <div class="grid-2">
+          <div class="form-group"><label for="re-name">Name</label><input id="re-name" type="text" class="form-control" placeholder="Your name" required></div>
+          <div class="form-group"><label for="re-phone">Phone</label><input id="re-phone" type="tel" class="form-control" placeholder="Your phone" pattern="[0-9]{10}" required></div>
+          <div class="form-group"><label for="re-city">City</label><input id="re-city" type="text" class="form-control" placeholder="Your city" required></div>
+          <div class="form-group">
+            <label for="re-bhk">BHK Preference</label>
+            <select id="re-bhk" class="form-control" required>
+              <option value="">Select</option>
+              <option>2 BHK</option>
+              <option>3 BHK</option>
+            </select>
+          </div>
+          <div class="form-group" style="grid-column:1 / -1;">
+            <label for="re-budget">Budget</label>
+            <select id="re-budget" class="form-control" required>
+              <option value="">Select Budget</option>
+              <option>Under ₹50 Lakh</option>
+              <option>₹50 - 75 Lakh</option>
+              <option>₹75 Lakh - 1 Crore</option>
+              <option>Above ₹1 Crore</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn no-arrow" data-track="realestate_form_submit">Schedule Site Visit</button>
+        <p class="form-note">Prefer WhatsApp? <a href="#" data-whatsapp="I saw your real estate demo, interested!" data-demo="realestate">Chat directly</a></p>
+      </form>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    <div class="container">© 2025 MistHustlers Indore — Real Estate Demo</div>
+  </div>
+  <div class="sticky-footer">
+    <div class="container">
+      <span class="text">Want this for your business?</span>
+      <a href="tel:XXXXXXXXXX" class="btn btn-sm btn-secondary no-arrow" data-track="realestate_footer_call">Call Now</a>
+      <a href="#" class="btn btn-sm btn-primary no-arrow" data-whatsapp="I saw your real estate demo, interested!" data-demo="realestate" data-track="realestate_footer_whatsapp">WhatsApp</a>
+    </div>
+  </div>
+
+  <script src="../js/shared.js"></script>
+  <script>
+    function switchTab(id) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById(id).classList.add('active');
+      if (window.MistHustlers) MistHustlers.trackEvent('realestate_tab_switch', { tab: id });
+    }
+  </script>
+</body>
+</html>

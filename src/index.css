@@ -19,12 +19,50 @@
 
 :root {
   --mh-bg: #e2e2df;
+  --mh-canvas: #e2e2df;
   --mh-surface: #f7f6f2;
   --mh-text: #070607;
   --mh-cta: #fc5000;
   --mh-accent: #524ae9;
+  --mh-secondary: #524ae9;
   --font-body: "Libre Baskerville", "DM Sans", serif;
   --font-heading: "Libre Baskerville", "PP Neue Corp Compact Ultrabold", serif;
+}
+
+/* RGB channel vars for rgba() usage in inline styles */
+:root {
+  --mh-text-rgb: 7, 6, 7;
+  --mh-cta-rgb: 252, 80, 0;
+  --mh-secondary-rgb: 82, 74, 233;
+  --mh-surface-rgb: 247, 246, 242;
+}
+
+/* Color-mix opacity helpers (used by Services, Career, etc.) */
+:root {
+  --mh-text-6: color-mix(in srgb, var(--mh-text) 6%, transparent);
+  --mh-text-8: color-mix(in srgb, var(--mh-text) 8%, transparent);
+  --mh-text-10: color-mix(in srgb, var(--mh-text) 10%, transparent);
+  --mh-text-12: color-mix(in srgb, var(--mh-text) 12%, transparent);
+  --mh-text-14: color-mix(in srgb, var(--mh-text) 14%, transparent);
+  --mh-text-35: color-mix(in srgb, var(--mh-text) 35%, transparent);
+  --mh-text-40: color-mix(in srgb, var(--mh-text) 40%, transparent);
+  --mh-text-45: color-mix(in srgb, var(--mh-text) 45%, transparent);
+  --mh-text-50: color-mix(in srgb, var(--mh-text) 50%, transparent);
+  --mh-text-55: color-mix(in srgb, var(--mh-text) 55%, transparent);
+  --mh-text-60: color-mix(in srgb, var(--mh-text) 60%, transparent);
+  --mh-text-65: color-mix(in srgb, var(--mh-text) 65%, transparent);
+  --mh-text-68: color-mix(in srgb, var(--mh-text) 68%, transparent);
+  --mh-text-70: color-mix(in srgb, var(--mh-text) 70%, transparent);
+  --mh-text-72: color-mix(in srgb, var(--mh-text) 72%, transparent);
+  --mh-cta-14: color-mix(in srgb, var(--mh-cta) 14%, transparent);
+  --mh-cta-35: color-mix(in srgb, var(--mh-cta) 35%, transparent);
+  --mh-cta-40: color-mix(in srgb, var(--mh-cta) 40%, transparent);
+  --mh-cta-55: color-mix(in srgb, var(--mh-cta) 55%, transparent);
+  --mh-secondary-14: color-mix(in srgb, var(--mh-secondary) 14%, transparent);
+  --mh-secondary-35: color-mix(in srgb, var(--mh-secondary) 35%, transparent);
+  --mh-surface-60: color-mix(in srgb, var(--mh-surface) 60%, transparent);
+  --mh-surface-78: color-mix(in srgb, var(--mh-surface) 78%, transparent);
+  --mh-surface-90: color-mix(in srgb, var(--mh-surface) 90%, transparent);
 }
 
 .font-display {
@@ -168,9 +206,18 @@ button, input, textarea {
 }
 
 /* Form focus */
-input:focus, textarea:focus, select:focus {
-  outline: none;
-  ring: 2px solid #fc5000;
+input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 2px solid #fc5000;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* 3D scene */

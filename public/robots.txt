@@ -1,7 +1,3 @@
 User-agent: *
 Allow: /
-Disallow: /api/
-Disallow: /admin/
-Disallow: /uploads/
-
-Sitemap: https://misthustlers.in/sitemap.xml
+Sitemap: https://misthustlers.com/sitemap.xml

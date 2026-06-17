@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clinic / Dental Website Demo - MistHustlers Indore</title>
+  <meta name="description" content="Premium clinic and dental website demo for Indore. Appointment booking, services, doctor profile, and map. Built by MistHustlers.">
+  <link rel="canonical" href="https://misthustlers.up.railway.app/demo/clinic/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%237C3AED'/%3E%3Ctext x='50' y='65' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3EM%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@600&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    :root {
+      --clinic-teal: #00897B;
+      --clinic-teal-light: #4DB6AC;
+      --clinic-light: #E0F7FA;
+      --clinic-cream: #F5F9FF;
+      --clinic-dark: #1C1C1C;
+    }
+    body { background: var(--clinic-cream); color: var(--clinic-dark); font-family: 'Source Sans Pro', sans-serif; }
+    h1, h2, h3 { font-family: 'Lora', serif; }
+    
+.hero { padding: 140px 0 80px; background: linear-gradient(135deg, #fff 0%, var(--clinic-light) 100%); position: relative; overflow: hidden; }
+    .hero::before {
+      content: ''; position: absolute; width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,137,123,0.12), transparent 70%); top: -150px; right: -100px; z-index: 0;
+    }
+    .hero-grid { display: grid; gap: 48px; align-items: center; position: relative; z-index: 1; }
+    @media (min-width: 900px) { .hero-grid { grid-template-columns: 1fr 1fr; } }
+    .hero h1 { font-size: clamp(2.3rem, 5vw, 3.8rem); line-height: 1.1; color: var(--clinic-dark); margin-bottom: 16px; }
+    .hero p { font-size: 1.15rem; color: #555; max-width: 500px; margin-bottom: 28px; }
+    .btn-teal { background: var(--clinic-teal); color: #fff; font-weight: 600; }
+    .btn-teal:hover { background: #00695C; box-shadow: 0 12px 32px rgba(0,137,123,0.25); }
+    .btn-outline { background: transparent; color: var(--clinic-dark); border: 1px solid rgba(0,137,123,0.3); font-weight: 600; }
+    .btn-outline:hover { background: rgba(0,137,123,0.08); }
+    .trust-badges .badge-pill { background: rgba(0,137,123,0.1); color: #00695C; border: 1px solid rgba(0,137,123,0.15); }
+
+    .hero-visual {
+      background: #fff; border-radius: 24px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,137,123,0.15);
+      border: 1px solid rgba(0,137,123,0.15); position: relative;
+    }
+    .hero-visual img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+    .doctor-card {
+      position: absolute; bottom: 20px; left: 20px; right: 20px;
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 20px;
+      padding: 20px; box-shadow: 0 12px 32px rgba(0,0,0,0.12); display: flex; gap: 16px; align-items: center;
+      border: 1px solid rgba(0,137,123,0.12);
+    }
+    .doctor-card .avatar { width: 64px; height: 64px; border-radius: 50%; overflow: hidden; border: 3px solid var(--clinic-teal); flex-shrink: 0; }
+    .doctor-card .avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .doctor-card .info { flex: 1; }
+    .doctor-card .info h4 { font-family: 'Lora', serif; font-size: 1.2rem; color: var(--clinic-dark); margin-bottom: 2px; }
+    .doctor-card .info p { font-size: 0.85rem; color: #555; max-width: 100%; }
+    .doctor-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .doctor-meta span { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 10px; border-radius: 999px; }
+    .doctor-meta .exp { background: rgba(0,137,123,0.1); color: var(--clinic-teal); }
+    .doctor-meta .avail { background: #E8F5E9; color: #2E7D32; }
+    .doctor-meta .rating { background: #FFF8E1; color: #F57F17; }
+    .doctor-appointment {
+      position: absolute; top: 20px; right: 20px;
+      background: var(--clinic-teal); color: #fff; padding: 12px 18px; border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0,137,123,0.25); text-align: center; min-width: 110px;
+    }
+    .doctor-appointment strong { display: block; font-size: 1.3rem; font-weight: 700; }
+    .doctor-appointment small { font-size: 0.7rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .services-section { background: #fff; padding: 96px 0; }
+    .section-title { color: var(--clinic-dark); font-family: 'Lora', serif; }
+    .section-subtitle { color: #555; }
+    .services-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
+    @media (min-width: 640px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 900px) { .services-grid { grid-template-columns: repeat(3, 1fr); } }
+    .service-card {
+      background: var(--clinic-cream); border: 1px solid rgba(0,137,123,0.1); border-radius: 16px; padding: 28px;
+      transition: transform 0.3s var(--ease-out), box-shadow 0.3s, border-color 0.3s;
+    }
+    .service-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,137,123,0.12); border-color: rgba(0,137,123,0.25); }
+    .service-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(0,137,123,0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: var(--clinic-teal); }
+    .service-icon svg { width: 24px; height: 24px; stroke-width: 2; stroke: currentColor; fill: none; }
+    .service-card h3 { font-family: 'Source Sans Pro', sans-serif; font-size: 1.15rem; font-weight: 600; margin-bottom: 6px; }
+    .service-card p { font-size: 0.95rem; color: #666; max-width: 100%; }
+
+    .form-section { background: linear-gradient(180deg, #fff, var(--clinic-light)); padding: 96px 0; }
+    .form-card { max-width: 680px; margin: 0 auto; background: var(--clinic-teal); color: #fff; border-radius: 24px; padding: 40px; box-shadow: var(--shadow-lg); }
+    .form-card .form-control { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.25); color: #fff; }
+    .form-card .form-control::placeholder { color: rgba(255,255,255,0.7); }
+    .form-card .form-control:focus { border-color: #fff; }
+    .form-card label { color: #fff; }
+    .submit-btn { width: 100%; background: #fff; color: var(--clinic-teal); font-weight: 700; padding: 16px; border-radius: 16px; cursor: pointer; transition: opacity 0.2s; }
+    .submit-btn:hover { opacity: 0.9; }
+    .form-success { background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+    .form-note { color: rgba(255,255,255,0.9); }
+    .form-note a { color: #fff; font-weight: 700; }
+
+    .trust-section { background: #fff; padding: 80px 0; }
+    .trust-grid { display: grid; gap: 24px; grid-template-columns: repeat(2, 1fr); }
+    @media (min-width: 900px) { .trust-grid { grid-template-columns: repeat(4, 1fr); } }
+    .trust-card {
+      background: var(--clinic-cream); border-radius: 16px; padding: 28px; text-align: center; border: 1px solid rgba(0,137,123,0.1);
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .trust-card:hover { transform: translateY(-4px); border-color: rgba(0,137,123,0.25); }
+    .trust-card .icon { width: 48px; height: 48px; border-radius: 50%; background: rgba(0,137,123,0.1); display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; color: var(--clinic-teal); }
+    .trust-card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .trust-card p { font-size: 0.9rem; color: #666; max-width: 100%; }
+
+    .testimonials { background: var(--clinic-cream); padding: 96px 0; }
+    .testimonials-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
+    @media (min-width: 768px) { .testimonials-grid { grid-template-columns: repeat(3, 1fr); } }
+    .testimonial-card { background: #fff; border-radius: 16px; padding: 28px; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,137,123,0.08); }
+    .stars { color: #F5A623; font-size: 1.1rem; margin-bottom: 12px; }
+    .testimonial-card p { color: #444; font-style: italic; margin-bottom: 16px; max-width: 100%; }
+    .testimonial-card h4 { font-weight: 700; color: var(--clinic-dark); }
+
+    .location-section { background: #fff; padding: 96px 0; }
+    .location-grid { display: grid; gap: 32px; align-items: center; }
+    @media (min-width: 900px) { .location-grid { grid-template-columns: 1fr 1fr; } }
+.location-card {
+      background: #fff; border-radius: 24px; padding: 32px; box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0,137,123,0.12); height: 100%; display: flex; flex-direction: column;
+    }
+    .location-map {
+      background: linear-gradient(135deg, #E0F7FA, #B2DFDB); border-radius: 16px; aspect-ratio: 16 / 9;
+      position: relative; overflow: hidden; margin-bottom: 24px; display: flex; align-items: center; justify-content: center;
+    }
+    .location-map::before {
+      content: ''; position: absolute; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 18px, rgba(0,137,123,0.08) 18px, rgba(0,137,123,0.08) 19px),
+                  repeating-linear-gradient(90deg, transparent, transparent 18px, rgba(0,137,123,0.08) 18px, rgba(0,137,123,0.08) 19px);
+    }
+    .location-pin {
+      position: relative; z-index: 1; width: 56px; height: 56px; background: var(--clinic-teal); border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,137,123,0.3);
+    }
+    .location-pin svg { transform: rotate(45deg); width: 28px; height: 28px; }
+    .nearby-chips { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .nearby-chip { background: var(--clinic-cream); border: 1px solid rgba(0,137,123,0.15); border-radius: 999px; padding: 8px 14px; font-size: 0.85rem; font-weight: 600; color: var(--clinic-dark); display: flex; align-items: center; gap: 6px; }
+    .nearby-chip .distance { color: var(--clinic-teal); }
+    .location-ctas { display: flex; gap: 12px; margin-top: auto; flex-wrap: wrap; }
+    .location-ctas .btn { flex: 1; min-width: 140px; }
+    .map-box { border-radius: 24px; overflow: hidden; aspect-ratio: 4 / 3; box-shadow: var(--shadow-md); }
+    .map-box img { width: 100%; height: 100%; object-fit: cover; }
+    .hours-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    .hours-table td { padding: 12px 0; border-bottom: 1px solid #eee; color: #555; }
+    .hours-table td:last-child { text-align: right; font-weight: 600; color: var(--clinic-dark); }
+
+    .footer-note { text-align: center; padding: 40px 0; background: #f5f9ff; color: #777; font-size: 0.9rem; }
+.sticky-footer { background: rgba(255,255,255,0.95); border-top: 1px solid #e0e0e0; color: var(--clinic-dark); }
+    .sticky-footer .text { color: var(--clinic-dark); }
+    .sticky-footer .btn-primary { background: var(--clinic-teal); color: #fff; }
+    .sticky-footer .btn-secondary { background: #f0f0f0; color: var(--clinic-dark); border: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+<section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="reveal">
+          <h1>Your Health, Our Priority</h1>
+          <p>Trusted dental and general care in Indore. Experience modern treatment, compassionate doctors, and easy appointment booking.</p>
+          <div class="hero-ctas">
+            <a href="#appointment" class="btn btn-lg btn-teal no-arrow" data-track="clinic_hero_book">Book Appointment</a>
+            <a href="#services" class="btn btn-lg btn-outline no-arrow" data-track="clinic_hero_services">Our Services</a>
+          </div>
+          <div class="trust-badges">
+            <span class="badge-pill">10+ Years</span>
+            <span class="badge-pill">5000+ Patients</span>
+            <span class="badge-pill">ISO Certified</span>
+          </div>
+        </div>
+        <div class="hero-visual reveal reveal-right">
+          <img src="https://images.unsplash.com/photo-1571772996211-2f02c9727629?w=800&q=80" alt="Dr. Anjali Sharma in modern clinic" width="800" height="600" loading="eager" decoding="async">
+          <div class="doctor-appointment">
+            <strong>Today</strong>
+            <small>Slots Open</small>
+          </div>
+          <div class="doctor-card">
+            <div class="avatar">
+              <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&q=80" alt="Dr. Anjali Sharma portrait" width="128" height="128" loading="eager" decoding="async">
+            </div>
+            <div class="info">
+              <h4>Dr. Anjali Sharma</h4>
+              <p>BDS, MDS (Orthodontics) • Head Dentist</p>
+              <div class="doctor-meta">
+                <span class="exp">12+ Years</span>
+                <span class="avail">Available Today</span>
+                <span class="rating">4.9★ Rating</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="services-section">
+    <div class="container">
+      <h2 class="section-title reveal">Our Services</h2>
+      <p class="section-subtitle reveal">Complete care for your family under one roof.</p>
+      <div class="services-grid reveal-stagger">
+        <div class="service-card reveal">
+          <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+          <h3>General Checkup</h3>
+          <p>Full body health screening and preventive care.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12s2-4 4-4 4 4 4 4-2 4-4 4-4-4-4-4z"/></svg></div>
+          <h3>Dental Cleaning</h3>
+          <p>Professional scaling and polishing for healthy gums.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+          <h3>Root Canal</h3>
+          <p>Painless root canal treatment with advanced tools.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M12 6v6l4 2"/></svg></div>
+          <h3>Braces</h3>
+          <p>Metal, ceramic, and clear aligner options.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z"/></svg></div>
+          <h3>Teeth Whitening</h3>
+          <p>Safe whitening procedures for a brighter smile.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 21c4.97 0 9-3.13 9-7 0-3.13-3-6-8-7-1.74-.3-3.41.5-5 2.4-1.59-1.9-3.26-2.7-5-2.4-5 1-8 3.87-8 7 0 3.87 4.03 7 9 7z"/></svg></div>
+          <h3>Kids Dentistry</h3>
+          <p>Gentle dental care for children of all ages.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="appointment" class="form-section">
+    <div class="container">
+      <h2 class="section-title text-center reveal">Request Appointment</h2>
+      <p class="section-subtitle text-center reveal" style="margin-left:auto;margin-right:auto;">Choose your preferred service and date. We'll confirm instantly.</p>
+      <form class="form-card reveal" data-demo="clinic">
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="clinic-name">Name</label>
+            <input id="clinic-name" type="text" class="form-control" placeholder="Your name" required>
+          </div>
+          <div class="form-group">
+            <label for="clinic-phone">Phone</label>
+            <input id="clinic-phone" type="tel" class="form-control" placeholder="Your phone" pattern="[0-9]{10}" required>
+          </div>
+          <div class="form-group">
+            <label for="clinic-service">Service</label>
+            <select id="clinic-service" class="form-control" required>
+              <option value="">Select Service</option>
+              <option>General Checkup</option>
+              <option>Dental Cleaning</option>
+              <option>Root Canal</option>
+              <option>Braces</option>
+              <option>Teeth Whitening</option>
+              <option>Kids Dentistry</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="clinic-date">Preferred Date</label>
+            <input id="clinic-date" type="date" class="form-control" required>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn no-arrow" data-track="clinic_form_submit">Request Appointment</button>
+        <p class="form-note">Prefer WhatsApp? <a href="#" data-whatsapp="I saw your clinic demo, interested!" data-demo="clinic">Chat directly</a></p>
+      </form>
+    </div>
+  </section>
+
+  <section class="trust-section">
+    <div class="container">
+      <h2 class="section-title text-center reveal">Why Choose Our Clinic</h2>
+      <p class="section-subtitle text-center reveal" style="margin-left:auto;margin-right:auto;">Trust and care in every visit.</p>
+      <div class="trust-grid reveal-stagger">
+        <div class="trust-card reveal">
+          <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <h4>Hygiene First</h4>
+          <p>ISO-grade sterilization protocols.</p>
+        </div>
+        <div class="trust-card reveal">
+          <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg></div>
+          <h4>Quick Appointments</h4>
+          <p>Same-day slots available.</p>
+        </div>
+        <div class="trust-card reveal">
+          <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+          <h4>Experienced Team</h4>
+          <p>10+ years of clinical expertise.</p>
+        </div>
+        <div class="trust-card reveal">
+          <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <h4>Emergency Support</h4>
+          <p>Urgent dental care on call.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonials">
+    <div class="container">
+      <h2 class="section-title reveal">Patient Reviews</h2>
+      <p class="section-subtitle reveal">Real stories from our patients.</p>
+      <div class="testimonials-grid reveal-stagger">
+        <div class="testimonial-card reveal">
+          <div class="stars"><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></div>
+          <p>"The root canal was completely painless. The staff is very supportive."</p>
+          <h4>— Ramesh</h4>
+        </div>
+        <div class="testimonial-card reveal">
+          <div class="stars"><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></div>
+          <p>"Best dental clinic in Indore. My kids actually enjoy their visits now."</p>
+          <h4>— Priya</h4>
+        </div>
+        <div class="testimonial-card reveal">
+          <div class="stars"><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></div>
+          <p>"Appointment booking is smooth and the doctors take time to explain."</p>
+          <h4>— Sunil</h4>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="location-section">
+    <div class="container">
+      <h2 class="section-title reveal">Visit Our Clinic</h2>
+      <p class="section-subtitle reveal">Located in the heart of Indore with easy access to major landmarks.</p>
+      <div class="location-grid">
+        <div class="location-card reveal">
+          <div class="location-map">
+            <div class="location-pin">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            </div>
+          </div>
+          <h3 style="font-family:'Lora',serif; margin-bottom:8px; font-size:1.5rem;">City Care Clinic</h3>
+          <p style="color:#555; margin-bottom:16px;">123, Vijay Nagar, Indore, Madhya Pradesh 452010</p>
+          <div class="nearby-chips">
+            <span class="nearby-chip">Apollo Hospital <span class="distance">1.2 km</span></span>
+            <span class="nearby-chip">Vijay Nagar Square <span class="distance">0.8 km</span></span>
+            <span class="nearby-chip">City Bus Stand <span class="distance">2.1 km</span></span>
+            <span class="nearby-chip">Kendriya School <span class="distance">1.5 km</span></span>
+          </div>
+          <table class="hours-table">
+            <tr><td>Monday - Friday</td><td>9:00 AM - 8:00 PM</td></tr>
+            <tr><td>Saturday</td><td>9:00 AM - 6:00 PM</td></tr>
+            <tr><td>Sunday</td><td>10:00 AM - 2:00 PM</td></tr>
+          </table>
+          <div class="location-ctas">
+            <a href="tel:XXXXXXXXXX" class="btn btn-teal no-arrow" data-track="clinic_location_call">Call Clinic</a>
+            <a href="#" class="btn btn-outline no-arrow" data-whatsapp="I saw your clinic demo, interested!" data-demo="clinic" data-track="clinic_location_whatsapp">WhatsApp</a>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="trust-grid" style="grid-template-columns:1fr;">
+            <div class="trust-card" style="text-align:left; display:flex; gap:16px; align-items:flex-start;">
+              <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+              <div>
+                <h4>Fully Sanitized Clinic</h4>
+                <p>ISO-grade sterilization for every instrument and operatory. Patient safety is our priority.</p>
+              </div>
+            </div>
+            <div class="trust-card" style="text-align:left; display:flex; gap:16px; align-items:flex-start;">
+              <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg></div>
+              <div>
+                <h4>Same-Day Appointments</h4>
+                <p>Book online or walk in. We reserve slots for urgent dental and general consultations.</p>
+              </div>
+            </div>
+            <div class="trust-card" style="text-align:left; display:flex; gap:16px; align-items:flex-start;">
+              <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg></div>
+              <div>
+                <h4>24/7 Emergency Support</h4>
+                <p>Dental emergency? Our on-call doctor is available for priority after-hours support.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    <div class="container">© 2025 MistHustlers Indore — Clinic / Dental Demo</div>
+  </div>
+  <div class="sticky-footer">
+    <div class="container">
+      <span class="text">Want this for your business?</span>
+      <a href="tel:XXXXXXXXXX" class="btn btn-sm btn-secondary no-arrow" data-track="clinic_footer_call">Call</a>
+      <a href="#" class="btn btn-sm btn-primary no-arrow" data-whatsapp="I saw your clinic demo, interested!" data-demo="clinic" data-track="clinic_footer_whatsapp">WhatsApp</a>
+    </div>
+  </div>
+
+  <script src="../js/shared.js"></script>
+</body>
+</html>

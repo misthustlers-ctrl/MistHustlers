@@ -5,6 +5,7 @@ import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { upload, uploadImage, deleteImage } from "../controllers/upload.controller.js";
 import { auditLog } from "../middleware/audit.middleware.js";
+import { allowRoles, createSessionToken, hashPassword, requireAdmin } from "../middleware/admin-auth.middleware.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, "..", "data");
@@ -21,6 +22,51 @@ async function writeJSON(file, data) {
 }
 
 const CONTENT_PAGES = ["home", "services", "career", "projects", "contact", "logo", "seo"];
+const ACCOUNT_ROLES = ["agent", "partner"];
+const INQUIRY_STATUSES = ["new", "contacted", "archived"];
+const EMAIL_STATUSES = ["pending", "sent", "failed"];
+const OPPORTUNITY_STATUSES = ["open", "paused", "closed", "archived"];
+const APPLICANT_STATUSES = ["new", "reviewed", "shortlisted", "accepted", "rejected"];
+const PROJECT_STATUSES = ["planning", "in-progress", "review", "completed"];
+
+function toId(value) {
+  const id = Number(value);
+  return Number.isInteger(id) && id > 0 ? id : null;
+}
+
+function text(value, max = 5000) {
+  if (value === undefined) return undefined;
+  const normalized = String(value || "").trim();
+  return normalized.slice(0, max);
+}
+
+function nullableText(value, max = 5000) {
+  const normalized = text(value, max);
+  return normalized ? normalized : null;
+}
+
+function requireText(value, label, max = 5000) {
+  const normalized = text(value, max);
+  if (!normalized) {
+    const err = new Error(`${label} is required`);
+    err.status = 400;
+    throw err;
+  }
+  return normalized;
+}
+
+function pickStatus(value, allowed, fallback) {
+  return allowed.includes(value) ? value : fallback;
+}
+
+function validateContentPayload(page, data) {
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    return `${page} content must be an object`;
+  }
+  const size = Buffer.byteLength(JSON.stringify(data), "utf-8");
+  if (size > 750_000) return `${page} content is too large`;
+  return null;
+}
 
 async function moveToBin(type, data) {
   const current = await readJSON("bin-files.json").catch(() => []);
@@ -35,13 +81,13 @@ async function moveToBin(type, data) {
   return item;
 }
 
-router.get("/bin", async (_, res, next) => {
+router.get("/bin", requireAdmin, async (_, res, next) => {
   try {
     res.json(await readJSON("bin-files.json").catch(() => []));
   } catch (err) { next(err); }
 });
 
-router.delete("/bin", async (req, res, next) => {
+router.delete("/bin", requireAdmin, async (req, res, next) => {
   try {
     const { id } = req.body;
     if (!id) {
@@ -54,17 +100,100 @@ router.delete("/bin", async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-router.get("/inquiries", async (_, res, next) => {
+router.get("/session", (req, res) => {
+  res.json({ success: true, user: req.admin, token: createSessionToken(req.admin) });
+});
+
+router.get("/accounts", requireAdmin, async (_, res, next) => {
+  try {
+    const accounts = await prisma.adminUser.findMany({
+      orderBy: { createdAt: "desc" },
+      select: { id: true, username: true, displayName: true, role: true, status: true, createdAt: true, updatedAt: true },
+    });
+    res.json(accounts);
+  } catch (err) { next(err); }
+});
+
+router.post("/accounts", requireAdmin, async (req, res, next) => {
+  try {
+    const { username, password, displayName, role } = req.body;
+    const safeUsername = text(username, 80)?.toLowerCase();
+    if (!username || !password || !ACCOUNT_ROLES.includes(role)) {
+      return res.status(400).json({ success: false, message: "Username, password, and a valid account type are required" });
+    }
+    if (!/^[a-z0-9._-]{3,80}$/.test(safeUsername)) {
+      return res.status(400).json({ success: false, message: "Username can use letters, numbers, dots, dashes, and underscores only" });
+    }
+    if (password.length < 8) {
+      return res.status(400).json({ success: false, message: "Password must be at least 8 characters" });
+    }
+    const { salt, passwordHash } = hashPassword(password);
+    const account = await prisma.adminUser.create({
+      data: { username: safeUsername, displayName: nullableText(displayName, 120), role, salt, passwordHash },
+      select: { id: true, username: true, displayName: true, role: true, status: true, createdAt: true, updatedAt: true },
+    });
+    res.status(201).json(account);
+  } catch (err) {
+    if (err.code === "P2002") return res.status(409).json({ success: false, message: "Username already exists" });
+    next(err);
+  }
+});
+
+router.put("/accounts", requireAdmin, async (req, res, next) => {
+  try {
+    const { id, password, role, ...updates } = req.body;
+    const accountId = toId(id);
+    if (!accountId) return res.status(400).json({ success: false, message: "Valid account id is required" });
+    const data = {
+      displayName: nullableText(updates.displayName, 120),
+      status: updates.status === "disabled" ? "disabled" : "active",
+    };
+    if (ACCOUNT_ROLES.includes(role)) data.role = role;
+    if (password) {
+      if (password.length < 8) return res.status(400).json({ success: false, message: "Password must be at least 8 characters" });
+      Object.assign(data, hashPassword(password));
+    }
+    const account = await prisma.adminUser.update({
+      where: { id: accountId },
+      data,
+      select: { id: true, username: true, displayName: true, role: true, status: true, createdAt: true, updatedAt: true },
+    });
+    res.json(account);
+  } catch (err) {
+    if (err.code === "P2025") return res.status(404).json({ success: false, message: "Account not found" });
+    next(err);
+  }
+});
+
+router.delete("/accounts", requireAdmin, async (req, res, next) => {
+  try {
+    const { id } = req.body;
+    const accountId = toId(id);
+    if (!accountId) return res.status(400).json({ success: false, message: "Valid account id is required" });
+    await prisma.adminUser.delete({ where: { id: accountId } });
+    res.json({ ok: true });
+  } catch (err) {
+    if (err.code === "P2025") return res.status(404).json({ success: false, message: "Account not found" });
+    next(err);
+  }
+});
+
+router.get("/inquiries", allowRoles("admin", "agent", "partner"), async (_, res, next) => {
   try {
     const items = await prisma.inquiry.findMany({ orderBy: { createdAt: "desc" } });
     res.json(items);
   } catch (err) { next(err); }
 });
 
-router.put("/inquiries", async (req, res, next) => {
+router.put("/inquiries", allowRoles("admin", "agent"), async (req, res, next) => {
   try {
-    const { id, ...updates } = req.body;
-    const item = await prisma.inquiry.update({ where: { id }, data: updates });
+    const id = toId(req.body.id);
+    if (!id) return res.status(400).json({ success: false, message: "Valid inquiry id is required" });
+    const data = {};
+    if (req.body.status !== undefined) data.status = pickStatus(req.body.status, INQUIRY_STATUSES, "new");
+    if (req.body.notes !== undefined) data.notes = nullableText(req.body.notes, 3000);
+    if (req.admin.role === "admin" && req.body.emailStatus !== undefined) data.emailStatus = pickStatus(req.body.emailStatus, EMAIL_STATUSES, "pending");
+    const item = await prisma.inquiry.update({ where: { id }, data });
     res.json(item);
   } catch (err) {
     if (err.code === "P2025") return res.status(404).json({ error: "Not found" });
@@ -72,7 +201,7 @@ router.put("/inquiries", async (req, res, next) => {
   }
 });
 
-router.delete("/inquiries", async (req, res, next) => {
+router.delete("/inquiries", requireAdmin, async (req, res, next) => {
   try {
     const { id } = req.body;
     const item = await prisma.inquiry.delete({ where: { id } });
@@ -84,24 +213,44 @@ router.delete("/inquiries", async (req, res, next) => {
   }
 });
 
-router.get("/opportunities", async (_, res, next) => {
+router.get("/opportunities", allowRoles("admin", "agent"), async (_, res, next) => {
   try {
     const items = await prisma.opportunity.findMany({ orderBy: { createdAt: "desc" } });
     res.json(items);
   } catch (err) { next(err); }
 });
 
-router.post("/opportunities", async (req, res, next) => {
+router.post("/opportunities", requireAdmin, async (req, res, next) => {
   try {
-    const item = await prisma.opportunity.create({ data: req.body });
+    const item = await prisma.opportunity.create({
+      data: {
+        title: requireText(req.body.title, "Opportunity title", 180),
+        description: text(req.body.description, 5000) || "",
+        department: requireText(req.body.department || "General", "Department", 120),
+        type: text(req.body.type || "full-time", 80),
+        location: nullableText(req.body.location, 160),
+        status: pickStatus(req.body.status, OPPORTUNITY_STATUSES, "open"),
+        applicants: 0,
+      },
+    });
     res.status(201).json(item);
   } catch (err) { next(err); }
 });
 
-router.put("/opportunities", async (req, res, next) => {
+router.put("/opportunities", allowRoles("admin", "agent"), async (req, res, next) => {
   try {
-    const { id, ...updates } = req.body;
-    const item = await prisma.opportunity.update({ where: { id }, data: updates });
+    const id = toId(req.body.id);
+    if (!id) return res.status(400).json({ success: false, message: "Valid opportunity id is required" });
+    const data = {};
+    if (req.admin.role === "admin") {
+      if (req.body.title !== undefined) data.title = requireText(req.body.title, "Opportunity title", 180);
+      if (req.body.description !== undefined) data.description = text(req.body.description, 5000) || "";
+      if (req.body.department !== undefined) data.department = requireText(req.body.department, "Department", 120);
+      if (req.body.type !== undefined) data.type = text(req.body.type, 80);
+      if (req.body.location !== undefined) data.location = nullableText(req.body.location, 160);
+    }
+    if (req.body.status !== undefined) data.status = pickStatus(req.body.status, OPPORTUNITY_STATUSES, "open");
+    const item = await prisma.opportunity.update({ where: { id }, data });
     res.json(item);
   } catch (err) {
     if (err.code === "P2025") return res.status(404).json({ error: "Not found" });
@@ -109,7 +258,7 @@ router.put("/opportunities", async (req, res, next) => {
   }
 });
 
-router.delete("/opportunities", async (req, res, next) => {
+router.delete("/opportunities", requireAdmin, async (req, res, next) => {
   try {
     const { id } = req.body;
     const item = await prisma.opportunity.delete({
@@ -124,16 +273,28 @@ router.delete("/opportunities", async (req, res, next) => {
   }
 });
 
-router.get("/applicants", async (_, res, next) => {
+router.get("/applicants", allowRoles("admin", "agent"), async (_, res, next) => {
   try {
     const items = await prisma.applicant.findMany({ orderBy: { createdAt: "desc" } });
     res.json(items);
   } catch (err) { next(err); }
 });
 
-router.post("/applicants", async (req, res, next) => {
+router.post("/applicants", requireAdmin, async (req, res, next) => {
   try {
-    const item = await prisma.applicant.create({ data: req.body });
+    const opportunityId = toId(req.body.opportunityId);
+    if (!opportunityId) return res.status(400).json({ success: false, message: "Valid opportunity is required" });
+    const item = await prisma.applicant.create({
+      data: {
+        opportunityId,
+        name: requireText(req.body.name, "Applicant name", 180),
+        email: requireText(req.body.email, "Applicant email", 200),
+        phone: nullableText(req.body.phone, 50),
+        resumeUrl: nullableText(req.body.resumeUrl, 500),
+        coverLetter: nullableText(req.body.coverLetter, 5000),
+        status: pickStatus(req.body.status, APPLICANT_STATUSES, "new"),
+      },
+    });
     await prisma.opportunity.update({
       where: { id: item.opportunityId },
       data: { applicants: { increment: 1 } },
@@ -142,10 +303,20 @@ router.post("/applicants", async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-router.put("/applicants", async (req, res, next) => {
+router.put("/applicants", allowRoles("admin", "agent"), async (req, res, next) => {
   try {
-    const { id, ...updates } = req.body;
-    const item = await prisma.applicant.update({ where: { id }, data: updates });
+    const id = toId(req.body.id);
+    if (!id) return res.status(400).json({ success: false, message: "Valid applicant id is required" });
+    const data = {};
+    if (req.admin.role === "admin") {
+      if (req.body.name !== undefined) data.name = requireText(req.body.name, "Applicant name", 180);
+      if (req.body.email !== undefined) data.email = requireText(req.body.email, "Applicant email", 200);
+      if (req.body.phone !== undefined) data.phone = nullableText(req.body.phone, 50);
+      if (req.body.resumeUrl !== undefined) data.resumeUrl = nullableText(req.body.resumeUrl, 500);
+      if (req.body.coverLetter !== undefined) data.coverLetter = nullableText(req.body.coverLetter, 5000);
+    }
+    if (req.body.status !== undefined) data.status = pickStatus(req.body.status, APPLICANT_STATUSES, "new");
+    const item = await prisma.applicant.update({ where: { id }, data });
     res.json(item);
   } catch (err) {
     if (err.code === "P2025") return res.status(404).json({ error: "Not found" });
@@ -153,7 +324,7 @@ router.put("/applicants", async (req, res, next) => {
   }
 });
 
-router.delete("/applicants", async (req, res, next) => {
+router.delete("/applicants", requireAdmin, async (req, res, next) => {
   try {
     const { id } = req.body;
     const item = await prisma.applicant.delete({ where: { id } });
@@ -169,24 +340,39 @@ router.delete("/applicants", async (req, res, next) => {
   }
 });
 
-router.get("/projects", async (_, res, next) => {
+router.get("/projects", allowRoles("admin", "partner"), async (_, res, next) => {
   try {
     const items = await prisma.project.findMany({ orderBy: { createdAt: "desc" } });
     res.json(items);
   } catch (err) { next(err); }
 });
 
-router.post("/projects", async (req, res, next) => {
+router.post("/projects", requireAdmin, async (req, res, next) => {
   try {
-    const item = await prisma.project.create({ data: req.body });
+    const item = await prisma.project.create({
+      data: {
+        name: requireText(req.body.name, "Project name", 180),
+        clientName: nullableText(req.body.clientName, 180),
+        description: nullableText(req.body.description, 5000),
+        status: pickStatus(req.body.status, PROJECT_STATUSES, "planning"),
+      },
+    });
     res.status(201).json(item);
   } catch (err) { next(err); }
 });
 
-router.put("/projects", async (req, res, next) => {
+router.put("/projects", allowRoles("admin", "partner"), async (req, res, next) => {
   try {
-    const { id, ...updates } = req.body;
-    const item = await prisma.project.update({ where: { id }, data: updates });
+    const id = toId(req.body.id);
+    if (!id) return res.status(400).json({ success: false, message: "Valid project id is required" });
+    const data = {};
+    if (req.admin.role === "admin") {
+      if (req.body.name !== undefined) data.name = requireText(req.body.name, "Project name", 180);
+      if (req.body.clientName !== undefined) data.clientName = nullableText(req.body.clientName, 180);
+      if (req.body.description !== undefined) data.description = nullableText(req.body.description, 5000);
+    }
+    if (req.body.status !== undefined) data.status = pickStatus(req.body.status, PROJECT_STATUSES, "planning");
+    const item = await prisma.project.update({ where: { id }, data });
     res.json(item);
   } catch (err) {
     if (err.code === "P2025") return res.status(404).json({ error: "Not found" });
@@ -194,7 +380,7 @@ router.put("/projects", async (req, res, next) => {
   }
 });
 
-router.delete("/projects", async (req, res, next) => {
+router.delete("/projects", requireAdmin, async (req, res, next) => {
   try {
     const { id } = req.body;
     const item = await prisma.project.delete({ where: { id } });
@@ -206,10 +392,10 @@ router.delete("/projects", async (req, res, next) => {
   }
 });
 
-router.post("/upload", upload.single("image"), uploadImage);
-router.delete("/upload/:filename", deleteImage);
+router.post("/upload", requireAdmin, upload.single("image"), uploadImage);
+router.delete("/upload/:filename", requireAdmin, deleteImage);
 
-router.get("/media", async (_, res, next) => {
+router.get("/media", requireAdmin, async (_, res, next) => {
   try {
     const uploadsDir = join(__dirname, "..", process.env.UPLOAD_DIR || "uploads");
     const files = await readdir(uploadsDir).catch(() => []);
@@ -218,7 +404,7 @@ router.get("/media", async (_, res, next) => {
   } catch (err) { next(err); }
 });
 
-router.get("/content/:page", async (req, res, next) => {
+router.get("/content/:page", requireAdmin, async (req, res, next) => {
   const page = req.params.page;
   if (!CONTENT_PAGES.includes(page)) return res.status(404).json({ error: "Page not found" });
   try {
@@ -228,9 +414,11 @@ router.get("/content/:page", async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-router.put("/content/:page", async (req, res, next) => {
+router.put("/content/:page", requireAdmin, async (req, res, next) => {
   const page = req.params.page;
   if (!CONTENT_PAGES.includes(page)) return res.status(404).json({ error: "Page not found" });
+  const validationError = validateContentPayload(page, req.body);
+  if (validationError) return res.status(400).json({ success: false, message: validationError });
   try {
     const entry = await prisma.content.upsert({
       where: { page },

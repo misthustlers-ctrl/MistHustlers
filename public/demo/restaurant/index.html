@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restaurant / Cafe Website Demo - MistHustlers Indore</title>
+  <meta name="description" content="Premium restaurant and cafe landing page demo for Indore. Appetizing menu, reservations, chef specials, and gallery. Built by MistHustlers.">
+  <link rel="canonical" href="https://misthustlers.up.railway.app/demo/restaurant/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%237C3AED'/%3E%3Ctext x='50' y='65' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3EM%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&family=Satisfy&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    :root {
+      --rest-amber: #F5A623;
+      --rest-amber-light: #FBC668;
+      --rest-espresso: #1A0F00;
+      --rest-cream: #FFF8F0;
+      --rest-brown: #3D2B00;
+    }
+    body { background: var(--rest-espresso); color: var(--rest-cream); font-family: 'Lato', sans-serif; }
+    h1, h2, h3 { font-family: 'Playfair Display', serif; }
+    .script { font-family: 'Satisfy', cursive; }
+    
+.hero {
+      min-height: 92vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; padding: 140px 0 80px; overflow: hidden;
+    }
+    .hero::before { content: ''; position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&q=80') center/cover; opacity: 0.35; z-index: 0; }
+    .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(26,15,0,0.6), rgba(26,15,0,0.95)); z-index: 0; }
+    .hero .container { position: relative; z-index: 1; }
+    .hero h1 { font-size: clamp(2.8rem, 7vw, 5.5rem); line-height: 1; margin-bottom: 12px; }
+    .hero .cuisine { font-family: 'Satisfy', cursive; font-size: 1.6rem; color: var(--rest-amber); margin-bottom: 32px; display: block; }
+    .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-amber { background: var(--rest-amber); color: var(--rest-espresso); font-weight: 700; }
+    .btn-amber:hover { background: var(--rest-amber-light); box-shadow: 0 12px 32px rgba(245,166,35,0.3); }
+    .btn-outline { background: transparent; color: var(--rest-cream); border: 1px solid rgba(255,248,240,0.4); font-weight: 700; }
+    .btn-outline:hover { border-color: var(--rest-cream); background: rgba(255,255,255,0.08); }
+
+    .featured-section { background: var(--rest-brown); padding: 96px 0; }
+    .section-title { color: var(--rest-cream); }
+    .section-subtitle { color: rgba(255,248,240,0.7); }
+    .dishes-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
+    @media (min-width: 768px) { .dishes-grid { grid-template-columns: repeat(3, 1fr); } }
+    .dish-card { background: var(--rest-espresso); border-radius: 16px; overflow: hidden; border: 1px solid rgba(245,166,35,0.2); transition: transform 0.3s var(--ease-out), box-shadow 0.3s; }
+    .dish-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(245,166,35,0.15); }
+    .dish-image { aspect-ratio: 4 / 3; overflow: hidden; }
+    .dish-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+    .dish-card:hover .dish-image img { transform: scale(1.08); }
+    .dish-info { padding: 24px; }
+    .dish-info h3 { font-size: 1.4rem; margin-bottom: 6px; }
+    .dish-info p { font-size: 0.95rem; color: rgba(255,248,240,0.7); margin-bottom: 14px; max-width: 100%; }
+    .dish-info .price { font-size: 1.3rem; color: var(--rest-amber); font-weight: 700; margin-bottom: 14px; }
+
+    .menu-section { background: var(--rest-espresso); padding: 96px 0; }
+    .accordion { display: flex; flex-direction: column; gap: 12px; max-width: 800px; margin: 0 auto; }
+    .accordion-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(245,166,35,0.15); border-radius: 16px; overflow: hidden; }
+    .accordion-header { padding: 18px 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-family: 'Playfair Display', serif; font-size: 1.3rem; transition: background 0.2s; }
+    .accordion-header:hover { background: rgba(245,166,35,0.08); }
+    .accordion-icon { font-size: 1.2rem; transition: transform 0.3s; }
+    .accordion-item.open .accordion-icon { transform: rotate(180deg); }
+    .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .accordion-item.open .accordion-body { max-height: 500px; }
+    .accordion-content { padding: 0 24px 20px; }
+    .menu-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .menu-item:last-child { border-bottom: none; }
+    .menu-item .name { font-weight: 600; }
+    .menu-item small { color: rgba(255,248,240,0.6); display: block; }
+    .menu-item .price { color: var(--rest-amber); font-weight: 700; }
+
+    .offer-strip { background: var(--rest-amber); color: var(--rest-espresso); padding: 20px 0; text-align: center; font-weight: 700; font-size: 1.1rem; }
+
+    .chef-section { background: var(--rest-brown); padding: 96px 0; }
+    .chef-grid { display: grid; gap: 40px; align-items: center; }
+    @media (min-width: 900px) { .chef-grid { grid-template-columns: 1fr 1fr; } }
+    .chef-image { border-radius: 24px; overflow: hidden; aspect-ratio: 4 / 3; box-shadow: 0 24px 60px rgba(0,0,0,0.3); }
+    .chef-image img { width: 100%; height: 100%; object-fit: cover; }
+    .chef-content h2 { margin-bottom: 16px; }
+    .chef-content p { opacity: 0.8; margin-bottom: 16px; }
+    .chef-signature { font-family: 'Satisfy', cursive; font-size: 1.8rem; color: var(--rest-amber); margin-top: 16px; }
+
+    .reservation-section { background: var(--rest-espresso); padding: 96px 0; }
+    .reservation-form { max-width: 720px; margin: 0 auto; background: rgba(255,255,255,0.04); border-radius: 24px; padding: 40px; border: 1px solid rgba(245,166,35,0.25); }
+    .submit-btn { width: 100%; background: var(--rest-amber); color: var(--rest-espresso); font-weight: 700; padding: 16px; border-radius: 16px; cursor: pointer; }
+    .submit-btn:hover { opacity: 0.9; }
+    .form-success { background: rgba(245,166,35,0.15); color: var(--rest-amber); border: 1px solid rgba(245,166,35,0.3); }
+    .form-note a { color: var(--rest-amber); }
+    .order-links { display: flex; gap: 12px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+    .order-link { padding: 10px 20px; border-radius: 999px; background: rgba(255,255,255,0.1); font-weight: 600; transition: background 0.2s; }
+    .order-link:hover { background: rgba(255,255,255,0.2); }
+
+    .gallery-section { background: var(--rest-brown); padding: 96px 0; }
+    .gallery-grid { display: grid; gap: 16px; grid-template-columns: repeat(2, 1fr); }
+    @media (min-width: 900px) { .gallery-grid { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 200px; } }
+    .gallery-item { border-radius: 16px; overflow: hidden; aspect-ratio: 1 / 1; }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+    .gallery-item:hover img { transform: scale(1.08); }
+    .gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+    @media (max-width: 899px) { .gallery-item:nth-child(1) { grid-column: span 1; grid-row: span 1; } }
+
+    .social-proof { background: rgba(255,255,255,0.04); padding: 40px 0; border-top: 1px solid rgba(245,166,35,0.15); border-bottom: 1px solid rgba(245,166,35,0.15); }
+    .social-grid { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; }
+    .social-item { text-align: center; }
+    .social-item h4 { font-size: 2rem; color: var(--rest-amber); margin-bottom: 4px; }
+    .social-item p { font-size: 0.9rem; opacity: 0.8; max-width: 100%; }
+
+    .location-section { background: var(--rest-espresso); padding: 96px 0; }
+    .location-grid { display: grid; gap: 32px; align-items: center; }
+    @media (min-width: 900px) { .location-grid { grid-template-columns: 1fr 1fr; } }
+    .map-box { border-radius: 24px; overflow: hidden; aspect-ratio: 4 / 3; box-shadow: var(--shadow-md); }
+    .map-box img { width: 100%; height: 100%; object-fit: cover; }
+    .timing-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    .timing-table td { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .timing-table td:last-child { text-align: right; }
+
+    .footer-note { text-align: center; padding: 40px 0; background: #120a00; color: rgba(255,248,240,0.4); font-size: 0.9rem; }
+.sticky-footer { background: rgba(18,10,0,0.95); border-top: 1px solid rgba(245,166,35,0.25); }
+    .sticky-footer .btn-primary { background: var(--rest-amber); color: var(--rest-espresso); }
+    .sticky-footer .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+  </style>
+</head>
+<body>
+<section class="hero">
+    <div class="container">
+      <h1 class="reveal">The Copper Spoon</h1>
+      <span class="cuisine reveal">Fine Indian & Continental Cuisine</span>
+      <div class="hero-ctas reveal">
+        <a href="#menu" class="btn btn-lg btn-amber no-arrow" data-track="restaurant_hero_menu">View Menu</a>
+        <a href="#reservation" class="btn btn-lg btn-outline no-arrow" data-track="restaurant_hero_reserve">Reserve a Table</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="featured-section">
+    <div class="container">
+      <h2 class="section-title reveal">Chef's Specials</h2>
+      <p class="section-subtitle reveal">Most loved dishes by our guests.</p>
+      <div class="dishes-grid reveal-stagger">
+        <div class="dish-card reveal">
+          <div class="dish-image"><img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=800&q=80" alt="Butter chicken dish" width="800" height="600" loading="lazy" decoding="async"></div>
+          <div class="dish-info">
+            <h3>Butter Chicken</h3>
+            <p>Creamy tomato gravy with tender chicken pieces.</p>
+            <div class="price">₹399</div>
+            <a href="#" class="btn btn-amber btn-sm no-arrow" data-track="restaurant_dish_1">Order Now</a>
+          </div>
+        </div>
+        <div class="dish-card reveal">
+          <div class="dish-image"><img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&q=80" alt="Wood-fired pizza" width="800" height="600" loading="lazy" decoding="async"></div>
+          <div class="dish-info">
+            <h3>Wood-Fired Pizza</h3>
+            <p>Crispy thin crust with fresh mozzarella.</p>
+            <div class="price">₹449</div>
+            <a href="#" class="btn btn-amber btn-sm no-arrow" data-track="restaurant_dish_2">Order Now</a>
+          </div>
+        </div>
+        <div class="dish-card reveal">
+          <div class="dish-image"><img src="https://images.unsplash.com/photo-1624353365286-3f8fa6df5f55?w=800&q=80" alt="Chocolate fondant dessert" width="800" height="600" loading="lazy" decoding="async"></div>
+          <div class="dish-info">
+            <h3>Chocolate Fondant</h3>
+            <p>Warm molten cake with vanilla ice cream.</p>
+            <div class="price">₹299</div>
+            <a href="#" class="btn btn-amber btn-sm no-arrow" data-track="restaurant_dish_3">Order Now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="menu" class="menu-section">
+    <div class="container">
+      <h2 class="section-title text-center reveal">Full Menu</h2>
+      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">Explore our complete range of flavors.</p>
+      <div class="accordion reveal">
+        <div class="accordion-item open">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Starters <span class="accordion-icon">▼</span></div>
+          <div class="accordion-body"><div class="accordion-content">
+            <div class="menu-item"><div><span class="name">Paneer Tikka</span><small>Grilled cottage cheese with spices</small></div><div class="price">₹249</div></div>
+            <div class="menu-item"><div><span class="name">Chicken Wings</span><small>Spicy buffalo wings</small></div><div class="price">₹329</div></div>
+            <div class="menu-item"><div><span class="name">Spring Rolls</span><small>Crispy veggie rolls</small></div><div class="price">₹199</div></div>
+          </div></div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Mains <span class="accordion-icon">▼</span></div>
+          <div class="accordion-body"><div class="accordion-content">
+            <div class="menu-item"><div><span class="name">Dal Makhani</span><small>Creamy black lentils</small></div><div class="price">₹299</div></div>
+            <div class="menu-item"><div><span class="name">Rogan Josh</span><small>Aromatic lamb curry</small></div><div class="price">₹499</div></div>
+            <div class="menu-item"><div><span class="name">Grilled Fish</span><small>Lemon herb marinated</small></div><div class="price">₹549</div></div>
+          </div></div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Desserts <span class="accordion-icon">▼</span></div>
+          <div class="accordion-body"><div class="accordion-content">
+            <div class="menu-item"><div><span class="name">Gulab Jamun</span><small>Warm sweet dumplings</small></div><div class="price">₹149</div></div>
+            <div class="menu-item"><div><span class="name">Tiramisu</span><small>Classic Italian coffee dessert</small></div><div class="price">₹349</div></div>
+          </div></div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">Beverages <span class="accordion-icon">▼</span></div>
+          <div class="accordion-body"><div class="accordion-content">
+            <div class="menu-item"><div><span class="name">Masala Chai</span><small>Indian spiced tea</small></div><div class="price">₹79</div></div>
+            <div class="menu-item"><div><span class="name">Fresh Lime Soda</span><small>Refreshing citrus cooler</small></div><div class="price">₹129</div></div>
+            <div class="menu-item"><div><span class="name">Cold Coffee</span><small>Creamy blended coffee</small></div><div class="price">₹179</div></div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="offer-strip">
+    <div class="container">Weekend Special — Buy 2 Get 1 Free on Starters</div>
+  </div>
+
+  <section class="chef-section">
+    <div class="container">
+      <div class="chef-grid">
+        <div class="chef-image reveal">
+          <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=800&q=80" alt="Chef preparing signature dish" width="800" height="600" loading="lazy" decoding="async">
+        </div>
+        <div class="chef-content reveal">
+          <h2>Chef's Special Today</h2>
+          <p>Every day our chef curates a special dish using seasonal ingredients and classic techniques. Ask your server for today's creation.</p>
+          <p>From slow-cooked curries to wood-fired grills, every plate tells a story of flavor and craftsmanship.</p>
+          <div class="chef-signature">— Chef Arjun Rathore</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="reservation" class="reservation-section">
+    <div class="container">
+      <h2 class="section-title text-center reveal">Reserve a Table</h2>
+      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">Book your dining experience or order online.</p>
+      <form class="reservation-form reveal" data-demo="restaurant">
+        <div class="grid-2">
+          <div class="form-group"><label for="rest-name">Name</label><input id="rest-name" type="text" class="form-control" placeholder="Your name" required></div>
+          <div class="form-group"><label for="rest-phone">Phone</label><input id="rest-phone" type="tel" class="form-control" placeholder="Your phone" pattern="[0-9]{10}" required></div>
+          <div class="form-group"><label for="rest-date">Date</label><input id="rest-date" type="date" class="form-control" required></div>
+          <div class="form-group"><label for="rest-time">Time</label><input id="rest-time" type="time" class="form-control" required></div>
+          <div class="form-group"><label for="rest-party">Party Size</label><select id="rest-party" class="form-control"><option>2 People</option><option>4 People</option><option>6 People</option><option>8+ People</option></select></div>
+          <div class="form-group"><label for="rest-requests">Special Requests</label><input id="rest-requests" type="text" class="form-control" placeholder="Any preferences"></div>
+        </div>
+        <button type="submit" class="submit-btn no-arrow" data-track="restaurant_form_submit">Book Table</button>
+        <p class="form-note">Prefer WhatsApp? <a href="#" data-whatsapp="I saw your restaurant demo, interested!" data-demo="restaurant">Chat directly</a></p>
+        <div class="order-links">
+          <a href="https://www.zomato.com" target="_blank" class="order-link" data-track="restaurant_zomato">Order on Zomato</a>
+          <a href="https://www.swiggy.com" target="_blank" class="order-link" data-track="restaurant_swiggy">Order on Swiggy</a>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="gallery-section">
+    <div class="container">
+      <h2 class="section-title reveal">Gallery</h2>
+      <p class="section-subtitle reveal">A peek into our ambience and food.</p>
+      <div class="gallery-grid reveal-stagger">
+        <div class="gallery-item reveal"><img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&q=80" alt="Restaurant interior ambience" width="800" height="800" loading="lazy" decoding="async"></div>
+        <div class="gallery-item reveal"><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80" alt="Gourmet food platter" width="800" height="800" loading="lazy" decoding="async"></div>
+        <div class="gallery-item reveal"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80" alt="Upscale cafe interior" width="800" height="800" loading="lazy" decoding="async"></div>
+        <div class="gallery-item reveal"><img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80" alt="Steak dish close up" width="800" height="800" loading="lazy" decoding="async"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="social-proof">
+    <div class="container">
+      <div class="social-grid reveal-stagger">
+        <div class="social-item reveal"><h4>4.8<svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2" style="display:inline;vertical-align:middle;margin-left:4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></h4><p>Google Rating</p></div>
+        <div class="social-item reveal"><h4>2000+</h4><p>Happy Diners</p></div>
+        <div class="social-item reveal"><h4>150+</h4><p>Dishes on Menu</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="location-section">
+    <div class="container">
+      <h2 class="section-title reveal">Visit Us</h2>
+      <p class="section-subtitle reveal">We deliver across Vijay Nagar and nearby areas.</p>
+      <div class="location-grid">
+        <div class="map-box reveal">
+          <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80" alt="Restaurant location map" width="800" height="600" loading="lazy" decoding="async">
+        </div>
+        <div class="reveal">
+          <h3 style="font-family:'Playfair Display',serif; margin-bottom:8px; font-size:1.8rem;">The Copper Spoon</h3>
+          <p style="opacity:0.7; margin-bottom:20px;">56, MG Road, Indore, Madhya Pradesh 452001</p>
+          <table class="timing-table">
+            <tr><td>Mon - Thu</td><td>11 AM - 11 PM</td></tr>
+            <tr><td>Fri - Sat</td><td>11 AM - 12 AM</td></tr>
+            <tr><td>Sunday</td><td>12 PM - 10 PM</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    <div class="container">© 2025 MistHustlers Indore — Restaurant / Cafe Demo</div>
+  </div>
+  <div class="sticky-footer">
+    <div class="container">
+      <span class="text">Want this for your business?</span>
+      <a href="tel:XXXXXXXXXX" class="btn btn-sm btn-secondary no-arrow" data-track="restaurant_footer_call">Call</a>
+      <a href="#" class="btn btn-sm btn-primary no-arrow" data-whatsapp="I saw your restaurant demo, interested!" data-demo="restaurant" data-track="restaurant_footer_whatsapp">WhatsApp</a>
+    </div>
+  </div>
+
+  <script src="../js/shared.js"></script>
+  <script>
+    function toggleAccordion(header) {
+      const item = header.parentElement;
+      item.classList.toggle('open');
+      if (window.MistHustlers) MistHustlers.trackEvent('restaurant_accordion_toggle', { open: item.classList.contains('open') });
+    }
+  </script>
+</body>
+</html>

@@ -1,13 +1,10 @@
 import { Link } from "react-router-dom";
-import GlobalNavbar from "@/components/GlobalNavbar";
-import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 
 export default function PrivacyPolicy() {
   return (
     <div className="bg-basalt-canvas min-h-screen">
       <SEO page="privacyPolicy" />
-      <GlobalNavbar />
       <main className="pt-32 pb-20">
         <div className="max-w-[800px] mx-auto px-6">
           <h1 className="font-display text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mb-8">Privacy Policy</h1>
@@ -19,7 +16,7 @@ export default function PrivacyPolicy() {
             <h2 className="font-body font-bold text-xl text-abyssal-ink mt-8 mb-4">How We Use Your Information</h2>
             <p>We use your information to: respond to your inquiries, provide our services, send project proposals, communicate about your project, and improve our services.</p>
             <h2 className="font-body font-bold text-xl text-abyssal-ink mt-8 mb-4">Data Protection</h2>
-            <p>We implement reasonable security measures to protect your personal information. We do not sell, trade, or share your personal information with third parties except as necessary to provide our services or as required by law.</p>
+            <p>We implement appropriate security measures to protect your personal information. However, no method of transmission over the Internet is 100% secure.</p>
             <h2 className="font-body font-bold text-xl text-abyssal-ink mt-8 mb-4">Third-Party Services</h2>
             <p>We may use third-party services (email providers, hosting services) that process data on our behalf. These providers have their own privacy policies.</p>
             <h2 className="font-body font-bold text-xl text-abyssal-ink mt-8 mb-4">Contact Us</h2>
@@ -30,7 +27,6 @@ export default function PrivacyPolicy() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

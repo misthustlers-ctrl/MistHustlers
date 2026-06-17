@@ -18,12 +18,16 @@ export default function NotFound() {
           <p className="font-body text-lg text-abyssal-ink/60 mt-4 mb-8">
             The page you are looking for does not exist or has been moved.
           </p>
-          <Link
-            to="/"
-            className="inline-flex rounded-full bg-abyssal-ink px-7 py-4 text-base font-bold text-ash-white transition hover:-translate-y-0.5 hover:bg-digital-orange"
-          >
-            Back to Home
-          </Link>
+
+          <div className="flex flex-wrap justify-center gap-3 mb-8">
+            <Link
+              to="/"
+              className="inline-flex rounded-full bg-abyssal-ink px-7 py-4 text-base font-bold text-ash-white transition hover:-translate-y-0.5 hover:bg-digital-orange"
+            >
+              Back to Home
+            </Link>
+          </div>
+
         </div>
       </main>
       <Footer />

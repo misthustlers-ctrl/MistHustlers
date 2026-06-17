@@ -1,11 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
-import GlobalNavbar from "@/components/GlobalNavbar";
 import ScrollReveal from "@/components/ScrollReveal";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import FAQItem from "@/components/FAQItem";
-import Footer from "@/components/Footer";
 import JoinEcosystemModal from "@/components/JoinEcosystemModal";
 import SEO from "@/components/SEO";
 import SchemaMarkup from "@/components/SchemaMarkup";
@@ -69,10 +67,10 @@ export default function Home() {
   const navigate = useNavigate();
   const logoData = useContent("logo", LOGO_DEFAULTS);
   const c = useContent("home", { stats: [{ value: 127, suffix: "+", label: "Projects Delivered" }, { value: 43, suffix: "+", label: "Happy Clients" }, { value: 18, suffix: "+", label: "Startups Launched" }, { value: 48, suffix: "h", label: "Avg Response Time" }], journeySteps: [{ step: "01", title: "Requirements", desc: "Share your project idea, timeline, and budget. We analyze scope and feasibility within 24 hours." }, { step: "02", title: "Proposal", desc: "Receive a fixed-price proposal with clear deliverables, milestones, and exact timeline. No hidden costs." }, { step: "03", title: "Execution", desc: "We build your project with daily updates and direct communication. Zero bureaucracy. Full transparency." }, { step: "04", title: "Delivery", desc: "Handover with complete source code, documentation, and ongoing support. Your project, fully shipped." }], mentorship: { features: [{ title: "Fixed Pricing", desc: "Know exactly what you pay upfront. No hourly billing, no scope creep, no surprises." }, { title: "Direct Access", desc: "Communicate directly with the developers building your project. No account managers." }, { title: "48h Response", desc: "We respond to every inquiry within 48 hours. Async-first, all timezones." }, { title: "Source Code Included", desc: "You own everything we build. Full source code, documentation, and rights." }] }, faqData: [{ q: "What services does MistHustlers offer?", a: "We offer web development, MVP development, automation systems, full-stack application development, and UI/UX design services in Indore. From landing pages to complex platforms." }, { q: "How much does it cost to build a website?", a: "Our pricing starts at Rs 999 for basic landing pages and goes up to Rs 50,000+ for full-stack applications. We provide a fixed-price quote after reviewing your requirements." }, { q: "Where is MistHustlers based?", a: "We are based in Indore, Madhya Pradesh, and serve clients across India and globally. We work async-first via email, WhatsApp, and calls." }, { q: "How long does it take to build a project?", a: "A landing page can be delivered in 3-5 days. A full-stack MVP typically takes 2-4 weeks. We provide exact timelines in our proposal." }, { q: "Do you offer support after delivery?", a: "Yes. Every project includes post-delivery support from 14 to 90 days depending on plan. We also offer ongoing maintenance and feature additions." }], projects: [] });
-  const stats = c.stats ?? [];
-  const journeySteps = c.journeySteps ?? [];
-  const faqData = c.faqData ?? [];
-  const projectPreview = (c.projects ?? []).slice(0, 3);
+  const stats = useMemo(() => c.stats ?? [], [c.stats]);
+  const journeySteps = useMemo(() => c.journeySteps ?? [], [c.journeySteps]);
+  const faqData = useMemo(() => c.faqData ?? [], [c.faqData]);
+  const projectPreview = useMemo(() => (c.projects ?? []).slice(0, 3), [c.projects]);
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.3]);
@@ -84,7 +82,6 @@ export default function Home() {
     <div className="bg-basalt-canvas min-h-screen">
       <SEO page="home" />
       <SchemaMarkup page="home" faq={faqData} />
-      <GlobalNavbar />
       <main>
 
       <section ref={heroRef} className="relative pt-20 md:pt-32 pb-20 overflow-hidden">
@@ -399,7 +396,6 @@ export default function Home() {
 
       </main>
 
-      <Footer />
       <JoinEcosystemModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );
