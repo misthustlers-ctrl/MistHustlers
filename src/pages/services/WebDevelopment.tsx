@@ -11,13 +11,13 @@ export default function WebDevelopment() {
       <SchemaMarkup page="webDevelopment" />
       <Breadcrumbs />
       <main>
-        <section className="pt-16 pb-20">
-          <div className="max-w-[1200px] mx-auto px-6">
-            <div className="text-center mb-16">
+        <section className="pt-12 sm:pt-16 pb-16 sm:pb-20">
+          <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12 sm:mb-16">
               <span className="inline-block px-4 py-1.5 rounded-full bg-abyssal-ink/5 text-abyssal-ink/60 text-xs font-semibold tracking-wider uppercase mb-6 font-body">
                 Service
               </span>
-              <h1 className="font-display text-[clamp(48px,8vw,80px)] leading-[0.9] tracking-[0.02em] text-abyssal-ink">
+              <h1 className="font-display text-[clamp(38px,12vw,80px)] leading-[0.92] tracking-[0.02em] text-abyssal-ink">
                 Web Development<br />
                 <span className="text-digital-orange">in Indore</span>
               </h1>
@@ -35,7 +35,7 @@ export default function WebDevelopment() {
                 { title: "Portfolio Sites", desc: "Showcase your work with custom galleries, case studies, and client testimonial sections." },
                 { title: "Corporate Sites", desc: "Professional company websites with team pages, service listings, and blog integration." },
               ].map((s) => (
-                <div key={s.title} className="bg-ash-white rounded-[32px] p-6 border border-abyssal-ink/5">
+                <div key={s.title} className="bg-ash-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 border border-abyssal-ink/5">
                   <h3 className="font-body font-bold text-xl tracking-[0.01em] text-abyssal-ink mb-3">{s.title}</h3>
                   <p className="text-sm text-abyssal-ink/60 font-body leading-relaxed">{s.desc}</p>
                 </div>
@@ -45,7 +45,7 @@ export default function WebDevelopment() {
             <div className="text-center mb-16">
               <h2 className="font-body font-bold text-3xl tracking-[0.02em] text-abyssal-ink mb-4">Pricing</h2>
               <p className="text-abyssal-ink/50 mb-8 font-body">Starting from Rs 999 for landing pages, custom quotes for larger projects.</p>
-              <Link to="/contact" className="inline-block magnetic-btn bg-digital-orange text-white px-8 py-4 rounded-[800px] text-base font-semibold font-body">
+              <Link to="/contact" className="inline-flex min-h-12 items-center justify-center magnetic-btn bg-digital-orange text-white px-6 sm:px-8 py-4 rounded-[800px] text-base font-semibold font-body">
                 Get a Quote
               </Link>
             </div>

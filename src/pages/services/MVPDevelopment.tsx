@@ -11,13 +11,13 @@ export default function MVPDevelopment() {
       <SchemaMarkup page="mvpDevelopment" />
       <Breadcrumbs />
       <main>
-        <section className="pt-16 pb-20">
-          <div className="max-w-[1200px] mx-auto px-6">
-            <div className="text-center mb-16">
+        <section className="pt-12 sm:pt-16 pb-16 sm:pb-20">
+          <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12 sm:mb-16">
               <span className="inline-block px-4 py-1.5 rounded-full bg-abyssal-ink/5 text-abyssal-ink/60 text-xs font-semibold tracking-wider uppercase mb-6 font-body">
                 Service
               </span>
-              <h1 className="font-display text-[clamp(48px,8vw,80px)] leading-[0.9] tracking-[0.02em] text-abyssal-ink">
+              <h1 className="font-display text-[clamp(38px,12vw,80px)] leading-[0.92] tracking-[0.02em] text-abyssal-ink">
                 MVP Development<br />
                 <span className="text-digital-orange">for Startups</span>
               </h1>
@@ -35,7 +35,7 @@ export default function MVPDevelopment() {
                 { title: "API-First Products", desc: "Backend-first MVPs with documented APIs, ready for mobile or frontend consumption." },
                 { title: "AI-Integrated MVPs", desc: "MVPs with AI features: chatbots, content generation, recommendation engines, and more." },
               ].map((s) => (
-                <div key={s.title} className="bg-ash-white rounded-[32px] p-6 border border-abyssal-ink/5">
+                <div key={s.title} className="bg-ash-white rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 border border-abyssal-ink/5">
                   <h3 className="font-body font-bold text-xl tracking-[0.01em] text-abyssal-ink mb-3">{s.title}</h3>
                   <p className="text-sm text-abyssal-ink/60 font-body leading-relaxed">{s.desc}</p>
                 </div>
@@ -59,7 +59,7 @@ export default function MVPDevelopment() {
                 ))}
               </div>
               <p className="text-abyssal-ink/50 mb-8 font-body">Pricing: Rs 15,000 to Rs 50,000+ depending on scope.</p>
-              <Link to="/contact" className="inline-block magnetic-btn bg-digital-orange text-white px-8 py-4 rounded-[800px] text-base font-semibold font-body">
+              <Link to="/contact" className="inline-flex min-h-12 items-center justify-center magnetic-btn bg-digital-orange text-white px-6 sm:px-8 py-4 rounded-[800px] text-base font-semibold font-body">
                 Start Your MVP
               </Link>
             </div>

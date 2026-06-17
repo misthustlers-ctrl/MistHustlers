@@ -5,9 +5,9 @@ export default function RefundPolicy() {
   return (
     <div className="bg-basalt-canvas min-h-screen">
       <SEO page="refundPolicy" />
-      <main className="pt-32 pb-20">
-        <div className="max-w-[800px] mx-auto px-6">
-          <h1 className="font-display text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mb-8">Refund & Cancellation Policy</h1>
+      <main className="pt-28 sm:pt-32 pb-16 sm:pb-20">
+        <div className="max-w-[800px] mx-auto px-4 sm:px-6">
+          <h1 className="font-display text-[clamp(34px,10vw,56px)] tracking-[0.02em] text-abyssal-ink mb-8">Refund & Cancellation Policy</h1>
           <div className="text-abyssal-ink/60 font-body leading-relaxed space-y-4">
             <p>Last updated: June 2026</p>
             <h2 className="font-body font-bold text-xl text-abyssal-ink mt-8 mb-4">Cancellation</h2>

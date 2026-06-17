@@ -41,15 +41,15 @@ export default function CareerHero({
   };
 
   return (
-    <section className="mx-auto grid max-w-7xl gap-10 pb-18 pt-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:pt-16">
+    <section className="mx-auto grid max-w-7xl gap-10 pb-14 pt-8 sm:pb-18 sm:pt-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:pt-16">
       <div className="space-y-8">
-        <div className="inline-flex items-center gap-2 rounded-full border border-[var(--mh-text)]/10 bg-[var(--mh-surface)]/90 px-4 py-2 text-sm font-medium text-[var(--mh-text)]/70 shadow-[0_10px_25px_rgba(var(--mh-text-rgb),0.05)]">
+        <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-[var(--mh-text)]/10 bg-[var(--mh-surface)]/90 px-4 py-2 text-sm font-medium text-[var(--mh-text)]/70 shadow-[0_10px_25px_rgba(var(--mh-text-rgb),0.05)]">
           <span className="h-2.5 w-2.5 rounded-full bg-[var(--mh-cta)]" />
           {hero.badge || "Live opportunity hub for ambitious builders"}
         </div>
 
         <div className="space-y-5">
-          <h1 className="mh-heading max-w-4xl text-5xl leading-[0.95] sm:text-6xl lg:text-8xl">
+          <h1 className="mh-heading max-w-4xl text-[42px] leading-[0.98] sm:text-6xl lg:text-8xl">
             {hero.title || "Opportunities for Builders"}
           </h1>
           <p className="max-w-2xl text-lg leading-8 text-[var(--mh-text)]/70 sm:text-xl">
@@ -61,13 +61,13 @@ export default function CareerHero({
           <button
             type="button"
             onClick={() => scrollToSection("opportunities")}
-            className="rounded-full bg-[var(--mh-text)] px-7 py-4 text-base font-bold text-[var(--mh-surface)] transition hover:-translate-y-0.5 hover:bg-[var(--mh-secondary)] cursor-pointer"
+            className="rounded-full bg-[var(--mh-text)] px-6 sm:px-7 py-4 text-base font-bold text-[var(--mh-surface)] transition hover:-translate-y-0.5 hover:bg-[var(--mh-secondary)] cursor-pointer"
           >
             {hero.ctaPrimary || "Explore Opportunities"}
           </button>
           <a
             href={GOOGLE_FORM_URL}
-            className="rounded-full border border-[var(--mh-text)]/12 bg-[var(--mh-surface)] px-7 py-4 text-base font-bold text-[var(--mh-text)] shadow-[0_12px_24px_rgba(var(--mh-text-rgb),0.06)] transition hover:-translate-y-0.5 hover:border-[var(--mh-cta)]/30 hover:text-[var(--mh-cta)] cursor-pointer"
+            className="rounded-full border border-[var(--mh-text)]/12 bg-[var(--mh-surface)] px-6 sm:px-7 py-4 text-center text-base font-bold text-[var(--mh-text)] shadow-[0_12px_24px_rgba(var(--mh-text-rgb),0.06)] transition hover:-translate-y-0.5 hover:border-[var(--mh-cta)]/30 hover:text-[var(--mh-cta)] cursor-pointer"
           >
             {hero.ctaSecondary || "Join Now"}
           </a>
@@ -89,16 +89,16 @@ export default function CareerHero({
         </div>
       </div>
 
-      <div className="relative min-h-[420px]">
+      <div className="relative grid gap-4 lg:block lg:min-h-[420px]">
         {heroCards.map((card, index) => (
           <article
             key={card.id}
-            className={`floating-card absolute w-[78%] rounded-[30px] border border-white/60 bg-[var(--mh-surface)]/92 p-6 shadow-[0_24px_60px_rgba(var(--mh-text-rgb),0.10)] backdrop-blur ${
+            className={`floating-card rounded-[24px] border border-white/60 bg-[var(--mh-surface)]/92 p-5 shadow-[0_24px_60px_rgba(var(--mh-text-rgb),0.10)] backdrop-blur lg:absolute lg:w-[78%] lg:rounded-[30px] lg:p-6 ${
               index === 0
-                ? "left-[4%] top-[8%] rotate-[-8deg]"
+                ? "lg:left-[4%] lg:top-[8%] lg:rotate-[-8deg]"
                 : index === 1
-                  ? "right-[4%] top-[32%] rotate-[7deg] floating-delay-1"
-                  : "left-[18%] bottom-[7%] rotate-[-3deg] floating-delay-2"
+                  ? "floating-delay-1 lg:right-[4%] lg:top-[32%] lg:rotate-[7deg]"
+                  : "floating-delay-2 lg:left-[18%] lg:bottom-[7%] lg:rotate-[-3deg]"
             }`}
           >
             <div className="flex items-center justify-between gap-3">
@@ -107,7 +107,7 @@ export default function CareerHero({
               </span>
               <span className="text-xs font-medium uppercase tracking-[0.18em] text-[var(--mh-text)]/35">{card.mode}</span>
             </div>
-            <h2 className="mt-5 text-2xl font-bold text-[var(--mh-text)]">{card.title}</h2>
+            <h2 className="mt-5 text-xl font-bold text-[var(--mh-text)] sm:text-2xl">{card.title}</h2>
             <p className="mt-3 text-sm leading-6 text-[var(--mh-text)]/65">{card.description}</p>
             <div className="mt-5 flex flex-wrap gap-2">
               {card.skills.map((skill) => (

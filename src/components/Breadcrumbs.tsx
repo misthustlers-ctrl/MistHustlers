@@ -20,7 +20,7 @@ export default function Breadcrumbs() {
   if (segments.length === 0) return null;
 
   return (
-    <nav aria-label="Breadcrumb" className="max-w-[1200px] mx-auto px-6 pt-24">
+    <nav aria-label="Breadcrumb" className="max-w-[1200px] mx-auto px-4 sm:px-6 pt-24">
       <ol className="flex flex-wrap items-center gap-2 text-sm text-abyssal-ink/50 font-body">
         <li>
           <Link to="/" className="hover:text-digital-orange transition-colors">Home</Link>

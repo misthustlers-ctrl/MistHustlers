@@ -20,18 +20,18 @@ export default function Projects() {
       <SchemaMarkup page="projects" />
       <main>
 
-      <section className="pt-32 pb-20">
-        <div className="max-w-[1200px] mx-auto px-6">
+      <section className="pt-28 sm:pt-32 pb-16 sm:pb-20">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.33, 1, 0.68, 1] }}
             className="text-center mb-12"
           >
-            <span className="inline-block px-4 py-1.5 rounded-full bg-abyssal-ink/5 text-abyssal-ink/60 text-xs font-semibold tracking-wider uppercase mb-6 font-body">
+            <span className="inline-block max-w-full px-4 py-1.5 rounded-full bg-abyssal-ink/5 text-abyssal-ink/60 text-xs font-semibold tracking-wider uppercase mb-6 font-body">
               Client Demos
             </span>
-            <h1 className="font-display text-[clamp(48px,8vw,80px)] leading-[0.9] tracking-[0.02em] text-abyssal-ink">
+            <h1 className="font-display text-[clamp(38px,12vw,80px)] leading-[0.92] tracking-[0.02em] text-abyssal-ink">
               Industry-Specific<br />
               <span className="text-digital-orange">Websites</span>
             </h1>
@@ -45,7 +45,7 @@ export default function Projects() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-200 font-body ${
+                className={`min-h-10 px-3 sm:px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-200 font-body ${
                   activeCategory === cat
                     ? "bg-abyssal-ink text-ash-white"
                     : "bg-abyssal-ink/5 text-abyssal-ink/60 hover:bg-abyssal-ink/10"
@@ -71,7 +71,7 @@ export default function Projects() {
                     to={`/projects/demo/${project.slug}`}
                     className="block group"
                   >
-                    <div className="bg-ash-white rounded-[40px] border border-abyssal-ink/5 overflow-hidden h-full flex flex-col hover:shadow-xl hover:shadow-abyssal-ink/5 transition-all duration-500">
+                    <div className="bg-ash-white rounded-[28px] sm:rounded-[40px] border border-abyssal-ink/5 overflow-hidden h-full flex flex-col hover:shadow-xl hover:shadow-abyssal-ink/5 transition-all duration-500">
                       <div
                         className="relative h-48 overflow-hidden flex items-center justify-center"
                         style={{ background: project.gradient }}
@@ -88,8 +88,8 @@ export default function Projects() {
                         <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-wider">
                           {project.category}
                         </span>
-                        <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-                          <h3 className="text-white font-body font-bold text-lg leading-tight drop-shadow-lg">
+                        <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-3">
+                          <h3 className="text-white font-body font-bold text-base sm:text-lg leading-tight drop-shadow-lg">
                             {project.title}
                           </h3>
                           <span className="shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm text-white group-hover:bg-digital-orange transition-colors duration-300">
@@ -99,7 +99,7 @@ export default function Projects() {
                           </span>
                         </div>
                       </div>
-                      <div className="p-6 flex flex-col flex-1">
+                      <div className="p-5 sm:p-6 flex flex-col flex-1">
                         <span
                           className="text-xs font-semibold tracking-wider uppercase font-body"
                           style={{ color: project.accentColor }}
@@ -128,8 +128,8 @@ export default function Projects() {
         </div>
       </section>
 
-      <section className="py-24 bg-abyssal-ink/5">
-        <div className="max-w-[1200px] mx-auto px-6 text-center">
+      <section className="py-16 sm:py-24 bg-abyssal-ink/5">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 text-center">
           <ScrollReveal>
             <span className="inline-block px-4 py-1.5 rounded-full bg-digital-orange/10 text-digital-orange text-xs font-semibold tracking-wider uppercase mb-6 font-body">
               Get Started
@@ -142,7 +142,7 @@ export default function Projects() {
             </p>
             <Link
               to="/contact"
-              className="magnetic-btn inline-flex items-center gap-2 bg-digital-orange text-white px-8 py-3.5 rounded-[800px] text-sm font-semibold font-body hover:bg-digital-orange/90 transition-colors"
+              className="magnetic-btn inline-flex min-h-12 items-center justify-center gap-2 bg-digital-orange text-white px-6 sm:px-8 py-3.5 rounded-[800px] text-sm font-semibold font-body hover:bg-digital-orange/90 transition-colors"
             >
               Start Your Project
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

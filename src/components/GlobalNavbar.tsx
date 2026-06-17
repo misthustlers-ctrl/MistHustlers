@@ -64,12 +64,12 @@ export default function GlobalNavbar() {
             : "bg-transparent py-5"
         }`}
       >
-        <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 group">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 flex items-center justify-between gap-3">
+          <Link to="/" className="flex min-w-0 items-center gap-2 group">
             {logo.logoMain ? (
-              <img src={logo.logoMain} alt="MistHustlers" className="h-8 w-auto" />
+              <img src={logo.logoMain} alt="MistHustlers" className="h-7 sm:h-8 w-auto max-w-[180px] object-contain" />
             ) : (
-              <span className="font-display text-2xl tracking-[0.02em] text-abyssal-ink">
+              <span className="truncate font-display text-xl sm:text-2xl tracking-[0.02em] text-abyssal-ink">
                 {logo.brandPrefix}<span className="text-digital-orange">{logo.brandHighlight}</span>
               </span>
             )}
@@ -96,7 +96,10 @@ export default function GlobalNavbar() {
           </div>
 
           <button
-            className="lg:hidden flex flex-col gap-1.5 p-2 cursor-pointer"
+            type="button"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            className="lg:hidden flex h-11 w-11 flex-shrink-0 flex-col items-center justify-center gap-1.5 rounded-full p-2 cursor-pointer"
             onClick={() => setMobileOpen(!mobileOpen)}
           >
             <span className={`block w-6 h-0.5 bg-abyssal-ink transition-all duration-300 ${mobileOpen ? "rotate-45 translate-y-[3px]" : ""}`} />
@@ -114,13 +117,13 @@ export default function GlobalNavbar() {
               transition={{ duration: 0.3 }}
               className="lg:hidden bg-ash-white border-b border-abyssal-ink/5 overflow-hidden"
             >
-              <div className="px-6 py-6 flex flex-col gap-4">
+              <div className="px-4 sm:px-6 py-5 flex flex-col gap-2">
                 {NAV_LINKS.map((link) => (
                   <Link
                     key={link.label}
                     to={link.to}
                     onClick={() => handleNavClick(link.to)}
-                    className="text-sm font-medium text-abyssal-ink/70 hover:text-abyssal-ink transition-colors py-2 font-body"
+                    className="min-h-11 rounded-2xl px-3 text-sm font-medium text-abyssal-ink/70 hover:text-abyssal-ink hover:bg-abyssal-ink/5 transition-colors py-2 font-body flex items-center"
                   >
                     {link.label}
                   </Link>

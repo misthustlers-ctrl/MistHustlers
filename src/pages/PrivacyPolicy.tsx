@@ -5,9 +5,9 @@ export default function PrivacyPolicy() {
   return (
     <div className="bg-basalt-canvas min-h-screen">
       <SEO page="privacyPolicy" />
-      <main className="pt-32 pb-20">
-        <div className="max-w-[800px] mx-auto px-6">
-          <h1 className="font-display text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mb-8">Privacy Policy</h1>
+      <main className="pt-28 sm:pt-32 pb-16 sm:pb-20">
+        <div className="max-w-[800px] mx-auto px-4 sm:px-6">
+          <h1 className="font-display text-[clamp(34px,10vw,56px)] tracking-[0.02em] text-abyssal-ink mb-8">Privacy Policy</h1>
           <div className="text-abyssal-ink/60 font-body leading-relaxed space-y-4">
             <p>Last updated: June 2026</p>
             <p>MistHustlers ("we", "our", "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your personal information.</p>

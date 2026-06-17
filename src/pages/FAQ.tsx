@@ -31,13 +31,13 @@ export default function FAQ() {
       <SEO page="faq" />
       <SchemaMarkup page="faq" faq={FAQ_DATA} />
       <main>
-        <section className="pt-32 pb-20">
-          <div className="max-w-[800px] mx-auto px-6">
+        <section className="pt-28 sm:pt-32 pb-16 sm:pb-20">
+          <div className="max-w-[800px] mx-auto px-4 sm:px-6">
             <div className="text-center mb-12">
               <span className="inline-block px-4 py-1.5 rounded-full bg-abyssal-ink/5 text-abyssal-ink/60 text-xs font-semibold tracking-wider uppercase mb-6 font-body">
                 FAQ
               </span>
-              <h1 className="font-display text-[clamp(48px,8vw,80px)] leading-[0.9] tracking-[0.02em] text-abyssal-ink">
+              <h1 className="font-display text-[clamp(38px,12vw,80px)] leading-[0.92] tracking-[0.02em] text-abyssal-ink">
                 Frequently Asked<br />
                 <span className="text-digital-orange">Questions</span>
               </h1>
@@ -46,7 +46,7 @@ export default function FAQ() {
               </p>
             </div>
 
-            <div className="bg-ash-white rounded-[40px] p-8 border border-abyssal-ink/5">
+            <div className="bg-ash-white rounded-[28px] sm:rounded-[40px] p-5 sm:p-8 border border-abyssal-ink/5">
               {FAQ_DATA.map((faq, i) => (
                 <FAQItem
                   key={i}
@@ -62,7 +62,7 @@ export default function FAQ() {
               <p className="text-abyssal-ink/50 mb-4 font-body">Still have questions?</p>
               <a
                 href="/contact"
-                className="inline-block magnetic-btn bg-digital-orange text-white px-8 py-4 rounded-[800px] text-base font-semibold font-body"
+                className="inline-flex min-h-12 items-center justify-center magnetic-btn bg-digital-orange text-white px-6 sm:px-8 py-4 rounded-[800px] text-base font-semibold font-body"
               >
                 Get in Touch
               </a>

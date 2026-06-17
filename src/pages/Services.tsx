@@ -24,17 +24,17 @@ export default function Services() {
 
       {/* HERO */}
       <section className="relative overflow-hidden pt-20">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-8 pt-[96px] md:pt-[128px] pb-[72px] md:pb-[104px]">
+        <div className="mx-auto max-w-[1200px] px-4 sm:px-6 md:px-8 pt-[88px] md:pt-[128px] pb-[64px] md:pb-[104px]">
           <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-[64px] lg:gap-[96px] items-center">
             <div>
-              <div className="inline-flex items-center gap-[10px] px-[14px] h-[36px] rounded-[14px] mb-[28px] border" style={{ backgroundColor: "var(--mh-surface)", borderColor: "rgba(var(--mh-text-rgb), 0.06)" }}>
+              <div className="inline-flex max-w-full items-center gap-[10px] px-[14px] min-h-[36px] rounded-[14px] mb-[28px] border" style={{ backgroundColor: "var(--mh-surface)", borderColor: "rgba(var(--mh-text-rgb), 0.06)" }}>
                 <div className="h-[7px] w-[7px] rounded-full animate-pulse" style={{ backgroundColor: "var(--mh-cta)" }}></div>
                 <span className="text-[12.5px] font-[600] tracking-[-0.01em] uppercase" style={{ color: "var(--mh-text)", letterSpacing: "0.04em" }}>
                   Transparent Pricing for Real Execution
                 </span>
               </div>
 
-              <h1 className="font-display text-[52px] md:text-[68px] leading-[0.92] tracking-[-0.04em] mb-[24px]" style={{ color: "var(--mh-text)" }}>
+              <h1 className="font-display text-[42px] sm:text-[52px] md:text-[68px] leading-[0.94] md:leading-[0.92] tracking-[-0.035em] md:tracking-[-0.04em] mb-[24px]" style={{ color: "var(--mh-text)" }}>
                 Build with clarity.<br />
                 <span style={{ color: "rgba(var(--mh-text-rgb), 0.35)" }}>Ship with precision.</span>
               </h1>
@@ -64,7 +64,7 @@ export default function Services() {
                 </button>
               </div>
 
-              <div className="flex items-center gap-[28px] mt-[44px] text-[13px] font-[500]" style={{ color: "rgba(var(--mh-text-rgb), 0.55)" }}>
+              <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-[28px] mt-[34px] sm:mt-[44px] text-[13px] font-[500]" style={{ color: "rgba(var(--mh-text-rgb), 0.55)" }}>
                 <div className="flex items-center gap-[8px]">
                   <div className="flex -space-x-[8px]">
                     {[...Array(3)].map((_, i) => (
@@ -75,7 +75,7 @@ export default function Services() {
                   </div>
                   <span>127 projects shipped</span>
                 </div>
-                <div className="h-[16px] w-[1px]" style={{ backgroundColor: "rgba(var(--mh-text-rgb), 0.12)" }}></div>
+                <div className="hidden sm:block h-[16px] w-[1px]" style={{ backgroundColor: "rgba(var(--mh-text-rgb), 0.12)" }}></div>
                 <div className="flex items-center gap-[6px]">
                   <div className="h-[7px] w-[7px] rounded-full" style={{ backgroundColor: "var(--mh-secondary)" }}></div>
                   <span>48h avg response</span>
@@ -132,7 +132,7 @@ export default function Services() {
       </section>
 
       {/* SERVICE CATEGORIES */}
-      <section className="mx-auto max-w-[1200px] px-6 md:px-8 py-[88px] md:py-[120px]">
+      <section className="mx-auto max-w-[1200px] px-4 sm:px-6 md:px-8 py-[72px] md:py-[120px]">
         <div className="max-w-[720px] mb-[64px] md:mb-[84px]">
           <div className="inline-flex items-center gap-[8px] mb-[24px]">
             <div className="h-[4px] w-[4px] rounded-full" style={{ backgroundColor: "var(--mh-cta)" }}></div>
@@ -179,7 +179,7 @@ export default function Services() {
       </section>
 
       {/* PRICING TIERS */}
-      <section id="tiers" className="mx-auto max-w-[1200px] px-6 md:px-8 py-[88px] md:py-[120px]">
+      <section id="tiers" className="mx-auto max-w-[1200px] px-4 sm:px-6 md:px-8 py-[72px] md:py-[120px]">
         <div className="max-w-[720px] mb-[64px] md:mb-[84px]">
           <div className="inline-flex items-center gap-[8px] mb-[24px]">
             <div className="h-[4px] w-[4px] rounded-full" style={{ backgroundColor: "var(--mh-cta)" }}></div>
@@ -376,20 +376,20 @@ export default function Services() {
       <section
         id="service-inquiry"
         ref={inquiryRef}
-        className="mx-auto max-w-[1200px] px-6 md:px-8 py-[88px] md:py-[120px] scroll-mt-24"
+        className="mx-auto max-w-[1200px] px-4 sm:px-6 md:px-8 py-[72px] md:py-[120px] scroll-mt-24"
       >
         <ServiceInquiryForm />
       </section>
 
       {/* FINAL CTA */}
-      <section className="mx-auto max-w-[1200px] px-6 md:px-8 pb-[96px] md:pb-[140px]">
+      <section className="mx-auto max-w-[1200px] px-4 sm:px-6 md:px-8 pb-[80px] md:pb-[140px]">
         <div className="rounded-[36px] overflow-hidden relative" style={{ backgroundColor: "var(--mh-text)" }}>
           <div className="absolute inset-0 opacity-[0.035]" style={{
             backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 32px, white 32px, white 33px), repeating-linear-gradient(90deg, transparent, transparent 32px, white 32px, white 33px)`
           }}></div>
 
-          <div className="relative px-[36px] md:px-[72px] py-[64px] md:py-[88px] text-center">
-            <h2 className="font-body font-bold text-[40px] md:text-[56px] leading-[1.04] tracking-[-0.035em] mb-[22px] text-white max-w-[720px] mx-auto">
+          <div className="relative px-5 sm:px-[36px] md:px-[72px] py-[52px] md:py-[88px] text-center">
+            <h2 className="font-body font-bold text-[34px] sm:text-[40px] md:text-[56px] leading-[1.08] md:leading-[1.04] tracking-[-0.03em] md:tracking-[-0.035em] mb-[22px] text-white max-w-[720px] mx-auto">
               Ready to start your project?
             </h2>
             <p className="text-[17px] md:text-[18px] leading-[1.6] mb-[40px] max-w-[560px] mx-auto font-[450]" style={{ color: "rgba(var(--mh-surface-rgb), 0.78)" }}>

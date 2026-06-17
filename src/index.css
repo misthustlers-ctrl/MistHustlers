@@ -72,6 +72,7 @@
 html {
   scroll-behavior: smooth;
   background-color: #e2e2df;
+  overflow-x: hidden;
 }
 
 body {
@@ -82,10 +83,35 @@ body {
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
   min-width: 320px;
+  overflow-x: hidden;
 }
 
 * {
   box-sizing: border-box;
+}
+
+img, svg, video, canvas {
+  max-width: 100%;
+}
+
+p, h1, h2, h3, h4, h5, h6, a, button, span, label {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+  .mobile-safe-card {
+    border-radius: 24px !important;
+  }
+
+  .mobile-safe-pad {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  .magnetic-btn:hover,
+  .card-lift:hover {
+    transform: none;
+  }
 }
 
 button, input, textarea {

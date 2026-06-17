@@ -72,18 +72,18 @@ export default function ServiceInquiryForm() {
 
   return (
     <div className="max-w-[1040px] mx-auto">
-      <div className="grid lg:grid-cols-[0.95fr_1.05fr] gap-[56px] lg:gap-[88px] items-start">
+      <div className="grid gap-[40px] lg:grid-cols-[0.95fr_1.05fr] lg:gap-[88px] items-start">
         <div className="lg:sticky lg:top-[104px]">
           <div className="inline-flex items-center gap-[10px] px-[14px] h-[36px] rounded-[14px] mb-[28px] border" style={{ backgroundColor: "var(--mh-surface)", borderColor: "rgba(252, 80, 0, 0.2)" }}>
             <div className="h-[8px] w-[8px] rounded-full animate-pulse" style={{ backgroundColor: "var(--mh-cta)" }}></div>
             <span className="text-[12px] font-[700] tracking-[0.04em] uppercase" style={{ color: "var(--mh-text)" }}>Let&rsquo;s Build Something Real</span>
           </div>
 
-          <h2 className="display text-[44px] md:text-[52px] leading-[1.06] tracking-[-0.035em] mb-[28px]" style={{ color: "var(--mh-text)" }}>
+          <h2 className="display text-[34px] sm:text-[44px] md:text-[52px] leading-[1.06] tracking-[-0.025em] mb-[22px] sm:mb-[28px]" style={{ color: "var(--mh-text)" }}>
             Tell us what you&rsquo;re making
           </h2>
 
-          <p className="text-[17px] leading-[1.65] mb-[44px] font-[450]" style={{ color: "rgba(7, 6, 7, 0.72)" }}>
+          <p className="text-[16px] sm:text-[17px] leading-[1.65] mb-[34px] sm:mb-[44px] font-[450]" style={{ color: "rgba(7, 6, 7, 0.72)" }}>
             Share your idea, and we&rsquo;ll get back with a fixed-price proposal within 48 hours. No calls required unless you want them.
           </p>
 
@@ -123,8 +123,8 @@ export default function ServiceInquiryForm() {
         </div>
 
         <div className="relative">
-          <div className="rounded-[32px] p-[1px] shadow-[0_32px_72px_-16px_rgba(7,6,7,0.18)]" style={{ background: "linear-gradient(180deg, rgba(7,6,7,0.12), rgba(7,6,7,0.04))" }}>
-            <div className="rounded-[31px] p-[32px] md:p-[40px]" style={{ backgroundColor: "var(--mh-surface)" }}>
+          <div className="rounded-[24px] sm:rounded-[32px] p-[1px] shadow-[0_32px_72px_-16px_rgba(7,6,7,0.18)]" style={{ background: "linear-gradient(180deg, rgba(7,6,7,0.12), rgba(7,6,7,0.04))" }}>
+            <div className="rounded-[23px] sm:rounded-[31px] p-[22px] sm:p-[32px] md:p-[40px]" style={{ backgroundColor: "var(--mh-surface)" }}>
               {submitted ? (
                 <div className="py-[64px] text-center">
                   <div className="h-[72px] w-[72px] rounded-[24px] mx-auto mb-[24px] flex items-center justify-center" style={{ backgroundColor: "var(--mh-cta)", color: "white" }}>
@@ -196,13 +196,13 @@ export default function ServiceInquiryForm() {
 
                   <div>
                     <label className="block text-[12.5px] font-[650] mb-[9px] tracking-[-0.01em]" style={{ color: "var(--mh-text)" }}>Which service are you exploring?</label>
-                    <div className="grid grid-cols-3 gap-[10px]">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-[10px]">
                       {pricingTiers.map((tier) => (
                         <button
                           key={tier.id}
                           type="button"
                           onClick={() => setFormData({ ...formData, service: tier.id })}
-                          className={`h-[54px] rounded-[16px] border-2 text-[13px] font-[650] transition-all cursor-pointer ${formData.service === tier.id ? "scale-[0.98]" : "hover:scale-[0.99]"}`}
+                          className={`min-h-[52px] rounded-[16px] border-2 px-[10px] py-[12px] text-[13px] font-[650] transition-all cursor-pointer ${formData.service === tier.id ? "scale-[0.98]" : "hover:scale-[0.99]"}`}
                           style={{
                             backgroundColor: formData.service === tier.id ? tier.accent : "white",
                             borderColor: formData.service === tier.id ? tier.accent : "rgba(7, 6, 7, 0.1)",

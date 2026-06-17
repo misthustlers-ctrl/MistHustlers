@@ -5,9 +5,9 @@ export default function FAQItem({ q, a, isOpen, onClick }: { q: string; a: strin
     <div className="border-b border-abyssal-ink/10 last:border-b-0">
       <button
         onClick={onClick}
-        className="w-full flex items-center justify-between py-6 text-left group cursor-pointer"
+        className="w-full flex items-start justify-between gap-4 py-5 sm:py-6 text-left group cursor-pointer"
       >
-        <span className="text-lg font-semibold text-abyssal-ink pr-8 font-body">{q}</span>
+        <span className="text-base sm:text-lg font-semibold text-abyssal-ink font-body">{q}</span>
         <span
           className={`flex-shrink-0 w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
             isOpen ? "border-digital-orange bg-digital-orange text-white rotate-45" : "border-abyssal-ink/20 text-abyssal-ink group-hover:border-abyssal-ink/40"

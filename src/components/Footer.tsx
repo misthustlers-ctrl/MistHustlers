@@ -19,7 +19,7 @@ export default function Footer() {
   const logo = useContent("logo", LOGO_DEFAULTS);
   return (
     <footer id="contact" className="py-16 border-t border-abyssal-ink/5 bg-basalt-canvas">
-      <div className="max-w-[1200px] mx-auto px-6">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex flex-col items-center md:items-start gap-2">
             <Link to="/" className="flex items-center gap-2">
@@ -34,7 +34,7 @@ export default function Footer() {
             <p className="text-sm text-abyssal-ink/40 font-body">&copy; {new Date().getFullYear()} MistHustlers. All rights reserved.</p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-6 text-sm text-abyssal-ink/50 font-body">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm text-abyssal-ink/50 font-body">
             {FOOTER_LINKS.map((link) => (
               <Link key={link.label} to={link.to} className="hover:text-abyssal-ink transition-colors">
                 {link.label}
@@ -53,7 +53,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="mt-10 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8 text-sm text-abyssal-ink/45 font-body">
           <Link to="/privacy-policy" className="hover:text-abyssal-ink/60 transition-colors">Privacy Policy</Link>
           <Link to="/terms-of-service" className="hover:text-abyssal-ink/60 transition-colors">Terms of Service</Link>
           <Link to="/refund-policy" className="hover:text-abyssal-ink/60 transition-colors">Refund Policy</Link>

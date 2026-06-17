@@ -84,8 +84,8 @@ export default function Home() {
       <SchemaMarkup page="home" faq={faqData} />
       <main>
 
-      <section ref={heroRef} className="relative pt-20 md:pt-32 pb-20 overflow-hidden">
-        <motion.div style={{ opacity: heroOpacity, y: heroY }} className="max-w-[1200px] mx-auto px-6">
+      <section ref={heroRef} className="relative pt-20 md:pt-32 pb-16 sm:pb-20 overflow-hidden">
+        <motion.div style={{ opacity: heroOpacity, y: heroY }} className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
               <motion.div
@@ -96,7 +96,7 @@ export default function Home() {
                 <span className="inline-block px-4 py-1.5 rounded-full bg-abyssal-ink/5 text-abyssal-ink/60 text-xs font-semibold tracking-wider uppercase mb-6 font-body">
                   Web Development Agency — Indore
                 </span>
-                <h1 className="font-display text-[clamp(36px,6vw,110px)] leading-[0.9] tracking-[0.02em] text-abyssal-ink">
+                <h1 className="font-display text-[clamp(34px,12vw,110px)] leading-[0.92] sm:leading-[0.9] tracking-[0.02em] text-abyssal-ink">
                   Web Development &amp;<br />Automation Services<br />
                   <span className="text-digital-orange">in Indore</span>
                 </h1>
@@ -124,17 +124,17 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.35 }}
-                className="flex flex-wrap gap-4"
+                className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4"
               >
                 <button
                   onClick={() => setModalOpen(true)}
-                  className="magnetic-btn bg-digital-orange text-white px-8 py-4 rounded-[800px] text-base font-semibold cursor-pointer font-body"
+                  className="magnetic-btn bg-digital-orange text-white px-6 sm:px-8 py-4 rounded-[800px] text-base font-semibold cursor-pointer font-body text-center"
                 >
                   Get a Quote
                 </button>
                 <button
                   onClick={() => navigate("/services")}
-                  className="magnetic-btn bg-transparent border-2 border-abyssal-ink text-abyssal-ink px-8 py-4 rounded-[800px] text-base font-semibold cursor-pointer hover:bg-abyssal-ink hover:text-white transition-colors duration-300 font-body"
+                  className="magnetic-btn bg-transparent border-2 border-abyssal-ink text-abyssal-ink px-6 sm:px-8 py-4 rounded-[800px] text-base font-semibold cursor-pointer hover:bg-abyssal-ink hover:text-white transition-colors duration-300 font-body text-center"
                 >
                   View Services
                 </button>
@@ -158,7 +158,7 @@ export default function Home() {
       </section>
 
       <section className="py-12 md:py-16 border-t border-abyssal-ink/5">
-        <div className="max-w-[1200px] mx-auto px-6">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {stats.map((stat, i) => (
               <ScrollReveal key={stat.label} delay={i * 0.1}>
@@ -184,7 +184,7 @@ export default function Home() {
 
       {/* SERVICES TEASER */}
       <section className="py-16 md:py-20 bg-ash-white">
-        <div className="max-w-[1200px] mx-auto px-6">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <ScrollReveal>
             <div className="mb-12 text-center">
               <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">Services in Indore</span>
@@ -211,7 +211,7 @@ export default function Home() {
 
       {/* JOURNEY */}
       <section className="py-16 md:py-24">
-        <div className="max-w-[1200px] mx-auto px-6">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <ScrollReveal>
             <div className="mb-16 text-center">
               <span className="text-sm font-semibold tracking-wider uppercase text-digital-orange font-body">How We Work</span>
@@ -227,7 +227,7 @@ export default function Home() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {journeySteps.map((step, i) => (
               <ScrollReveal key={step.step} delay={i * 0.12}>
-                <div className="relative bg-ash-white rounded-[40px] p-5 md:p-10 border border-abyssal-ink/5 h-full group card-lift">
+                <div className="relative bg-ash-white rounded-[28px] md:rounded-[40px] p-5 md:p-10 border border-abyssal-ink/5 h-full group card-lift">
                   <span className="font-display text-4xl md:text-5xl tracking-[0.02em] text-abyssal-ink/10 group-hover:text-digital-orange/20 transition-colors duration-300">
                     {step.step}
                   </span>
@@ -242,7 +242,7 @@ export default function Home() {
 
       {/* CAREER TEASER */}
       <section className="py-16 md:py-20 bg-ash-white">
-        <div className="max-w-[1200px] mx-auto px-6">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <ScrollReveal>
             <div className="mb-12 text-center">
               <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">Career</span>
@@ -269,7 +269,7 @@ export default function Home() {
 
       {/* MENTORSHIP TEASER */}
       <section className="py-16 md:py-24">
-        <div className="max-w-[1200px] mx-auto px-6">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <div className="grid lg:grid-cols-2 gap-10 md:gap-16 items-center">
             <ScrollReveal>
               <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">Mentorship</span>
@@ -288,7 +288,7 @@ export default function Home() {
             </ScrollReveal>
 
             <ScrollReveal delay={0.15}>
-              <div className="bg-ash-white rounded-[40px] p-6 md:p-10 border border-abyssal-ink/5 relative overflow-hidden">
+              <div className="bg-ash-white rounded-[28px] md:rounded-[40px] p-6 md:p-10 border border-abyssal-ink/5 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-cyber-violet/5 rounded-full -translate-y-1/2 translate-x-1/2" />
                 <div className="relative space-y-6">
                   {(c.mentorship?.features ?? []).map((item, i) => (
@@ -309,7 +309,7 @@ export default function Home() {
 
       {/* PROJECT PREVIEW */}
       <section className="py-16 md:py-24 bg-ash-white">
-        <div className="max-w-[1200px] mx-auto px-6">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <ScrollReveal>
             <div className="mb-12 flex flex-col gap-5 text-center md:flex-row md:items-end md:justify-between md:text-left">
               <div>
@@ -347,7 +347,7 @@ export default function Home() {
 
       {/* FAQ */}
       <section id="faq" className="py-16 md:py-24">
-        <div className="max-w-[1200px] mx-auto px-6">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <div className="max-w-2xl mx-auto">
             <ScrollReveal>
               <div className="mb-12 text-center">
@@ -375,7 +375,7 @@ export default function Home() {
 
       {/* FINAL CTA */}
       <section className="py-16 md:py-20 bg-abyssal-ink text-white">
-        <div className="max-w-[1200px] mx-auto px-6 text-center">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 text-center">
           <ScrollReveal>
             <h2 className="font-body font-bold text-[clamp(32px,6vw,80px)] tracking-[0.02em] leading-[0.95] mb-6">
               READY TO SHIP<br />

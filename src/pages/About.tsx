@@ -9,8 +9,8 @@ export default function About() {
       <SEO page="about" />
       <SchemaMarkup page="about" />
       <main>
-        <section className="pt-32 pb-20">
-          <div className="max-w-[1200px] mx-auto px-6">
+        <section className="pt-28 sm:pt-32 pb-16 sm:pb-20">
+          <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
@@ -20,7 +20,7 @@ export default function About() {
               <span className="inline-block px-4 py-1.5 rounded-full bg-abyssal-ink/5 text-abyssal-ink/60 text-xs font-semibold tracking-wider uppercase mb-6 font-body">
                 About Us
               </span>
-              <h1 className="font-display text-[clamp(48px,8vw,80px)] leading-[0.9] tracking-[0.02em] text-abyssal-ink">
+              <h1 className="font-display text-[clamp(38px,12vw,80px)] leading-[0.92] tracking-[0.02em] text-abyssal-ink">
                 Web Development Agency<br />
                 <span className="text-digital-orange">Based in Indore</span>
               </h1>
@@ -29,9 +29,9 @@ export default function About() {
               </p>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
+            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center mb-16 sm:mb-20">
               <ScrollReveal>
-                <div className="bg-ash-white rounded-[40px] p-8 border border-abyssal-ink/5">
+                <div className="bg-ash-white rounded-[28px] sm:rounded-[40px] p-6 sm:p-8 border border-abyssal-ink/5">
                   <div className="w-20 h-20 rounded-full bg-abyssal-ink flex items-center justify-center mb-6">
                     <span className="font-display text-3xl text-white">NS</span>
                   </div>
@@ -65,7 +65,7 @@ export default function About() {
             </div>
 
             <ScrollReveal>
-              <div className="bg-ash-white rounded-[40px] p-10 border border-abyssal-ink/5 mb-20">
+              <div className="bg-ash-white rounded-[28px] sm:rounded-[40px] p-6 sm:p-10 border border-abyssal-ink/5 mb-16 sm:mb-20">
                 <h2 className="font-body font-bold text-3xl tracking-[0.02em] text-abyssal-ink mb-8 text-center">Why Choose MistHustlers</h2>
                 <div className="grid md:grid-cols-3 gap-8">
                   {[

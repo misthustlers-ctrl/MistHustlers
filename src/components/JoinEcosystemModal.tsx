@@ -30,11 +30,11 @@ export default function JoinEcosystemModal({ isOpen, onClose }: { isOpen: boolea
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
-            className="relative bg-ash-white rounded-[40px] p-8 md:p-12 max-w-lg w-full border border-abyssal-ink/5 shadow-2xl text-center"
+            className="relative max-h-[calc(100vh-32px)] w-full max-w-lg overflow-y-auto rounded-[28px] border border-abyssal-ink/5 bg-ash-white p-6 text-center shadow-2xl sm:rounded-[40px] sm:p-8 md:p-12"
           >
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center text-abyssal-ink/40 hover:text-abyssal-ink hover:bg-abyssal-ink/5 transition-colors cursor-pointer"
+              className="absolute top-4 right-4 flex h-9 w-9 items-center justify-center rounded-full text-abyssal-ink/40 hover:text-abyssal-ink hover:bg-abyssal-ink/5 transition-colors cursor-pointer"
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                 <line x1="2" y1="2" x2="14" y2="14" />
@@ -43,12 +43,12 @@ export default function JoinEcosystemModal({ isOpen, onClose }: { isOpen: boolea
             </button>
 
             <div className="mb-6">
-              <span className="font-display text-4xl tracking-[0.02em] text-abyssal-ink">
+              <span className="font-display text-3xl sm:text-4xl tracking-[0.02em] text-abyssal-ink">
                 MIST<span className="text-digital-orange">HUSTLERS</span>
               </span>
             </div>
 
-            <h2 className="font-body font-bold text-3xl tracking-[0.02em] text-abyssal-ink mb-3">
+            <h2 className="font-body font-bold text-2xl sm:text-3xl tracking-[0.02em] text-abyssal-ink mb-3">
               What brings you here?
             </h2>
             <p className="text-abyssal-ink/60 mb-8 font-body text-sm">
@@ -58,7 +58,7 @@ export default function JoinEcosystemModal({ isOpen, onClose }: { isOpen: boolea
             <div className="space-y-4">
               <button
                 onClick={handleHire}
-                className="w-full bg-digital-orange text-white px-8 py-5 rounded-[800px] text-base font-semibold cursor-pointer magnetic-btn font-body flex items-center justify-between group"
+                className="w-full bg-digital-orange text-white px-5 sm:px-8 py-4 sm:py-5 rounded-[800px] text-base font-semibold cursor-pointer magnetic-btn font-body flex items-center justify-between gap-3 group"
               >
                 <span>I want to hire you</span>
                 <span className="opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0 transition-all">
@@ -67,7 +67,7 @@ export default function JoinEcosystemModal({ isOpen, onClose }: { isOpen: boolea
               </button>
               <button
                 onClick={handleLearn}
-                className="w-full bg-abyssal-ink text-white px-8 py-5 rounded-[800px] text-base font-semibold cursor-pointer magnetic-btn font-body flex items-center justify-between group"
+                className="w-full bg-abyssal-ink text-white px-5 sm:px-8 py-4 sm:py-5 rounded-[800px] text-base font-semibold cursor-pointer magnetic-btn font-body flex items-center justify-between gap-3 group"
               >
                 <span>I want to work / learn</span>
                 <span className="opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0 transition-all">

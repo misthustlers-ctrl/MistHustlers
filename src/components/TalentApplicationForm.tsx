@@ -103,9 +103,9 @@ export default function TalentApplicationForm({
   };
 
   return (
-    <div className="overflow-hidden rounded-[40px] border border-white/55 bg-[linear-gradient(135deg,rgba(var(--mh-surface-rgb),0.96),rgba(var(--mh-surface-rgb),0.88))] shadow-[0_30px_80px_rgba(var(--mh-text-rgb),0.10)]">
+    <div className="overflow-hidden rounded-[26px] border border-white/55 bg-[linear-gradient(135deg,rgba(var(--mh-surface-rgb),0.96),rgba(var(--mh-surface-rgb),0.88))] shadow-[0_30px_80px_rgba(var(--mh-text-rgb),0.10)] sm:rounded-[40px]">
       <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
-        <div className="border-b border-[var(--mh-text)]/8 p-7 md:p-10 lg:border-b-0 lg:border-r">
+        <div className="border-b border-[var(--mh-text)]/8 p-5 sm:p-7 md:p-10 lg:border-b-0 lg:border-r">
           <p className="text-sm uppercase tracking-[0.22em] text-[var(--mh-text)]/40">Final CTA</p>
           <h2 className="mh-heading mt-3 text-4xl leading-none sm:text-5xl lg:text-6xl">
             Start Your Journey Today
@@ -131,7 +131,7 @@ export default function TalentApplicationForm({
             </button>
           </div>
 
-          <div className="mt-8 rounded-[28px] bg-[var(--mh-text)] p-6 text-[var(--mh-surface)] shadow-[0_24px_48px_rgba(var(--mh-text-rgb),0.16)]">
+          <div className="mt-8 rounded-[22px] bg-[var(--mh-text)] p-5 text-[var(--mh-surface)] shadow-[0_24px_48px_rgba(var(--mh-text-rgb),0.16)] sm:rounded-[28px] sm:p-6">
             <p className="text-xs uppercase tracking-[0.22em] text-white/45">Selected opportunity</p>
             <h3 className="mt-3 text-2xl font-bold">
               {selectedOpportunity ? selectedOpportunity.title : "General MistHustlers Opportunity"}
@@ -155,11 +155,11 @@ export default function TalentApplicationForm({
           </div>
         </div>
 
-        <div className="p-7 md:p-10">
-          <div className="mb-6 flex items-center justify-between gap-3">
+        <div className="p-5 sm:p-7 md:p-10">
+          <div className="mb-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm uppercase tracking-[0.22em] text-[var(--mh-text)]/40">Inquiry Form</p>
-              <h3 className="mt-3 text-3xl font-bold tracking-tight text-[var(--mh-text)]">Apply via #service-inquiry</h3>
+              <h3 className="mt-3 text-2xl font-bold tracking-tight text-[var(--mh-text)] sm:text-3xl">Apply via #service-inquiry</h3>
             </div>
             <span className="rounded-full bg-[var(--mh-secondary)]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--mh-secondary)] ring-1 ring-[var(--mh-secondary)]/15">
               Curated intake

@@ -105,14 +105,14 @@ function Career() {
 
         {/* FILTER BAR */}
         <section className="mx-auto max-w-7xl pb-8">
-          <div className="mh-card rounded-[32px] p-4 md:p-6">
+          <div className="mh-card rounded-[24px] sm:rounded-[32px] p-4 md:p-6">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <p className="text-sm uppercase tracking-[0.22em] text-[var(--mh-text)]/40">Filter Bar</p>
                 <p className="mt-2 text-lg font-semibold text-[var(--mh-text)]">Find curated opportunities by category and search intent.</p>
               </div>
 
-              <label className="flex min-w-full items-center gap-3 rounded-full border border-[var(--mh-text)]/10 bg-white/60 px-4 py-3 text-sm text-[var(--mh-text)]/45 lg:min-w-[320px]">
+              <label className="flex min-w-full items-center gap-3 rounded-[18px] border border-[var(--mh-text)]/10 bg-white/60 px-4 py-3 text-sm text-[var(--mh-text)]/45 sm:rounded-full lg:min-w-[320px]">
                 <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="11" cy="11" r="8" />
                   <path d="m21 21-4.35-4.35" />
@@ -187,8 +187,8 @@ function Career() {
               const displayMetaValue = primaryMetaValue || opportunity.duration || opportunity.mode || "Flexible";
 
               return (
-                <article key={opportunity.id} className="mh-card group flex h-full flex-col rounded-[30px] p-6 transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_50px_rgba(var(--mh-text-rgb),0.10)]">
-                  <div className="flex items-start justify-between gap-3">
+                <article key={opportunity.id} className="mh-card group flex h-full flex-col rounded-[24px] p-5 transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_50px_rgba(var(--mh-text-rgb),0.10)] sm:rounded-[30px] sm:p-6">
+                  <div className="flex flex-col items-start gap-3 sm:flex-row sm:justify-between">
                     <span className={`inline-flex rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] ${badgeStyles[opportunity.type]}`}>
                       {opportunity.type}
                     </span>
@@ -198,7 +198,7 @@ function Career() {
                   </div>
 
                   <div className="mt-5 space-y-3">
-                    <h3 className="text-2xl font-bold tracking-tight text-[var(--mh-text)]">{opportunity.title}</h3>
+                    <h3 className="text-xl font-bold tracking-tight text-[var(--mh-text)] sm:text-2xl">{opportunity.title}</h3>
                     <p className="text-sm leading-7 text-[var(--mh-text)]/65">{opportunity.description}</p>
                   </div>
 
@@ -256,14 +256,14 @@ function Career() {
           </div>
 
           <div className="mt-8 grid gap-5 lg:grid-cols-3">
-            <article className="mh-card rounded-[32px] p-7 lg:col-span-1">
-              <div className="flex items-center justify-between gap-3">
+            <article className="mh-card rounded-[24px] p-5 sm:rounded-[32px] sm:p-7 lg:col-span-1">
+              <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <span className="rounded-full bg-[var(--mh-secondary)]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--mh-secondary)] ring-1 ring-[var(--mh-secondary)]/15">Featured Internships</span>
                 <span className="text-sm font-semibold text-[var(--mh-text)]/45">Early career</span>
               </div>
               {featuredInternship ? (
                 <>
-                  <h3 className="mt-6 text-3xl font-bold tracking-tight text-[var(--mh-text)]">{featuredInternship.title}</h3>
+                  <h3 className="mt-6 text-2xl font-bold tracking-tight text-[var(--mh-text)] sm:text-3xl">{featuredInternship.title}</h3>
                   <p className="mt-4 text-sm leading-7 text-[var(--mh-text)]/65">{featuredInternship.description}</p>
                   <div className="mt-6 grid grid-cols-2 gap-3">
                     <div className="rounded-2xl bg-white/65 p-4 ring-1 ring-[var(--mh-text)]/8">
@@ -287,14 +287,14 @@ function Career() {
               )}
             </article>
 
-            <article className="mh-card rounded-[32px] p-7 lg:col-span-1">
-              <div className="flex items-center justify-between gap-3">
+            <article className="mh-card rounded-[24px] p-5 sm:rounded-[32px] sm:p-7 lg:col-span-1">
+              <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <span className="rounded-full bg-[var(--mh-cta)]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--mh-cta)] ring-1 ring-[var(--mh-cta)]/15">Hot Events</span>
                 <span className="text-sm font-semibold text-[var(--mh-text)]/45">Live energy</span>
               </div>
               {hotEvent ? (
                 <>
-                  <h3 className="mt-6 text-3xl font-bold tracking-tight text-[var(--mh-text)]">{hotEvent.title}</h3>
+                  <h3 className="mt-6 text-2xl font-bold tracking-tight text-[var(--mh-text)] sm:text-3xl">{hotEvent.title}</h3>
                   <p className="mt-4 text-sm leading-7 text-[var(--mh-text)]/65">{hotEvent.description}</p>
                   <div className="mt-6 rounded-[24px] bg-[linear-gradient(135deg,rgba(var(--mh-secondary-rgb),0.10),rgba(var(--mh-cta-rgb),0.12))] p-5 ring-1 ring-white/60">
                     <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--mh-text)]/40">Next session</p>
@@ -313,16 +313,16 @@ function Career() {
               )}
             </article>
 
-            <article className="mh-card rounded-[32px] p-7 lg:col-span-1">
-              <div className="flex items-center justify-between gap-3">
+            <article className="mh-card rounded-[24px] p-5 sm:rounded-[32px] sm:p-7 lg:col-span-1">
+              <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <span className="rounded-full bg-[var(--mh-text)]/6 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-[var(--mh-text)] ring-1 ring-[var(--mh-text)]/10">High Paying Freelance Gigs</span>
                 <span className="text-sm font-semibold text-[var(--mh-text)]/45">Fast turnaround</span>
               </div>
               {highPayingGig ? (
                 <>
-                  <h3 className="mt-6 text-3xl font-bold tracking-tight text-[var(--mh-text)]">{highPayingGig.title}</h3>
+                  <h3 className="mt-6 text-2xl font-bold tracking-tight text-[var(--mh-text)] sm:text-3xl">{highPayingGig.title}</h3>
                   <p className="mt-4 text-sm leading-7 text-[var(--mh-text)]/65">{highPayingGig.description}</p>
-                  <div className="mt-6 flex items-end justify-between rounded-[24px] bg-white/65 p-5 ring-1 ring-[var(--mh-text)]/8">
+                  <div className="mt-6 flex flex-col gap-3 rounded-[24px] bg-white/65 p-5 ring-1 ring-[var(--mh-text)]/8 sm:flex-row sm:items-end sm:justify-between">
                     <div>
                       <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--mh-text)]/35">Budget Range</p>
                       <p className="mt-2 text-2xl font-bold text-[var(--mh-text)]">{highPayingGig.budget}</p>
