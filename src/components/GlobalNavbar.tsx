@@ -22,6 +22,7 @@ export default function GlobalNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [logoFailed, setLogoFailed] = useState(false);
   const location = useLocation();
   const logo = useContent("logo", LOGO_DEFAULTS);
 
@@ -66,8 +67,8 @@ export default function GlobalNavbar() {
       >
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 flex items-center justify-between gap-3">
           <Link to="/" className="flex min-w-0 items-center gap-2 group">
-            {logo.logoMain ? (
-              <img src={logo.logoMain} alt="MistHustlers" className="h-7 sm:h-8 w-auto max-w-[180px] object-contain" />
+            {logo.logoMain && !logoFailed ? (
+              <img src={logo.logoMain} alt="MistHustlers" onError={() => setLogoFailed(true)} className="h-7 sm:h-8 w-auto max-w-[180px] object-contain" />
             ) : (
               <span className="truncate font-display text-xl sm:text-2xl tracking-[0.02em] text-abyssal-ink">
                 {logo.brandPrefix}<span className="text-digital-orange">{logo.brandHighlight}</span>

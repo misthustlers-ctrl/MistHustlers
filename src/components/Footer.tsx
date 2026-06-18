@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import { useContent } from "@/utils/useContent";
 
 const LOGO_DEFAULTS = {
@@ -23,6 +24,7 @@ const FOOTER_LINKS = [
 ];
 
 export default function Footer() {
+  const [logoFailed, setLogoFailed] = useState(false);
   const logo = useContent("logo", LOGO_DEFAULTS);
   const contact = useContent("contact", CONTACT_DEFAULTS);
   const tel = (contact.phoneHref || contact.phone || "").replace(/\s/g, "");
@@ -32,8 +34,8 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex flex-col items-center md:items-start gap-2">
             <Link to="/" className="flex items-center gap-2">
-              {logo.logoFooter ? (
-                <img src={logo.logoFooter} alt="MistHustlers" className="h-7 w-auto" />
+              {logo.logoFooter && !logoFailed ? (
+                <img src={logo.logoFooter} alt="MistHustlers" onError={() => setLogoFailed(true)} className="h-7 w-auto" />
               ) : (
                 <span className="font-display text-xl tracking-[0.02em] text-abyssal-ink">
                   {logo.brandPrefix}<span className="text-digital-orange">{logo.brandHighlight}</span>

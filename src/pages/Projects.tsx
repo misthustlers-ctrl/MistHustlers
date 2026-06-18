@@ -79,6 +79,7 @@ export default function Projects() {
                         <img
                           src={project.previewImage}
                           alt={project.title}
+                          onError={(event) => { event.currentTarget.style.display = "none"; }}
                           loading="lazy"
                           width="400"
                           height="192"

@@ -13,6 +13,7 @@ const PAGES = [
   { page: "career", file: "content-career.json" },
   { page: "projects", file: "content-projects.json" },
   { page: "contact", file: "contact.json" },
+  { page: "logo", file: "content-logo.json" },
 ];
 
 const OPPORTUNITIES = [
@@ -32,23 +33,23 @@ const OPPORTUNITIES = [
 ];
 
 export async function seed() {
-  const contentCount = await prisma.content.count();
   const oppCount = await prisma.opportunity.count();
   const projCount = await prisma.project.count();
 
-  if (contentCount === 0) {
-    for (const { page, file } of PAGES) {
-      const filePath = join(DATA_DIR, file);
-      if (!existsSync(filePath)) {
-        console.warn(`[SEED] Missing ${file}, skipping`);
-        continue;
-      }
-      const data = JSON.parse(readFileSync(filePath, "utf-8"));
-      await prisma.content.create({ data: { page, data } });
-      console.log(`[SEED] ${page} → created`);
+  for (const { page, file } of PAGES) {
+    const existing = await prisma.content.findUnique({ where: { page } });
+    if (existing) {
+      console.log(`[SEED] ${page} already seeded, skipping`);
+      continue;
     }
-  } else {
-    console.log("[SEED] Content already seeded, skipping");
+    const filePath = join(DATA_DIR, file);
+    if (!existsSync(filePath)) {
+      console.warn(`[SEED] Missing ${file}, skipping`);
+      continue;
+    }
+    const data = JSON.parse(readFileSync(filePath, "utf-8"));
+    await prisma.content.create({ data: { page, data } });
+    console.log(`[SEED] ${page} → created`);
   }
 
   if (oppCount === 0) {

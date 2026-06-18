@@ -223,7 +223,7 @@ export default function Services() {
                       </div>
                       <div className="h-[36px] w-[36px] rounded-[14px] flex items-center justify-center" style={{ backgroundColor: `color-mix(in srgb, ${tier.accent} 8%, transparent)`, color: tier.accent }}>
                         {tier.imageUrl ? (
-                          <img src={tier.imageUrl} alt={tier.name} loading="lazy" width="36" height="36" className="w-full h-full rounded-[13px] object-cover" />
+                          <img src={tier.imageUrl} alt={tier.name} onError={(event) => { event.currentTarget.style.display = "none"; }} loading="lazy" width="36" height="36" className="w-full h-full rounded-[13px] object-cover" />
                         ) : (
                           <div className="h-[8px] w-[8px] rounded-[3px]" style={{ backgroundColor: tier.accent }}></div>
                         )}
@@ -234,7 +234,7 @@ export default function Services() {
 
                   {tier.imageUrl && (
                     <div className="mb-4 rounded-[16px] overflow-hidden border" style={{ borderColor: "rgba(var(--mh-text-rgb), 0.08)" }}>
-                      <img src={tier.imageUrl} alt={tier.name} loading="lazy" width="400" height="128" className="w-full h-32 object-cover" />
+                      <img src={tier.imageUrl} alt={tier.name} onError={(event) => { event.currentTarget.parentElement?.remove(); }} loading="lazy" width="400" height="128" className="w-full h-32 object-cover" />
                     </div>
                   )}
 
