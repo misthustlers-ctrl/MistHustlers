@@ -47,6 +47,10 @@ if (smtpMissing.length) {
   console.warn(`[WARN] SMTP not configured (${smtpMissing.join(", ")}). Emails will be logged instead of sent.`);
 }
 
+if (!process.env.GOOGLE_SHEETS_WEBHOOK_URL) {
+  console.warn("[WARN] Google Sheet sync not configured. Set GOOGLE_SHEETS_WEBHOOK_URL to sync inquiries to a sheet.");
+}
+
 const corsOrigins = (process.env.CORS_ORIGIN || "http://localhost:5173").split(",").map(s => s.trim());
 app.use(cors({ origin: corsOrigins }));
 app.use(morgan("short"));

@@ -9,7 +9,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 interface Inquiry {
   id: number; name: string; email: string; phone: string; service: string; budget: string;
-  status: string; message: string; company?: string; notes?: string; emailStatus?: string;
+  status: string; message: string; company?: string; notes?: string; emailStatus?: string; sheetStatus?: string; sheetError?: string | null;
   createdAt: string; updatedAt?: string;
 }
 interface Opportunity {
@@ -41,6 +41,17 @@ interface ActivityItem {
 }
 interface DeployStatus {
   service: string; environment: string; gitCommit: string; deployId: string; checkedAt: string;
+}
+interface IntegrationOverview {
+  gmail: { configured: boolean; from?: string | null; to?: string | null };
+  googleSheet: { configured: boolean; mode: string };
+  submissions: {
+    total: number;
+    email: Record<string, number>;
+    sheet: Record<string, number>;
+  };
+  recentFailures: Array<{ id: number; name: string; email: string; emailStatus?: string; sheetStatus?: string; sheetError?: string | null; createdAt: string }>;
+  checkedAt: string;
 }
 type AdminRole = 'admin' | 'agent' | 'partner';
 interface AdminSessionUser {
@@ -226,6 +237,7 @@ const App: React.FC = () => {
   const [contentVersions, setContentVersions] = useState<ContentVersion[]>([]);
   const [activityItems, setActivityItems] = useState<ActivityItem[]>([]);
   const [deployStatus, setDeployStatus] = useState<DeployStatus | null>(null);
+  const [integrationOverview, setIntegrationOverview] = useState<IntegrationOverview | null>(null);
   const [showLivePreview, setShowLivePreview] = useState(true);
   const [jsonValid, setJsonValid] = useState(true);
 
@@ -410,17 +422,31 @@ const App: React.FC = () => {
 
   const refreshAdminMeta = async () => {
     if (!isAdmin || isPreviewSession) return;
-    const [activity, deploy] = await Promise.all([
+    const [activity, deploy, integrations] = await Promise.all([
       api<ActivityItem[]>(`${API}/activity`).catch(() => []),
       api<DeployStatus>(`${API}/deploy-status`).catch(() => null),
+      api<IntegrationOverview>(`${API}/integrations/overview`).catch(() => null),
     ]);
     setActivityItems(activity);
     if (deploy) setDeployStatus(deploy);
+    if (integrations) setIntegrationOverview(integrations);
   };
 
   const agentAccounts = accounts.filter((account) => account.role === 'agent' && account.status === 'active');
   const partnerAccounts = accounts.filter((account) => account.role === 'partner' && account.status === 'active');
   const rupee = (value: number) => `₹${Math.round(Number(value) || 0).toLocaleString('en-IN')}`;
+  const deliveryCount = (kind: 'email' | 'sheet', status: string) => integrationOverview?.submissions?.[kind]?.[status] || 0;
+  const statusPill = (status?: string) => {
+    const normalized = status || 'pending';
+    const tone = normalized === 'sent'
+      ? 'bg-emerald-500/15 text-emerald-300'
+      : normalized === 'failed'
+        ? 'bg-red-500/15 text-red-300'
+        : normalized === 'skipped'
+          ? 'bg-yellow-500/15 text-yellow-300'
+          : 'bg-white/10 text-white/55';
+    return `rounded-lg px-2 py-0.5 text-[10px] uppercase tracking-[0.04em] ${tone}`;
+  };
 
   const filteredApplicants = activeFilter === 'all'
     ? applicants
@@ -1038,6 +1064,61 @@ const App: React.FC = () => {
         </section>
       )}
 
+      {isAdmin && (
+        <section className="mb-8 rounded-2xl border border-white/10 bg-[#111] p-5">
+          <div className="mb-4 flex items-end justify-between gap-4">
+            <div>
+              <div className="text-[11px] tracking-[1px] text-white/50">FORM DELIVERY</div>
+              <div className="text-lg font-semibold">Gmail & Google Sheet Overview</div>
+            </div>
+            <button onClick={refreshAdminMeta} className="rounded-xl border border-white/15 px-3 py-1.5 text-xs hover:bg-white hover:text-black">Refresh</button>
+          </div>
+          <div className="grid grid-cols-4 gap-3">
+            <div className="rounded-xl bg-white/5 p-4">
+              <div className="mb-2 flex items-center justify-between text-xs">
+                <span className="text-white/45">Gmail</span>
+                <span className={integrationOverview?.gmail.configured ? 'text-emerald-300' : 'text-red-300'}>
+                  {integrationOverview?.gmail.configured ? 'Configured' : 'Missing env'}
+                </span>
+              </div>
+              <div className="text-2xl font-semibold tabular-nums">{deliveryCount('email', 'sent')}</div>
+              <div className="text-[11px] text-white/40">sent / {deliveryCount('email', 'failed')} failed</div>
+            </div>
+            <div className="rounded-xl bg-white/5 p-4">
+              <div className="mb-2 flex items-center justify-between text-xs">
+                <span className="text-white/45">Google Sheet</span>
+                <span className={integrationOverview?.googleSheet.configured ? 'text-emerald-300' : 'text-yellow-300'}>
+                  {integrationOverview?.googleSheet.configured ? 'Webhook ready' : 'Not connected'}
+                </span>
+              </div>
+              <div className="text-2xl font-semibold tabular-nums">{deliveryCount('sheet', 'sent')}</div>
+              <div className="text-[11px] text-white/40">synced / {deliveryCount('sheet', 'failed')} failed / {deliveryCount('sheet', 'skipped')} skipped</div>
+            </div>
+            <div className="rounded-xl bg-white/5 p-4">
+              <div className="text-xs text-white/45">Total form submissions</div>
+              <div className="mt-2 text-2xl font-semibold tabular-nums">{integrationOverview?.submissions.total ?? inquiries.length}</div>
+              <div className="text-[11px] text-white/40">Website service inquiries</div>
+            </div>
+            <div className="rounded-xl bg-white/5 p-4">
+              <div className="text-xs text-white/45">Last checked</div>
+              <div className="mt-2 text-sm text-white/75">{integrationOverview?.checkedAt ? new Date(integrationOverview.checkedAt).toLocaleString() : 'Not loaded'}</div>
+              <div className="text-[11px] text-white/40">Railway env based</div>
+            </div>
+          </div>
+          {integrationOverview?.recentFailures?.length ? (
+            <div className="mt-4 rounded-xl bg-black/30">
+              {integrationOverview.recentFailures.map((item) => (
+                <div key={item.id} className="grid grid-cols-[1fr_auto_auto] gap-3 border-b border-white/10 px-3 py-2 text-xs last:border-b-0">
+                  <span className="truncate">{item.name} <span className="text-white/35">({item.email})</span></span>
+                  <span className={statusPill(item.emailStatus)}>mail {item.emailStatus || 'pending'}</span>
+                  <span className={statusPill(item.sheetStatus)}>sheet {item.sheetStatus || 'pending'}</span>
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </section>
+      )}
+
       {isAdmin && <section className="mb-8">
         <div className="flex items-end justify-between mb-3">
           <div>
@@ -1211,7 +1292,13 @@ const App: React.FC = () => {
               <div className="font-medium truncate">{inquiry.name}</div>
               <div className="text-[11px] text-white/45 truncate">{inquiry.email} | {inquiry.phone}</div>
             </button>
-            <div className="text-xs text-white/60">{inquiry.service} | {inquiry.budget}</div>
+            <div className="text-xs text-white/60">
+              <div>{inquiry.service} | {inquiry.budget}</div>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className={statusPill(inquiry.emailStatus)}>mail {inquiry.emailStatus || 'pending'}</span>
+                <span className={statusPill(inquiry.sheetStatus)}>sheet {inquiry.sheetStatus || 'pending'}</span>
+              </div>
+            </div>
             <span className={`w-fit px-2 py-0.5 text-[10px] rounded ${inquiry.status === 'new' ? 'bg-blue-500/20 text-blue-300' : 'bg-white/10 text-white/65'}`}>{inquiry.status || 'new'}</span>
             <div className="flex gap-1.5">
               {currentRole !== 'partner' && <button onClick={() => contactLead(inquiry)} className="px-2.5 py-1 text-[10px] rounded-xl border border-white/15 hover:bg-white hover:text-black"><Mail className="inline w-2.5 h-2.5 mr-0.5" />Contact</button>}
@@ -2401,7 +2488,11 @@ const App: React.FC = () => {
               <div className="space-y-3 text-sm">
                 <div><span className="text-white/40">Service:</span> {selectedInquiry.service}</div>
                 <div><span className="text-white/40">Budget:</span> {selectedInquiry.budget}</div>
-                <div><span className="text-white/40">Email status:</span> {selectedInquiry.emailStatus}</div>
+                <div className="flex flex-wrap gap-2">
+                  <span className={statusPill(selectedInquiry.emailStatus)}>Gmail {selectedInquiry.emailStatus || 'pending'}</span>
+                  <span className={statusPill(selectedInquiry.sheetStatus)}>Sheet {selectedInquiry.sheetStatus || 'pending'}</span>
+                </div>
+                {selectedInquiry.sheetError && <div className="rounded-xl bg-red-500/10 p-3 text-xs text-red-200"><span className="text-red-300">Sheet error:</span> {selectedInquiry.sheetError}</div>}
                 <div className="pt-3 border-t border-white/10 text-white/80 text-sm">{selectedInquiry.message}</div>
               </div>
               <div className="flex gap-2 mt-5">

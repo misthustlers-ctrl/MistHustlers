@@ -77,6 +77,8 @@ model Inquiry {
   status    String   @default("new")
   notes     String?
   emailStatus String @default("pending") @map("email_status")
+  sheetStatus String @default("pending") @map("sheet_status")
+  sheetError  String? @map("sheet_error")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 

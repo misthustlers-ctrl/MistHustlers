@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import { upload, uploadImage, deleteImage } from "../controllers/upload.controller.js";
 import { auditLog } from "../middleware/audit.middleware.js";
 import { allowRoles, createSessionToken, hashPassword, requireAdmin } from "../middleware/admin-auth.middleware.js";
+import { getSheetIntegrationStatus } from "../services/sheet.service.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, "..", "data");
@@ -25,6 +26,7 @@ const CONTENT_PAGES = ["home", "services", "career", "projects", "contact", "log
 const ACCOUNT_ROLES = ["agent", "partner"];
 const INQUIRY_STATUSES = ["new", "contacted", "archived"];
 const EMAIL_STATUSES = ["pending", "sent", "failed"];
+const SHEET_STATUSES = ["pending", "sent", "failed", "skipped"];
 const OPPORTUNITY_STATUSES = ["open", "paused", "closed", "archived"];
 const APPLICANT_STATUSES = ["new", "reviewed", "shortlisted", "accepted", "rejected"];
 const PROJECT_STATUSES = ["planning", "in-progress", "review", "completed"];
@@ -118,6 +120,48 @@ router.get("/deploy-status", requireAdmin, async (_, res) => {
     deployId: process.env.RAILWAY_DEPLOYMENT_ID || "unknown",
     checkedAt: new Date().toISOString(),
   });
+});
+
+router.get("/integrations/overview", requireAdmin, async (_, res, next) => {
+  try {
+    const [total, emailGroups, sheetGroups, recentFailures] = await Promise.all([
+      prisma.inquiry.count(),
+      prisma.inquiry.groupBy({ by: ["emailStatus"], _count: { _all: true } }),
+      prisma.inquiry.groupBy({ by: ["sheetStatus"], _count: { _all: true } }),
+      prisma.inquiry.findMany({
+        where: {
+          OR: [
+            { emailStatus: "failed" },
+            { sheetStatus: "failed" },
+          ],
+        },
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        select: { id: true, name: true, email: true, emailStatus: true, sheetStatus: true, sheetError: true, createdAt: true },
+      }),
+    ]);
+
+    const counts = (rows, key) => rows.reduce((acc, row) => {
+      acc[row[key] || "unknown"] = row._count._all;
+      return acc;
+    }, {});
+
+    res.json({
+      gmail: {
+        configured: Boolean(process.env.SMTP_EMAIL && process.env.SMTP_PASSWORD && process.env.EMAIL_TO),
+        from: process.env.SMTP_EMAIL ? process.env.SMTP_EMAIL.replace(/(^.).*(@.*$)/, "$1***$2") : null,
+        to: process.env.EMAIL_TO ? process.env.EMAIL_TO.replace(/(^.).*(@.*$)/, "$1***$2") : null,
+      },
+      googleSheet: getSheetIntegrationStatus(),
+      submissions: {
+        total,
+        email: counts(emailGroups, "emailStatus"),
+        sheet: counts(sheetGroups, "sheetStatus"),
+      },
+      recentFailures,
+      checkedAt: new Date().toISOString(),
+    });
+  } catch (err) { next(err); }
 });
 
 router.get("/activity", requireAdmin, async (_, res, next) => {
@@ -325,6 +369,7 @@ router.put("/inquiries", allowRoles("admin", "agent"), async (req, res, next) =>
     if (req.body.status !== undefined) data.status = pickStatus(req.body.status, INQUIRY_STATUSES, "new");
     if (req.body.notes !== undefined) data.notes = nullableText(req.body.notes, 3000);
     if (req.admin.role === "admin" && req.body.emailStatus !== undefined) data.emailStatus = pickStatus(req.body.emailStatus, EMAIL_STATUSES, "pending");
+    if (req.admin.role === "admin" && req.body.sheetStatus !== undefined) data.sheetStatus = pickStatus(req.body.sheetStatus, SHEET_STATUSES, "pending");
     const item = await prisma.inquiry.update({ where: { id }, data });
     res.json(item);
   } catch (err) {

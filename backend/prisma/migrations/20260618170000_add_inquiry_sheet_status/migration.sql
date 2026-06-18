@@ -1,0 +1,3 @@
+ALTER TABLE "inquiries"
+ADD COLUMN IF NOT EXISTS "sheet_status" TEXT NOT NULL DEFAULT 'pending',
+ADD COLUMN IF NOT EXISTS "sheet_error" TEXT;

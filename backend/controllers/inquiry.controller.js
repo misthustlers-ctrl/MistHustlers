@@ -1,20 +1,34 @@
 import prisma from "../prisma/client.js";
 import { sendInquiryEmail } from "../services/mail.service.js";
+import { syncInquiryToSheet } from "../services/sheet.service.js";
 
 export async function submitInquiry(req, res, next) {
   try {
     const { name, email, phone, company, service, budget, message } = req.body;
 
-    const inquiry = await prisma.inquiry.create({
-      data: { name, email, phone, company: company || null, service, budget, message, emailStatus: "pending" },
+    let inquiry = await prisma.inquiry.create({
+      data: { name, email, phone, company: company || null, service, budget, message, emailStatus: "pending", sheetStatus: "pending" },
     });
 
     try {
       await sendInquiryEmail({ name, email, phone, company: company || "", service, budget, message });
-      await prisma.inquiry.update({ where: { id: inquiry.id }, data: { emailStatus: "sent" } });
+      inquiry = await prisma.inquiry.update({ where: { id: inquiry.id }, data: { emailStatus: "sent" } });
     } catch (emailErr) {
       console.error("[INQUIRY EMAIL FAILED]", emailErr.message);
-      await prisma.inquiry.update({ where: { id: inquiry.id }, data: { emailStatus: "failed" } });
+      inquiry = await prisma.inquiry.update({ where: { id: inquiry.id }, data: { emailStatus: "failed" } });
+    }
+
+    const sheetResult = await syncInquiryToSheet(inquiry);
+    try {
+      await prisma.inquiry.update({
+        where: { id: inquiry.id },
+        data: {
+          sheetStatus: sheetResult.status,
+          sheetError: sheetResult.error || null,
+        },
+      });
+    } catch (sheetErr) {
+      console.error("[INQUIRY SHEET STATUS UPDATE FAILED]", sheetErr.message);
     }
 
     res.status(201).json({
