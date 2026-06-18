@@ -1,0 +1,28 @@
+{
+  "siteName": "MistHustlers",
+  "siteUrl": "https://misthustlers.up.railway.app",
+  "defaultTitle": "MistHustlers - Web Development & Automation Services",
+  "defaultDescription": "MistHustlers builds websites, MVPs, automation systems, and digital products for founders, students, and businesses.",
+  "pages": {
+    "home": {
+      "title": "MistHustlers - Learn, Build, Earn, Grow",
+      "description": "A premium ecosystem for ambitious students, developers, founders, and future builders."
+    },
+    "services": {
+      "title": "Services - MistHustlers",
+      "description": "Transparent web development, MVP development, and automation services with fixed-price execution."
+    },
+    "career": {
+      "title": "Career - MistHustlers",
+      "description": "Jobs, internships, events, programs, mentorship, and real builder opportunities."
+    },
+    "projects": {
+      "title": "Projects - MistHustlers",
+      "description": "Explore projects, demos, and shipped work by MistHustlers builders and partners."
+    },
+    "contact": {
+      "title": "Contact - MistHustlers",
+      "description": "Contact MistHustlers for websites, MVPs, automation, and digital product execution."
+    }
+  }
+}

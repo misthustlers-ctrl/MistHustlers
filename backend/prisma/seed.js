@@ -14,6 +14,7 @@ const PAGES = [
   { page: "projects", file: "content-projects.json" },
   { page: "contact", file: "contact.json" },
   { page: "logo", file: "content-logo.json" },
+  { page: "seo", file: "content-seo.json" },
 ];
 
 const OPPORTUNITIES = [
