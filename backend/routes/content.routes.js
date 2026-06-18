@@ -8,7 +8,7 @@ const router = Router();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const UPLOAD_DIR = join(__dirname, "..", process.env.UPLOAD_DIR || "uploads");
 
-const PAGES = ["home", "services", "career", "projects", "logo", "seo"];
+const PAGES = ["home", "about", "services", "career", "projects", "contact", "logo", "seo"];
 
 function removeMissingUploadUrls(value) {
   if (Array.isArray(value)) return value.map(removeMissingUploadUrls);
@@ -25,8 +25,7 @@ function removeMissingUploadUrls(value) {
 router.get("/:page", async (req, res, next) => {
   const { page } = req.params;
 
-  const allowed = page === "contact" || PAGES.includes(page);
-  if (!allowed) {
+  if (!PAGES.includes(page)) {
     return res.status(404).json({ success: false, message: "Page not found" });
   }
 

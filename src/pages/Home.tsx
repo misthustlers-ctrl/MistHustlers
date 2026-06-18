@@ -111,11 +111,11 @@ const HOME_DEFAULTS = {
   },
   projectsShowcase: {
     badge: "Project Showcase",
-    title: "Built by the community",
+    title: "Client-ready work we ship",
     projects: [
-      { title: "Automation Dashboard", category: "Automation", visual: "⚡" },
-      { title: "E-Commerce Platform", category: "Development", visual: "🛒" },
-      { title: "AI Content Pipeline", category: "AI", visual: "🤖" },
+      { title: "Business Website Launch", category: "Website", visual: "WEB" },
+      { title: "Startup MVP Build", category: "Full-stack", visual: "MVP" },
+      { title: "Lead & Sheet Automation", category: "Automation", visual: "AI" },
     ],
   },
   faq: {

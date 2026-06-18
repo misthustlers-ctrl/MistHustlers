@@ -1,0 +1,33 @@
+{
+  "badge": "About Us",
+  "title": ["Premium Ecosystem", "Based in Indore"],
+  "highlightWord": "Based in Indore",
+  "description": "MistHustlers helps ambitious students, developers, founders, agents, and partners learn, build, earn, and grow through real execution.",
+  "membersTitle": "Core Team",
+  "members": [
+    {
+      "name": "Naveen Salve",
+      "role": "Founder, MistHustlers",
+      "initials": "NS",
+      "bio": "Naveen is a developer and entrepreneur based in Indore. He founded MistHustlers to bridge the gap between ambitious builders and real-world execution."
+    }
+  ],
+  "whatTitle": "What We Do",
+  "whatWeDo": [
+    "MistHustlers is a premium ecosystem for learning, building, earning, and career growth.",
+    "We build websites, MVPs, full-stack applications, and AI automation systems for startups and founders.",
+    "We also manage client work through agents and partners with transparent tracking for delivery and payments."
+  ],
+  "whyTitle": "Why Choose MistHustlers",
+  "reasons": [
+    { "title": "Real Execution", "desc": "Work is tied to real projects, client delivery, and measurable outcomes." },
+    { "title": "Direct Access", "desc": "Clients and builders get direct communication with the people doing the work." },
+    { "title": "Transparent System", "desc": "Admin, agent, and partner dashboards keep work, leads, and payments visible." },
+    { "title": "Post-Delivery Support", "desc": "Projects include support and handoff so delivery does not stop at launch." }
+  ],
+  "stackTitle": "Our Tech Stack",
+  "stackDescription": "Technologies we use to ship production-ready projects",
+  "techStack": ["React", "Next.js", "Node.js", "TypeScript", "PostgreSQL", "Prisma", "Tailwind CSS", "Railway", "OpenAI", "Automation"],
+  "mapTitle": "MistHustlers Location - Indore",
+  "mapEmbedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d117925.21689636887!2d75.788529!3d22.719568!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3962fcad1b410ddb%3A0x96ec4da356240f4!2sIndore%2C%20Madhya%20Pradesh!5e0!3m2!1sen!2sin!4v1"
+}

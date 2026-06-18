@@ -1,14 +1,14 @@
 {
   "badge": "Project Showcase",
-  "title": "Built by the community",
-  "highlightWord": "community",
-  "subtitle": "Real projects shipped by MistHustlers builders and partners.",
+  "title": "Client-ready work we ship",
+  "highlightWord": "ship",
+  "subtitle": "Examples of the website, MVP, automation, CMS, and growth systems MistHustlers can deliver for clients.",
   "projects": [
-    { "title": "Automation Dashboard", "category": "Automation", "imageUrl": "", "desc": "Real-time workflow monitoring and automation control panel for enterprise operations." },
-    { "title": "E-Commerce Platform", "category": "Development", "imageUrl": "", "desc": "Full-stack online marketplace with payment integration, inventory management, and analytics." },
-    { "title": "AI Content Pipeline", "category": "AI", "imageUrl": "", "desc": "Automated content generation system leveraging LLMs for marketing and documentation." },
-    { "title": "Portfolio Builder App", "category": "Tooling", "imageUrl": "", "desc": "Drag-and-drop portfolio builder with custom themes, SEO optimization, and hosting." },
-    { "title": "Client CRM System", "category": "Freelancing", "imageUrl": "", "desc": "Client management platform with invoicing, project tracking, and communication tools." },
-    { "title": "Career Match Engine", "category": "Platform", "imageUrl": "", "desc": "AI-powered talent matching platform connecting builders with relevant opportunities." }
+    { "title": "Business Website Launch", "category": "Website", "imageUrl": "", "desc": "A fast, mobile-ready business website with service pages, inquiry forms, SEO basics, and analytics-ready structure." },
+    { "title": "Startup MVP Build", "category": "Full-stack", "imageUrl": "", "desc": "A production-ready MVP with frontend, backend, database, authentication, admin workflows, and deployment setup." },
+    { "title": "Lead & Sheet Automation", "category": "Automation", "imageUrl": "", "desc": "A lead capture flow connected with Gmail and Google Sheets so every form submission is tracked and followed up." },
+    { "title": "Admin Dashboard Setup", "category": "CMS", "imageUrl": "", "desc": "A restricted admin panel to manage content, leads, projects, media, accounts, and operational overview." },
+    { "title": "Client Work Management", "category": "Operations", "imageUrl": "", "desc": "Agent and partner dashboards for client work, assignment, delivery status, payout tracking, and payment history." },
+    { "title": "SEO & Performance Upgrade", "category": "Growth", "imageUrl": "", "desc": "A technical cleanup for speed, metadata, page content, schema, mobile UX, and deployment readiness." }
   ]
 }

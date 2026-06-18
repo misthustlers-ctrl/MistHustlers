@@ -22,7 +22,7 @@ async function writeJSON(file, data) {
   await writeFile(join(DATA_DIR, file), JSON.stringify(data, null, 2), "utf-8");
 }
 
-const CONTENT_PAGES = ["home", "services", "career", "projects", "contact", "logo", "seo"];
+const CONTENT_PAGES = ["home", "about", "services", "career", "projects", "contact", "logo", "seo"];
 const ACCOUNT_ROLES = ["agent", "partner"];
 const INQUIRY_STATUSES = ["new", "contacted", "archived"];
 const EMAIL_STATUSES = ["pending", "sent", "failed"];

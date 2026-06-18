@@ -9,10 +9,11 @@ const DATA_DIR = join(__dirname, "..", "data");
 
 const PAGES = [
   { page: "home", file: "content-home.json" },
+  { page: "about", file: "content-about.json" },
   { page: "services", file: "content-services.json" },
   { page: "career", file: "content-career.json" },
   { page: "projects", file: "content-projects.json" },
-  { page: "contact", file: "contact.json" },
+  { page: "contact", file: "content-contact.json" },
   { page: "logo", file: "content-logo.json" },
   { page: "seo", file: "content-seo.json" },
 ];

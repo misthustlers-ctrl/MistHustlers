@@ -47,14 +47,14 @@
   },
   "projectsShowcase": {
     "badge": "Project Showcase",
-    "title": "Built by the community",
+    "title": "Client-ready work we ship",
     "projects": [
-      { "title": "Automation Dashboard", "category": "Automation", "visual": "⚡" },
-      { "title": "E-Commerce Platform", "category": "Development", "visual": "🛒" },
-      { "title": "AI Content Pipeline", "category": "AI", "visual": "🤖" },
-      { "title": "Portfolio Builder App", "category": "Tooling", "visual": "🎨" },
-      { "title": "Client CRM System", "category": "Freelancing", "visual": "📊" },
-      { "title": "Career Match Engine", "category": "Platform", "visual": "🔗" }
+      { "title": "Business Website Launch", "category": "Website", "visual": "WEB" },
+      { "title": "Startup MVP Build", "category": "Full-stack", "visual": "MVP" },
+      { "title": "Lead & Sheet Automation", "category": "Automation", "visual": "AI" },
+      { "title": "Admin Dashboard Setup", "category": "CMS", "visual": "CMS" },
+      { "title": "Client Work Management", "category": "Operations", "visual": "CRM" },
+      { "title": "SEO & Performance Upgrade", "category": "Growth", "visual": "SEO" }
     ]
   },
   "faq": {

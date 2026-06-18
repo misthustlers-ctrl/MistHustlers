@@ -67,6 +67,7 @@ app.use(helmet({
       scriptSrc: ["'self'", "'unsafe-inline'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "blob:", "https:"],
+      frameSrc: ["'self'", "https://www.google.com", "https://maps.google.com"],
       fontSrc: ["'self'", "data:"],
       objectSrc: ["'none'"],
       baseUri: ["'self'"],

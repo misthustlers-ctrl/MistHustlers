@@ -220,6 +220,7 @@ const App: React.FC = () => {
 
   const [servicesContent, setServicesContent] = useState<any>(null);
   const [homeContent, setHomeContent] = useState<any>(null);
+  const [aboutContent, setAboutContent] = useState<any>(null);
   const [careerContent, setCareerContent] = useState<any>(null);
   const [projectsContent, setProjectsContent] = useState<any>(null);
   const [contactContent, setContactContent] = useState<any>(null);
@@ -317,6 +318,7 @@ const App: React.FC = () => {
       if (res.success) {
         if (page === 'services') setServicesContent(res.data);
         if (page === 'home') setHomeContent(res.data);
+        if (page === 'about') setAboutContent(res.data);
         if (page === 'career') setCareerContent(res.data);
         if (page === 'projects') setProjectsContent(res.data);
         if (page === 'contact') setContactContent(res.data);
@@ -827,6 +829,7 @@ const App: React.FC = () => {
     if (res.success) {
       if (page === 'services') setServicesContent(res.data);
       if (page === 'home') setHomeContent(res.data);
+      if (page === 'about') setAboutContent(res.data);
       if (page === 'career') setCareerContent(res.data);
       if (page === 'projects') setProjectsContent(res.data);
       if (page === 'contact') setContactContent(res.data);
@@ -892,14 +895,15 @@ const App: React.FC = () => {
 
   const createAccount = async () => {
     try {
-      if (!formData.username || !formData.password || !formData.role) throw new Error('Username, password, and account type are required');
+      const role = formData.role === 'partner' ? 'partner' : 'agent';
+      if (!formData.username || !formData.password) throw new Error('Username and password are required');
       await api<AdminAccount>(`${API}/accounts`, {
         method: 'POST',
         body: JSON.stringify({
           username: formData.username,
           password: formData.password,
           displayName: formData.displayName || '',
-          role: formData.role,
+          role,
         }),
       });
       setFormData({});
@@ -1561,6 +1565,7 @@ const App: React.FC = () => {
               <option value="agent">Agent dashboard</option>
               <option value="partner">Partner dashboard</option>
             </select>
+            <div className="rounded-xl bg-white/5 px-3 py-2 text-[11px] leading-5 text-white/45">Password minimum 8 characters. These accounts cannot open admin-only tabs.</div>
             <button onClick={createAccount} className="w-full py-3 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90">
               <UserPlus className="inline w-4 h-4 mr-1.5" /> Create Account
             </button>
@@ -1840,17 +1845,21 @@ const App: React.FC = () => {
         </div>
 
         <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
-          <h3 className="text-sm font-semibold mb-4">Project Showcase</h3>
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-sm font-semibold">Project Showcase</h3>
+            <button onClick={() => upd(['projectsShowcase', 'projects'], [...(c.projectsShowcase?.projects || []), { title: 'New Project', category: 'Category', visual: 'WEB' }])} className="rounded-lg border border-white/15 px-3 py-1.5 text-xs hover:bg-white hover:text-black">Add Project</button>
+          </div>
           <div className="grid grid-cols-2 gap-3">
             <div><label className="block text-[11px] text-white/50 mb-1">Badge</label><input className="field text-sm" value={c.projectsShowcase?.badge || ''} onChange={e => upd(['projectsShowcase', 'badge'], e.target.value)} /></div>
             <div><label className="block text-[11px] text-white/50 mb-1">Title</label><input className="field text-sm" value={c.projectsShowcase?.title || ''} onChange={e => upd(['projectsShowcase', 'title'], e.target.value)} /></div>
           </div>
           <div className="mt-4 space-y-3">
             {(c.projectsShowcase?.projects || []).map((proj: any, idx: number) => (
-              <div key={idx} className="grid grid-cols-[1fr_1fr_80px] gap-2 items-center">
+              <div key={idx} className="grid grid-cols-[1fr_1fr_80px_auto] gap-2 items-center">
                 <input className="field text-sm" placeholder="Title" value={proj.title} onChange={e => upd(['projectsShowcase', 'projects', String(idx), 'title'], e.target.value)} />
                 <input className="field text-sm" placeholder="Category" value={proj.category} onChange={e => upd(['projectsShowcase', 'projects', String(idx), 'category'], e.target.value)} />
                 <input className="field text-sm" placeholder="Visual/Emoji" value={proj.visual || ''} onChange={e => upd(['projectsShowcase', 'projects', String(idx), 'visual'], e.target.value)} />
+                <button onClick={() => upd(['projectsShowcase', 'projects'], (c.projectsShowcase?.projects || []).filter((_: any, i: number) => i !== idx))} className="rounded-lg border border-red-400/30 px-2 py-2 text-xs text-red-300 hover:bg-red-500 hover:text-white">Remove</button>
               </div>
             ))}
           </div>
@@ -1888,6 +1897,85 @@ const App: React.FC = () => {
           </button>
         </div>
         {rawJsonEditor(c, setHomeContent)}
+      </div>
+    );
+  };
+
+  const renderAboutEditor = () => {
+    if (!aboutContent) return <div className="text-center text-white/40 py-10">Loading...</div>;
+    const c = aboutContent;
+    const upd = (path: string[], val: any) => updateContentField(setAboutContent, path, val);
+    return (
+      <div className="space-y-6">
+        <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
+          <h3 className="text-sm font-semibold mb-4">About Header</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <div><label className="block text-[11px] text-white/50 mb-1">Badge</label><input className="field text-sm" value={c.badge || ''} onChange={e => upd(['badge'], e.target.value)} /></div>
+            <div><label className="block text-[11px] text-white/50 mb-1">Highlight Word</label><input className="field text-sm" value={c.highlightWord || ''} onChange={e => upd(['highlightWord'], e.target.value)} /></div>
+            <div className="col-span-2"><label className="block text-[11px] text-white/50 mb-1">Title Lines (comma separated)</label><input className="field text-sm" value={(c.title || []).join(', ')} onChange={e => upd(['title'], e.target.value.split(',').map((s: string) => s.trim()).filter(Boolean))} /></div>
+            <div className="col-span-2"><label className="block text-[11px] text-white/50 mb-1">Description</label><textarea className="field h-20 resize-y text-sm" value={c.description || ''} onChange={e => upd(['description'], e.target.value)} /></div>
+          </div>
+        </div>
+
+        <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-sm font-semibold">Team Members</h3>
+            <button onClick={() => upd(['members'], [...(c.members || []), { name: 'New Member', role: 'Role', initials: 'NM', bio: '' }])} className="rounded-lg border border-white/15 px-3 py-1.5 text-xs hover:bg-white hover:text-black">Add Member</button>
+          </div>
+          <div className="mb-3"><label className="block text-[11px] text-white/50 mb-1">Section Title</label><input className="field text-sm" value={c.membersTitle || ''} onChange={e => upd(['membersTitle'], e.target.value)} /></div>
+          <div className="space-y-3">
+            {(c.members || []).map((member: any, idx: number) => (
+              <div key={idx} className="rounded-xl bg-white/5 p-4">
+                <div className="mb-3 grid grid-cols-[1fr_1fr_80px_auto] gap-2">
+                  <input className="field text-sm" placeholder="Name" value={member.name || ''} onChange={e => upd(['members', String(idx), 'name'], e.target.value)} />
+                  <input className="field text-sm" placeholder="Role" value={member.role || ''} onChange={e => upd(['members', String(idx), 'role'], e.target.value)} />
+                  <input className="field text-sm" placeholder="Initials" value={member.initials || ''} onChange={e => upd(['members', String(idx), 'initials'], e.target.value)} />
+                  <button onClick={() => upd(['members'], (c.members || []).filter((_: any, i: number) => i !== idx))} className="rounded-lg border border-red-400/30 px-2 text-xs text-red-300 hover:bg-red-500 hover:text-white">Remove</button>
+                </div>
+                <textarea className="field h-20 resize-y text-sm" placeholder="Bio" value={member.bio || ''} onChange={e => upd(['members', String(idx), 'bio'], e.target.value)} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
+          <h3 className="text-sm font-semibold mb-4">About Copy & Map</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <div><label className="block text-[11px] text-white/50 mb-1">What Title</label><input className="field text-sm" value={c.whatTitle || ''} onChange={e => upd(['whatTitle'], e.target.value)} /></div>
+            <div><label className="block text-[11px] text-white/50 mb-1">Map Title</label><input className="field text-sm" value={c.mapTitle || ''} onChange={e => upd(['mapTitle'], e.target.value)} /></div>
+            <div className="col-span-2"><label className="block text-[11px] text-white/50 mb-1">Map Embed URL</label><input className="field text-sm" value={c.mapEmbedUrl || ''} onChange={e => upd(['mapEmbedUrl'], e.target.value)} /></div>
+            <div className="col-span-2"><label className="block text-[11px] text-white/50 mb-1">What We Do Lines</label><textarea className="field h-28 resize-y text-sm" value={(c.whatWeDo || []).join('\n')} onChange={e => upd(['whatWeDo'], e.target.value.split('\n').map((s: string) => s.trim()).filter(Boolean))} /></div>
+          </div>
+        </div>
+
+        <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-sm font-semibold">Reasons & Tech Stack</h3>
+            <button onClick={() => upd(['reasons'], [...(c.reasons || []), { title: 'New Reason', desc: '' }])} className="rounded-lg border border-white/15 px-3 py-1.5 text-xs hover:bg-white hover:text-black">Add Reason</button>
+          </div>
+          <div className="mb-4 grid grid-cols-2 gap-3">
+            <div><label className="block text-[11px] text-white/50 mb-1">Reasons Title</label><input className="field text-sm" value={c.whyTitle || ''} onChange={e => upd(['whyTitle'], e.target.value)} /></div>
+            <div><label className="block text-[11px] text-white/50 mb-1">Stack Title</label><input className="field text-sm" value={c.stackTitle || ''} onChange={e => upd(['stackTitle'], e.target.value)} /></div>
+            <div className="col-span-2"><label className="block text-[11px] text-white/50 mb-1">Stack Description</label><input className="field text-sm" value={c.stackDescription || ''} onChange={e => upd(['stackDescription'], e.target.value)} /></div>
+            <div className="col-span-2"><label className="block text-[11px] text-white/50 mb-1">Tech Stack (comma separated)</label><input className="field text-sm" value={(c.techStack || []).join(', ')} onChange={e => upd(['techStack'], e.target.value.split(',').map((s: string) => s.trim()).filter(Boolean))} /></div>
+          </div>
+          <div className="space-y-2">
+            {(c.reasons || []).map((reason: any, idx: number) => (
+              <div key={idx} className="grid grid-cols-[1fr_2fr_auto] gap-2">
+                <input className="field text-sm" placeholder="Title" value={reason.title || ''} onChange={e => upd(['reasons', String(idx), 'title'], e.target.value)} />
+                <input className="field text-sm" placeholder="Description" value={reason.desc || ''} onChange={e => upd(['reasons', String(idx), 'desc'], e.target.value)} />
+                <button onClick={() => upd(['reasons'], (c.reasons || []).filter((_: any, i: number) => i !== idx))} className="rounded-lg border border-red-400/30 px-2 text-xs text-red-300 hover:bg-red-500 hover:text-white">Remove</button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex justify-end">
+          <button onClick={() => saveContent('about', c)} disabled={contentSaving} className="flex items-center gap-2 px-5 py-2.5 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 disabled:opacity-50">
+            <Save className="w-4 h-4" /> {contentSaving ? 'Saving...' : 'Save About'}
+          </button>
+        </div>
+        {rawJsonEditor(c, setAboutContent)}
       </div>
     );
   };
@@ -2047,10 +2135,16 @@ const App: React.FC = () => {
         </div>
 
         <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
-          <h3 className="text-sm font-semibold mb-4">Projects ({c.projects?.length || 0})</h3>
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-sm font-semibold">Projects ({c.projects?.length || 0})</h3>
+            <button onClick={() => upd(['projects'], [...(c.projects || []), { title: 'New Project', category: 'Website', imageUrl: '', desc: '' }])} className="rounded-lg border border-white/15 px-3 py-1.5 text-xs hover:bg-white hover:text-black">Add Project</button>
+          </div>
           <div className="space-y-4">
             {(c.projects || []).map((proj: any, idx: number) => (
               <div key={idx} className="p-4 bg-white/5 rounded-xl">
+                <div className="mb-3 flex justify-end">
+                  <button onClick={() => upd(['projects'], (c.projects || []).filter((_: any, i: number) => i !== idx))} className="rounded-lg border border-red-400/30 px-2 py-1 text-xs text-red-300 hover:bg-red-500 hover:text-white">Remove</button>
+                </div>
                 <div className="grid grid-cols-2 gap-3 mb-3">
                   <div><label className="block text-[11px] text-white/50 mb-1">Title</label><input className="field text-sm" value={proj.title} onChange={e => upd(['projects', String(idx), 'title'], e.target.value)} /></div>
                   <div><label className="block text-[11px] text-white/50 mb-1">Category</label><input className="field text-sm" value={proj.category} onChange={e => upd(['projects', String(idx), 'category'], e.target.value)} /></div>
@@ -2214,14 +2308,33 @@ const App: React.FC = () => {
 
   const renderContactEditor = () => {
     if (!contactContent) return <div className="text-center text-white/40 py-10">Loading...</div>;
+    const c = contactContent;
+    const upd = (path: string[], val: any) => updateContentField(setContactContent, path, val);
     return (
       <div className="space-y-6">
-        {rawJsonEditor(contactContent, setContactContent)}
+        <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
+          <h3 className="text-sm font-semibold mb-4">Contact Page</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <div><label className="block text-[11px] text-white/50 mb-1">Badge</label><input className="field text-sm" value={c.badge || ''} onChange={e => upd(['badge'], e.target.value)} /></div>
+            <div><label className="block text-[11px] text-white/50 mb-1">Title</label><input className="field text-sm" value={c.title || ''} onChange={e => upd(['title'], e.target.value)} /></div>
+            <div className="col-span-2"><label className="block text-[11px] text-white/50 mb-1">Description</label><textarea className="field h-20 resize-y text-sm" value={c.description || ''} onChange={e => upd(['description'], e.target.value)} /></div>
+            <div><label className="block text-[11px] text-white/50 mb-1">Email</label><input className="field text-sm" value={c.email || ''} onChange={e => upd(['email'], e.target.value)} /></div>
+            <div><label className="block text-[11px] text-white/50 mb-1">Phone Display</label><input className="field text-sm" value={c.phone || ''} onChange={e => upd(['phone'], e.target.value)} /></div>
+            <div><label className="block text-[11px] text-white/50 mb-1">Phone Href</label><input className="field text-sm" value={c.phoneHref || ''} onChange={e => upd(['phoneHref'], e.target.value)} /></div>
+            <div><label className="block text-[11px] text-white/50 mb-1">Info Title</label><input className="field text-sm" value={c.infoTitle || ''} onChange={e => upd(['infoTitle'], e.target.value)} /></div>
+            <div className="col-span-2"><label className="block text-[11px] text-white/50 mb-1">Address</label><input className="field text-sm" value={c.address || ''} onChange={e => upd(['address'], e.target.value)} /></div>
+            <div className="col-span-2"><label className="block text-[11px] text-white/50 mb-1">Business Hours</label><textarea className="field h-20 resize-y text-sm" value={c.businessHours || ''} onChange={e => upd(['businessHours'], e.target.value)} /></div>
+            <div className="col-span-2"><label className="block text-[11px] text-white/50 mb-1">WhatsApp Text</label><input className="field text-sm" value={c.whatsappText || ''} onChange={e => upd(['whatsappText'], e.target.value)} /></div>
+            <div><label className="block text-[11px] text-white/50 mb-1">Map Title</label><input className="field text-sm" value={c.mapTitle || ''} onChange={e => upd(['mapTitle'], e.target.value)} /></div>
+            <div className="col-span-2"><label className="block text-[11px] text-white/50 mb-1">Google Map Embed URL</label><input className="field text-sm" value={c.mapEmbedUrl || ''} onChange={e => upd(['mapEmbedUrl'], e.target.value)} /></div>
+          </div>
+        </div>
         <div className="flex justify-end">
-          <button onClick={() => saveContent('contact', contactContent)} disabled={contentSaving} className="flex items-center gap-2 px-5 py-2.5 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 disabled:opacity-50">
+          <button onClick={() => saveContent('contact', c)} disabled={contentSaving} className="flex items-center gap-2 px-5 py-2.5 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 disabled:opacity-50">
             <Save className="w-4 h-4" /> {contentSaving ? 'Saving...' : 'Save Contact'}
           </button>
         </div>
+        {rawJsonEditor(c, setContactContent)}
       </div>
     );
   };
@@ -2229,6 +2342,7 @@ const App: React.FC = () => {
   const currentContentData = () => {
     if (contentTab === 'services') return servicesContent;
     if (contentTab === 'home') return homeContent;
+    if (contentTab === 'about') return aboutContent;
     if (contentTab === 'career') return careerContent;
     if (contentTab === 'projects') return projectsContent;
     if (contentTab === 'contact') return contactContent;
@@ -2239,6 +2353,7 @@ const App: React.FC = () => {
   const setCurrentContentData = (next: any) => {
     if (contentTab === 'services') setServicesContent(next);
     if (contentTab === 'home') setHomeContent(next);
+    if (contentTab === 'about') setAboutContent(next);
     if (contentTab === 'career') setCareerContent(next);
     if (contentTab === 'projects') setProjectsContent(next);
     if (contentTab === 'contact') setContactContent(next);
@@ -2289,7 +2404,7 @@ const App: React.FC = () => {
   };
 
   const contentPreviewPath = () => {
-    const map: Record<string, string> = { services: '/services', home: '/', career: '/career', projects: '/projects', contact: '/contact', seo: '/' };
+    const map: Record<string, string> = { services: '/services', home: '/', about: '/about', career: '/career', projects: '/projects', contact: '/contact', seo: '/' };
     return map[contentTab] || '/';
   };
 
@@ -2298,7 +2413,7 @@ const App: React.FC = () => {
       <div className="flex justify-between mb-4 items-end">
         <div><div className="text-[11px] tracking-[1px] text-white/50">CONTENT MANAGEMENT</div><div className="text-lg font-semibold">Edit Page Content</div></div>
         <div className="flex gap-1.5">
-          {['services', 'home', 'career', 'projects', 'contact', 'seo'].map((page) => (
+          {['services', 'home', 'about', 'career', 'projects', 'contact', 'seo'].map((page) => (
             <button key={page} onClick={() => { setContentTab(page); if (!isPreviewSession) fetchContent(page); }} className={`px-3 py-1.5 text-[11px] rounded-lg border ${contentTab === page ? 'bg-white text-black border-white' : 'border-white/10 text-white/60 hover:bg-white/5'}`}>
               {page.charAt(0).toUpperCase() + page.slice(1)}
             </button>
@@ -2359,6 +2474,7 @@ const App: React.FC = () => {
       {isPreviewSession && <div className="bg-[#111] border border-white/10 rounded-2xl p-8 text-center text-white/45 text-sm">Content editor preview is visible after connecting the backend database.</div>}
       {!isPreviewSession && contentTab === 'services' && renderServicesEditor()}
       {!isPreviewSession && contentTab === 'home' && renderHomeEditor()}
+      {!isPreviewSession && contentTab === 'about' && renderAboutEditor()}
       {!isPreviewSession && contentTab === 'career' && renderCareerEditor()}
       {!isPreviewSession && contentTab === 'projects' && renderProjectsEditor()}
       {!isPreviewSession && contentTab === 'contact' && renderContactEditor()}
