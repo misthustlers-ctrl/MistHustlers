@@ -35,6 +35,7 @@ for (const f of runtimeFiles) {
 }
 
 const required = ["ADMIN_USERNAME", "ADMIN_PASSWORD", "DATABASE_URL"];
+if (process.env.NODE_ENV === "production") required.push("ADMIN_SESSION_SECRET");
 const missing = required.filter((k) => !process.env[k]);
 if (missing.length) {
   console.error(`[FATAL] Missing required env vars: ${missing.join(", ")}`);

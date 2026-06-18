@@ -5,7 +5,11 @@ const VALID_ROLES = ["admin", "agent", "partner"];
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000;
 
 function sessionSecret() {
-  return process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_PASSWORD || "development-admin-session-secret";
+  const secret = process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_PASSWORD;
+  if (!secret && process.env.NODE_ENV === "production") {
+    throw new Error("ADMIN_SESSION_SECRET is required in production");
+  }
+  return secret || "development-admin-session-secret";
 }
 
 function signPayload(payload) {
@@ -28,7 +32,10 @@ export function createSessionToken(admin) {
 export function readSessionToken(token) {
   if (!token || !token.includes(".")) return null;
   const [encoded, signature] = token.split(".");
-  if (!encoded || !signature || signPayload(encoded) !== signature) return null;
+  const expected = signPayload(encoded || "");
+  const expectedBuffer = Buffer.from(expected);
+  const signatureBuffer = Buffer.from(signature || "");
+  if (!encoded || !signature || expectedBuffer.length !== signatureBuffer.length || !crypto.timingSafeEqual(expectedBuffer, signatureBuffer)) return null;
   try {
     const payload = JSON.parse(Buffer.from(encoded, "base64url").toString("utf-8"));
     if (!payload.exp || payload.exp < Date.now()) return null;
