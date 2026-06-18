@@ -61,28 +61,91 @@ const LOGO_DEFAULTS = {
   emojiRocket: "",
 };
 
+const HOME_DEFAULTS = {
+  hero: {
+    badge: "Premium Ecosystem",
+    title: ["LEARN.", "BUILD.", "EARN.", "GROW."],
+    highlightWord: "GROW.",
+    description: "A Premium Ecosystem for Ambitious Students, Developers & Future Builders.",
+    tagline: "No fluff. Real skills. Real execution.",
+    ctaPrimary: "Join MistHustlers",
+    ctaSecondary: "Explore Careers",
+  },
+  stats: [
+    { value: 10000, suffix: "+", label: "Students Guided" },
+    { value: 1200, suffix: "+", label: "Projects Built" },
+    { value: 5000, suffix: "+", label: "Mentorship Hours" },
+    { value: 80, suffix: "+", label: "Career Opportunities" },
+  ],
+  brands: ["STRIPE", "LINEAR", "VERCEL", "GITHUB", "NOTION"],
+  servicesTeaser: {
+    badge: "Services",
+    title: "Build premium products",
+    description: "From automation to full-stack development - we ship production-grade work for startups and founders.",
+    cta: "Explore Services",
+  },
+  careerTeaser: {
+    badge: "Career",
+    title: "Your career, accelerated",
+    description: "Jobs, internships, events, programs, and mentorship - all in one place.",
+    cta: "Explore Career",
+  },
+  journey: { badge: "How We Work", title: "From Idea to Launch", description: "A streamlined process from requirements to delivery. Direct communication. No middlemen." },
+  journeySteps: [
+    { step: "01", title: "Learn", desc: "Master in-demand skills through our structured bootcamps, workshops, and curated learning paths designed by industry experts." },
+    { step: "02", title: "Build", desc: "Apply your knowledge by building real projects. From automation pipelines to full-stack apps - your portfolio grows here." },
+    { step: "03", title: "Earn", desc: "Monetize your skills through freelancing, internships, and career placements. We connect you directly to opportunities." },
+    { step: "04", title: "Grow", desc: "Scale your career with ongoing mentorship, advanced projects, leadership skills, and a network of ambitious builders." },
+  ],
+  mentorship: {
+    badge: "Mentorship",
+    title: "Guided by those who've done it.",
+    description: "Our mentors are active practitioners who share real, actionable guidance. No theory. Just practice.",
+    cta: "Find a Mentor",
+    features: [
+      { title: "1:1 Guidance", desc: "Personalized sessions with practitioners who've been where you want to go." },
+      { title: "Career Roadmap", desc: "A custom growth plan designed around your goals and timeline." },
+      { title: "Accountability", desc: "Weekly check-ins to keep you on track and moving forward." },
+      { title: "Project Reviews", desc: "Get expert feedback on your code, design, and architecture decisions." },
+    ],
+  },
+  projectsShowcase: {
+    badge: "Project Showcase",
+    title: "Built by the community",
+    projects: [
+      { title: "Automation Dashboard", category: "Automation", visual: "⚡" },
+      { title: "E-Commerce Platform", category: "Development", visual: "🛒" },
+      { title: "AI Content Pipeline", category: "AI", visual: "🤖" },
+    ],
+  },
+  faq: {
+    badge: "FAQ",
+    title: ["You ask.", "We answer."],
+    items: [],
+  },
+  finalCta: {
+    title: ["STOP WATCHING.", "START BUILDING."],
+    highlightWord: "START BUILDING.",
+    description: "Join the premium ecosystem built for ambitious future builders.",
+    cta: "JOIN MISTHUSTLERS",
+  },
+  faqData: [],
+  projects: [],
+};
+
 export default function Home() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
   const logoData = useContent("logo", LOGO_DEFAULTS);
-  const c = useContent("home", {
-    hero: { badge: "Web Development Agency", title: ["Web Development &", "Automation Services", "in Indore"], description: "We build websites, MVPs, and automation systems for startups and founders.", tagline: "From landing pages to full-stack platforms.", ctaPrimary: "Get a Quote", ctaSecondary: "View Services" },
-    stats: [{ value: 127, suffix: "+", label: "Projects Delivered" }, { value: 43, suffix: "+", label: "Happy Clients" }, { value: 18, suffix: "+", label: "Startups Launched" }, { value: 48, suffix: "h", label: "Avg Response Time" }],
-    brands: [],
-    servicesTeaser: { badge: "Services in Indore", title: "Websites, MVPs & Automation", description: "From landing pages to full-stack platforms and AI automation pipelines - we ship production-grade work for startups and founders in Indore.", cta: "Explore Services" },
-    journey: { badge: "How We Work", title: "From Idea to Launch", description: "A streamlined process from requirements to delivery. Direct communication. No middlemen." },
-    journeySteps: [{ step: "01", title: "Requirements", desc: "Share your project idea, timeline, and budget." }],
-    mentorship: { features: [] },
-    faqData: [],
-    faq: { items: [] },
-    projects: [],
-  });
+  const c = useContent("home", HOME_DEFAULTS);
   const stats = useMemo(() => c.stats ?? [], [c.stats]);
   const journeySteps = useMemo(() => c.journeySteps ?? [], [c.journeySteps]);
   const faqData = useMemo(() => c.faq?.items ?? c.faqData ?? [], [c.faq, c.faqData]);
-  const projectPreview = useMemo(() => (c.projects ?? []).slice(0, 3), [c.projects]);
+  const projectPreview = useMemo(() => (c.projectsShowcase?.projects ?? c.projects ?? []).slice(0, 3), [c.projectsShowcase, c.projects]);
   const heroLines = Array.isArray(c.hero?.title) ? c.hero.title : String(c.hero?.title || "").split("\n").filter(Boolean);
+  const faqTitleLines = Array.isArray(c.faq?.title) ? c.faq.title : String(c.faq?.title || "").split("\n").filter(Boolean);
+  const finalCtaLines = Array.isArray(c.finalCta?.title) ? c.finalCta.title : String(c.finalCta?.title || "").split("\n").filter(Boolean);
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.3]);
@@ -106,10 +169,10 @@ export default function Home() {
                 transition={{ duration: 0.7, ease: [0.33, 1, 0.68, 1] }}
               >
                 <span className="inline-block px-4 py-1.5 rounded-full bg-abyssal-ink/5 text-abyssal-ink/60 text-xs font-semibold tracking-wider uppercase mb-6 font-body">
-                  {c.hero?.badge || "Web Development Agency"}
+                  {c.hero?.badge || HOME_DEFAULTS.hero.badge}
                 </span>
                 <h1 className="font-display text-[clamp(34px,12vw,110px)] leading-[0.92] sm:leading-[0.9] tracking-[0.02em] text-abyssal-ink">
-                  {(heroLines.length ? heroLines : ["Web Development & Automation Services"]).map((line, index) => (
+                  {(heroLines.length ? heroLines : HOME_DEFAULTS.hero.title).map((line, index) => (
                     <span key={`${line}-${index}`} className={index === heroLines.length - 1 ? "text-digital-orange" : ""}>
                       {line}{index < heroLines.length - 1 && <br />}
                     </span>
@@ -260,12 +323,12 @@ export default function Home() {
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <ScrollReveal>
             <div className="mb-12 text-center">
-              <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">Career</span>
+              <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">{c.careerTeaser?.badge || "Career"}</span>
               <h2 className="font-body font-bold text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
-                Your career, accelerated
+                {c.careerTeaser?.title || "Your career, accelerated"}
               </h2>
               <p className="text-abyssal-ink/50 mt-4 max-w-lg mx-auto font-body">
-                Jobs, internships, events, programs, and mentorship — all in one place.
+                {c.careerTeaser?.description || "Jobs, internships, events, programs, and mentorship - all in one place."}
               </p>
             </div>
           </ScrollReveal>
@@ -275,7 +338,7 @@ export default function Home() {
                 onClick={() => navigate("/career")}
                 className="magnetic-btn bg-digital-orange text-white px-8 py-4 rounded-[800px] text-base font-semibold cursor-pointer font-body"
               >
-                Explore Career &rarr;
+                {c.careerTeaser?.cta || "Explore Career"} &rarr;
               </button>
             </div>
           </ScrollReveal>
@@ -287,18 +350,18 @@ export default function Home() {
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <div className="grid lg:grid-cols-2 gap-10 md:gap-16 items-center">
             <ScrollReveal>
-              <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">Mentorship</span>
+              <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">{c.mentorship?.badge || "Mentorship"}</span>
               <h2 className="font-body font-bold text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05] mb-6">
-                Guided by those<br />who've done it.
+                {c.mentorship?.title || "Guided by those who've done it."}
               </h2>
               <p className="text-abyssal-ink/60 mb-8 leading-relaxed font-body">
-                Our mentors are active practitioners who share real, actionable guidance. No theory. Just practice.
+                {c.mentorship?.description || "Our mentors are active practitioners who share real, actionable guidance. No theory. Just practice."}
               </p>
               <button
                 onClick={() => navigate("/career")}
                 className="magnetic-btn bg-abyssal-ink text-white px-8 py-4 rounded-[800px] text-base font-semibold cursor-pointer hover:bg-digital-orange transition-colors duration-300 font-body"
               >
-                Find a Mentor &rarr;
+                {c.mentorship?.cta || "Find a Mentor"} &rarr;
               </button>
             </ScrollReveal>
 
@@ -328,9 +391,9 @@ export default function Home() {
           <ScrollReveal>
             <div className="mb-12 flex flex-col gap-5 text-center md:flex-row md:items-end md:justify-between md:text-left">
               <div>
-                <span className="text-sm font-semibold tracking-wider uppercase text-digital-orange font-body">Project Preview</span>
+                <span className="text-sm font-semibold tracking-wider uppercase text-digital-orange font-body">{c.projectsShowcase?.badge || HOME_DEFAULTS.projectsShowcase.badge}</span>
                 <h2 className="font-body font-bold text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
-                  Recent community builds
+                  {c.projectsShowcase?.title || HOME_DEFAULTS.projectsShowcase.title}
                 </h2>
               </div>
               <button
@@ -366,9 +429,13 @@ export default function Home() {
           <div className="max-w-2xl mx-auto">
             <ScrollReveal>
               <div className="mb-12 text-center">
-                <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">FAQ</span>
+                <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">{c.faq?.badge || "FAQ"}</span>
                 <h2 className="font-body font-bold text-[clamp(36px,5vw,48px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
-                  You ask.<br />We answer.
+                  {(faqTitleLines.length ? faqTitleLines : ["You ask.", "We answer."]).map((line, index) => (
+                    <span key={`${line}-${index}`}>
+                      {line}{index < (faqTitleLines.length ? faqTitleLines.length : 2) - 1 && <br />}
+                    </span>
+                  ))}
                 </h2>
               </div>
             </ScrollReveal>
@@ -393,17 +460,20 @@ export default function Home() {
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 text-center">
           <ScrollReveal>
             <h2 className="font-body font-bold text-[clamp(32px,6vw,80px)] tracking-[0.02em] leading-[0.95] mb-6">
-              READY TO SHIP<br />
-              <span className="text-digital-orange">YOUR PROJECT?</span>
+              {(finalCtaLines.length ? finalCtaLines : ["STOP WATCHING.", "START BUILDING."]).map((line, index) => (
+                <span key={`${line}-${index}`} className={line === c.finalCta?.highlightWord || index === finalCtaLines.length - 1 ? "text-digital-orange" : ""}>
+                  {line}{index < (finalCtaLines.length ? finalCtaLines.length : 2) - 1 && <br />}
+                </span>
+              ))}
             </h2>
             <p className="text-white/50 text-base md:text-lg mb-10 max-w-md mx-auto font-body">
-              Get a fixed-price proposal in 48 hours. No calls. No pressure. Real execution.
+              {c.finalCta?.description || "Join the premium ecosystem built for ambitious future builders."}
             </p>
             <button
               onClick={() => navigate("/contact")}
               className="magnetic-btn bg-digital-orange text-white px-6 py-4 md:px-10 md:py-5 rounded-[800px] text-base md:text-lg font-bold cursor-pointer font-body"
             >
-              GET A QUOTE
+              {c.finalCta?.cta || "JOIN MISTHUSTLERS"}
             </button>
           </ScrollReveal>
         </div>
