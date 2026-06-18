@@ -28,6 +28,7 @@ const EMAIL_STATUSES = ["pending", "sent", "failed"];
 const OPPORTUNITY_STATUSES = ["open", "paused", "closed", "archived"];
 const APPLICANT_STATUSES = ["new", "reviewed", "shortlisted", "accepted", "rejected"];
 const PROJECT_STATUSES = ["planning", "in-progress", "review", "completed"];
+const WORK_STATUSES = ["lead", "quoted", "assigned", "in-progress", "review", "completed", "paid", "lost"];
 
 function toId(value) {
   const id = Number(value);
@@ -58,6 +59,16 @@ function requireText(value, label, max = 5000) {
 function pickStatus(value, allowed, fallback) {
   return allowed.includes(value) ? value : fallback;
 }
+
+function money(value) {
+  const amount = Number(value || 0);
+  return Number.isFinite(amount) && amount >= 0 ? Math.round(amount) : 0;
+}
+
+const workInclude = {
+  agent: { select: { id: true, username: true, displayName: true, role: true, status: true } },
+  partner: { select: { id: true, username: true, displayName: true, role: true, status: true } },
+};
 
 function validateContentPayload(page, data) {
   if (!data || typeof data !== "object" || Array.isArray(data)) {
@@ -178,7 +189,96 @@ router.delete("/accounts", requireAdmin, async (req, res, next) => {
   }
 });
 
-router.get("/inquiries", allowRoles("admin", "agent", "partner"), async (_, res, next) => {
+router.get("/work-orders", allowRoles("admin", "agent", "partner"), async (req, res, next) => {
+  try {
+    const where = req.admin.role === "agent"
+      ? { agentId: Number(req.admin.id) }
+      : req.admin.role === "partner"
+        ? { partnerId: Number(req.admin.id) }
+        : {};
+    const items = await prisma.clientWork.findMany({
+      where,
+      include: workInclude,
+      orderBy: { createdAt: "desc" },
+    });
+    res.json(items);
+  } catch (err) { next(err); }
+});
+
+router.post("/work-orders", allowRoles("admin", "agent"), async (req, res, next) => {
+  try {
+    const isAdmin = req.admin.role === "admin";
+    const agentId = isAdmin ? toId(req.body.agentId) : Number(req.admin.id);
+    const partnerId = isAdmin ? toId(req.body.partnerId) : null;
+    const item = await prisma.clientWork.create({
+      data: {
+        clientName: requireText(req.body.clientName, "Client name", 180),
+        clientPhone: nullableText(req.body.clientPhone, 60),
+        service: requireText(req.body.service || "Website", "Service", 160),
+        price: isAdmin ? money(req.body.price) : 0,
+        status: isAdmin ? pickStatus(req.body.status, WORK_STATUSES, "lead") : "lead",
+        notes: nullableText(req.body.notes, 5000),
+        agentId,
+        partnerId,
+        agentCommission: isAdmin ? money(req.body.agentCommission) : 0,
+        agentPaid: isAdmin ? money(req.body.agentPaid) : 0,
+        partnerPayout: isAdmin ? money(req.body.partnerPayout) : 0,
+        partnerPaid: isAdmin ? money(req.body.partnerPaid) : 0,
+      },
+      include: workInclude,
+    });
+    res.status(201).json(item);
+  } catch (err) { next(err); }
+});
+
+router.put("/work-orders", allowRoles("admin", "agent", "partner"), async (req, res, next) => {
+  try {
+    const id = toId(req.body.id);
+    if (!id) return res.status(400).json({ success: false, message: "Valid work id is required" });
+    const existing = await prisma.clientWork.findUnique({ where: { id } });
+    if (!existing) return res.status(404).json({ success: false, message: "Work item not found" });
+    if (req.admin.role === "agent" && existing.agentId !== Number(req.admin.id)) {
+      return res.status(403).json({ success: false, message: "You can only update your own clients" });
+    }
+    if (req.admin.role === "partner" && existing.partnerId !== Number(req.admin.id)) {
+      return res.status(403).json({ success: false, message: "You can only update assigned work" });
+    }
+
+    const data = {};
+    if (req.admin.role === "admin") {
+      if (req.body.clientName !== undefined) data.clientName = requireText(req.body.clientName, "Client name", 180);
+      if (req.body.clientPhone !== undefined) data.clientPhone = nullableText(req.body.clientPhone, 60);
+      if (req.body.service !== undefined) data.service = requireText(req.body.service, "Service", 160);
+      if (req.body.price !== undefined) data.price = money(req.body.price);
+      if (req.body.agentId !== undefined) data.agentId = toId(req.body.agentId);
+      if (req.body.partnerId !== undefined) data.partnerId = toId(req.body.partnerId);
+      if (req.body.agentCommission !== undefined) data.agentCommission = money(req.body.agentCommission);
+      if (req.body.agentPaid !== undefined) data.agentPaid = money(req.body.agentPaid);
+      if (req.body.partnerPayout !== undefined) data.partnerPayout = money(req.body.partnerPayout);
+      if (req.body.partnerPaid !== undefined) data.partnerPaid = money(req.body.partnerPaid);
+    }
+    if (req.body.notes !== undefined) data.notes = nullableText(req.body.notes, 5000);
+    if (req.body.status !== undefined) data.status = pickStatus(req.body.status, WORK_STATUSES, existing.status);
+
+    const item = await prisma.clientWork.update({ where: { id }, data, include: workInclude });
+    res.json(item);
+  } catch (err) { next(err); }
+});
+
+router.delete("/work-orders", requireAdmin, async (req, res, next) => {
+  try {
+    const id = toId(req.body.id);
+    if (!id) return res.status(400).json({ success: false, message: "Valid work id is required" });
+    const item = await prisma.clientWork.delete({ where: { id }, include: workInclude });
+    await moveToBin("client-work", item);
+    res.json({ ok: true });
+  } catch (err) {
+    if (err.code === "P2025") return res.status(404).json({ success: false, message: "Work item not found" });
+    next(err);
+  }
+});
+
+router.get("/inquiries", allowRoles("admin", "agent"), async (_, res, next) => {
   try {
     const items = await prisma.inquiry.findMany({ orderBy: { createdAt: "desc" } });
     res.json(items);

@@ -3,7 +3,7 @@ import {
   Archive, Bell, Briefcase, Check, ExternalLink, Mail, Phone, Plus,
   RefreshCw, Trash2, UserCircle, Users, X, LayoutDashboard, FolderKanban,
   BriefcaseBusiness, FileText, Image, Trash, Upload, Save, Settings, ChevronDown,
-  UserPlus, Shield
+  UserPlus, Shield, Handshake, IndianRupee
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -38,12 +38,21 @@ interface AdminAccount {
   id: number; username: string; displayName?: string | null; role: 'agent' | 'partner'; status: string;
   createdAt: string; updatedAt?: string;
 }
+interface WorkAccount {
+  id: number; username: string; displayName?: string | null; role: AdminRole; status: string;
+}
+interface ClientWork {
+  id: number; clientName: string; clientPhone?: string | null; service: string; price: number;
+  status: string; notes?: string | null; agentId?: number | null; partnerId?: number | null;
+  agentCommission: number; agentPaid: number; partnerPayout: number; partnerPaid: number;
+  agent?: WorkAccount | null; partner?: WorkAccount | null; createdAt: string; updatedAt?: string;
+}
 interface ToastState {
   message: string;
   type: 'success' | 'error';
 }
 
-type TabType = 'dashboard' | 'leads' | 'career' | 'projects' | 'content' | 'media' | 'logo' | 'accounts' | 'bin';
+type TabType = 'dashboard' | 'work' | 'leads' | 'career' | 'projects' | 'content' | 'media' | 'logo' | 'accounts' | 'bin';
 type ModalType = 'job' | 'event' | 'program' | 'applicant' | 'project' | null;
 
 const API = '/api/admin';
@@ -91,6 +100,7 @@ async function api<T>(url: string, init?: RequestInit): Promise<T> {
 
 const tabs: { id: TabType; label: string; icon: React.ElementType }[] = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { id: 'work', label: 'Client Work', icon: Handshake },
   { id: 'leads', label: 'Leads', icon: Mail },
   { id: 'career', label: 'Career', icon: BriefcaseBusiness },
   { id: 'projects', label: 'Projects', icon: FolderKanban },
@@ -102,9 +112,9 @@ const tabs: { id: TabType; label: string; icon: React.ElementType }[] = [
 ];
 
 const roleTabs: Record<AdminRole, TabType[]> = {
-  admin: ['dashboard', 'leads', 'career', 'projects', 'content', 'media', 'logo', 'accounts', 'bin'],
-  agent: ['dashboard', 'leads', 'career'],
-  partner: ['dashboard', 'leads', 'projects'],
+  admin: ['dashboard', 'work', 'leads', 'career', 'projects', 'content', 'media', 'logo', 'accounts', 'bin'],
+  agent: ['dashboard', 'work', 'leads', 'career'],
+  partner: ['dashboard', 'work', 'projects'],
 };
 
 function getStoredUser(): AdminSessionUser | null {
@@ -169,6 +179,7 @@ const App: React.FC = () => {
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [applicants, setApplicants] = useState<Applicant[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [workOrders, setWorkOrders] = useState<ClientWork[]>([]);
   const [binItems, setBinItems] = useState<BinItem[]>([]);
   const [accounts, setAccounts] = useState<AdminAccount[]>([]);
   const [loading, setLoading] = useState(true);
@@ -193,6 +204,7 @@ const App: React.FC = () => {
   const [selectedOpportunity, setSelectedOpportunity] = useState<Opportunity | null>(null);
   const [selectedApplicant, setSelectedApplicant] = useState<Applicant | null>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedWork, setSelectedWork] = useState<ClientWork | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [images, setImages] = useState<string[]>([]);
   const [loadingMedia, setLoadingMedia] = useState(true);
@@ -203,6 +215,7 @@ const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<AdminSessionUser | null>(() => getStoredUser());
   const [loginUser, setLoginUser] = useState('');
   const [loginPass, setLoginPass] = useState('');
+  const [loginRole, setLoginRole] = useState<AdminRole>('admin');
   const [loginError, setLoginError] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
 
@@ -223,6 +236,7 @@ const App: React.FC = () => {
       setOpportunities([]);
       setApplicants([]);
       setProjects([]);
+      setWorkOrders([]);
       setBinItems([]);
       setAccounts([]);
       setLoading(false);
@@ -230,11 +244,12 @@ const App: React.FC = () => {
     }
     const role = currentUser?.role || 'admin';
     try {
-      const [inq, opp, app, proj, bin, acct] = await Promise.all([
-        ['admin', 'agent', 'partner'].includes(role) ? api<Inquiry[]>(`${API}/inquiries`) : Promise.resolve([]),
+      const [inq, opp, app, proj, work, bin, acct] = await Promise.all([
+        ['admin', 'agent'].includes(role) ? api<Inquiry[]>(`${API}/inquiries`) : Promise.resolve([]),
         ['admin', 'agent'].includes(role) ? api<Opportunity[]>(`${API}/opportunities`) : Promise.resolve([]),
         ['admin', 'agent'].includes(role) ? api<Applicant[]>(`${API}/applicants`) : Promise.resolve([]),
         ['admin', 'partner'].includes(role) ? api<Project[]>(`${API}/projects`) : Promise.resolve([]),
+        ['admin', 'agent', 'partner'].includes(role) ? api<ClientWork[]>(`${API}/work-orders`) : Promise.resolve([]),
         role === 'admin' ? api<BinItem[]>(`${API}/bin`) : Promise.resolve([]),
         role === 'admin' ? api<AdminAccount[]>(`${API}/accounts`) : Promise.resolve([]),
       ]);
@@ -242,6 +257,7 @@ const App: React.FC = () => {
       setOpportunities(opp);
       setApplicants(app);
       setProjects(proj);
+      setWorkOrders(work);
       setBinItems(bin);
       setAccounts(acct);
     } catch (err) {
@@ -250,6 +266,7 @@ const App: React.FC = () => {
         setOpportunities([]);
         setApplicants([]);
         setProjects([]);
+        setWorkOrders([]);
         setBinItems([]);
         setAccounts([]);
         setError('');
@@ -361,7 +378,15 @@ const App: React.FC = () => {
     projects: projects.filter((item) => item.status !== 'completed').length,
     applicants: applicants.length,
     openRoles: opportunities.filter((item) => item.status === 'open').length,
+    work: workOrders.length,
+    workValue: workOrders.reduce((sum, item) => sum + (Number(item.price) || 0), 0),
+    agentDue: workOrders.reduce((sum, item) => sum + Math.max((Number(item.agentCommission) || 0) - (Number(item.agentPaid) || 0), 0), 0),
+    partnerDue: workOrders.reduce((sum, item) => sum + Math.max((Number(item.partnerPayout) || 0) - (Number(item.partnerPaid) || 0), 0), 0),
   };
+
+  const agentAccounts = accounts.filter((account) => account.role === 'agent' && account.status === 'active');
+  const partnerAccounts = accounts.filter((account) => account.role === 'partner' && account.status === 'active');
+  const rupee = (value: number) => `₹${Math.round(Number(value) || 0).toLocaleString('en-IN')}`;
 
   const filteredApplicants = activeFilter === 'all'
     ? applicants
@@ -419,6 +444,78 @@ const App: React.FC = () => {
   const updateProject = async (id: number, updates: Partial<Project>) => {
     await api<Project>(`${API}/projects`, { method: 'PUT', body: JSON.stringify({ id, ...updates }) });
     fetchAll();
+  };
+
+  const createWorkOrder = async () => {
+    try {
+      if (!formData.clientName || !formData.service) throw new Error('Client name and service are required');
+      await api<ClientWork>(`${API}/work-orders`, {
+        method: 'POST',
+        body: JSON.stringify({
+          clientName: formData.clientName,
+          clientPhone: formData.clientPhone || null,
+          service: formData.service,
+          price: Number(formData.price || 0),
+          status: formData.status || 'lead',
+          agentId: formData.agentId ? Number(formData.agentId) : null,
+          partnerId: formData.partnerId ? Number(formData.partnerId) : null,
+          agentCommission: Number(formData.agentCommission || 0),
+          agentPaid: Number(formData.agentPaid || 0),
+          partnerPayout: Number(formData.partnerPayout || 0),
+          partnerPaid: Number(formData.partnerPaid || 0),
+          notes: formData.notes || '',
+        }),
+      });
+      setFormData({});
+      fetchAll();
+      notify(currentRole === 'agent' ? 'Client lead added' : 'Client work added');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create work');
+      notify(err instanceof Error ? err.message : 'Failed to create work', 'error');
+    }
+  };
+
+  const updateWorkOrder = async (id: number, updates: Partial<ClientWork>) => {
+    await api<ClientWork>(`${API}/work-orders`, { method: 'PUT', body: JSON.stringify({ id, ...updates }) });
+    fetchAll();
+  };
+
+  const updateWorkField = async () => {
+    if (!selectedWork) return;
+    try {
+      await api<ClientWork>(`${API}/work-orders`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          id: selectedWork.id,
+          clientName: formData.clientName,
+          clientPhone: formData.clientPhone || null,
+          service: formData.service,
+          price: Number(formData.price || 0),
+          status: formData.status || selectedWork.status,
+          agentId: formData.agentId ? Number(formData.agentId) : null,
+          partnerId: formData.partnerId ? Number(formData.partnerId) : null,
+          agentCommission: Number(formData.agentCommission || 0),
+          agentPaid: Number(formData.agentPaid || 0),
+          partnerPayout: Number(formData.partnerPayout || 0),
+          partnerPaid: Number(formData.partnerPaid || 0),
+          notes: formData.notes || '',
+        }),
+      });
+      setSelectedWork(null);
+      setFormData({});
+      fetchAll();
+      notify('Client work updated');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update work');
+      notify(err instanceof Error ? err.message : 'Failed to update work', 'error');
+    }
+  };
+
+  const deleteWorkOrder = async (id: number) => {
+    if (!window.confirm('Move this client work to Bin Files?')) return;
+    await api<{ ok: boolean }>(`${API}/work-orders`, { method: 'DELETE', body: JSON.stringify({ id }) });
+    fetchAll();
+    notify('Client work moved to bin');
   };
 
   const deleteProject = async (id: number) => {
@@ -649,7 +746,7 @@ const App: React.FC = () => {
       return;
     }
     setLoginLoading(true);
-    if (canUsePreviewLogin(loginUser, loginPass)) {
+    if (canUsePreviewLogin(loginUser, loginPass) && loginRole === 'admin') {
       sessionStorage.setItem('admin_token', 'preview');
       sessionStorage.setItem('admin_user', JSON.stringify(PREVIEW_USER));
       sessionStorage.removeItem('admin_credentials');
@@ -663,13 +760,16 @@ const App: React.FC = () => {
       const r = await fetch(`${API}/session`, { headers: { Authorization: testAuth } });
       if (!r.ok) throw new Error('Invalid');
       const data = await r.json();
+      if (data.user?.role !== loginRole) {
+        throw new Error(`This login is ${data.user?.role || 'unknown'} access. Select the correct portal type.`);
+      }
       sessionStorage.setItem('admin_token', data.token);
       sessionStorage.setItem('admin_user', JSON.stringify(data.user));
       sessionStorage.removeItem('admin_credentials');
       setCurrentUser(data.user);
       setIsLoggedIn(true);
-    } catch {
-      setLoginError('Invalid username or password');
+    } catch (err) {
+      setLoginError(err instanceof Error && err.message !== 'Invalid' ? err.message : 'Invalid username or password');
     } finally {
       setLoginLoading(false);
     }
@@ -690,7 +790,7 @@ const App: React.FC = () => {
       <nav className="flex-1 p-3 space-y-1">
         {visibleTabs.map((tab) => {
           const Icon = tab.icon;
-          const count = tab.id === 'leads' ? metrics.leads : tab.id === 'bin' ? binItems.length : undefined;
+          const count = tab.id === 'leads' ? metrics.leads : tab.id === 'work' ? metrics.work : tab.id === 'bin' ? binItems.length : undefined;
           return (
             <button
               key={tab.id}
@@ -754,10 +854,10 @@ const App: React.FC = () => {
 
       <div className="grid grid-cols-4 gap-3 mb-8">
         {[
-          { label: 'New Leads', value: metrics.leads, icon: Users },
-          { label: 'Active Projects', value: metrics.projects, icon: Briefcase },
-          { label: 'Career Applicants', value: metrics.applicants, icon: UserCircle },
-          { label: 'Open Roles', value: metrics.openRoles, icon: Check },
+          { label: currentRole === 'partner' ? 'Assigned Work' : currentRole === 'agent' ? 'Clients Given' : 'Client Work', value: metrics.work, icon: Handshake },
+          { label: 'Total Client Price', value: rupee(metrics.workValue), icon: IndianRupee },
+          { label: currentRole === 'partner' ? 'Partner Due' : 'Agent Due', value: rupee(currentRole === 'partner' ? metrics.partnerDue : metrics.agentDue), icon: Users },
+          { label: currentRole === 'agent' ? 'Open Roles' : 'Active Projects', value: currentRole === 'agent' ? metrics.openRoles : metrics.projects, icon: Briefcase },
         ].map((item) => (
           <div key={item.label} className="bg-[#111] border border-white/10 rounded-xl p-5">
             <item.icon className="w-4 h-4 text-white/40 mb-3" />
@@ -766,6 +866,49 @@ const App: React.FC = () => {
           </div>
         ))}
       </div>
+
+      {isAdmin && (
+        <section className="mb-8 grid grid-cols-2 gap-4">
+          <div className="bg-[#111] border border-white/10 rounded-2xl p-5">
+            <div className="text-[11px] tracking-[1px] text-white/50 mb-3">AGENT OVERVIEW</div>
+            <div className="space-y-2">
+              {agentAccounts.map((agent) => {
+                const rows = workOrders.filter((item) => item.agentId === agent.id);
+                const value = rows.reduce((sum, item) => sum + (item.price || 0), 0);
+                const paid = rows.reduce((sum, item) => sum + (item.agentPaid || 0), 0);
+                const commission = rows.reduce((sum, item) => sum + (item.agentCommission || 0), 0);
+                return (
+                  <div key={agent.id} className="grid grid-cols-[1fr_auto_auto] gap-3 rounded-xl bg-white/5 px-3 py-2 text-xs">
+                    <span className="truncate">{agent.displayName || agent.username}</span>
+                    <span className="text-white/50">{rows.length} clients / {rupee(value)}</span>
+                    <span className="text-emerald-300">{rupee(paid)} paid of {rupee(commission)}</span>
+                  </div>
+                );
+              })}
+              {!agentAccounts.length && <div className="text-sm text-white/35">No agents yet.</div>}
+            </div>
+          </div>
+          <div className="bg-[#111] border border-white/10 rounded-2xl p-5">
+            <div className="text-[11px] tracking-[1px] text-white/50 mb-3">PARTNER OVERVIEW</div>
+            <div className="space-y-2">
+              {partnerAccounts.map((partner) => {
+                const rows = workOrders.filter((item) => item.partnerId === partner.id);
+                const done = rows.filter((item) => ['completed', 'paid'].includes(item.status)).length;
+                const paid = rows.reduce((sum, item) => sum + (item.partnerPaid || 0), 0);
+                const payout = rows.reduce((sum, item) => sum + (item.partnerPayout || 0), 0);
+                return (
+                  <div key={partner.id} className="grid grid-cols-[1fr_auto_auto] gap-3 rounded-xl bg-white/5 px-3 py-2 text-xs">
+                    <span className="truncate">{partner.displayName || partner.username}</span>
+                    <span className="text-white/50">{done}/{rows.length} complete</span>
+                    <span className="text-emerald-300">{rupee(paid)} paid of {rupee(payout)}</span>
+                  </div>
+                );
+              })}
+              {!partnerAccounts.length && <div className="text-sm text-white/35">No partners yet.</div>}
+            </div>
+          </div>
+        </section>
+      )}
 
       {isAdmin && <section className="mb-8">
         <div className="flex items-end justify-between mb-3">
@@ -792,6 +935,103 @@ const App: React.FC = () => {
       </section>}
     </div>
   );
+
+  const renderWork = () => {
+    const statuses = ['lead', 'quoted', 'assigned', 'in-progress', 'review', 'completed', 'paid', 'lost'];
+    return (
+      <section>
+        <div className="flex items-end justify-between mb-4">
+          <div>
+            <div className="text-[11px] tracking-[1px] text-white/50">CLIENT WORKFLOW</div>
+            <div className="text-lg font-semibold">{isAdmin ? 'Agent, Partner & Payment Overview' : currentRole === 'agent' ? 'My Client Leads' : 'My Assigned Work'}</div>
+          </div>
+          <div className="text-xs text-white/40">{workOrders.length} records / {rupee(metrics.workValue)}</div>
+        </div>
+
+        {(isAdmin || currentRole === 'agent') && (
+          <div className="mb-4 rounded-2xl border border-white/10 bg-[#111] p-4">
+            <div className="mb-3 text-sm font-semibold">{isAdmin ? 'Add client work' : 'Add client lead'}</div>
+            <div className="grid grid-cols-4 gap-3">
+              <input className="field text-sm" placeholder="Client name" value={formData.clientName || ''} onChange={(e) => setField('clientName', e.target.value)} />
+              <input className="field text-sm" placeholder="Phone / WhatsApp" value={formData.clientPhone || ''} onChange={(e) => setField('clientPhone', e.target.value)} />
+              <input className="field text-sm" placeholder="Service" value={formData.service || ''} onChange={(e) => setField('service', e.target.value)} />
+              {isAdmin ? <input className="field text-sm" type="number" placeholder="Client price" value={formData.price || ''} onChange={(e) => setField('price', e.target.value)} /> : null}
+            </div>
+            {isAdmin && (
+              <div className="mt-3 grid grid-cols-4 gap-3">
+                <select className="field text-sm" value={formData.agentId || ''} onChange={(e) => setField('agentId', e.target.value)}>
+                  <option value="">No agent</option>
+                  {agentAccounts.map((account) => <option key={account.id} value={account.id}>{account.displayName || account.username}</option>)}
+                </select>
+                <select className="field text-sm" value={formData.partnerId || ''} onChange={(e) => setField('partnerId', e.target.value)}>
+                  <option value="">No partner</option>
+                  {partnerAccounts.map((account) => <option key={account.id} value={account.id}>{account.displayName || account.username}</option>)}
+                </select>
+                <input className="field text-sm" type="number" placeholder="Agent commission" value={formData.agentCommission || ''} onChange={(e) => setField('agentCommission', e.target.value)} />
+                <input className="field text-sm" type="number" placeholder="Partner payout" value={formData.partnerPayout || ''} onChange={(e) => setField('partnerPayout', e.target.value)} />
+              </div>
+            )}
+            <div className="mt-3 grid grid-cols-[1fr_auto] gap-3">
+              <input className="field text-sm" placeholder="Notes" value={formData.notes || ''} onChange={(e) => setField('notes', e.target.value)} />
+              <button onClick={createWorkOrder} className="rounded-xl bg-white px-5 py-3 text-sm font-medium text-black hover:bg-white/90">
+                <Plus className="mr-1.5 inline h-4 w-4" /> Add
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111] text-sm">
+          {workOrders.map((item) => (
+            <div key={item.id} className="grid grid-cols-[1.1fr_0.85fr_0.8fr_0.8fr_0.8fr_auto] gap-3 border-b border-white/10 px-5 py-4 last:border-b-0">
+              <button onClick={() => {
+                setFormData({
+                  clientName: item.clientName,
+                  clientPhone: item.clientPhone || '',
+                  service: item.service,
+                  price: String(item.price || ''),
+                  status: item.status,
+                  agentId: item.agentId ? String(item.agentId) : '',
+                  partnerId: item.partnerId ? String(item.partnerId) : '',
+                  agentCommission: String(item.agentCommission || ''),
+                  agentPaid: String(item.agentPaid || ''),
+                  partnerPayout: String(item.partnerPayout || ''),
+                  partnerPaid: String(item.partnerPaid || ''),
+                  notes: item.notes || '',
+                });
+                setSelectedWork(item);
+              }} className="min-w-0 text-left">
+                <div className="truncate font-medium">{item.clientName}</div>
+                <div className="truncate text-[11px] text-white/45">{item.clientPhone || 'No phone'} | {item.service}</div>
+              </button>
+              <div className="text-xs text-white/60">
+                <div>Price: <span className="text-white">{rupee(item.price)}</span></div>
+                <div>Agent: {item.agent?.displayName || item.agent?.username || '-'}</div>
+              </div>
+              <div className="text-xs text-white/60">
+                <div>Partner: {item.partner?.displayName || item.partner?.username || '-'}</div>
+                <div>Work: <span className="capitalize">{item.status}</span></div>
+              </div>
+              <div className="text-xs text-white/60">
+                <div>Agent paid</div>
+                <div className="text-emerald-300">{rupee(item.agentPaid)} / {rupee(item.agentCommission)}</div>
+              </div>
+              <div className="text-xs text-white/60">
+                <div>Partner paid</div>
+                <div className="text-emerald-300">{rupee(item.partnerPaid)} / {rupee(item.partnerPayout)}</div>
+              </div>
+              <div className="flex items-start gap-1.5">
+                <select value={item.status} onChange={(e) => updateWorkOrder(item.id, { status: e.target.value } as Partial<ClientWork>)} className="rounded-lg border border-white/10 bg-black px-2 py-1 text-[11px]">
+                  {statuses.map((status) => <option key={status} value={status}>{status}</option>)}
+                </select>
+                {isAdmin && <button onClick={() => deleteWorkOrder(item.id)} className="rounded-lg border border-white/15 px-2 py-1.5 text-[11px] hover:bg-red-500"><Trash2 className="h-3 w-3" /></button>}
+              </div>
+            </div>
+          ))}
+          {!workOrders.length && <div className="p-8 text-center text-white/40 text-sm">{currentRole === 'partner' ? 'No work assigned yet.' : 'No client work yet.'}</div>}
+        </div>
+      </section>
+    );
+  };
 
   const renderLeads = () => (
     <section>
@@ -1652,10 +1892,22 @@ const App: React.FC = () => {
           <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center mx-auto mb-4">
             <span className="text-[#0A0A0A] text-xl font-bold">MH</span>
           </div>
-          <h1 className="text-2xl font-semibold">Admin Login</h1>
-          <p className="text-sm text-white/50 mt-1">MistHustlers Founder Platform</p>
+          <h1 className="text-2xl font-semibold">MistHustlers Portal</h1>
+          <p className="text-sm text-white/50 mt-1">Choose your access type and sign in</p>
         </div>
         <form onSubmit={handleLogin} className="space-y-4">
+          <div className="grid grid-cols-3 gap-2">
+            {(['admin', 'partner', 'agent'] as AdminRole[]).map((role) => (
+              <button
+                key={role}
+                type="button"
+                onClick={() => setLoginRole(role)}
+                className={`rounded-xl border px-3 py-2.5 text-xs font-semibold capitalize ${loginRole === role ? 'border-white bg-white text-black' : 'border-white/10 bg-white/5 text-white/60 hover:text-white'}`}
+              >
+                {role}
+              </button>
+            ))}
+          </div>
           <div>
             <label className="block text-xs text-white/50 mb-1.5">Username</label>
             <input type="text" value={loginUser} onChange={(e) => setLoginUser(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-white/30" placeholder="Enter username" autoFocus />
@@ -1674,6 +1926,7 @@ const App: React.FC = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard': return renderDashboard();
+      case 'work': return renderWork();
       case 'leads': return renderLeads();
       case 'career': return renderCareer();
       case 'projects': return renderProjects();
@@ -1743,6 +1996,52 @@ const App: React.FC = () => {
                 )}
               </div>
               <button onClick={submitModal} className="mt-6 w-full py-3.5 bg-white text-black font-medium rounded-xl text-sm">Create</button>
+            </motion.div>
+          </div>
+        )}
+
+        {selectedWork && (
+          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[60] p-4" onClick={() => { setSelectedWork(null); setFormData({}); }}>
+            <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.96 }} onClick={(event) => event.stopPropagation()} className="bg-[#111] border border-white/10 rounded-2xl p-6 w-full max-w-lg">
+              <div className="flex justify-between mb-6"><div className="text-base tracking-tight">Edit Client Work</div><X className="cursor-pointer w-4 h-4" onClick={() => { setSelectedWork(null); setFormData({}); }} /></div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><label className="block text-[11px] text-white/50 mb-1">Client Name</label><input disabled={!isAdmin} className="field text-sm disabled:opacity-55" value={formData.clientName || ''} onChange={(event) => setField('clientName', event.target.value)} /></div>
+                <div><label className="block text-[11px] text-white/50 mb-1">Phone</label><input disabled={!isAdmin && currentRole !== 'agent'} className="field text-sm disabled:opacity-55" value={formData.clientPhone || ''} onChange={(event) => setField('clientPhone', event.target.value)} /></div>
+                <div><label className="block text-[11px] text-white/50 mb-1">Service</label><input disabled={!isAdmin} className="field text-sm disabled:opacity-55" value={formData.service || ''} onChange={(event) => setField('service', event.target.value)} /></div>
+                <div><label className="block text-[11px] text-white/50 mb-1">Status</label>
+                  <select className="field text-sm" value={formData.status || 'lead'} onChange={(event) => setField('status', event.target.value)}>
+                    {['lead', 'quoted', 'assigned', 'in-progress', 'review', 'completed', 'paid', 'lost'].map((status) => <option key={status} value={status}>{status}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              {isAdmin && (
+                <div className="mt-4 grid grid-cols-2 gap-3 border-t border-white/10 pt-4">
+                  <div><label className="block text-[11px] text-white/50 mb-1">Price</label><input type="number" className="field text-sm" value={formData.price || ''} onChange={(event) => setField('price', event.target.value)} /></div>
+                  <div><label className="block text-[11px] text-white/50 mb-1">Agent</label>
+                    <select className="field text-sm" value={formData.agentId || ''} onChange={(event) => setField('agentId', event.target.value)}>
+                      <option value="">No agent</option>
+                      {agentAccounts.map((account) => <option key={account.id} value={account.id}>{account.displayName || account.username}</option>)}
+                    </select>
+                  </div>
+                  <div><label className="block text-[11px] text-white/50 mb-1">Partner</label>
+                    <select className="field text-sm" value={formData.partnerId || ''} onChange={(event) => setField('partnerId', event.target.value)}>
+                      <option value="">No partner</option>
+                      {partnerAccounts.map((account) => <option key={account.id} value={account.id}>{account.displayName || account.username}</option>)}
+                    </select>
+                  </div>
+                  <div><label className="block text-[11px] text-white/50 mb-1">Agent Commission</label><input type="number" className="field text-sm" value={formData.agentCommission || ''} onChange={(event) => setField('agentCommission', event.target.value)} /></div>
+                  <div><label className="block text-[11px] text-white/50 mb-1">Agent Paid</label><input type="number" className="field text-sm" value={formData.agentPaid || ''} onChange={(event) => setField('agentPaid', event.target.value)} /></div>
+                  <div><label className="block text-[11px] text-white/50 mb-1">Partner Payout</label><input type="number" className="field text-sm" value={formData.partnerPayout || ''} onChange={(event) => setField('partnerPayout', event.target.value)} /></div>
+                  <div><label className="block text-[11px] text-white/50 mb-1">Partner Paid</label><input type="number" className="field text-sm" value={formData.partnerPaid || ''} onChange={(event) => setField('partnerPaid', event.target.value)} /></div>
+                </div>
+              )}
+
+              <div className="mt-4">
+                <label className="block text-[11px] text-white/50 mb-1">Notes</label>
+                <textarea className="field h-24 resize-y text-sm" value={formData.notes || ''} onChange={(event) => setField('notes', event.target.value)} />
+              </div>
+              <button onClick={updateWorkField} className="mt-6 w-full py-3.5 bg-white text-black font-medium rounded-xl text-sm">Save Work</button>
             </motion.div>
           </div>
         )}

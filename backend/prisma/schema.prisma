@@ -95,5 +95,33 @@ model AdminUser {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
+  agentWorks   ClientWork[] @relation("AgentWorks")
+  partnerWorks ClientWork[] @relation("PartnerWorks")
+
   @@map("admin_users")
+}
+
+model ClientWork {
+  id              Int       @id @default(autoincrement())
+  clientName      String    @map("client_name")
+  clientPhone     String?   @map("client_phone")
+  service         String
+  price           Int       @default(0)
+  status          String    @default("lead")
+  notes           String?
+  agentId         Int?      @map("agent_id")
+  partnerId       Int?      @map("partner_id")
+  agentCommission Int       @default(0) @map("agent_commission")
+  agentPaid       Int       @default(0) @map("agent_paid")
+  partnerPayout   Int       @default(0) @map("partner_payout")
+  partnerPaid     Int       @default(0) @map("partner_paid")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  agent           AdminUser? @relation("AgentWorks", fields: [agentId], references: [id], onDelete: SetNull)
+  partner         AdminUser? @relation("PartnerWorks", fields: [partnerId], references: [id], onDelete: SetNull)
+
+  @@index([agentId])
+  @@index([partnerId])
+  @@map("client_work")
 }
