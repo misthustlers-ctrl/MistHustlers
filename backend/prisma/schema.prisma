@@ -159,6 +159,9 @@ model ClientWork {
   price           Int       @default(0)
   status          String    @default("lead")
   notes           String?
+  deliveryLink    String?   @map("delivery_link")
+  deliveryNotes   String?   @map("delivery_notes")
+  submittedAt     DateTime? @map("submitted_at")
   agentId         Int?      @map("agent_id")
   partnerId       Int?      @map("partner_id")
   agentCommission Int       @default(0) @map("agent_commission")
@@ -170,8 +173,24 @@ model ClientWork {
 
   agent           AdminUser? @relation("AgentWorks", fields: [agentId], references: [id], onDelete: SetNull)
   partner         AdminUser? @relation("PartnerWorks", fields: [partnerId], references: [id], onDelete: SetNull)
+  payments        WorkPayment[]
 
   @@index([agentId])
   @@index([partnerId])
   @@map("client_work")
+}
+
+model WorkPayment {
+  id        Int      @id @default(autoincrement())
+  workId    Int      @map("work_id")
+  role      String
+  amount    Int      @default(0)
+  note      String?
+  createdBy String?  @map("created_by")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  work      ClientWork @relation(fields: [workId], references: [id], onDelete: Cascade)
+
+  @@index([workId])
+  @@map("work_payments")
 }

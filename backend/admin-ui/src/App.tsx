@@ -64,11 +64,14 @@ interface AdminAccount {
 interface WorkAccount {
   id: number; username: string; displayName?: string | null; role: AdminRole; status: string;
 }
+interface WorkPayment {
+  id: number; workId: number; role: 'agent' | 'partner'; amount: number; note?: string | null; createdBy?: string | null; createdAt: string;
+}
 interface ClientWork {
   id: number; clientName: string; clientPhone?: string | null; service: string; price: number;
-  status: string; notes?: string | null; agentId?: number | null; partnerId?: number | null;
+  status: string; notes?: string | null; deliveryLink?: string | null; deliveryNotes?: string | null; submittedAt?: string | null; agentId?: number | null; partnerId?: number | null;
   agentCommission: number; agentPaid: number; partnerPayout: number; partnerPaid: number;
-  agent?: WorkAccount | null; partner?: WorkAccount | null; createdAt: string; updatedAt?: string;
+  agent?: WorkAccount | null; partner?: WorkAccount | null; payments?: WorkPayment[]; createdAt: string; updatedAt?: string;
 }
 interface ToastState {
   message: string;
@@ -418,6 +421,7 @@ const App: React.FC = () => {
     workValue: workOrders.reduce((sum, item) => sum + (Number(item.price) || 0), 0),
     agentDue: workOrders.reduce((sum, item) => sum + Math.max((Number(item.agentCommission) || 0) - (Number(item.agentPaid) || 0), 0), 0),
     partnerDue: workOrders.reduce((sum, item) => sum + Math.max((Number(item.partnerPayout) || 0) - (Number(item.partnerPaid) || 0), 0), 0),
+    partnerPayout: workOrders.reduce((sum, item) => sum + (Number(item.partnerPayout) || 0), 0),
   };
 
   const refreshAdminMeta = async () => {
@@ -523,6 +527,8 @@ const App: React.FC = () => {
           agentPaid: Number(formData.agentPaid || 0),
           partnerPayout: Number(formData.partnerPayout || 0),
           partnerPaid: Number(formData.partnerPaid || 0),
+          deliveryLink: formData.deliveryLink || null,
+          deliveryNotes: formData.deliveryNotes || null,
           notes: formData.notes || '',
         }),
       });
@@ -558,6 +564,8 @@ const App: React.FC = () => {
           agentPaid: Number(formData.agentPaid || 0),
           partnerPayout: Number(formData.partnerPayout || 0),
           partnerPaid: Number(formData.partnerPaid || 0),
+          deliveryLink: formData.deliveryLink || null,
+          deliveryNotes: formData.deliveryNotes || null,
           notes: formData.notes || '',
         }),
       });
@@ -576,6 +584,38 @@ const App: React.FC = () => {
     await api<{ ok: boolean }>(`${API}/work-orders`, { method: 'DELETE', body: JSON.stringify({ id }) });
     fetchAll();
     notify('Client work moved to bin');
+  };
+
+  const recordWorkPayment = async (work: ClientWork, role: 'agent' | 'partner') => {
+    const amount = Number(role === 'agent' ? formData.agentPaymentAmount : formData.partnerPaymentAmount);
+    if (!amount || amount < 1) {
+      notify('Enter a valid payment amount', 'error');
+      return;
+    }
+    try {
+      const item = await api<ClientWork>(`${API}/work-orders/${work.id}/payments`, {
+        method: 'POST',
+        body: JSON.stringify({
+          role,
+          amount,
+          note: role === 'agent' ? formData.agentPaymentNote || '' : formData.partnerPaymentNote || '',
+        }),
+      });
+      setSelectedWork(item);
+      setFormData((current) => ({
+        ...current,
+        agentPaid: String(item.agentPaid || ''),
+        partnerPaid: String(item.partnerPaid || ''),
+        agentPaymentAmount: '',
+        agentPaymentNote: '',
+        partnerPaymentAmount: '',
+        partnerPaymentNote: '',
+      }));
+      fetchAll();
+      notify(`${role === 'agent' ? 'Agent' : 'Partner'} payment recorded`);
+    } catch (err) {
+      notify(err instanceof Error ? err.message : 'Payment failed', 'error');
+    }
   };
 
   const deleteProject = async (id: number) => {
@@ -1009,7 +1049,7 @@ const App: React.FC = () => {
       <div className="grid grid-cols-4 gap-3 mb-8">
         {[
           { label: currentRole === 'partner' ? 'Assigned Work' : currentRole === 'agent' ? 'Clients Given' : 'Client Work', value: metrics.work, icon: Handshake },
-          { label: 'Total Client Price', value: rupee(metrics.workValue), icon: IndianRupee },
+          { label: currentRole === 'partner' ? 'Total Payout' : 'Total Client Price', value: rupee(currentRole === 'partner' ? metrics.partnerPayout : metrics.workValue), icon: IndianRupee },
           { label: currentRole === 'partner' ? 'Partner Due' : 'Agent Due', value: rupee(currentRole === 'partner' ? metrics.partnerDue : metrics.agentDue), icon: Users },
           { label: currentRole === 'agent' ? 'Open Roles' : 'Active Projects', value: currentRole === 'agent' ? metrics.openRoles : metrics.projects, icon: Briefcase },
         ].map((item) => (
@@ -1184,6 +1224,7 @@ const App: React.FC = () => {
 
   const renderWork = () => {
     const statuses = ['lead', 'quoted', 'assigned', 'in-progress', 'review', 'completed', 'paid', 'lost'];
+    const editableStatuses = currentRole === 'partner' ? ['assigned', 'in-progress', 'review', 'completed'] : statuses;
     return (
       <section>
         <div className="flex items-end justify-between mb-4">
@@ -1191,7 +1232,7 @@ const App: React.FC = () => {
             <div className="text-[11px] tracking-[1px] text-white/50">CLIENT WORKFLOW</div>
             <div className="text-lg font-semibold">{isAdmin ? 'Agent, Partner & Payment Overview' : currentRole === 'agent' ? 'My Client Leads' : 'My Assigned Work'}</div>
           </div>
-          <div className="text-xs text-white/40">{workOrders.length} records / {rupee(metrics.workValue)}</div>
+          <div className="text-xs text-white/40">{workOrders.length} records / {rupee(currentRole === 'partner' ? metrics.partnerPayout : metrics.workValue)}</div>
         </div>
 
         {(isAdmin || currentRole === 'agent') && (
@@ -1242,6 +1283,8 @@ const App: React.FC = () => {
                   agentPaid: String(item.agentPaid || ''),
                   partnerPayout: String(item.partnerPayout || ''),
                   partnerPaid: String(item.partnerPaid || ''),
+                  deliveryLink: item.deliveryLink || '',
+                  deliveryNotes: item.deliveryNotes || '',
                   notes: item.notes || '',
                 });
                 setSelectedWork(item);
@@ -1250,12 +1293,13 @@ const App: React.FC = () => {
                 <div className="truncate text-[11px] text-white/45">{item.clientPhone || 'No phone'} | {item.service}</div>
               </button>
               <div className="text-xs text-white/60">
-                <div>Price: <span className="text-white">{rupee(item.price)}</span></div>
+                <div>{currentRole === 'partner' ? 'Payout' : 'Price'}: <span className="text-white">{rupee(currentRole === 'partner' ? item.partnerPayout : item.price)}</span></div>
                 <div>Agent: {item.agent?.displayName || item.agent?.username || '-'}</div>
               </div>
               <div className="text-xs text-white/60">
                 <div>Partner: {item.partner?.displayName || item.partner?.username || '-'}</div>
                 <div>Work: <span className="capitalize">{item.status}</span></div>
+                {item.deliveryLink && <a href={item.deliveryLink} target="_blank" rel="noreferrer" className="mt-1 inline-flex items-center gap-1 text-emerald-300 hover:underline">Delivery <ExternalLink className="h-3 w-3" /></a>}
               </div>
               <div className="text-xs text-white/60">
                 <div>Agent paid</div>
@@ -1267,8 +1311,11 @@ const App: React.FC = () => {
               </div>
               <div className="flex items-start gap-1.5">
                 <select value={item.status} onChange={(e) => updateWorkOrder(item.id, { status: e.target.value } as Partial<ClientWork>)} className="rounded-lg border border-white/10 bg-black px-2 py-1 text-[11px]">
-                  {statuses.map((status) => <option key={status} value={status}>{status}</option>)}
+                  {[...new Set([item.status, ...editableStatuses])].map((status) => <option key={status} value={status}>{status}</option>)}
                 </select>
+                {currentRole === 'partner' && item.status !== 'review' && item.status !== 'completed' && item.status !== 'paid' && (
+                  <button onClick={() => updateWorkOrder(item.id, { status: 'review' } as Partial<ClientWork>)} className="rounded-lg border border-emerald-400/25 px-2 py-1.5 text-[11px] text-emerald-200 hover:bg-emerald-500/20">Submit</button>
+                )}
                 {isAdmin && <button onClick={() => deleteWorkOrder(item.id)} className="rounded-lg border border-white/15 px-2 py-1.5 text-[11px] hover:bg-red-500"><Trash2 className="h-3 w-3" /></button>}
               </div>
             </div>
@@ -2436,7 +2483,7 @@ const App: React.FC = () => {
 
         {selectedWork && (
           <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[60] p-4" onClick={() => { setSelectedWork(null); setFormData({}); }}>
-            <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.96 }} onClick={(event) => event.stopPropagation()} className="bg-[#111] border border-white/10 rounded-2xl p-6 w-full max-w-lg">
+            <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.96 }} onClick={(event) => event.stopPropagation()} className="max-h-[92vh] w-full max-w-3xl overflow-auto rounded-2xl border border-white/10 bg-[#111] p-6">
               <div className="flex justify-between mb-6"><div className="text-base tracking-tight">Edit Client Work</div><X className="cursor-pointer w-4 h-4" onClick={() => { setSelectedWork(null); setFormData({}); }} /></div>
               <div className="grid grid-cols-2 gap-3">
                 <div><label className="block text-[11px] text-white/50 mb-1">Client Name</label><input disabled={!isAdmin} className="field text-sm disabled:opacity-55" value={formData.clientName || ''} onChange={(event) => setField('clientName', event.target.value)} /></div>
@@ -2444,9 +2491,21 @@ const App: React.FC = () => {
                 <div><label className="block text-[11px] text-white/50 mb-1">Service</label><input disabled={!isAdmin} className="field text-sm disabled:opacity-55" value={formData.service || ''} onChange={(event) => setField('service', event.target.value)} /></div>
                 <div><label className="block text-[11px] text-white/50 mb-1">Status</label>
                   <select className="field text-sm" value={formData.status || 'lead'} onChange={(event) => setField('status', event.target.value)}>
-                    {['lead', 'quoted', 'assigned', 'in-progress', 'review', 'completed', 'paid', 'lost'].map((status) => <option key={status} value={status}>{status}</option>)}
+                    {[...new Set([formData.status || selectedWork.status, ...editableStatuses])].map((status) => <option key={status} value={status}>{status}</option>)}
                   </select>
                 </div>
+              </div>
+
+              <div className="mt-4 grid grid-cols-1 gap-3 border-t border-white/10 pt-4">
+                <div>
+                  <label className="block text-[11px] text-white/50 mb-1">Delivery Link</label>
+                  <input disabled={currentRole === 'agent'} className="field text-sm disabled:opacity-55" placeholder="Website, Drive, GitHub, Figma, etc." value={formData.deliveryLink || ''} onChange={(event) => setField('deliveryLink', event.target.value)} />
+                </div>
+                <div>
+                  <label className="block text-[11px] text-white/50 mb-1">Delivery Notes</label>
+                  <textarea disabled={currentRole === 'agent'} className="field h-20 resize-y text-sm disabled:opacity-55" placeholder="Partner update, handoff notes, pending items" value={formData.deliveryNotes || ''} onChange={(event) => setField('deliveryNotes', event.target.value)} />
+                </div>
+                {selectedWork.submittedAt && <div className="text-[11px] text-white/40">Submitted for review: {new Date(selectedWork.submittedAt).toLocaleString()}</div>}
               </div>
 
               {isAdmin && (
@@ -2468,6 +2527,36 @@ const App: React.FC = () => {
                   <div><label className="block text-[11px] text-white/50 mb-1">Agent Paid</label><input type="number" className="field text-sm" value={formData.agentPaid || ''} onChange={(event) => setField('agentPaid', event.target.value)} /></div>
                   <div><label className="block text-[11px] text-white/50 mb-1">Partner Payout</label><input type="number" className="field text-sm" value={formData.partnerPayout || ''} onChange={(event) => setField('partnerPayout', event.target.value)} /></div>
                   <div><label className="block text-[11px] text-white/50 mb-1">Partner Paid</label><input type="number" className="field text-sm" value={formData.partnerPaid || ''} onChange={(event) => setField('partnerPaid', event.target.value)} /></div>
+                </div>
+              )}
+
+              {isAdmin && (
+                <div className="mt-4 rounded-2xl border border-white/10 bg-black/25 p-4">
+                  <div className="mb-3 text-sm font-semibold">Payment History</div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-2">
+                      <div className="text-[11px] text-white/45">Agent payment</div>
+                      <input className="field text-sm" type="number" placeholder="Amount" value={formData.agentPaymentAmount || ''} onChange={(event) => setField('agentPaymentAmount', event.target.value)} />
+                      <input className="field text-sm" placeholder="Note" value={formData.agentPaymentNote || ''} onChange={(event) => setField('agentPaymentNote', event.target.value)} />
+                      <button onClick={() => recordWorkPayment(selectedWork, 'agent')} className="w-full rounded-xl border border-white/15 px-3 py-2 text-xs hover:bg-white hover:text-black">Record Agent Payment</button>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="text-[11px] text-white/45">Partner payment</div>
+                      <input className="field text-sm" type="number" placeholder="Amount" value={formData.partnerPaymentAmount || ''} onChange={(event) => setField('partnerPaymentAmount', event.target.value)} />
+                      <input className="field text-sm" placeholder="Note" value={formData.partnerPaymentNote || ''} onChange={(event) => setField('partnerPaymentNote', event.target.value)} />
+                      <button onClick={() => recordWorkPayment(selectedWork, 'partner')} className="w-full rounded-xl border border-white/15 px-3 py-2 text-xs hover:bg-white hover:text-black">Record Partner Payment</button>
+                    </div>
+                  </div>
+                  <div className="mt-3 max-h-28 overflow-auto rounded-xl bg-white/5">
+                    {(selectedWork.payments || []).map((payment) => (
+                      <div key={payment.id} className="grid grid-cols-[70px_1fr_auto] gap-2 border-b border-white/10 px-3 py-2 text-[11px] last:border-b-0">
+                        <span className="capitalize text-white/55">{payment.role}</span>
+                        <span className="truncate">{payment.note || payment.createdBy || '-'}</span>
+                        <span className="text-emerald-300">{rupee(payment.amount)}</span>
+                      </div>
+                    ))}
+                    {!(selectedWork.payments || []).length && <div className="px-3 py-3 text-[11px] text-white/35">No payment history yet.</div>}
+                  </div>
                 </div>
               )}
 

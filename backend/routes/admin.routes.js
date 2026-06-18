@@ -31,6 +31,7 @@ const OPPORTUNITY_STATUSES = ["open", "paused", "closed", "archived"];
 const APPLICANT_STATUSES = ["new", "reviewed", "shortlisted", "accepted", "rejected"];
 const PROJECT_STATUSES = ["planning", "in-progress", "review", "completed"];
 const WORK_STATUSES = ["lead", "quoted", "assigned", "in-progress", "review", "completed", "paid", "lost"];
+const PARTNER_WORK_STATUSES = ["assigned", "in-progress", "review", "completed"];
 
 function toId(value) {
   const id = Number(value);
@@ -70,6 +71,7 @@ function money(value) {
 const workInclude = {
   agent: { select: { id: true, username: true, displayName: true, role: true, status: true } },
   partner: { select: { id: true, username: true, displayName: true, role: true, status: true } },
+  payments: { orderBy: { createdAt: "desc" } },
 };
 
 function validateContentPayload(page, data) {
@@ -294,6 +296,8 @@ router.post("/work-orders", allowRoles("admin", "agent"), async (req, res, next)
         price: isAdmin ? money(req.body.price) : 0,
         status: isAdmin ? pickStatus(req.body.status, WORK_STATUSES, "lead") : "lead",
         notes: nullableText(req.body.notes, 5000),
+        deliveryLink: nullableText(req.body.deliveryLink, 800),
+        deliveryNotes: nullableText(req.body.deliveryNotes, 5000),
         agentId,
         partnerId,
         agentCommission: isAdmin ? money(req.body.agentCommission) : 0,
@@ -332,13 +336,55 @@ router.put("/work-orders", allowRoles("admin", "agent", "partner"), async (req, 
       if (req.body.agentPaid !== undefined) data.agentPaid = money(req.body.agentPaid);
       if (req.body.partnerPayout !== undefined) data.partnerPayout = money(req.body.partnerPayout);
       if (req.body.partnerPaid !== undefined) data.partnerPaid = money(req.body.partnerPaid);
+      if (req.body.deliveryLink !== undefined) data.deliveryLink = nullableText(req.body.deliveryLink, 800);
+      if (req.body.deliveryNotes !== undefined) data.deliveryNotes = nullableText(req.body.deliveryNotes, 5000);
+    }
+    if (req.admin.role === "partner") {
+      if (req.body.deliveryLink !== undefined) data.deliveryLink = nullableText(req.body.deliveryLink, 800);
+      if (req.body.deliveryNotes !== undefined) data.deliveryNotes = nullableText(req.body.deliveryNotes, 5000);
     }
     if (req.body.notes !== undefined) data.notes = nullableText(req.body.notes, 5000);
-    if (req.body.status !== undefined) data.status = pickStatus(req.body.status, WORK_STATUSES, existing.status);
+    if (req.body.status !== undefined) {
+      const allowedStatuses = req.admin.role === "partner" ? PARTNER_WORK_STATUSES : WORK_STATUSES;
+      data.status = pickStatus(req.body.status, allowedStatuses, existing.status);
+      if (data.status === "review" && existing.status !== "review") data.submittedAt = new Date();
+    }
 
     const item = await prisma.clientWork.update({ where: { id }, data, include: workInclude });
     res.json(item);
   } catch (err) { next(err); }
+});
+
+router.post("/work-orders/:id/payments", requireAdmin, async (req, res, next) => {
+  try {
+    const id = toId(req.params.id);
+    if (!id) return res.status(400).json({ success: false, message: "Valid work id is required" });
+    const role = req.body.role === "partner" ? "partner" : req.body.role === "agent" ? "agent" : null;
+    if (!role) return res.status(400).json({ success: false, message: "Payment role must be agent or partner" });
+    const amount = money(req.body.amount);
+    if (!amount) return res.status(400).json({ success: false, message: "Payment amount is required" });
+
+    const item = await prisma.clientWork.update({
+      where: { id },
+      data: {
+        [role === "agent" ? "agentPaid" : "partnerPaid"]: { increment: amount },
+        payments: {
+          create: {
+            role,
+            amount,
+            note: nullableText(req.body.note, 1000),
+            createdBy: req.admin?.username || "admin",
+          },
+        },
+      },
+      include: workInclude,
+    });
+    await logActivity(req, "record-payment", `work:${id}`, `${role}:${amount}`);
+    res.status(201).json(item);
+  } catch (err) {
+    if (err.code === "P2025") return res.status(404).json({ success: false, message: "Work item not found" });
+    next(err);
+  }
 });
 
 router.delete("/work-orders", requireAdmin, async (req, res, next) => {
