@@ -92,9 +92,38 @@ async function moveToBin(type, data) {
   return item;
 }
 
+async function logActivity(req, action, target, detail = "") {
+  await prisma.activityLog.create({
+    data: {
+      actor: req.admin?.username || "unknown",
+      role: req.admin?.role || "unknown",
+      action,
+      target,
+      detail: text(detail, 1000) || null,
+    },
+  }).catch(() => {});
+}
+
 router.get("/bin", requireAdmin, async (_, res, next) => {
   try {
     res.json(await readJSON("bin-files.json").catch(() => []));
+  } catch (err) { next(err); }
+});
+
+router.get("/deploy-status", requireAdmin, async (_, res) => {
+  res.json({
+    service: process.env.RAILWAY_SERVICE_NAME || process.env.RAILWAY_SERVICE_ID || "local",
+    environment: process.env.RAILWAY_ENVIRONMENT_NAME || process.env.NODE_ENV || "development",
+    gitCommit: process.env.RAILWAY_GIT_COMMIT_SHA || process.env.GIT_COMMIT || "unknown",
+    deployId: process.env.RAILWAY_DEPLOYMENT_ID || "unknown",
+    checkedAt: new Date().toISOString(),
+  });
+});
+
+router.get("/activity", requireAdmin, async (_, res, next) => {
+  try {
+    const items = await prisma.activityLog.findMany({ orderBy: { createdAt: "desc" }, take: 80 });
+    res.json(items);
   } catch (err) { next(err); }
 });
 
@@ -143,6 +172,7 @@ router.post("/accounts", requireAdmin, async (req, res, next) => {
       data: { username: safeUsername, displayName: nullableText(displayName, 120), role, salt, passwordHash },
       select: { id: true, username: true, displayName: true, role: true, status: true, createdAt: true, updatedAt: true },
     });
+    await logActivity(req, "create-account", `account:${account.id}`, `${account.role}:${account.username}`);
     res.status(201).json(account);
   } catch (err) {
     if (err.code === "P2002") return res.status(409).json({ success: false, message: "Username already exists" });
@@ -169,6 +199,7 @@ router.put("/accounts", requireAdmin, async (req, res, next) => {
       data,
       select: { id: true, username: true, displayName: true, role: true, status: true, createdAt: true, updatedAt: true },
     });
+    await logActivity(req, "update-account", `account:${account.id}`, account.username);
     res.json(account);
   } catch (err) {
     if (err.code === "P2025") return res.status(404).json({ success: false, message: "Account not found" });
@@ -182,6 +213,7 @@ router.delete("/accounts", requireAdmin, async (req, res, next) => {
     const accountId = toId(id);
     if (!accountId) return res.status(400).json({ success: false, message: "Valid account id is required" });
     await prisma.adminUser.delete({ where: { id: accountId } });
+    await logActivity(req, "delete-account", `account:${accountId}`);
     res.json({ ok: true });
   } catch (err) {
     if (err.code === "P2025") return res.status(404).json({ success: false, message: "Account not found" });
@@ -499,8 +531,134 @@ router.get("/media", requireAdmin, async (_, res, next) => {
   try {
     const uploadsDir = join(__dirname, "..", process.env.UPLOAD_DIR || "uploads");
     const files = await readdir(uploadsDir).catch(() => []);
-    const urls = files.filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f)).map(f => `/uploads/${f}`);
-    res.json(urls);
+    const urls = files.filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f)).map(f => ({ url: `/uploads/${f}`, filename: f }));
+    const existing = await prisma.mediaAsset.findMany();
+    const byUrl = new Map(existing.map((item) => [item.url, item]));
+    const assets = [];
+    for (const file of urls) {
+      if (byUrl.has(file.url)) {
+        assets.push(byUrl.get(file.url));
+      } else {
+        const created = await prisma.mediaAsset.create({ data: { url: file.url, filename: file.filename } }).catch(() => null);
+        if (created) assets.push(created);
+      }
+    }
+    res.json(assets);
+  } catch (err) { next(err); }
+});
+
+router.put("/media", requireAdmin, async (req, res, next) => {
+  try {
+    const { url, label, category, altText } = req.body;
+    if (!url) return res.status(400).json({ success: false, message: "Media url is required" });
+    const item = await prisma.mediaAsset.upsert({
+      where: { url },
+      update: { label: nullableText(label, 120), category: nullableText(category, 80), altText: nullableText(altText, 200) },
+      create: { url, filename: String(url).split("/").pop() || "upload", label: nullableText(label, 120), category: nullableText(category, 80), altText: nullableText(altText, 200) },
+    });
+    await logActivity(req, "update-media", url, label || "");
+    res.json(item);
+  } catch (err) { next(err); }
+});
+
+router.get("/content-export", requireAdmin, async (_, res, next) => {
+  try {
+    const entries = await prisma.content.findMany();
+    const drafts = await prisma.contentDraft.findMany();
+    res.json({
+      exportedAt: new Date().toISOString(),
+      content: Object.fromEntries(entries.map((entry) => [entry.page, entry.data])),
+      drafts: Object.fromEntries(drafts.map((entry) => [entry.page, entry.data])),
+    });
+  } catch (err) { next(err); }
+});
+
+router.post("/content-import", requireAdmin, async (req, res, next) => {
+  try {
+    const payload = req.body?.content && typeof req.body.content === "object" ? req.body.content : req.body;
+    if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+      return res.status(400).json({ success: false, message: "Import payload must be an object" });
+    }
+    const pages = Object.keys(payload).filter((page) => CONTENT_PAGES.includes(page));
+    for (const page of pages) {
+      const validationError = validateContentPayload(page, payload[page]);
+      if (validationError) return res.status(400).json({ success: false, message: validationError });
+      await prisma.content.upsert({
+        where: { page },
+        update: { data: payload[page] },
+        create: { page, data: payload[page] },
+      });
+      await prisma.contentRevision.create({ data: { page, data: payload[page], action: "import", createdBy: req.admin.username } });
+    }
+    await logActivity(req, "import-content", "content", `${pages.length} pages`);
+    res.json({ success: true, pages });
+  } catch (err) { next(err); }
+});
+
+router.get("/content/:page/draft", requireAdmin, async (req, res, next) => {
+  const page = req.params.page;
+  if (!CONTENT_PAGES.includes(page)) return res.status(404).json({ error: "Page not found" });
+  try {
+    res.setHeader("Cache-Control", "no-store");
+    const draft = await prisma.contentDraft.findUnique({ where: { page } });
+    if (draft) return res.json({ success: true, data: draft.data, updatedAt: draft.updatedAt });
+    const published = await prisma.content.findUnique({ where: { page } });
+    res.json({ success: true, data: published?.data || {}, updatedAt: published?.updatedAt || null });
+  } catch (err) { next(err); }
+});
+
+router.get("/content/:page/versions", requireAdmin, async (req, res, next) => {
+  const page = req.params.page;
+  if (!CONTENT_PAGES.includes(page)) return res.status(404).json({ error: "Page not found" });
+  try {
+    const items = await prisma.contentRevision.findMany({
+      where: { page },
+      orderBy: { createdAt: "desc" },
+      take: 20,
+      select: { id: true, page: true, action: true, createdBy: true, createdAt: true },
+    });
+    res.json(items);
+  } catch (err) { next(err); }
+});
+
+router.post("/content/:page/restore", requireAdmin, async (req, res, next) => {
+  const page = req.params.page;
+  if (!CONTENT_PAGES.includes(page)) return res.status(404).json({ error: "Page not found" });
+  try {
+    const id = toId(req.body.id);
+    if (!id) return res.status(400).json({ success: false, message: "Valid version id is required" });
+    const revision = await prisma.contentRevision.findFirst({ where: { id, page } });
+    if (!revision) return res.status(404).json({ success: false, message: "Version not found" });
+    await prisma.contentDraft.upsert({
+      where: { page },
+      update: { data: revision.data },
+      create: { page, data: revision.data },
+    });
+    await logActivity(req, "restore-draft", `content:${page}`, `version:${id}`);
+    res.json({ success: true, data: revision.data });
+  } catch (err) { next(err); }
+});
+
+router.post("/content/:page/publish", requireAdmin, async (req, res, next) => {
+  const page = req.params.page;
+  if (!CONTENT_PAGES.includes(page)) return res.status(404).json({ error: "Page not found" });
+  const data = req.body && Object.keys(req.body).length ? req.body : (await prisma.contentDraft.findUnique({ where: { page } }).catch(() => null))?.data;
+  const validationError = validateContentPayload(page, data);
+  if (validationError) return res.status(400).json({ success: false, message: validationError });
+  try {
+    const previous = await prisma.content.findUnique({ where: { page } });
+    if (previous) {
+      await prisma.contentRevision.create({ data: { page, data: previous.data, action: "backup", createdBy: req.admin.username } });
+    }
+    const entry = await prisma.content.upsert({
+      where: { page },
+      update: { data },
+      create: { page, data },
+    });
+    await prisma.contentDraft.upsert({ where: { page }, update: { data }, create: { page, data } });
+    await prisma.contentRevision.create({ data: { page, data, action: "publish", createdBy: req.admin.username } });
+    await logActivity(req, "publish-content", `content:${page}`);
+    res.json({ success: true, data: entry.data });
   } catch (err) { next(err); }
 });
 
@@ -521,11 +679,12 @@ router.put("/content/:page", requireAdmin, async (req, res, next) => {
   const validationError = validateContentPayload(page, req.body);
   if (validationError) return res.status(400).json({ success: false, message: validationError });
   try {
-    const entry = await prisma.content.upsert({
+    const entry = await prisma.contentDraft.upsert({
       where: { page },
       update: { data: req.body },
       create: { page, data: req.body },
     });
+    await logActivity(req, "save-draft", `content:${page}`);
     res.json({ success: true, data: entry.data });
   } catch (err) { next(err); }
 });

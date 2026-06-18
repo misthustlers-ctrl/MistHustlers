@@ -30,6 +30,18 @@ interface Project {
 interface BinItem {
   id: string; type: string; deletedAt: string; data: Record<string, unknown>;
 }
+interface MediaAsset {
+  id?: number; url: string; filename?: string; label?: string | null; category?: string | null; altText?: string | null;
+}
+interface ContentVersion {
+  id: number; page: string; action: string; createdBy?: string | null; createdAt: string;
+}
+interface ActivityItem {
+  id: number; actor?: string | null; role?: string | null; action: string; target?: string | null; detail?: string | null; createdAt: string;
+}
+interface DeployStatus {
+  service: string; environment: string; gitCommit: string; deployId: string; checkedAt: string;
+}
 type AdminRole = 'admin' | 'agent' | 'partner';
 interface AdminSessionUser {
   id: number; username: string; displayName?: string | null; role: AdminRole; source?: string;
@@ -207,10 +219,15 @@ const App: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [selectedWork, setSelectedWork] = useState<ClientWork | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<MediaAsset[]>([]);
   const [loadingMedia, setLoadingMedia] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
+  const [contentVersions, setContentVersions] = useState<ContentVersion[]>([]);
+  const [activityItems, setActivityItems] = useState<ActivityItem[]>([]);
+  const [deployStatus, setDeployStatus] = useState<DeployStatus | null>(null);
+  const [showLivePreview, setShowLivePreview] = useState(true);
+  const [jsonValid, setJsonValid] = useState(true);
 
   const [isLoggedIn, setIsLoggedIn] = useState(() => !!sessionStorage.getItem('admin_token') || !!sessionStorage.getItem('admin_credentials'));
   const [currentUser, setCurrentUser] = useState<AdminSessionUser | null>(() => getStoredUser());
@@ -281,7 +298,7 @@ const App: React.FC = () => {
 
   const fetchContent = async (page: string) => {
     try {
-      const res = await api<{ success: boolean; data: any }>(`${API}/content/${page}`);
+      const res = await api<{ success: boolean; data: any }>(`${API}/content/${page}/draft`);
       if (res.success) {
         if (page === 'services') setServicesContent(res.data);
         if (page === 'home') setHomeContent(res.data);
@@ -291,6 +308,8 @@ const App: React.FC = () => {
         if (page === 'logo') setLogoContent(res.data);
         if (page === 'seo') setSeoContent(res.data);
       }
+      const versions = await api<ContentVersion[]>(`${API}/content/${page}/versions`).catch(() => []);
+      setContentVersions(versions);
     } catch (err) {
       if (page === 'logo') {
         setLogoContent({});
@@ -352,6 +371,7 @@ const App: React.FC = () => {
     if (!isAdmin || isPreviewSession) return;
     if (activeTab === 'content') fetchContent(contentTab);
     if (activeTab === 'logo') fetchContent('logo');
+    if (activeTab === 'dashboard') refreshAdminMeta();
   }, [activeTab, contentTab, isAdmin, isPreviewSession]);
 
   const fetchMedia = async () => {
@@ -362,7 +382,9 @@ const App: React.FC = () => {
     }
     try {
       const d = await api<unknown>(`${API}/media`);
-      if (Array.isArray(d)) setImages(d);
+      if (Array.isArray(d)) {
+        setImages(d.map((item: any) => typeof item === 'string' ? { url: item, filename: item.split('/').pop() } : item));
+      }
     } catch {} finally {
       setLoadingMedia(false);
     }
@@ -384,6 +406,16 @@ const App: React.FC = () => {
     workValue: workOrders.reduce((sum, item) => sum + (Number(item.price) || 0), 0),
     agentDue: workOrders.reduce((sum, item) => sum + Math.max((Number(item.agentCommission) || 0) - (Number(item.agentPaid) || 0), 0), 0),
     partnerDue: workOrders.reduce((sum, item) => sum + Math.max((Number(item.partnerPayout) || 0) - (Number(item.partnerPaid) || 0), 0), 0),
+  };
+
+  const refreshAdminMeta = async () => {
+    if (!isAdmin || isPreviewSession) return;
+    const [activity, deploy] = await Promise.all([
+      api<ActivityItem[]>(`${API}/activity`).catch(() => []),
+      api<DeployStatus>(`${API}/deploy-status`).catch(() => null),
+    ]);
+    setActivityItems(activity);
+    if (deploy) setDeployStatus(deploy);
   };
 
   const agentAccounts = accounts.filter((account) => account.role === 'agent' && account.status === 'active');
@@ -685,17 +717,88 @@ const App: React.FC = () => {
   };
 
   const saveContent = async (page: string, data: any) => {
+    if (!jsonValid) {
+      notify('Fix invalid JSON before saving draft', 'error');
+      return;
+    }
     setContentSaving(true);
     try {
       await api(`${API}/content/${page}`, { method: 'PUT', body: JSON.stringify(data) });
       setError('');
-      notify(`${page} content saved`);
+      notify(`${page} draft saved`);
+      fetchContent(page);
     } catch (err) {
-      setError(`Failed to save ${page} content`);
-      notify(`Failed to save ${page} content`, 'error');
+      setError(`Failed to save ${page} draft`);
+      notify(`Failed to save ${page} draft`, 'error');
     } finally {
       setContentSaving(false);
     }
+  };
+
+  const publishContent = async (page: string, data: any) => {
+    if (!jsonValid) {
+      notify('Fix invalid JSON before publishing', 'error');
+      return;
+    }
+    setContentSaving(true);
+    try {
+      await api(`${API}/content/${page}/publish`, { method: 'POST', body: JSON.stringify(data) });
+      setError('');
+      notify(`${page} published`);
+      fetchContent(page);
+      refreshAdminMeta();
+    } catch {
+      setError(`Failed to publish ${page}`);
+      notify(`Failed to publish ${page}`, 'error');
+    } finally {
+      setContentSaving(false);
+    }
+  };
+
+  const restoreVersion = async (page: string, id: number) => {
+    if (!window.confirm('Restore this version into draft?')) return;
+    const res = await api<{ success: boolean; data: any }>(`${API}/content/${page}/restore`, { method: 'POST', body: JSON.stringify({ id }) });
+    if (res.success) {
+      if (page === 'services') setServicesContent(res.data);
+      if (page === 'home') setHomeContent(res.data);
+      if (page === 'career') setCareerContent(res.data);
+      if (page === 'projects') setProjectsContent(res.data);
+      if (page === 'contact') setContactContent(res.data);
+      if (page === 'logo') setLogoContent(res.data);
+      if (page === 'seo') setSeoContent(res.data);
+      notify('Version restored to draft');
+      fetchContent(page);
+    }
+  };
+
+  const exportContent = async () => {
+    const data = await api<any>(`${API}/content-export`);
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `misthustlers-content-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importContent = async (file?: File) => {
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const payload = JSON.parse(text);
+      await api(`${API}/content-import`, { method: 'POST', body: JSON.stringify(payload) });
+      notify('Content imported and published');
+      fetchContent(contentTab);
+    } catch {
+      notify('Import failed. Check JSON file format.', 'error');
+    }
+  };
+
+  const updateMediaAsset = async (asset: MediaAsset, updates: Partial<MediaAsset>) => {
+    await api<MediaAsset>(`${API}/media`, { method: 'PUT', body: JSON.stringify({ ...asset, ...updates }) });
+    fetchMedia();
+    notify('Media details saved');
   };
 
   const rawJsonEditor = (data: any, setContent: (value: any) => void) => (
@@ -709,8 +812,10 @@ const App: React.FC = () => {
         onBlur={(event) => {
           try {
             setContent(JSON.parse(event.target.value));
+            setJsonValid(true);
             setError('');
           } catch {
+            setJsonValid(false);
             setError('Advanced JSON is invalid. Fix it before saving.');
             notify('Advanced JSON is invalid', 'error');
           }
@@ -956,6 +1061,43 @@ const App: React.FC = () => {
           </button>
         </div>
       </section>}
+
+      {isAdmin && (
+        <section className="grid grid-cols-2 gap-4">
+          <div className="rounded-2xl border border-white/10 bg-[#111] p-5">
+            <div className="mb-3 flex items-center justify-between">
+              <div>
+                <div className="text-[11px] tracking-[1px] text-white/50">DEPLOYMENT</div>
+                <div className="text-lg font-semibold">Railway Status</div>
+              </div>
+              <button onClick={refreshAdminMeta} className="rounded-xl border border-white/15 px-3 py-1.5 text-xs hover:bg-white hover:text-black">Refresh</button>
+            </div>
+            {deployStatus ? (
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="rounded-xl bg-white/5 p-3"><div className="text-white/35">Service</div><div>{deployStatus.service}</div></div>
+                <div className="rounded-xl bg-white/5 p-3"><div className="text-white/35">Environment</div><div>{deployStatus.environment}</div></div>
+                <div className="rounded-xl bg-white/5 p-3"><div className="text-white/35">Commit</div><div className="truncate">{deployStatus.gitCommit}</div></div>
+                <div className="rounded-xl bg-white/5 p-3"><div className="text-white/35">Checked</div><div>{new Date(deployStatus.checkedAt).toLocaleString()}</div></div>
+              </div>
+            ) : <div className="text-sm text-white/35">Deploy status not loaded yet.</div>}
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-[#111] p-5">
+            <div className="mb-3">
+              <div className="text-[11px] tracking-[1px] text-white/50">ACTIVITY LOGS</div>
+              <div className="text-lg font-semibold">Recent Admin Actions</div>
+            </div>
+            <div className="max-h-48 overflow-auto rounded-xl bg-black/35">
+              {activityItems.map((item) => (
+                <div key={item.id} className="border-b border-white/10 px-3 py-2 text-xs last:border-b-0">
+                  <div className="text-white/70">{item.action} <span className="text-white/35">{item.target}</span></div>
+                  <div className="text-white/35">{item.actor || 'system'} / {item.role || '-'} / {new Date(item.createdAt).toLocaleString()}</div>
+                </div>
+              ))}
+              {!activityItems.length && <div className="px-3 py-4 text-xs text-white/35">No activity logged yet.</div>}
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 
@@ -1200,7 +1342,7 @@ const App: React.FC = () => {
       setDeleting(url);
       try {
         await api<{ ok: boolean }>(`${API}/upload/${filename}`, { method: 'DELETE' });
-        setImages(prev => prev.filter(i => i !== url));
+        setImages(prev => prev.filter(i => i.url !== url));
       } catch (err) {
         setError('Failed to delete image');
       } finally {
@@ -1226,17 +1368,31 @@ const App: React.FC = () => {
         <div className="grid grid-cols-6 gap-3">
           {loadingMedia ? <div className="col-span-6 text-center text-white/40 py-10">Loading...</div> :
             images.length === 0 ? <div className="col-span-6 text-center text-white/40 py-10">No images uploaded yet. Use the Upload button above.</div> :
-            images.map(url => (
-              <div key={url} className="group relative aspect-square rounded-xl border border-white/10 overflow-hidden bg-[#111]">
-                <button onClick={() => setPreviewImage(url)} className="w-full h-full">
-                  <img src={url} className="w-full h-full object-cover" />
+            images.map(asset => (
+              <div key={asset.url} className="group rounded-xl border border-white/10 overflow-hidden bg-[#111]">
+                <button onClick={() => setPreviewImage(asset.url)} className="aspect-square w-full">
+                  <img src={asset.url} alt={asset.altText || asset.label || ''} className="w-full h-full object-cover" />
                 </button>
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                  <button onClick={() => copyUrl(url)} className="px-2 py-1 text-[10px] bg-white/20 rounded-lg hover:bg-white/40 text-white">
-                    {copied === url ? 'Copied!' : 'Copy URL'}
+                <div className="space-y-2 border-t border-white/10 p-2">
+                  <input className="field px-2 py-1.5 text-[11px]" placeholder="Label" value={asset.label || ''} onChange={(e) => setImages(prev => prev.map(i => i.url === asset.url ? { ...i, label: e.target.value } : i))} onBlur={() => updateMediaAsset(asset, { label: asset.label || '' })} />
+                  <input className="field px-2 py-1.5 text-[11px]" placeholder="Category" value={asset.category || ''} onChange={(e) => setImages(prev => prev.map(i => i.url === asset.url ? { ...i, category: e.target.value } : i))} onBlur={() => updateMediaAsset(asset, { category: asset.category || '' })} />
+                  <input className="field px-2 py-1.5 text-[11px]" placeholder="Alt text" value={asset.altText || ''} onChange={(e) => setImages(prev => prev.map(i => i.url === asset.url ? { ...i, altText: e.target.value } : i))} onBlur={() => updateMediaAsset(asset, { altText: asset.altText || '' })} />
+                  <div className="flex gap-1">
+                    <button onClick={() => copyUrl(asset.url)} className="flex-1 px-2 py-1 text-[10px] bg-white/10 rounded-lg hover:bg-white/20 text-white">
+                      {copied === asset.url ? 'Copied!' : 'Copy'}
+                    </button>
+                    <button onClick={() => deleteImage(asset.url)} disabled={deleting === asset.url} className="flex-1 px-2 py-1 text-[10px] bg-red-500/60 rounded-lg hover:bg-red-500 text-white disabled:opacity-50">
+                      {deleting === asset.url ? '...' : 'Delete'}
+                    </button>
+                  </div>
+                  <button onClick={() => updateMediaAsset(asset, asset)} className="w-full rounded-lg border border-white/15 px-2 py-1 text-[10px] hover:bg-white hover:text-black">Save Details</button>
+                </div>
+                <div className="hidden">
+                  <button onClick={() => copyUrl(asset.url)} className="px-2 py-1 text-[10px] bg-white/20 rounded-lg hover:bg-white/40 text-white">
+                    {copied === asset.url ? 'Copied!' : 'Copy URL'}
                   </button>
-                  <button onClick={() => deleteImage(url)} disabled={deleting === url} className="px-2 py-1 text-[10px] bg-red-500/80 rounded-lg hover:bg-red-500 text-white disabled:opacity-50">
-                    {deleting === url ? '...' : 'Delete'}
+                  <button onClick={() => deleteImage(asset.url)} disabled={deleting === asset.url} className="px-2 py-1 text-[10px] bg-red-500/80 rounded-lg hover:bg-red-500 text-white disabled:opacity-50">
+                    {deleting === asset.url ? '...' : 'Delete'}
                   </button>
                 </div>
               </div>
@@ -1936,6 +2092,73 @@ const App: React.FC = () => {
     );
   };
 
+  const currentContentData = () => {
+    if (contentTab === 'services') return servicesContent;
+    if (contentTab === 'home') return homeContent;
+    if (contentTab === 'career') return careerContent;
+    if (contentTab === 'projects') return projectsContent;
+    if (contentTab === 'contact') return contactContent;
+    if (contentTab === 'seo') return seoContent;
+    return {};
+  };
+
+  const setCurrentContentData = (next: any) => {
+    if (contentTab === 'services') setServicesContent(next);
+    if (contentTab === 'home') setHomeContent(next);
+    if (contentTab === 'career') setCareerContent(next);
+    if (contentTab === 'projects') setProjectsContent(next);
+    if (contentTab === 'contact') setContactContent(next);
+    if (contentTab === 'seo') setSeoContent(next);
+  };
+
+  const updateArrayBlock = (key: string, action: 'add' | 'remove' | 'up' | 'down', index = 0) => {
+    const data = JSON.parse(JSON.stringify(currentContentData() || {}));
+    if (!Array.isArray(data[key])) return;
+    if (action === 'add') data[key].push({ title: 'New Block', desc: '' });
+    if (action === 'remove') data[key].splice(index, 1);
+    if (action === 'up' && index > 0) [data[key][index - 1], data[key][index]] = [data[key][index], data[key][index - 1]];
+    if (action === 'down' && index < data[key].length - 1) [data[key][index + 1], data[key][index]] = [data[key][index], data[key][index + 1]];
+    setCurrentContentData(data);
+  };
+
+  const renderBlockManager = () => {
+    const data = currentContentData() || {};
+    const arrays = Object.keys(data).filter((key) => Array.isArray(data[key]));
+    if (!arrays.length) return null;
+    return (
+      <div className="mb-4 rounded-2xl border border-white/10 bg-[#111] p-4">
+        <div className="mb-3 text-sm font-semibold">Page Builder Blocks</div>
+        <div className="space-y-3">
+          {arrays.map((key) => (
+            <div key={key} className="rounded-xl bg-black/35 p-3">
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-xs font-semibold capitalize">{key} ({data[key].length})</span>
+                <button onClick={() => updateArrayBlock(key, 'add')} className="rounded-lg border border-white/15 px-2 py-1 text-[11px] hover:bg-white hover:text-black">Add Block</button>
+              </div>
+              <div className="space-y-1">
+                {data[key].map((item: any, index: number) => (
+                  <div key={`${key}-${index}`} className="flex items-center justify-between gap-2 rounded-lg bg-white/5 px-3 py-2 text-xs">
+                    <span className="truncate">{index + 1}. {item?.title || item?.label || item?.q || item?.name || JSON.stringify(item).slice(0, 60)}</span>
+                    <div className="flex gap-1">
+                      <button onClick={() => updateArrayBlock(key, 'up', index)} className="rounded border border-white/10 px-2 py-0.5">Up</button>
+                      <button onClick={() => updateArrayBlock(key, 'down', index)} className="rounded border border-white/10 px-2 py-0.5">Down</button>
+                      <button onClick={() => updateArrayBlock(key, 'remove', index)} className="rounded border border-white/10 px-2 py-0.5 hover:bg-red-500">Remove</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const contentPreviewPath = () => {
+    const map: Record<string, string> = { services: '/services', home: '/', career: '/career', projects: '/projects', contact: '/contact', seo: '/' };
+    return map[contentTab] || '/';
+  };
+
   const renderContentEditor = () => (
     <section>
       <div className="flex justify-between mb-4 items-end">
@@ -1948,6 +2171,56 @@ const App: React.FC = () => {
           ))}
         </div>
       </div>
+
+      {!isPreviewSession && (
+        <div className="mb-4 grid gap-4 xl:grid-cols-[1fr_420px]">
+          <div className="rounded-2xl border border-white/10 bg-[#111] p-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <button onClick={() => saveContent(contentTab, currentContentData())} disabled={contentSaving || !jsonValid} className="rounded-xl border border-white/15 px-4 py-2 text-xs hover:bg-white hover:text-black disabled:opacity-40">
+                Save Draft
+              </button>
+              <button onClick={() => publishContent(contentTab, currentContentData())} disabled={contentSaving || !jsonValid} className="rounded-xl bg-white px-4 py-2 text-xs font-semibold text-black hover:bg-white/90 disabled:opacity-40">
+                Publish Live
+              </button>
+              <button onClick={exportContent} className="rounded-xl border border-white/15 px-4 py-2 text-xs hover:bg-white/10">Export Backup</button>
+              <label className="cursor-pointer rounded-xl border border-white/15 px-4 py-2 text-xs hover:bg-white/10">
+                Import Backup
+                <input type="file" accept="application/json" className="hidden" onChange={(e) => importContent(e.target.files?.[0])} />
+              </label>
+              <button onClick={() => setShowLivePreview(v => !v)} className="rounded-xl border border-white/15 px-4 py-2 text-xs hover:bg-white/10">
+                {showLivePreview ? 'Hide Preview' : 'Show Preview'}
+              </button>
+              {!jsonValid && <span className="text-xs text-red-300">JSON invalid</span>}
+            </div>
+            <div className="mt-4">
+              <div className="mb-2 text-[11px] uppercase tracking-[1px] text-white/40">Version History</div>
+              <div className="max-h-32 overflow-auto rounded-xl bg-black/35">
+                {contentVersions.map((version) => (
+                  <div key={version.id} className="flex items-center justify-between gap-3 border-b border-white/10 px-3 py-2 text-xs last:border-b-0">
+                    <span className="text-white/65">#{version.id} {version.action} by {version.createdBy || 'system'}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-white/35">{new Date(version.createdAt).toLocaleString()}</span>
+                      <button onClick={() => restoreVersion(contentTab, version.id)} className="rounded-lg border border-white/15 px-2 py-1 hover:bg-white hover:text-black">Restore</button>
+                    </div>
+                  </div>
+                ))}
+                {!contentVersions.length && <div className="px-3 py-3 text-xs text-white/35">No versions yet. Publish once to create history.</div>}
+              </div>
+            </div>
+          </div>
+          {showLivePreview && (
+            <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111]">
+              <div className="flex items-center justify-between border-b border-white/10 px-4 py-2 text-xs text-white/45">
+                <span>Live Preview</span>
+                <a href={contentPreviewPath()} target="_blank" rel="noreferrer" className="hover:text-white">Open</a>
+              </div>
+              <iframe title="Live website preview" src={contentPreviewPath()} className="h-[360px] w-full bg-white" />
+            </div>
+          )}
+        </div>
+      )}
+
+      {!isPreviewSession && renderBlockManager()}
 
       {isPreviewSession && <div className="bg-[#111] border border-white/10 rounded-2xl p-8 text-center text-white/45 text-sm">Content editor preview is visible after connecting the backend database.</div>}
       {!isPreviewSession && contentTab === 'services' && renderServicesEditor()}

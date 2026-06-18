@@ -17,6 +17,54 @@ model Content {
   @@map("content")
 }
 
+model ContentDraft {
+  id        String   @id @default(uuid())
+  page      String   @unique
+  data      Json
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("content_drafts")
+}
+
+model ContentRevision {
+  id        Int      @id @default(autoincrement())
+  page      String
+  data      Json
+  action    String   @default("publish")
+  createdBy String?  @map("created_by")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([page])
+  @@map("content_revisions")
+}
+
+model MediaAsset {
+  id        Int      @id @default(autoincrement())
+  url       String   @unique
+  filename  String
+  label     String?
+  category  String?
+  altText   String?  @map("alt_text")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("media_assets")
+}
+
+model ActivityLog {
+  id        Int      @id @default(autoincrement())
+  actor     String?
+  role      String?
+  action    String
+  target    String?
+  detail    String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@map("activity_logs")
+}
+
 model Inquiry {
   id        Int      @id @default(autoincrement())
   name      String
