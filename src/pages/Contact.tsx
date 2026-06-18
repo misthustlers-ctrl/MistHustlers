@@ -1,8 +1,21 @@
 import SEO from "@/components/SEO";
 import SchemaMarkup from "@/components/SchemaMarkup";
 import ServiceInquiryForm from "@/components/ServiceInquiryForm";
+import { useContent } from "@/utils/useContent";
 
 export default function Contact() {
+  const c = useContent("contact", {
+    badge: "Get in Touch",
+    title: "Contact Us",
+    description: "Based in Indore, serving clients worldwide. Get a quote within 48 hours.",
+    address: "Indore, Madhya Pradesh 452001, India",
+    email: "misthustlers@gmail.com",
+    phone: "888 993 7648",
+    phoneHref: "+918889937648",
+    businessHours: "Mon-Fri: 9:00 AM - 6:00 PM\nSat: 10:00 AM - 2:00 PM",
+  });
+  const tel = (c.phoneHref || c.phone || "").replace(/\s/g, "");
+
   return (
     <div className="bg-basalt-canvas min-h-screen">
       <SEO page="contact" />
@@ -12,13 +25,13 @@ export default function Contact() {
           <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
             <div className="text-center mb-12 sm:mb-16">
               <span className="inline-block px-4 py-1.5 rounded-full bg-abyssal-ink/5 text-abyssal-ink/60 text-xs font-semibold tracking-wider uppercase mb-6 font-body">
-                Get in Touch
+                {c.badge}
               </span>
               <h1 className="font-display text-[clamp(40px,12vw,80px)] leading-[0.92] tracking-[0.02em] text-abyssal-ink">
-                Contact Us
+                {c.title}
               </h1>
               <p className="text-abyssal-ink/50 mt-4 max-w-lg mx-auto font-body">
-                Based in Indore, serving clients worldwide. Get a quote within 48 hours.
+                {c.description}
               </p>
             </div>
 
@@ -28,26 +41,26 @@ export default function Contact() {
 
                 <div>
                   <p className="text-sm font-semibold text-abyssal-ink/50 uppercase tracking-wider mb-1">Address</p>
-                  <p className="text-abyssal-ink font-body">Indore, Madhya Pradesh 452001, India</p>
+                  <p className="text-abyssal-ink font-body">{c.address}</p>
                 </div>
 
                 <div>
                   <p className="text-sm font-semibold text-abyssal-ink/50 uppercase tracking-wider mb-1">Email</p>
-                  <a href="mailto:misthustlers@gmail.com" className="text-digital-orange hover:underline font-body">misthustlers@gmail.com</a>
+                  <a href={`mailto:${c.email}`} className="text-digital-orange hover:underline font-body">{c.email}</a>
                 </div>
 
                 <div>
                   <p className="text-sm font-semibold text-abyssal-ink/50 uppercase tracking-wider mb-1">Phone / WhatsApp</p>
-                  <a href="tel:+918889937648" className="text-digital-orange hover:underline font-body">+91 888 993 7648</a>
+                  <a href={`tel:${tel}`} className="text-digital-orange hover:underline font-body">{c.phone}</a>
                 </div>
 
                 <div>
                   <p className="text-sm font-semibold text-abyssal-ink/50 uppercase tracking-wider mb-1">Business Hours</p>
-                  <p className="text-abyssal-ink font-body">Mon-Fri: 9:00 AM - 6:00 PM<br />Sat: 10:00 AM - 2:00 PM</p>
+                  <p className="text-abyssal-ink font-body whitespace-pre-line">{c.businessHours}</p>
                 </div>
 
                 <a
-                  href="https://wa.me/918889937648?text=Hi%20MistHustlers%2C%20I%20want%20to%20discuss%20a%20project"
+                  href={`https://wa.me/${tel.replace(/^\+/, "")}?text=Hi%20MistHustlers%2C%20I%20want%20to%20discuss%20a%20project`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex min-h-12 items-center justify-center gap-2 bg-green-500 text-white px-5 sm:px-6 py-3 rounded-[800px] text-sm font-semibold hover:bg-green-600 transition-colors font-body"

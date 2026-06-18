@@ -196,6 +196,7 @@ const App: React.FC = () => {
   const [homeContent, setHomeContent] = useState<any>(null);
   const [careerContent, setCareerContent] = useState<any>(null);
   const [projectsContent, setProjectsContent] = useState<any>(null);
+  const [contactContent, setContactContent] = useState<any>(null);
   const [logoContent, setLogoContent] = useState<any>(null);
   const [contentSaving, setContentSaving] = useState(false);
   const [seoContent, setSeoContent] = useState<any>(null);
@@ -286,6 +287,7 @@ const App: React.FC = () => {
         if (page === 'home') setHomeContent(res.data);
         if (page === 'career') setCareerContent(res.data);
         if (page === 'projects') setProjectsContent(res.data);
+        if (page === 'contact') setContactContent(res.data);
         if (page === 'logo') setLogoContent(res.data);
         if (page === 'seo') setSeoContent(res.data);
       }
@@ -695,6 +697,27 @@ const App: React.FC = () => {
       setContentSaving(false);
     }
   };
+
+  const rawJsonEditor = (data: any, setContent: (value: any) => void) => (
+    <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
+      <h3 className="text-sm font-semibold mb-2">Advanced JSON Editor</h3>
+      <p className="text-[11px] text-white/40 mb-4">Use this for fields that are not available in the visual editor. Changes apply after this box loses focus and you press Save.</p>
+      <textarea
+        key={contentTab}
+        className="field h-80 resize-y font-mono text-xs leading-5"
+        defaultValue={JSON.stringify(data || {}, null, 2)}
+        onBlur={(event) => {
+          try {
+            setContent(JSON.parse(event.target.value));
+            setError('');
+          } catch {
+            setError('Advanced JSON is invalid. Fix it before saving.');
+            notify('Advanced JSON is invalid', 'error');
+          }
+        }}
+      />
+    </div>
+  );
 
   const createAccount = async () => {
     try {
@@ -1419,6 +1442,7 @@ const App: React.FC = () => {
             <Save className="w-4 h-4" /> {contentSaving ? 'Saving...' : 'Save Services'}
           </button>
         </div>
+        {rawJsonEditor(c, setServicesContent)}
       </div>
     );
   };
@@ -1573,6 +1597,7 @@ const App: React.FC = () => {
             <Save className="w-4 h-4" /> {contentSaving ? 'Saving...' : 'Save Home'}
           </button>
         </div>
+        {rawJsonEditor(c, setHomeContent)}
       </div>
     );
   };
@@ -1710,6 +1735,7 @@ const App: React.FC = () => {
             <Save className="w-4 h-4" /> {contentSaving ? 'Saving...' : 'Save Career'}
           </button>
         </div>
+        {rawJsonEditor(c, setCareerContent)}
       </div>
     );
   };
@@ -1751,6 +1777,7 @@ const App: React.FC = () => {
             <Save className="w-4 h-4" /> {contentSaving ? 'Saving...' : 'Save Projects'}
           </button>
         </div>
+        {rawJsonEditor(c, setProjectsContent)}
       </div>
     );
   };
@@ -1764,6 +1791,36 @@ const App: React.FC = () => {
     const upd = (path: string[], val: any) => updateContentField(setLogoContent, path, val);
     return (
       <div className="space-y-6">
+        <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
+          <h3 className="text-sm font-semibold mb-4">Website Style</h3>
+          <p className="text-[11px] text-white/40 mb-4">These colors and fonts apply directly to the public website after saving.</p>
+          <div className="grid grid-cols-3 gap-4">
+            {[
+              ['canvas', 'Page background'],
+              ['surface', 'Cards / surface'],
+              ['text', 'Text color'],
+              ['cta', 'Main button color'],
+              ['secondary', 'Accent color'],
+            ].map(([key, label]) => (
+              <div key={key}>
+                <label className="block text-[11px] text-white/50 mb-1">{label}</label>
+                <div className="flex gap-2">
+                  <input type="color" value={c.theme?.[key] || (key === 'canvas' ? '#e2e2df' : key === 'surface' ? '#f7f6f2' : key === 'text' ? '#070607' : key === 'cta' ? '#fc5000' : '#524ae9')} onChange={e => upd(['theme', key], e.target.value)} className="h-11 w-12 rounded-xl border border-white/10 bg-black p-1" />
+                  <input className="field text-sm" value={c.theme?.[key] || ''} onChange={e => upd(['theme', key], e.target.value)} placeholder="#000000" />
+                </div>
+              </div>
+            ))}
+            <div>
+              <label className="block text-[11px] text-white/50 mb-1">Body font CSS</label>
+              <input className="field text-sm" value={c.theme?.bodyFont || ''} onChange={e => upd(['theme', 'bodyFont'], e.target.value)} placeholder={'"Libre Baskerville", serif'} />
+            </div>
+            <div>
+              <label className="block text-[11px] text-white/50 mb-1">Heading font CSS</label>
+              <input className="field text-sm" value={c.theme?.headingFont || ''} onChange={e => upd(['theme', 'headingFont'], e.target.value)} placeholder={'"Libre Baskerville", serif'} />
+            </div>
+          </div>
+        </div>
+
         <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
           <h3 className="text-sm font-semibold mb-4">Logo Images</h3>
           <p className="text-[11px] text-white/40 mb-4">Upload your brand logo images. They will replace the text-based "MISTHUSTLERS" branding on the site.</p>
@@ -1827,6 +1884,7 @@ const App: React.FC = () => {
             <Save className="w-4 h-4" /> {contentSaving ? 'Saving...' : 'Save Logo'}
           </button>
         </div>
+        {rawJsonEditor(c, setLogoContent)}
       </div>
     );
   };
@@ -1859,6 +1917,21 @@ const App: React.FC = () => {
             <Save className="w-4 h-4" /> {contentSaving ? 'Saving...' : 'Save SEO Settings'}
           </button>
         </div>
+        {rawJsonEditor(c, setSeoContent)}
+      </div>
+    );
+  };
+
+  const renderContactEditor = () => {
+    if (!contactContent) return <div className="text-center text-white/40 py-10">Loading...</div>;
+    return (
+      <div className="space-y-6">
+        {rawJsonEditor(contactContent, setContactContent)}
+        <div className="flex justify-end">
+          <button onClick={() => saveContent('contact', contactContent)} disabled={contentSaving} className="flex items-center gap-2 px-5 py-2.5 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 disabled:opacity-50">
+            <Save className="w-4 h-4" /> {contentSaving ? 'Saving...' : 'Save Contact'}
+          </button>
+        </div>
       </div>
     );
   };
@@ -1868,7 +1941,7 @@ const App: React.FC = () => {
       <div className="flex justify-between mb-4 items-end">
         <div><div className="text-[11px] tracking-[1px] text-white/50">CONTENT MANAGEMENT</div><div className="text-lg font-semibold">Edit Page Content</div></div>
         <div className="flex gap-1.5">
-          {['services', 'home', 'career', 'projects', 'seo'].map((page) => (
+          {['services', 'home', 'career', 'projects', 'contact', 'seo'].map((page) => (
             <button key={page} onClick={() => { setContentTab(page); if (!isPreviewSession) fetchContent(page); }} className={`px-3 py-1.5 text-[11px] rounded-lg border ${contentTab === page ? 'bg-white text-black border-white' : 'border-white/10 text-white/60 hover:bg-white/5'}`}>
               {page.charAt(0).toUpperCase() + page.slice(1)}
             </button>
@@ -1881,6 +1954,7 @@ const App: React.FC = () => {
       {!isPreviewSession && contentTab === 'home' && renderHomeEditor()}
       {!isPreviewSession && contentTab === 'career' && renderCareerEditor()}
       {!isPreviewSession && contentTab === 'projects' && renderProjectsEditor()}
+      {!isPreviewSession && contentTab === 'contact' && renderContactEditor()}
       {!isPreviewSession && contentTab === 'seo' && renderSeoEditor()}
     </section>
   );

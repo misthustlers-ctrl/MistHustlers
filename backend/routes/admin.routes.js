@@ -508,8 +508,9 @@ router.get("/content/:page", requireAdmin, async (req, res, next) => {
   const page = req.params.page;
   if (!CONTENT_PAGES.includes(page)) return res.status(404).json({ error: "Page not found" });
   try {
+    res.setHeader("Cache-Control", "no-store");
     const entry = await prisma.content.findUnique({ where: { page } });
-    if (!entry) return res.status(404).json({ error: "Content not found" });
+    if (!entry) return res.json({ success: true, data: {} });
     res.json({ success: true, data: entry.data });
   } catch (err) { next(err); }
 });

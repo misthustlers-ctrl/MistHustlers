@@ -3,7 +3,7 @@ import prisma from "../prisma/client.js";
 
 const router = Router();
 
-const PAGES = ["home", "services", "career", "projects", "seo"];
+const PAGES = ["home", "services", "career", "projects", "logo", "seo"];
 
 router.get("/:page", async (req, res, next) => {
   const { page } = req.params;
@@ -14,6 +14,7 @@ router.get("/:page", async (req, res, next) => {
   }
 
   try {
+    res.setHeader("Cache-Control", "no-store");
     const entry = await prisma.content.findUnique({ where: { page } });
     if (!entry) {
       return res.status(404).json({ success: false, message: "Content not found" });

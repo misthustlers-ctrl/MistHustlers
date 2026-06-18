@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import Layout from "@/components/Layout";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import Projects from "@/pages/Projects";
+import DynamicTheme from "@/components/DynamicTheme";
 
 const Home = lazy(() => import("./pages/Home"));
 const Services = lazy(() => import("./pages/Services"));
@@ -60,6 +61,7 @@ export default function App() {
 
   return (
     <>
+      <DynamicTheme />
       <ScrollManager />
       <ErrorBoundary key={location.pathname}>
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-basalt-canvas"><div className="font-display text-2xl text-abyssal-ink/50">Loading...</div></div>}>
