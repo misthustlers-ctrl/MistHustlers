@@ -66,11 +66,23 @@ export default function Home() {
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
   const logoData = useContent("logo", LOGO_DEFAULTS);
-  const c = useContent("home", { stats: [{ value: 127, suffix: "+", label: "Projects Delivered" }, { value: 43, suffix: "+", label: "Happy Clients" }, { value: 18, suffix: "+", label: "Startups Launched" }, { value: 48, suffix: "h", label: "Avg Response Time" }], journeySteps: [{ step: "01", title: "Requirements", desc: "Share your project idea, timeline, and budget. We analyze scope and feasibility within 24 hours." }, { step: "02", title: "Proposal", desc: "Receive a fixed-price proposal with clear deliverables, milestones, and exact timeline. No hidden costs." }, { step: "03", title: "Execution", desc: "We build your project with daily updates and direct communication. Zero bureaucracy. Full transparency." }, { step: "04", title: "Delivery", desc: "Handover with complete source code, documentation, and ongoing support. Your project, fully shipped." }], mentorship: { features: [{ title: "Fixed Pricing", desc: "Know exactly what you pay upfront. No hourly billing, no scope creep, no surprises." }, { title: "Direct Access", desc: "Communicate directly with the developers building your project. No account managers." }, { title: "48h Response", desc: "We respond to every inquiry within 48 hours. Async-first, all timezones." }, { title: "Source Code Included", desc: "You own everything we build. Full source code, documentation, and rights." }] }, faqData: [{ q: "What services does MistHustlers offer?", a: "We offer web development, MVP development, automation systems, full-stack application development, and UI/UX design services in Indore. From landing pages to complex platforms." }, { q: "How much does it cost to build a website?", a: "Our pricing starts at Rs 999 for basic landing pages and goes up to Rs 50,000+ for full-stack applications. We provide a fixed-price quote after reviewing your requirements." }, { q: "Where is MistHustlers based?", a: "We are based in Indore, Madhya Pradesh, and serve clients across India and globally. We work async-first via email, WhatsApp, and calls." }, { q: "How long does it take to build a project?", a: "A landing page can be delivered in 3-5 days. A full-stack MVP typically takes 2-4 weeks. We provide exact timelines in our proposal." }, { q: "Do you offer support after delivery?", a: "Yes. Every project includes post-delivery support from 14 to 90 days depending on plan. We also offer ongoing maintenance and feature additions." }], projects: [] });
+  const c = useContent("home", {
+    hero: { badge: "Web Development Agency", title: ["Web Development &", "Automation Services", "in Indore"], description: "We build websites, MVPs, and automation systems for startups and founders.", tagline: "From landing pages to full-stack platforms.", ctaPrimary: "Get a Quote", ctaSecondary: "View Services" },
+    stats: [{ value: 127, suffix: "+", label: "Projects Delivered" }, { value: 43, suffix: "+", label: "Happy Clients" }, { value: 18, suffix: "+", label: "Startups Launched" }, { value: 48, suffix: "h", label: "Avg Response Time" }],
+    brands: [],
+    servicesTeaser: { badge: "Services in Indore", title: "Websites, MVPs & Automation", description: "From landing pages to full-stack platforms and AI automation pipelines - we ship production-grade work for startups and founders in Indore.", cta: "Explore Services" },
+    journey: { badge: "How We Work", title: "From Idea to Launch", description: "A streamlined process from requirements to delivery. Direct communication. No middlemen." },
+    journeySteps: [{ step: "01", title: "Requirements", desc: "Share your project idea, timeline, and budget." }],
+    mentorship: { features: [] },
+    faqData: [],
+    faq: { items: [] },
+    projects: [],
+  });
   const stats = useMemo(() => c.stats ?? [], [c.stats]);
   const journeySteps = useMemo(() => c.journeySteps ?? [], [c.journeySteps]);
-  const faqData = useMemo(() => c.faqData ?? [], [c.faqData]);
+  const faqData = useMemo(() => c.faq?.items ?? c.faqData ?? [], [c.faq, c.faqData]);
   const projectPreview = useMemo(() => (c.projects ?? []).slice(0, 3), [c.projects]);
+  const heroLines = Array.isArray(c.hero?.title) ? c.hero.title : String(c.hero?.title || "").split("\n").filter(Boolean);
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.3]);
@@ -94,11 +106,14 @@ export default function Home() {
                 transition={{ duration: 0.7, ease: [0.33, 1, 0.68, 1] }}
               >
                 <span className="inline-block px-4 py-1.5 rounded-full bg-abyssal-ink/5 text-abyssal-ink/60 text-xs font-semibold tracking-wider uppercase mb-6 font-body">
-                  Web Development Agency — Indore
+                  {c.hero?.badge || "Web Development Agency"}
                 </span>
                 <h1 className="font-display text-[clamp(34px,12vw,110px)] leading-[0.92] sm:leading-[0.9] tracking-[0.02em] text-abyssal-ink">
-                  Web Development &amp;<br />Automation Services<br />
-                  <span className="text-digital-orange">in Indore</span>
+                  {(heroLines.length ? heroLines : ["Web Development & Automation Services"]).map((line, index) => (
+                    <span key={`${line}-${index}`} className={index === heroLines.length - 1 ? "text-digital-orange" : ""}>
+                      {line}{index < heroLines.length - 1 && <br />}
+                    </span>
+                  ))}
                 </h1>
               </motion.div>
 
@@ -108,7 +123,7 @@ export default function Home() {
                 transition={{ duration: 0.7, delay: 0.15, ease: [0.33, 1, 0.68, 1] }}
                 className="text-base md:text-lg text-abyssal-ink/60 max-w-md leading-relaxed font-body"
               >
-                We build websites, MVPs, and automation systems for startups and founders in Indore. Fixed pricing. 48h response. No bureaucracy.
+                {c.hero?.description}
               </motion.p>
 
               <motion.p
@@ -117,7 +132,7 @@ export default function Home() {
                 transition={{ duration: 0.7, delay: 0.25 }}
                 className="text-sm text-abyssal-ink/40 font-medium tracking-wider uppercase font-body"
               >
-                From landing pages to full-stack platforms. Starting at ₹999.
+                {c.hero?.tagline}
               </motion.p>
 
               <motion.div
@@ -130,13 +145,13 @@ export default function Home() {
                   onClick={() => setModalOpen(true)}
                   className="magnetic-btn bg-digital-orange text-white px-6 sm:px-8 py-4 rounded-[800px] text-base font-semibold cursor-pointer font-body text-center"
                 >
-                  Get a Quote
+                  {c.hero?.ctaPrimary || "Get a Quote"}
                 </button>
                 <button
                   onClick={() => navigate("/services")}
                   className="magnetic-btn bg-transparent border-2 border-abyssal-ink text-abyssal-ink px-6 sm:px-8 py-4 rounded-[800px] text-base font-semibold cursor-pointer hover:bg-abyssal-ink hover:text-white transition-colors duration-300 font-body text-center"
                 >
-                  View Services
+                  {c.hero?.ctaSecondary || "View Services"}
                 </button>
               </motion.div>
             </div>
@@ -174,7 +189,7 @@ export default function Home() {
 
           <ScrollReveal delay={0.3}>
             <div className="mt-16 flex flex-wrap items-center justify-center gap-8 opacity-30">
-              {["STRIPE", "LINEAR", "VERCEL", "GITHUB", "NOTION"].map((p) => (
+              {(c.brands || []).map((p) => (
                 <span key={p} className="font-display text-xl tracking-[0.1em] text-abyssal-ink/40">{p}</span>
               ))}
             </div>
@@ -187,12 +202,12 @@ export default function Home() {
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <ScrollReveal>
             <div className="mb-12 text-center">
-              <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">Services in Indore</span>
+              <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">{c.servicesTeaser?.badge || "Services"}</span>
               <h2 className="font-body font-bold text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
-                Websites, MVPs &amp; Automation
+                {c.servicesTeaser?.title || "Websites, MVPs & Automation"}
               </h2>
               <p className="text-abyssal-ink/50 mt-4 max-w-lg mx-auto font-body">
-                From landing pages to full-stack platforms and AI automation pipelines — we ship production-grade work for startups and founders in Indore.
+                {c.servicesTeaser?.description || "From landing pages to full-stack platforms and AI automation pipelines - we ship production-grade work for startups and founders."}
               </p>
             </div>
           </ScrollReveal>
@@ -202,7 +217,7 @@ export default function Home() {
                 onClick={() => navigate("/services")}
                 className="magnetic-btn bg-digital-orange text-white px-8 py-4 rounded-[800px] text-base font-semibold cursor-pointer font-body"
               >
-                Explore Services &rarr;
+                {c.servicesTeaser?.cta || "Explore Services"} &rarr;
               </button>
             </div>
           </ScrollReveal>
@@ -214,12 +229,12 @@ export default function Home() {
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <ScrollReveal>
             <div className="mb-16 text-center">
-              <span className="text-sm font-semibold tracking-wider uppercase text-digital-orange font-body">How We Work</span>
+              <span className="text-sm font-semibold tracking-wider uppercase text-digital-orange font-body">{c.journey?.badge || "How We Work"}</span>
               <h2 className="font-body font-bold text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
-                From Idea to Launch
+                {c.journey?.title || "From Idea to Launch"}
               </h2>
               <p className="text-abyssal-ink/50 mt-4 max-w-lg mx-auto font-body">
-                A streamlined process from requirements to delivery. Direct communication. No middlemen.
+                {c.journey?.description || "A streamlined process from requirements to delivery. Direct communication. No middlemen."}
               </p>
             </div>
           </ScrollReveal>

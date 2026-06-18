@@ -7,6 +7,13 @@ const LOGO_DEFAULTS = {
   brandHighlight: "HUSTLERS",
 };
 
+const CONTACT_DEFAULTS = {
+  address: "Indore, Madhya Pradesh",
+  email: "misthustlers@gmail.com",
+  phone: "+91 888 993 7648",
+  phoneHref: "+918889937648",
+};
+
 const FOOTER_LINKS = [
   { label: "Home", to: "/" },
   { label: "Services", to: "/services" },
@@ -17,6 +24,8 @@ const FOOTER_LINKS = [
 
 export default function Footer() {
   const logo = useContent("logo", LOGO_DEFAULTS);
+  const contact = useContent("contact", CONTACT_DEFAULTS);
+  const tel = (contact.phoneHref || contact.phone || "").replace(/\s/g, "");
   return (
     <footer id="contact" className="py-16 border-t border-abyssal-ink/5 bg-basalt-canvas">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
@@ -31,7 +40,7 @@ export default function Footer() {
                 </span>
               )}
             </Link>
-            <p className="text-sm text-abyssal-ink/40 font-body">&copy; {new Date().getFullYear()} MistHustlers. All rights reserved.</p>
+            <p className="text-sm text-abyssal-ink/40 font-body">&copy; {new Date().getFullYear()} {logo.brandPrefix}{logo.brandHighlight}. All rights reserved.</p>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm text-abyssal-ink/50 font-body">
@@ -43,12 +52,12 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-col items-center md:items-end gap-2 text-sm text-abyssal-ink/50 font-body">
-            <span className="text-abyssal-ink/60">Indore, Madhya Pradesh</span>
-            <a href="mailto:misthustlers@gmail.com" className="hover:text-abyssal-ink transition-colors">
-              misthustlers@gmail.com
+            <span className="text-abyssal-ink/60">{contact.address}</span>
+            <a href={`mailto:${contact.email}`} className="hover:text-abyssal-ink transition-colors">
+              {contact.email}
             </a>
-            <a href="tel:+918889937648" className="hover:text-abyssal-ink transition-colors">
-              +91 888 993 7648
+            <a href={`tel:${tel}`} className="hover:text-abyssal-ink transition-colors">
+              {contact.phone}
             </a>
           </div>
         </div>

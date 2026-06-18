@@ -6,7 +6,7 @@ import { useContent } from "@/utils/useContent";
 
 export default function Services() {
   const inquiryRef = useRef<HTMLDivElement>(null);
-  const c = useContent("services", { pricing: { tiers: [{ id: "starter", name: "STARTER", price: "₹999 – ₹4,999", description: "Essential presence for new founders", features: ["Landing Page Design", "Portfolio Website", "Basic Automation Setup", "14-Day Support"], popular: false, accent: "var(--mh-text)" }, { id: "growth", name: "GROWTH", price: "₹5,000 – ₹15,000", description: "Complete digital identity for scaling", features: ["Business Website", "Web App UI", "Automation Systems", "Basic Backend", "30-Day Support"], popular: true, accent: "var(--mh-cta)" }, { id: "premium", name: "PREMIUM", price: "₹15,000 – ₹50,000+", description: "Full product development for serious ventures", features: ["Full Stack App", "MVP Development", "AI Automation Systems", "Scalable Platforms", "90-Day Partnership"], popular: false, accent: "var(--mh-secondary)" }] }, process: { steps: [{ step: "01", title: "Apply via Inquiry", desc: "Share requirements, timeline, and budget range" }, { step: "02", title: "Requirement Review", desc: "We analyze scope and technical feasibility" }, { step: "03", title: "Proposal Finalized", desc: "Fixed price, clear deliverables, exact timeline" }, { step: "04", title: "Execution Begins", desc: "Daily updates, direct access, zero bureaucracy" }, { step: "05", title: "Delivery & Support", desc: "Handover with documentation + ongoing help" }] }, trust: { stats: [{ value: "127", label: "Real Projects Delivered", desc: "Landing pages to full-stack platforms" }, { value: "43", label: "Student Growth Stories", desc: "From learners to paid contributors" }, { value: "18", label: "Startup Collaborations", desc: "Pre-seed to Series A partners" }], brands: ["FyntOps", "ShopLogic", "CredVantage", "Taskable", "Flowwise", "BuildZero"] } });
+  const c = useContent("services", { hero: { badge: "Transparent Pricing for Real Execution", title: ["Build with clarity.", "Ship with precision."], subtitle: "Premium development services for startups, founders, and businesses.", ctaPrimary: "Get a Quote", ctaSecondary: "Start a Project", stats: [] }, pricing: { tiers: [] }, process: { steps: [] }, trust: { stats: [], brands: [] } });
   const pricingTiers = c.pricing?.tiers || [];
   const processSteps = (c.process?.steps || []).map((s, i) => ({ ...s, active: i < 2 }));
   const trustStats = c.trust?.stats || [];
@@ -30,17 +30,20 @@ export default function Services() {
               <div className="inline-flex max-w-full items-center gap-[10px] px-[14px] min-h-[36px] rounded-[14px] mb-[28px] border" style={{ backgroundColor: "var(--mh-surface)", borderColor: "rgba(var(--mh-text-rgb), 0.06)" }}>
                 <div className="h-[7px] w-[7px] rounded-full animate-pulse" style={{ backgroundColor: "var(--mh-cta)" }}></div>
                 <span className="text-[12.5px] font-[600] tracking-[-0.01em] uppercase" style={{ color: "var(--mh-text)", letterSpacing: "0.04em" }}>
-                  Transparent Pricing for Real Execution
+                  {c.hero?.badge || "Services"}
                 </span>
               </div>
 
               <h1 className="font-display text-[42px] sm:text-[52px] md:text-[68px] leading-[0.94] md:leading-[0.92] tracking-[-0.035em] md:tracking-[-0.04em] mb-[24px]" style={{ color: "var(--mh-text)" }}>
-                Build with clarity.<br />
-                <span style={{ color: "rgba(var(--mh-text-rgb), 0.35)" }}>Ship with precision.</span>
+                {(Array.isArray(c.hero?.title) ? c.hero.title : [c.hero?.title || "Services"]).map((line: string, index: number) => (
+                  <span key={`${line}-${index}`} style={index > 0 ? { color: "rgba(var(--mh-text-rgb), 0.35)" } : undefined}>
+                    {line}{index < (Array.isArray(c.hero?.title) ? c.hero.title.length : 1) - 1 && <br />}
+                  </span>
+                ))}
               </h1>
 
               <p className="text-[18px] leading-[1.65] max-w-[540px] mb-[40px] font-[450]" style={{ color: "rgba(var(--mh-text-rgb), 0.72)" }}>
-                Premium development services for startups, founders, and businesses who demand execution over promises. No agency overhead. Direct access. Real outcomes.
+                {c.hero?.subtitle || c.hero?.description}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-[14px]">
@@ -49,7 +52,7 @@ export default function Services() {
                   className="h-[52px] px-[28px] rounded-[16px] text-[15.5px] font-[650] flex items-center justify-center gap-[10px] transition-all hover:translate-y-[-1px] active:translate-y-[0px] cursor-pointer"
                   style={{ backgroundColor: "var(--mh-cta)", color: "white", boxShadow: "0 12px 28px -8px rgba(var(--mh-cta-rgb), 0.35)" }}
                 >
-                  Get a Quote
+                  {c.hero?.ctaPrimary || "Get a Quote"}
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/>
                   </svg>
@@ -59,7 +62,7 @@ export default function Services() {
                   className="h-[52px] px-[28px] rounded-[16px] text-[15.5px] font-[600] border transition-all hover:translate-y-[-1px] active:translate-y-[0px] flex items-center justify-center gap-[10px] cursor-pointer"
                   style={{ backgroundColor: "var(--mh-surface)", borderColor: "rgba(var(--mh-text-rgb), 0.12)", color: "var(--mh-text)" }}
                 >
-                  Start a Project
+                  {c.hero?.ctaSecondary || "Start a Project"}
                   <span style={{ color: "rgba(var(--mh-text-rgb), 0.35)" }}>&rarr;</span>
                 </button>
               </div>
@@ -73,12 +76,12 @@ export default function Services() {
                       </div>
                     ))}
                   </div>
-                  <span>127 projects shipped</span>
+                  <span>{c.hero?.stats?.[0]?.value || "0"} {c.hero?.stats?.[0]?.label || "projects shipped"}</span>
                 </div>
                 <div className="hidden sm:block h-[16px] w-[1px]" style={{ backgroundColor: "rgba(var(--mh-text-rgb), 0.12)" }}></div>
                 <div className="flex items-center gap-[6px]">
                   <div className="h-[7px] w-[7px] rounded-full" style={{ backgroundColor: "var(--mh-secondary)" }}></div>
-                  <span>48h avg response</span>
+                  <span>{c.hero?.stats?.[1]?.value || "48h"} {c.hero?.stats?.[1]?.label || "avg response"}</span>
                 </div>
               </div>
             </div>

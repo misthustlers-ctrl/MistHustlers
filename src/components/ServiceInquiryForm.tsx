@@ -1,4 +1,5 @@
 import { useState, useEffect, type FormEvent } from "react";
+import { useContent } from "@/utils/useContent";
 
 const DEFAULT_TIERS = [
   { id: "starter", name: "STARTER", price: "", description: "", features: [], popular: false, accent: "var(--mh-text)" as const, imageUrl: "" },
@@ -7,16 +8,12 @@ const DEFAULT_TIERS = [
 ];
 export default function ServiceInquiryForm() {
   const [pricingTiers, setPricingTiers] = useState(DEFAULT_TIERS);
-  const [contact, setContact] = useState({ email: "misthustlers@gmail.com", phone: "888 993 7648" });
+  const contact = useContent("contact", { email: "misthustlers@gmail.com", phone: "888 993 7648" });
 
   useEffect(() => {
     fetch("/api/content/services")
       .then((r) => r.json())
       .then((j) => { if (j.success && j.data?.pricing?.tiers) setPricingTiers(j.data.pricing.tiers); })
-      .catch(() => {});
-    fetch("/api/content/contact")
-      .then((r) => r.json())
-      .then((j) => { if (j.success && j.data) setContact(prev => ({ ...prev, ...j.data })); })
       .catch(() => {});
   }, []);
   const [formData, setFormData] = useState({
