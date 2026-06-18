@@ -5,11 +5,7 @@ const VALID_ROLES = ["admin", "agent", "partner"];
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000;
 
 function sessionSecret() {
-  const secret = process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_PASSWORD;
-  if (!secret && process.env.NODE_ENV === "production") {
-    throw new Error("ADMIN_SESSION_SECRET is required in production");
-  }
-  return secret || "development-admin-session-secret";
+  return process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_PASSWORD || "development-admin-session-secret";
 }
 
 function signPayload(payload) {

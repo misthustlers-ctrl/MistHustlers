@@ -35,11 +35,14 @@ for (const f of runtimeFiles) {
 }
 
 const required = ["ADMIN_USERNAME", "ADMIN_PASSWORD", "DATABASE_URL"];
-if (process.env.NODE_ENV === "production") required.push("ADMIN_SESSION_SECRET");
 const missing = required.filter((k) => !process.env[k]);
 if (missing.length) {
   console.error(`[FATAL] Missing required env vars: ${missing.join(", ")}`);
   process.exit(1);
+}
+
+if (!process.env.ADMIN_SESSION_SECRET) {
+  console.warn("[WARN] ADMIN_SESSION_SECRET is not configured. ADMIN_PASSWORD will be used to sign admin sessions.");
 }
 
 const smtpOptional = ["SMTP_EMAIL", "SMTP_PASSWORD", "EMAIL_TO"];
