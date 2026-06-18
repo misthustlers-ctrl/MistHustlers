@@ -4,9 +4,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --configLoader native",
-    "build": "vite build --configLoader native",
-    "preview": "vite preview --configLoader native",
+    "dev": "vite --config vite.config.js --configLoader native",
+    "build": "vite build --config vite.config.js --configLoader native",
+    "preview": "vite preview --config vite.config.js --configLoader native",
     "preview:local": "node scripts/serve-dist.js"
   },
   "dependencies": {
