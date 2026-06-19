@@ -110,12 +110,16 @@ const HOME_DEFAULTS = {
     ],
   },
   projectsShowcase: {
+    enabled: true,
     badge: "Project Showcase",
     title: "Client-ready work we ship",
     projects: [
-      { title: "Business Website Launch", category: "Website", visual: "WEB" },
-      { title: "Startup MVP Build", category: "Full-stack", visual: "MVP" },
-      { title: "Lead & Sheet Automation", category: "Automation", visual: "AI" },
+      { title: "Business Website Launch", category: "Website", visual: "WEB", imageUrl: "", link: "/projects" },
+      { title: "Startup MVP Build", category: "Full-stack", visual: "MVP", imageUrl: "", link: "/projects" },
+      { title: "Lead & Sheet Automation", category: "Automation", visual: "AI", imageUrl: "", link: "/projects" },
+      { title: "Admin Dashboard Setup", category: "CMS", visual: "CMS", imageUrl: "", link: "/projects" },
+      { title: "Client Work Management", category: "Operations", visual: "CRM", imageUrl: "", link: "/projects" },
+      { title: "SEO & Performance Upgrade", category: "Growth", visual: "SEO", imageUrl: "", link: "/projects" },
     ],
   },
   faq: {
@@ -142,7 +146,11 @@ export default function Home() {
   const stats = useMemo(() => c.stats ?? [], [c.stats]);
   const journeySteps = useMemo(() => c.journeySteps ?? [], [c.journeySteps]);
   const faqData = useMemo(() => c.faq?.items ?? c.faqData ?? [], [c.faq, c.faqData]);
-  const projectPreview = useMemo(() => (c.projectsShowcase?.projects ?? c.projects ?? []).slice(0, 3), [c.projectsShowcase, c.projects]);
+  const projectPreview = useMemo(() => c.projectsShowcase?.projects ?? c.projects ?? [], [c.projectsShowcase, c.projects]);
+  const movingProjects = useMemo(() => {
+    const items = projectPreview.length ? projectPreview : HOME_DEFAULTS.projectsShowcase.projects;
+    return [...items, ...items];
+  }, [projectPreview]);
   const heroLines = Array.isArray(c.hero?.title) ? c.hero.title : String(c.hero?.title || "").split("\n").filter(Boolean);
   const faqTitleLines = Array.isArray(c.faq?.title) ? c.faq.title : String(c.faq?.title || "").split("\n").filter(Boolean);
   const finalCtaLines = Array.isArray(c.finalCta?.title) ? c.finalCta.title : String(c.finalCta?.title || "").split("\n").filter(Boolean);
@@ -152,6 +160,8 @@ export default function Home() {
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 60]);
 
   const toggleFAQ = (i: number) => setOpenFAQ(openFAQ === i ? null : i);
+  const projectHref = (link?: string) => link?.trim() || "/projects";
+  const isExternalProjectLink = (link?: string) => /^https?:\/\//i.test(link || "");
 
   return (
     <div className="bg-basalt-canvas min-h-screen">
@@ -386,6 +396,7 @@ export default function Home() {
       </section>
 
       {/* PROJECT PREVIEW */}
+      {c.projectsShowcase?.enabled !== false && movingProjects.length > 0 && (
       <section className="py-16 md:py-24 bg-ash-white">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <ScrollReveal>
@@ -405,23 +416,39 @@ export default function Home() {
             </div>
           </ScrollReveal>
 
-          <div className="grid md:grid-cols-3 gap-5">
-            {projectPreview.map((proj, i) => (
-              <ScrollReveal key={proj.title} delay={i * 0.08}>
-                <div className="card-lift h-full overflow-hidden rounded-[32px] border border-abyssal-ink/5 bg-basalt-canvas">
-                  <div className="flex h-32 md:h-44 items-center justify-center bg-abyssal-ink/3">
-                    <span className="text-5xl opacity-30">{proj.visual}</span>
-                  </div>
-                  <div className="p-6">
-                    <span className="text-xs font-semibold tracking-wider uppercase text-abyssal-ink/40 font-body">{proj.category}</span>
-                    <h3 className="font-body font-bold mt-1 text-xl tracking-[0.02em] text-abyssal-ink">{proj.title}</h3>
-                  </div>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
+          <ScrollReveal delay={0.08}>
+            <div className="project-marquee relative overflow-hidden">
+              <div className="project-marquee__track flex w-max gap-5">
+                {movingProjects.map((proj, i) => (
+                  <a
+                    key={`${proj.title}-${i}`}
+                    href={projectHref(proj.link)}
+                    target={isExternalProjectLink(proj.link) ? "_blank" : undefined}
+                    rel={isExternalProjectLink(proj.link) ? "noopener noreferrer" : undefined}
+                    className="card-lift group h-[220px] w-[280px] flex-shrink-0 overflow-hidden rounded-[28px] border border-abyssal-ink/5 bg-basalt-canvas text-left sm:w-[340px]"
+                  >
+                    <div className="relative flex h-28 items-center justify-center overflow-hidden bg-abyssal-ink/3">
+                      {proj.imageUrl ? (
+                        <img src={proj.imageUrl} alt={proj.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                      ) : (
+                        <>
+                          <span className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(252,80,0,0.12),transparent_38%),radial-gradient(circle_at_70%_45%,rgba(82,74,233,0.12),transparent_34%)] opacity-80 transition-transform duration-500 group-hover:scale-110" />
+                          <span className="relative font-display text-5xl tracking-[0.08em] text-abyssal-ink/18">{proj.visual || "MH"}</span>
+                        </>
+                      )}
+                    </div>
+                    <div className="p-6">
+                      <span className="text-xs font-semibold tracking-wider uppercase text-digital-orange font-body">{proj.category}</span>
+                      <h3 className="font-body font-bold mt-2 text-xl tracking-[0.02em] text-abyssal-ink">{proj.title}</h3>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
+      )}
 
       {/* FAQ */}
       <section id="faq" className="py-16 md:py-24">

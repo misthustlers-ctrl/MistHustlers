@@ -1847,19 +1847,36 @@ const App: React.FC = () => {
         <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="text-sm font-semibold">Project Showcase</h3>
-            <button onClick={() => upd(['projectsShowcase', 'projects'], [...(c.projectsShowcase?.projects || []), { title: 'New Project', category: 'Category', visual: 'WEB' }])} className="rounded-lg border border-white/15 px-3 py-1.5 text-xs hover:bg-white hover:text-black">Add Project</button>
+            <button onClick={() => upd(['projectsShowcase', 'projects'], [...(c.projectsShowcase?.projects || []), { title: 'New Project', category: 'Category', visual: 'WEB', imageUrl: '', link: '/projects' }])} className="rounded-lg border border-white/15 px-3 py-1.5 text-xs hover:bg-white hover:text-black">Add Project</button>
           </div>
           <div className="grid grid-cols-2 gap-3">
+            <label className="col-span-2 flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm">
+              <span>
+                <span className="block font-medium">Show on website</span>
+                <span className="text-[11px] text-white/45">Turn this off to hide the whole Project Showcase section.</span>
+              </span>
+              <input type="checkbox" checked={c.projectsShowcase?.enabled !== false} onChange={e => upd(['projectsShowcase', 'enabled'], e.target.checked)} className="h-4 w-4 accent-white" />
+            </label>
             <div><label className="block text-[11px] text-white/50 mb-1">Badge</label><input className="field text-sm" value={c.projectsShowcase?.badge || ''} onChange={e => upd(['projectsShowcase', 'badge'], e.target.value)} /></div>
             <div><label className="block text-[11px] text-white/50 mb-1">Title</label><input className="field text-sm" value={c.projectsShowcase?.title || ''} onChange={e => upd(['projectsShowcase', 'title'], e.target.value)} /></div>
           </div>
           <div className="mt-4 space-y-3">
             {(c.projectsShowcase?.projects || []).map((proj: any, idx: number) => (
-              <div key={idx} className="grid grid-cols-[1fr_1fr_80px_auto] gap-2 items-center">
-                <input className="field text-sm" placeholder="Title" value={proj.title} onChange={e => upd(['projectsShowcase', 'projects', String(idx), 'title'], e.target.value)} />
-                <input className="field text-sm" placeholder="Category" value={proj.category} onChange={e => upd(['projectsShowcase', 'projects', String(idx), 'category'], e.target.value)} />
-                <input className="field text-sm" placeholder="Visual/Emoji" value={proj.visual || ''} onChange={e => upd(['projectsShowcase', 'projects', String(idx), 'visual'], e.target.value)} />
-                <button onClick={() => upd(['projectsShowcase', 'projects'], (c.projectsShowcase?.projects || []).filter((_: any, i: number) => i !== idx))} className="rounded-lg border border-red-400/30 px-2 py-2 text-xs text-red-300 hover:bg-red-500 hover:text-white">Remove</button>
+              <div key={idx} className="rounded-xl bg-white/5 p-4">
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="text-xs font-semibold text-white/65">Project {idx + 1}</div>
+                  <button onClick={() => upd(['projectsShowcase', 'projects'], (c.projectsShowcase?.projects || []).filter((_: any, i: number) => i !== idx))} className="rounded-lg border border-red-400/30 px-2 py-1 text-xs text-red-300 hover:bg-red-500 hover:text-white">Remove</button>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div><label className="block text-[11px] text-white/50 mb-1">Title</label><input className="field text-sm" placeholder="Title" value={proj.title || ''} onChange={e => upd(['projectsShowcase', 'projects', String(idx), 'title'], e.target.value)} /></div>
+                  <div><label className="block text-[11px] text-white/50 mb-1">Category</label><input className="field text-sm" placeholder="Category" value={proj.category || ''} onChange={e => upd(['projectsShowcase', 'projects', String(idx), 'category'], e.target.value)} /></div>
+                  <div><label className="block text-[11px] text-white/50 mb-1">Visual fallback</label><input className="field text-sm" placeholder="WEB / MVP / SEO" value={proj.visual || ''} onChange={e => upd(['projectsShowcase', 'projects', String(idx), 'visual'], e.target.value)} /></div>
+                  <div><label className="block text-[11px] text-white/50 mb-1">Project Link</label><input className="field text-sm" placeholder="/projects or https://..." value={proj.link || ''} onChange={e => upd(['projectsShowcase', 'projects', String(idx), 'link'], e.target.value)} /></div>
+                  <div className="col-span-2">
+                    <label className="block text-[11px] text-white/50 mb-1">Image</label>
+                    <ImageUpload currentUrl={proj.imageUrl || ''} onUploaded={(url) => upd(['projectsShowcase', 'projects', String(idx), 'imageUrl'], url)} />
+                  </div>
+                </div>
               </div>
             ))}
           </div>

@@ -46,15 +46,16 @@
     ]
   },
   "projectsShowcase": {
+    "enabled": true,
     "badge": "Project Showcase",
     "title": "Client-ready work we ship",
     "projects": [
-      { "title": "Business Website Launch", "category": "Website", "visual": "WEB" },
-      { "title": "Startup MVP Build", "category": "Full-stack", "visual": "MVP" },
-      { "title": "Lead & Sheet Automation", "category": "Automation", "visual": "AI" },
-      { "title": "Admin Dashboard Setup", "category": "CMS", "visual": "CMS" },
-      { "title": "Client Work Management", "category": "Operations", "visual": "CRM" },
-      { "title": "SEO & Performance Upgrade", "category": "Growth", "visual": "SEO" }
+      { "title": "Business Website Launch", "category": "Website", "visual": "WEB", "imageUrl": "", "link": "/projects" },
+      { "title": "Startup MVP Build", "category": "Full-stack", "visual": "MVP", "imageUrl": "", "link": "/projects" },
+      { "title": "Lead & Sheet Automation", "category": "Automation", "visual": "AI", "imageUrl": "", "link": "/projects" },
+      { "title": "Admin Dashboard Setup", "category": "CMS", "visual": "CMS", "imageUrl": "", "link": "/projects" },
+      { "title": "Client Work Management", "category": "Operations", "visual": "CRM", "imageUrl": "", "link": "/projects" },
+      { "title": "SEO & Performance Upgrade", "category": "Growth", "visual": "SEO", "imageUrl": "", "link": "/projects" }
     ]
   },
   "faq": {

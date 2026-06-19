@@ -166,6 +166,11 @@ button, input, textarea {
   100% { transform: translateX(100%); }
 }
 
+@keyframes projectMarquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% - 10px)); }
+}
+
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
@@ -185,6 +190,18 @@ button, input, textarea {
 
 .animate-fade-up {
   animation: fadeUp 0.7s ease-out forwards;
+}
+
+.project-marquee {
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.project-marquee__track {
+  animation: projectMarquee 28s linear infinite;
+}
+
+.project-marquee:hover .project-marquee__track {
+  animation-play-state: paused;
 }
 
 /* Stagger children */
