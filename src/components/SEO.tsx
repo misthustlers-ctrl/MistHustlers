@@ -3,8 +3,9 @@ import { SITE_URL, DEFAULT_OG_IMAGE, TWITTER_HANDLE, PAGE_META, SITE_NAME, type 
 import { useContent } from "@/utils/useContent";
 
 interface SEOProps {
-  page: keyof typeof PAGE_META;
+  page: string;
   overrides?: Partial<PageMeta>;
+  robots?: string;
 }
 
 const SEO_DEFAULTS = {
@@ -13,19 +14,31 @@ const SEO_DEFAULTS = {
   twitterHandle: TWITTER_HANDLE,
 };
 
-export default function SEO({ page, overrides }: SEOProps) {
+function replaceSiteName(value: string, siteName: string) {
+  return value.split(SITE_NAME).join(siteName);
+}
+
+function currentCanonical() {
+  if (typeof window === "undefined") return SITE_URL;
+  const path = window.location.pathname === "/" ? "" : window.location.pathname;
+  return `${SITE_URL}${path}`;
+}
+
+export default function SEO({ page, overrides, robots }: SEOProps) {
   const seo = useContent("seo", SEO_DEFAULTS);
   const siteName = seo.siteName || SITE_NAME;
   const ogImagePath = seo.ogImage || DEFAULT_OG_IMAGE;
 
-  const base = PAGE_META[page];
-  if (!base) return null;
+  const base = PAGE_META[page] || {
+    ...PAGE_META.home,
+    canonical: currentCanonical(),
+  };
   const meta = { ...base, ...overrides };
 
-  const title = meta.title.replaceAll(SITE_NAME, siteName);
-  const description = meta.description.replaceAll(SITE_NAME, siteName);
-  const ogTitle = (meta.ogTitle || meta.title).replaceAll(SITE_NAME, siteName);
-  const ogDescription = (meta.ogDescription || meta.description).replaceAll(SITE_NAME, siteName);
+  const title = replaceSiteName(meta.title, siteName);
+  const description = replaceSiteName(meta.description, siteName);
+  const ogTitle = replaceSiteName(meta.ogTitle || meta.title, siteName);
+  const ogDescription = replaceSiteName(meta.ogDescription || meta.description, siteName);
   const url = meta.canonical || SITE_URL;
   const ogImage = `${SITE_URL}${ogImagePath}`;
 
@@ -33,6 +46,7 @@ export default function SEO({ page, overrides }: SEOProps) {
     <Helmet>
       <title>{title}</title>
       <meta name="description" content={description} />
+      {robots && <meta name="robots" content={robots} />}
       <link rel="canonical" href={url} />
 
       <meta property="og:type" content="website" />

@@ -9,6 +9,7 @@ const ROUTES = [
   { file: "services-web-development.html", route: "/services/web-development", label: "Web Development" },
   { file: "services-automation.html", route: "/services/automation", label: "Automation" },
   { file: "services-mvp-development.html", route: "/services/mvp-development", label: "MVP Development" },
+  { file: "career.html", route: "/career", label: "Career" },
   { file: "projects.html", route: "/projects", label: "Projects" },
   { file: "about.html", route: "/about", label: "About" },
   { file: "contact.html", route: "/contact", label: "Contact" },
@@ -26,6 +27,10 @@ function check(label, passed, detail = "") {
 function extract(html, regex) {
   const m = html.match(regex);
   return m ? m[1].trim() : null;
+}
+
+function textFromHtml(value) {
+  return value ? value.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim() : null;
 }
 
 let allPassed = 0;
@@ -53,12 +58,17 @@ for (const { file, route, label } of ROUTES) {
   const title = extract(html, /<title>([^<]+)<\/title>/i);
 
   const hasDescription = html.includes('name="description"');
-  const desc = extract(html, /content="([^"]+)"/i);
+  const desc = extract(html, /<meta\s+name="description"[^>]*content="([^"]+)"/i);
 
-  const hasH1 = html.includes("<h1") && extract(html, /<h1[^>]*>([^<]+)<\/h1>/i);
+  const h1 = textFromHtml(extract(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i));
+  const hasH1 = Boolean(h1);
 
   const hasCanonical = html.includes('rel="canonical"');
   const canonical = extract(html, /rel="canonical"[^>]*href="([^"]+)"/i);
+  const canonicalCount = (html.match(/rel="canonical"/g) || []).length;
+  const hasCorrectCanonical = canonical === `https://www.misthustlers.in${route === "/" ? "" : route}`;
+  const hasOgUrl = html.includes(`property="og:url" content="https://www.misthustlers.in${route === "/" ? "" : route}"`);
+  const hasOldDomain = /misthustlers\.up\.railway\.app|misthustlers\.com|https:\/\/misthustlers\.in/i.test(html);
 
   const hasSchemaLD = html.includes('application/ld+json');
   const hasSchemaOrg = html.includes('"@type"');
@@ -72,10 +82,18 @@ for (const { file, route, label } of ROUTES) {
   if (hasTitle) passed++; else failed++;
   console.log(check("Meta description", hasDescription, desc ? desc.substring(0, 80) + "..." : ""));
   if (hasDescription) passed++; else failed++;
-  console.log(check("H1 heading", !!hasH1, hasH1 || ""));
+  console.log(check("H1 heading", hasH1, h1 || ""));
   if (hasH1) passed++; else failed++;
   console.log(check("Canonical URL", hasCanonical, canonical || ""));
   if (hasCanonical) passed++; else failed++;
+  console.log(check("Single canonical", canonicalCount === 1, `${canonicalCount}`));
+  if (canonicalCount === 1) passed++; else failed++;
+  console.log(check("Canonical is www self-reference", hasCorrectCanonical, canonical || ""));
+  if (hasCorrectCanonical) passed++; else failed++;
+  console.log(check("OG URL is www self-reference", hasOgUrl, ""));
+  if (hasOgUrl) passed++; else failed++;
+  console.log(check("No old public domains", !hasOldDomain, ""));
+  if (!hasOldDomain) passed++; else failed++;
   console.log(check("JSON-LD schema", hasSchemaLD && hasSchemaOrg, ""));
   if (hasSchemaLD && hasSchemaOrg) passed++; else failed++;
   console.log(check("Has body content (>200 chars)", hasContent, `${bodyContent.length} chars`));

@@ -1,4 +1,4 @@
-import { useState, useEffect, type FormEvent } from "react";
+import { useState, useEffect } from "react";
 import { useContent } from "@/utils/useContent";
 
 const DEFAULT_TIERS = [

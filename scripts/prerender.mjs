@@ -12,6 +12,7 @@ const ROUTES = [
   "/services/web-development",
   "/services/automation",
   "/services/mvp-development",
+  "/career",
   "/projects",
   "/about",
   "/contact",
@@ -91,12 +92,6 @@ async function prerender() {
       const html = await page.content();
       const fileName = route === "/" ? "index.html" : `${route.slice(1).replace(/\//g, "-")}.html`;
       const outputPath = join(PRERENDERED_DIR, fileName);
-
-      const dir = join(PRERENDERED_DIR, ...(route === "/" ? [] : [route.slice(1).split("/")[0]]));
-      if (route !== "/" && route.split("/").length > 2) {
-        const subDir = join(PRERENDERED_DIR, ...route.slice(1).split("/").slice(0, -1));
-        if (!existsSync(subDir)) mkdirSync(subDir, { recursive: true });
-      }
 
       writeFileSync(outputPath, html, "utf-8");
       console.log(`[prerender] Saved ${outputPath} (${html.length} bytes)`);

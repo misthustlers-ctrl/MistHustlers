@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import SEO from "@/components/SEO";
 import StarRating from "@/components/StarRating";
 import { getDemoBySlug } from "@/data/demoProjects";
 
@@ -9,6 +10,7 @@ export default function DemoViewer() {
   if (!project) {
     return (
       <div className="bg-basalt-canvas min-h-screen flex items-center justify-center">
+        <SEO page="notFound" robots="noindex, follow" />
         <main className="text-center">
           <h1 className="font-display text-4xl text-abyssal-ink mb-4">Demo not found</h1>
           <Link to="/projects" className="text-digital-orange underline font-body">Back to Projects</Link>
@@ -19,6 +21,15 @@ export default function DemoViewer() {
 
   return (
     <div className="bg-basalt-canvas min-h-screen flex flex-col">
+      <SEO
+        page="projects"
+        robots="noindex, follow"
+        overrides={{
+          title: `${project.title} Demo | MistHustlers`,
+          description: project.description,
+          canonical: `https://www.misthustlers.in/projects/demo/${project.slug}`,
+        }}
+      />
       <div className="sticky top-0 z-50 bg-abyssal-ink/90 backdrop-blur-xl border-b border-white/10">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-4 min-w-0">

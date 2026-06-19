@@ -4,9 +4,50 @@ import SEO from "@/components/SEO";
 import SchemaMarkup from "@/components/SchemaMarkup";
 import { useContent } from "@/utils/useContent";
 
+type ServiceStat = { value: string; label: string; desc?: string };
+type PricingTier = {
+  id: string;
+  name: string;
+  price: string;
+  description: string;
+  features: string[];
+  popular: boolean;
+  accent: string;
+  imageUrl?: string;
+};
+type ProcessStep = { step: string; title: string; desc: string; active?: boolean };
+type ServicesContent = {
+  hero: {
+    badge: string;
+    title: string[];
+    subtitle: string;
+    description?: string;
+    ctaPrimary: string;
+    ctaSecondary: string;
+    stats: ServiceStat[];
+  };
+  pricing: { tiers: PricingTier[] };
+  process: { steps: ProcessStep[] };
+  trust: { stats: ServiceStat[]; brands: string[] };
+};
+
+const SERVICES_DEFAULTS: ServicesContent = {
+  hero: {
+    badge: "Transparent Pricing for Real Execution",
+    title: ["Build with clarity.", "Ship with precision."],
+    subtitle: "Premium development services for startups, founders, and businesses.",
+    ctaPrimary: "Get a Quote",
+    ctaSecondary: "Start a Project",
+    stats: [],
+  },
+  pricing: { tiers: [] },
+  process: { steps: [] },
+  trust: { stats: [], brands: [] },
+};
+
 export default function Services() {
   const inquiryRef = useRef<HTMLDivElement>(null);
-  const c = useContent("services", { hero: { badge: "Transparent Pricing for Real Execution", title: ["Build with clarity.", "Ship with precision."], subtitle: "Premium development services for startups, founders, and businesses.", ctaPrimary: "Get a Quote", ctaSecondary: "Start a Project", stats: [] }, pricing: { tiers: [] }, process: { steps: [] }, trust: { stats: [], brands: [] } });
+  const c = useContent("services", SERVICES_DEFAULTS);
   const pricingTiers = c.pricing?.tiers || [];
   const processSteps = (c.process?.steps || []).map((s, i) => ({ ...s, active: i < 2 }));
   const trustStats = c.trust?.stats || [];

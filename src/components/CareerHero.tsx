@@ -33,7 +33,6 @@ export default function CareerHero({
 }) {
   const featuredInternship = opportunities.find((o) => o.type === "Internship") ?? opportunities[0];
   const hotEvent = opportunities.find((o) => o.title === "AI Automation Workshop") ?? opportunities[2];
-  const highPayingGig = opportunities.find((o) => o.title === "Motion Graphics Explainer Project") ?? opportunities[opportunities.length - 1];
   const heroCards = [featuredInternship, hotEvent, opportunities[3]].filter((x): x is Opportunity => !!x);
 
   const scrollToSection = (id: string) => {

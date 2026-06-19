@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import ScrollReveal from "@/components/ScrollReveal";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import FAQItem from "@/components/FAQItem";
@@ -61,7 +61,57 @@ const LOGO_DEFAULTS = {
   emojiRocket: "",
 };
 
-const HOME_DEFAULTS = {
+type HomeStat = { value: number; suffix?: string; label: string };
+type HomeJourneyStep = { step: string; title: string; desc: string };
+type HomeFeature = { title: string; desc: string };
+type HomeFaqItem = { q: string; a: string };
+type HomeProject = { title: string; category: string; visual?: string; imageUrl?: string; link?: string };
+
+type HomeContent = {
+  hero: {
+    badge: string;
+    title: string[];
+    highlightWord: string;
+    description: string;
+    tagline: string;
+    ctaPrimary: string;
+    ctaSecondary: string;
+  };
+  stats: HomeStat[];
+  brands: string[];
+  servicesTeaser: { badge: string; title: string; description: string; cta: string };
+  careerTeaser: { badge: string; title: string; description: string; cta: string };
+  journey: { badge: string; title: string; description: string };
+  journeySteps: HomeJourneyStep[];
+  mentorship: {
+    badge: string;
+    title: string;
+    description: string;
+    cta: string;
+    features: HomeFeature[];
+  };
+  projectsShowcase: {
+    enabled: boolean;
+    badge: string;
+    title: string;
+    projects: HomeProject[];
+  };
+  faq: {
+    badge: string;
+    title: string[];
+    items: HomeFaqItem[];
+  };
+  finalCta: {
+    title: string[];
+    highlightWord: string;
+    description: string;
+    cta: string;
+  };
+  faqData: HomeFaqItem[];
+  projects: HomeProject[];
+};
+
+const HOME_DEFAULTS: HomeContent = {
   hero: {
     badge: "Premium Ecosystem",
     title: ["LEARN.", "BUILD.", "EARN.", "GROW."],
@@ -252,7 +302,7 @@ export default function Home() {
               <ScrollReveal key={stat.label} delay={i * 0.1}>
                 <div className="text-center">
                   <div className="font-display text-[clamp(32px,5vw,56px)] tracking-[0.02em] text-abyssal-ink leading-none">
-                    <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+                    <AnimatedCounter target={stat.value} suffix={stat.suffix || ""} />
                   </div>
                   <p className="text-sm text-abyssal-ink/50 mt-2 font-medium font-body">{stat.label}</p>
                 </div>

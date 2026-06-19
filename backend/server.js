@@ -5,7 +5,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
 import crypto from "crypto";
-import { join, dirname } from "path";
+import { join, dirname, extname } from "path";
 import { fileURLToPath } from "url";
 import { existsSync, mkdirSync, writeFileSync } from "fs";
 import inquiryRoutes from "./routes/inquiry.routes.js";
@@ -22,6 +22,68 @@ const app = express();
 const PORT = process.env.PORT || 9000;
 
 app.set("trust proxy", 1);
+
+const PRIMARY_PUBLIC_ORIGIN = "https://www.misthustlers.in";
+const PRIMARY_PUBLIC_HOST = "www.misthustlers.in";
+const REDIRECT_PUBLIC_HOSTS = new Set(["misthustlers.in", "misthustlers.up.railway.app"]);
+const PUBLIC_PAGE_ROUTES = new Set([
+  "/",
+  "/services",
+  "/services/web-development",
+  "/services/automation",
+  "/services/mvp-development",
+  "/career",
+  "/projects",
+  "/about",
+  "/contact",
+  "/faq",
+  "/privacy-policy",
+  "/terms-of-service",
+  "/refund-policy",
+]);
+const DEMO_SLUGS = new Set([
+  "startup",
+  "restaurant",
+  "realestate",
+  "salon",
+  "clinic",
+  "gym",
+  "coaching",
+  "interior",
+  "manufacturer",
+  "ca-lawyer",
+]);
+
+function normalizePath(path) {
+  if (!path || path === "/") return "/";
+  return path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
+}
+
+function isDemoRoute(path) {
+  const match = normalizePath(path).match(/^\/projects\/demo\/([^/]+)$/);
+  return Boolean(match && DEMO_SLUGS.has(match[1]));
+}
+
+function isPublicPagePath(path) {
+  const normalized = normalizePath(path);
+  return PUBLIC_PAGE_ROUTES.has(normalized) || isDemoRoute(normalized);
+}
+
+function routeKeyForPath(path) {
+  const normalized = normalizePath(path);
+  return normalized === "/" ? "index" : normalized.slice(1).replace(/\//g, "-");
+}
+
+function isPrivatePath(path) {
+  return path.startsWith("/api") || path.startsWith("/admin") || path.startsWith("/uploads");
+}
+
+function isPublicBrowserPageRequest(req) {
+  if (!["GET", "HEAD"].includes(req.method)) return false;
+  if (isPrivatePath(req.path)) return false;
+  const accept = req.get("accept") || "";
+  return accept.includes("text/html") || accept.includes("*/*");
+}
 
 const uploadsDir = join(__dirname, "uploads");
 if (!existsSync(uploadsDir)) mkdirSync(uploadsDir, { recursive: true });
@@ -55,7 +117,7 @@ if (!process.env.GOOGLE_SHEETS_WEBHOOK_URL) {
   console.warn("[WARN] Google Sheet sync not configured. Set GOOGLE_SHEETS_WEBHOOK_URL to sync inquiries to a sheet.");
 }
 
-const corsOrigins = (process.env.CORS_ORIGIN || "http://localhost:5173").split(",").map(s => s.trim());
+const corsOrigins = (process.env.CORS_ORIGIN || "http://localhost:5173,https://www.misthustlers.in").split(",").map(s => s.trim());
 app.use(cors({ origin: corsOrigins }));
 app.use(morgan("short"));
 
@@ -100,6 +162,21 @@ app.use((req, res, next) => {
   if (req.path.startsWith("/api") || req.path.startsWith("/admin") || req.path.startsWith("/uploads")) {
     res.setHeader("X-Robots-Tag", "noindex, nofollow");
   }
+  next();
+});
+
+app.use((req, res, next) => {
+  if (!isPublicBrowserPageRequest(req)) return next();
+
+  const host = (req.get("host") || "").split(":")[0].toLowerCase();
+  const forwardedProto = (req.get("x-forwarded-proto") || req.protocol || "").split(",")[0].trim().toLowerCase();
+  const shouldRedirectHost = REDIRECT_PUBLIC_HOSTS.has(host);
+  const shouldRedirectProtocol = host === PRIMARY_PUBLIC_HOST && forwardedProto && forwardedProto !== "https";
+
+  if (shouldRedirectHost || shouldRedirectProtocol) {
+    return res.redirect(308, `${PRIMARY_PUBLIC_ORIGIN}${req.originalUrl}`);
+  }
+
   next();
 });
 
@@ -158,15 +235,15 @@ if (existsSync(adminDist)) {
 
 const frontendDist = join(__dirname, "..", "dist");
 if (existsSync(frontendDist)) {
-  app.use(express.static(frontendDist, staticOptions));
+  app.use(express.static(frontendDist, { ...staticOptions, index: false }));
 
   const prerenderedDir = join(frontendDist, "__prerendered");
   if (existsSync(prerenderedDir)) {
     app.use((req, res, next) => {
-      if (req.path.startsWith("/api") || req.path.startsWith("/admin") || req.path.startsWith("/uploads")) {
+      if (isPrivatePath(req.path) || !isPublicBrowserPageRequest(req)) {
         return next();
       }
-      const routeKey = req.path === "/" ? "index" : req.path.slice(1).replace(/\//g, "-");
+      const routeKey = routeKeyForPath(req.path);
       const filePath = join(prerenderedDir, routeKey + ".html");
       if (existsSync(filePath)) {
         return res.sendFile(filePath);
@@ -176,10 +253,16 @@ if (existsSync(frontendDist)) {
   }
 
   app.get("*", (req, res, next) => {
-    if (req.path.startsWith("/api") || req.path.startsWith("/admin") || req.path.startsWith("/uploads")) {
+    if (isPrivatePath(req.path)) {
       return next();
     }
-    res.sendFile(join(frontendDist, "index.html"));
+
+    if (extname(req.path)) {
+      return res.status(404).type("text/plain").send("Not found");
+    }
+
+    const status = isPublicPagePath(req.path) ? 200 : 404;
+    res.status(status).sendFile(join(frontendDist, "index.html"));
   });
 }
 

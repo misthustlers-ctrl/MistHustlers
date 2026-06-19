@@ -1,5 +1,5 @@
 export const SITE_NAME = "MistHustlers";
-export const SITE_URL = "https://misthustlers.up.railway.app";
+export const SITE_URL = (import.meta.env.VITE_SITE_URL || "https://www.misthustlers.in").replace(/\/$/, "");
 export const DEFAULT_OG_IMAGE = "/og-image.svg";
 export const TWITTER_HANDLE = "@misthustlers";
 export const SITE_LOCATION = "Indore, Madhya Pradesh";
@@ -23,6 +23,21 @@ export const PAGE_META: Record<string, PageMeta> = {
     title: "Web Development Services in Indore — MistHustlers",
     description: "Get your website, MVP, or automation system built by expert developers in Indore. Transparent pricing from ₹999. No agency overhead. Direct access.",
     canonical: `${SITE_URL}/services`,
+  },
+  webDevelopment: {
+    title: "Web Development Company in Indore | MistHustlers",
+    description: "Custom websites and web applications for startups and growing businesses. Explore web development services by MistHustlers in Indore.",
+    canonical: `${SITE_URL}/services/web-development`,
+  },
+  automation: {
+    title: "AI & Business Automation Services | MistHustlers",
+    description: "Automate repetitive business workflows, lead management and internal operations with practical AI and business automation solutions.",
+    canonical: `${SITE_URL}/services/automation`,
+  },
+  mvpDevelopment: {
+    title: "MVP Development for Startups | MistHustlers",
+    description: "Plan, design and build a focused MVP for your startup with clear scope, practical technology and scalable development support.",
+    canonical: `${SITE_URL}/services/mvp-development`,
   },
   career: {
     title: "Career & Opportunities — MistHustlers",

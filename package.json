@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --configLoader native",
-    "build": "cd backend && npm install && npx prisma generate && cd admin-ui && npm install && npm run build && cd ../.. && npx vite build --configLoader native",
+    "build": "cd backend && npm install && npx prisma generate && cd admin-ui && npm install && npm run build && cd ../.. && npx vite build --configLoader native && node scripts/prerender.mjs && node scripts/verify-seo.mjs",
     "start": "cd backend && npx prisma migrate deploy && node server.js",
     "server": "node backend/server.js",
     "prerender": "node scripts/prerender.mjs",
