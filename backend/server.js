@@ -25,6 +25,7 @@ app.set("trust proxy", 1);
 
 const PRIMARY_PUBLIC_ORIGIN = "https://www.misthustlers.in";
 const PRIMARY_PUBLIC_HOST = "www.misthustlers.in";
+const GOOGLE_VERIFICATION_PATH = "/google4367ff8b418c32a5.html";
 const REDIRECT_PUBLIC_HOSTS = new Set(["misthustlers.in", "misthustlers.up.railway.app"]);
 const PUBLIC_PAGE_ROUTES = new Set([
   "/",
@@ -166,6 +167,7 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
+  if (req.path === GOOGLE_VERIFICATION_PATH) return next();
   if (!isPublicBrowserPageRequest(req)) return next();
 
   const host = (req.get("host") || "").split(":")[0].toLowerCase();
