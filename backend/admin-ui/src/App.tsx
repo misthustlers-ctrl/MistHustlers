@@ -78,7 +78,7 @@ interface ToastState {
   type: 'success' | 'error';
 }
 
-type TabType = 'dashboard' | 'work' | 'leads' | 'career' | 'projects' | 'content' | 'media' | 'logo' | 'accounts' | 'bin';
+type TabType = 'dashboard' | 'work' | 'leads' | 'workers' | 'career' | 'projects' | 'content' | 'media' | 'logo' | 'accounts' | 'bin';
 type ModalType = 'job' | 'event' | 'program' | 'applicant' | 'project' | null;
 
 const API = '/api/admin';
@@ -128,6 +128,7 @@ const tabs: { id: TabType; label: string; icon: React.ElementType }[] = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { id: 'work', label: 'Client Work', icon: Handshake },
   { id: 'leads', label: 'Leads', icon: Mail },
+  { id: 'workers', label: 'Workers', icon: Users },
   { id: 'career', label: 'Career', icon: BriefcaseBusiness },
   { id: 'projects', label: 'Projects', icon: FolderKanban },
   { id: 'content', label: 'Content', icon: FileText },
@@ -138,8 +139,8 @@ const tabs: { id: TabType; label: string; icon: React.ElementType }[] = [
 ];
 
 const roleTabs: Record<AdminRole, TabType[]> = {
-  admin: ['dashboard', 'work', 'leads', 'career', 'projects', 'content', 'media', 'logo', 'accounts', 'bin'],
-  agent: ['dashboard', 'work', 'leads', 'career'],
+  admin: ['dashboard', 'work', 'leads', 'workers', 'career', 'projects', 'content', 'media', 'logo', 'accounts', 'bin'],
+  agent: ['dashboard', 'work', 'leads', 'workers', 'career'],
   partner: ['dashboard', 'work', 'projects'],
 };
 
@@ -457,6 +458,16 @@ const App: React.FC = () => {
   const filteredApplicants = activeFilter === 'all'
     ? applicants
     : applicants.filter((item) => item.status === activeFilter);
+  const opportunityById = useMemo(() => new Map(opportunities.map((item) => [item.id, item])), [opportunities]);
+  const workerCategoryGroups = useMemo(() => {
+    const groups = new Map<string, Applicant[]>();
+    applicants.forEach((item) => {
+      const opportunity = opportunityById.get(item.opportunityId);
+      const category = opportunity?.department || opportunity?.type || 'General';
+      groups.set(category, [...(groups.get(category) || []), item]);
+    });
+    return Array.from(groups.entries()).sort(([a], [b]) => a.localeCompare(b));
+  }, [applicants, opportunityById]);
 
   const setField = (field: string, value: string) => setFormData((current) => ({ ...current, [field]: value }));
 
@@ -988,7 +999,7 @@ const App: React.FC = () => {
       <nav className="flex-1 p-3 space-y-1">
         {visibleTabs.map((tab) => {
           const Icon = tab.icon;
-          const count = tab.id === 'leads' ? metrics.leads : tab.id === 'work' ? metrics.work : tab.id === 'bin' ? binItems.length : undefined;
+            const count = tab.id === 'leads' ? metrics.leads : tab.id === 'workers' ? applicants.length : tab.id === 'work' ? metrics.work : tab.id === 'bin' ? binItems.length : undefined;
           return (
             <button
               key={tab.id}
@@ -1362,6 +1373,70 @@ const App: React.FC = () => {
     </section>
   );
 
+  const renderWorkers = () => (
+    <section>
+      <div className="mb-4 flex items-end justify-between">
+        <div>
+          <div className="text-[11px] tracking-[1px] text-white/50">WORKER INQUIRIES</div>
+          <div className="text-lg font-semibold">Category-wise Worker Pipeline</div>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="text-xs text-white/40">{applicants.length} worker inquiries</div>
+          {isAdmin && <button onClick={() => openModal('applicant')} className="rounded-xl border border-white/20 px-3 py-1.5 text-[11px] hover:bg-white hover:text-black"><Plus className="mr-1 inline h-3 w-3" />Add Worker</button>}
+        </div>
+      </div>
+
+      <div className="mb-4 grid grid-cols-4 gap-3">
+        {workerCategoryGroups.map(([category, rows]) => (
+          <div key={category} className="rounded-2xl border border-white/10 bg-[#111] p-4">
+            <div className="text-[11px] uppercase tracking-[1px] text-white/40">{category}</div>
+            <div className="mt-2 text-3xl font-semibold tabular-nums">{rows.length}</div>
+            <div className="mt-1 text-[11px] text-white/40">
+              {rows.filter((item) => ['shortlisted', 'accepted'].includes(item.status)).length} shortlisted/accepted
+            </div>
+          </div>
+        ))}
+        {!workerCategoryGroups.length && <div className="col-span-4 rounded-2xl border border-white/10 bg-[#111] p-6 text-sm text-white/40">No worker inquiries yet.</div>}
+      </div>
+
+      <div className="mb-3 flex flex-wrap gap-1 text-[10px]">
+        {['all', 'new', 'reviewed', 'shortlisted', 'accepted', 'rejected'].map((filter) => (
+          <button key={filter} onClick={() => setActiveFilter(filter)} className={`rounded-lg border px-2 py-1 capitalize ${activeFilter === filter ? 'border-white bg-white text-black' : 'border-white/10 text-white/60 hover:bg-white/5'}`}>{filter}</button>
+        ))}
+      </div>
+
+      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111] text-sm">
+        {filteredApplicants.map((item) => {
+          const opportunity = opportunityById.get(item.opportunityId);
+          const category = opportunity?.department || opportunity?.type || 'General';
+          return (
+            <div key={item.id} className="grid grid-cols-[1.1fr_0.9fr_0.9fr_auto] gap-3 border-b border-white/10 px-5 py-4 last:border-b-0">
+              <button onClick={() => { setFormData({ name: item.name, email: item.email, phone: item.phone || '', status: item.status, resumeUrl: item.resumeUrl || '', coverLetter: item.coverLetter || '', opportunityId: String(item.opportunityId) }); setSelectedApplicant(item); }} className="min-w-0 text-left">
+                <div className="truncate font-medium">{item.name}</div>
+                <div className="truncate text-[11px] text-white/45">{item.email} {item.phone ? `| ${item.phone}` : ''}</div>
+              </button>
+              <div className="text-xs text-white/60">
+                <div className="truncate">{opportunity?.title || 'General worker inquiry'}</div>
+                <div className="text-white/35">{category}</div>
+              </div>
+              <div className="text-xs text-white/60">
+                <div>{new Date(item.createdAt).toLocaleDateString()}</div>
+                {item.resumeUrl && <a href={item.resumeUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-emerald-300 hover:underline">Profile <ExternalLink className="h-3 w-3" /></a>}
+              </div>
+              <div className="flex items-start gap-1.5">
+                <select value={item.status} onChange={(e) => updateApplicant(item.id, { status: e.target.value })} className="rounded-lg border border-white/10 bg-black px-2 py-1 text-[11px]">
+                  {['new', 'reviewed', 'shortlisted', 'accepted', 'rejected'].map((status) => <option key={status} value={status}>{status}</option>)}
+                </select>
+                {isAdmin && <button onClick={() => deleteApplicant(item.id)} className="rounded-lg border border-white/15 px-2 py-1.5 text-[11px] hover:bg-red-500"><Trash2 className="h-3 w-3" /></button>}
+              </div>
+            </div>
+          );
+        })}
+        {!filteredApplicants.length && <div className="p-8 text-center text-white/40 text-sm">No workers in this filter.</div>}
+      </div>
+    </section>
+  );
+
   const renderCareer = () => (
     <div className="grid grid-cols-5 gap-4">
       <section className="col-span-3">
@@ -1601,8 +1676,73 @@ const App: React.FC = () => {
   const renderServicesEditor = () => {
     if (!servicesContent) return <div className="text-center text-white/40 py-10">Loading...</div>;
     const c = servicesContent;
+    const serviceCategories = c.categories || [];
+    const serviceCards = c.serviceCards || [];
     return (
       <div className="space-y-6">
+        <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-semibold">Service Categories</h3>
+              <p className="mt-1 text-[11px] text-white/40">Create categories first, then assign individual services to them.</p>
+            </div>
+            <button onClick={() => updateContentField(setServicesContent, ['categories'], [...serviceCategories, { name: 'New Category', slug: 'new-category', description: '' }])} className="rounded-lg border border-white/15 px-3 py-1.5 text-xs hover:bg-white hover:text-black">Add Category</button>
+          </div>
+          <div className="space-y-3">
+            {serviceCategories.map((category: any, idx: number) => (
+              <div key={idx} className="rounded-xl bg-white/5 p-4">
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="text-xs font-semibold text-white/65">Category {idx + 1}</div>
+                  <button onClick={() => updateContentField(setServicesContent, ['categories'], serviceCategories.filter((_: any, i: number) => i !== idx))} className="rounded-lg border border-red-400/30 px-2 py-1 text-xs text-red-300 hover:bg-red-500 hover:text-white">Remove</button>
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                  <div><label className="block text-[11px] text-white/50 mb-1">Name</label><input className="field text-sm" value={category.name || ''} onChange={e => updateContentField(setServicesContent, ['categories', String(idx), 'name'], e.target.value)} /></div>
+                  <div><label className="block text-[11px] text-white/50 mb-1">Slug</label><input className="field text-sm" value={category.slug || ''} onChange={e => updateContentField(setServicesContent, ['categories', String(idx), 'slug'], e.target.value)} /></div>
+                  <div><label className="block text-[11px] text-white/50 mb-1">Description</label><input className="field text-sm" value={category.description || ''} onChange={e => updateContentField(setServicesContent, ['categories', String(idx), 'description'], e.target.value)} /></div>
+                </div>
+              </div>
+            ))}
+            {!serviceCategories.length && <div className="rounded-xl bg-white/5 p-4 text-sm text-white/40">No service categories yet.</div>}
+          </div>
+        </div>
+
+        <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-semibold">Services by Category</h3>
+              <p className="mt-1 text-[11px] text-white/40">Use this to manage every service offer under the correct category.</p>
+            </div>
+            <button onClick={() => updateContentField(setServicesContent, ['serviceCards'], [...serviceCards, { title: 'New Service', category: serviceCategories[0]?.name || 'General', description: '', price: '', link: '/services', enabled: true }])} className="rounded-lg border border-white/15 px-3 py-1.5 text-xs hover:bg-white hover:text-black">Add Service</button>
+          </div>
+          <div className="space-y-3">
+            {serviceCards.map((service: any, idx: number) => (
+              <div key={idx} className="rounded-xl bg-white/5 p-4">
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="text-xs font-semibold text-white/65">Service {idx + 1}</div>
+                  <button onClick={() => updateContentField(setServicesContent, ['serviceCards'], serviceCards.filter((_: any, i: number) => i !== idx))} className="rounded-lg border border-red-400/30 px-2 py-1 text-xs text-red-300 hover:bg-red-500 hover:text-white">Remove</button>
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                  <div><label className="block text-[11px] text-white/50 mb-1">Title</label><input className="field text-sm" value={service.title || ''} onChange={e => updateContentField(setServicesContent, ['serviceCards', String(idx), 'title'], e.target.value)} /></div>
+                  <div>
+                    <label className="block text-[11px] text-white/50 mb-1">Category</label>
+                    <select className="field text-sm" value={service.category || ''} onChange={e => updateContentField(setServicesContent, ['serviceCards', String(idx), 'category'], e.target.value)}>
+                      {[...new Set([service.category, ...serviceCategories.map((category: any) => category.name), 'General'].filter(Boolean))].map((name) => <option key={name} value={name}>{name}</option>)}
+                    </select>
+                  </div>
+                  <div><label className="block text-[11px] text-white/50 mb-1">Price / Range</label><input className="field text-sm" value={service.price || ''} onChange={e => updateContentField(setServicesContent, ['serviceCards', String(idx), 'price'], e.target.value)} /></div>
+                  <div className="col-span-2"><label className="block text-[11px] text-white/50 mb-1">Description</label><input className="field text-sm" value={service.description || ''} onChange={e => updateContentField(setServicesContent, ['serviceCards', String(idx), 'description'], e.target.value)} /></div>
+                  <div><label className="block text-[11px] text-white/50 mb-1">Link</label><input className="field text-sm" value={service.link || ''} onChange={e => updateContentField(setServicesContent, ['serviceCards', String(idx), 'link'], e.target.value)} /></div>
+                  <label className="col-span-3 flex items-center justify-between rounded-xl border border-white/10 bg-black/25 px-3 py-2 text-xs text-white/60">
+                    <span>Enabled in service manager</span>
+                    <input type="checkbox" checked={service.enabled !== false} onChange={e => updateContentField(setServicesContent, ['serviceCards', String(idx), 'enabled'], e.target.checked)} className="accent-white" />
+                  </label>
+                </div>
+              </div>
+            ))}
+            {!serviceCards.length && <div className="rounded-xl bg-white/5 p-4 text-sm text-white/40">No category services yet. Add one to start organizing offers.</div>}
+          </div>
+        </div>
+
         <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
           <h3 className="text-sm font-semibold mb-4">Pricing Section</h3>
           <div className="grid grid-cols-3 gap-4 mb-4">
@@ -2542,6 +2682,7 @@ const App: React.FC = () => {
       case 'dashboard': return renderDashboard();
       case 'work': return renderWork();
       case 'leads': return renderLeads();
+      case 'workers': return renderWorkers();
       case 'career': return renderCareer();
       case 'projects': return renderProjects();
       case 'content': return renderContentEditor();
