@@ -5,9 +5,44 @@ import { fileURLToPath } from "url";
 import { mkdir, unlink } from "fs/promises";
 import { existsSync } from "fs";
 import crypto from "crypto";
+import prisma from "../prisma/client.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const UPLOAD_DIR = join(__dirname, "..", process.env.UPLOAD_DIR || "uploads");
+
+function removeUploadUrl(value, targetUrl) {
+  if (Array.isArray(value)) return value.map((item) => removeUploadUrl(item, targetUrl));
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, removeUploadUrl(item, targetUrl)]));
+  }
+  return value === targetUrl ? "" : value;
+}
+
+async function cleanupUploadReferences(url) {
+  let updatedContent = 0;
+  let updatedDrafts = 0;
+  await prisma.mediaAsset.delete({ where: { url } }).catch(() => null);
+
+  const contentItems = await prisma.content.findMany();
+  for (const item of contentItems) {
+    const next = removeUploadUrl(item.data, url);
+    if (JSON.stringify(next) !== JSON.stringify(item.data)) {
+      await prisma.content.update({ where: { id: item.id }, data: { data: next } });
+      updatedContent += 1;
+    }
+  }
+
+  const draftItems = await prisma.contentDraft.findMany();
+  for (const item of draftItems) {
+    const next = removeUploadUrl(item.data, url);
+    if (JSON.stringify(next) !== JSON.stringify(item.data)) {
+      await prisma.contentDraft.update({ where: { id: item.id }, data: { data: next } });
+      updatedDrafts += 1;
+    }
+  }
+
+  return { updatedContent, updatedDrafts };
+}
 
 const storage = multer.diskStorage({
   destination: async (_, __, cb) => {
@@ -82,7 +117,8 @@ export async function deleteImage(req, res, next) {
       return res.status(400).json({ success: false, message: "Invalid filename" });
     }
     if (existsSync(filePath)) await unlink(filePath);
-    res.json({ success: true, message: "Deleted" });
+    const references = await cleanupUploadReferences(`/uploads/${safe}`);
+    res.json({ success: true, message: "Deleted", references });
   } catch (err) {
     next(err);
   }

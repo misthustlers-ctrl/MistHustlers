@@ -834,6 +834,24 @@ const App: React.FC = () => {
     }
   };
 
+  const deleteContent = async (page: string) => {
+    if (!window.confirm(`Remove saved ${page} content? A backup will stay in version history if live content exists.`)) return;
+    setContentSaving(true);
+    try {
+      await api(`${API}/content/${page}`, { method: 'DELETE' });
+      setError('');
+      setCurrentContentData({});
+      notify(`${page} content removed`);
+      fetchContent(page);
+      refreshAdminMeta();
+    } catch {
+      setError(`Failed to remove ${page} content`);
+      notify(`Failed to remove ${page} content`, 'error');
+    } finally {
+      setContentSaving(false);
+    }
+  };
+
   const restoreVersion = async (page: string, id: number) => {
     if (!window.confirm('Restore this version into draft?')) return;
     const res = await api<{ success: boolean; data: any }>(`${API}/content/${page}/restore`, { method: 'POST', body: JSON.stringify({ id }) });
@@ -2503,6 +2521,7 @@ const App: React.FC = () => {
     if (contentTab === 'career') return careerContent;
     if (contentTab === 'projects') return projectsContent;
     if (contentTab === 'contact') return contactContent;
+    if (contentTab === 'logo') return logoContent;
     if (contentTab === 'seo') return seoContent;
     return {};
   };
@@ -2514,6 +2533,7 @@ const App: React.FC = () => {
     if (contentTab === 'career') setCareerContent(next);
     if (contentTab === 'projects') setProjectsContent(next);
     if (contentTab === 'contact') setContactContent(next);
+    if (contentTab === 'logo') setLogoContent(next);
     if (contentTab === 'seo') setSeoContent(next);
   };
 
@@ -2587,6 +2607,9 @@ const App: React.FC = () => {
               </button>
               <button onClick={() => publishContent(contentTab, currentContentData())} disabled={contentSaving || !jsonValid} className="rounded-xl bg-white px-4 py-2 text-xs font-semibold text-black hover:bg-white/90 disabled:opacity-40">
                 Publish Live
+              </button>
+              <button onClick={() => deleteContent(contentTab)} disabled={contentSaving} className="rounded-xl border border-red-500/40 px-4 py-2 text-xs text-red-200 hover:bg-red-500 hover:text-white disabled:opacity-40">
+                Remove Saved
               </button>
               <button onClick={exportContent} className="rounded-xl border border-white/15 px-4 py-2 text-xs hover:bg-white/10">Export Backup</button>
               <label className="cursor-pointer rounded-xl border border-white/15 px-4 py-2 text-xs hover:bg-white/10">

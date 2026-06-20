@@ -1,6 +1,7 @@
 import { Router } from "express";
 import prisma from "../prisma/client.js";
 import { readFile, writeFile, readdir } from "fs/promises";
+import { existsSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { upload, uploadImage, deleteImage } from "../controllers/upload.controller.js";
@@ -10,6 +11,7 @@ import { getSheetIntegrationStatus } from "../services/sheet.service.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, "..", "data");
+const UPLOAD_DIR = join(__dirname, "..", process.env.UPLOAD_DIR || "uploads");
 const router = Router();
 
 router.use(auditLog);
@@ -81,6 +83,18 @@ function validateContentPayload(page, data) {
   const size = Buffer.byteLength(JSON.stringify(data), "utf-8");
   if (size > 750_000) return `${page} content is too large`;
   return null;
+}
+
+function removeMissingUploadUrls(value) {
+  if (Array.isArray(value)) return value.map(removeMissingUploadUrls);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, removeMissingUploadUrls(item)]));
+  }
+  if (typeof value === "string" && value.startsWith("/uploads/")) {
+    const filename = value.split("/").pop();
+    return filename && existsSync(join(UPLOAD_DIR, filename)) ? value : "";
+  }
+  return value;
 }
 
 async function moveToBin(type, data) {
@@ -692,9 +706,9 @@ router.get("/content/:page/draft", requireAdmin, async (req, res, next) => {
   try {
     res.setHeader("Cache-Control", "no-store");
     const draft = await prisma.contentDraft.findUnique({ where: { page } });
-    if (draft) return res.json({ success: true, data: draft.data, updatedAt: draft.updatedAt });
+    if (draft) return res.json({ success: true, data: removeMissingUploadUrls(draft.data), updatedAt: draft.updatedAt });
     const published = await prisma.content.findUnique({ where: { page } });
-    res.json({ success: true, data: published?.data || {}, updatedAt: published?.updatedAt || null });
+    res.json({ success: true, data: removeMissingUploadUrls(published?.data || {}), updatedAt: published?.updatedAt || null });
   } catch (err) { next(err); }
 });
 
@@ -760,7 +774,22 @@ router.get("/content/:page", requireAdmin, async (req, res, next) => {
     res.setHeader("Cache-Control", "no-store");
     const entry = await prisma.content.findUnique({ where: { page } });
     if (!entry) return res.json({ success: true, data: {} });
-    res.json({ success: true, data: entry.data });
+    res.json({ success: true, data: removeMissingUploadUrls(entry.data) });
+  } catch (err) { next(err); }
+});
+
+router.delete("/content/:page", requireAdmin, async (req, res, next) => {
+  const page = req.params.page;
+  if (!CONTENT_PAGES.includes(page)) return res.status(404).json({ error: "Page not found" });
+  try {
+    const previous = await prisma.content.findUnique({ where: { page } });
+    if (previous) {
+      await prisma.contentRevision.create({ data: { page, data: previous.data, action: "delete", createdBy: req.admin.username } });
+    }
+    await prisma.contentDraft.delete({ where: { page } }).catch(() => null);
+    await prisma.content.delete({ where: { page } }).catch(() => null);
+    await logActivity(req, "delete-content", `content:${page}`);
+    res.json({ success: true, data: {} });
   } catch (err) { next(err); }
 });
 
