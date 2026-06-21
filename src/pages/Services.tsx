@@ -110,11 +110,11 @@ export default function Services() {
       <main>
 
       {/* HERO */}
-      <section className="relative overflow-hidden pt-20">
+      <section className="services-cinematic-hero relative overflow-hidden pt-20">
         <div className="mx-auto max-w-[1200px] px-4 sm:px-6 md:px-8 pt-[88px] md:pt-[128px] pb-[64px] md:pb-[104px]">
           <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-[64px] lg:gap-[96px] items-center">
-            <div>
-              <div className="inline-flex max-w-full items-center gap-[10px] px-[14px] min-h-[36px] rounded-[14px] mb-[28px] border" style={{ backgroundColor: "var(--mh-surface)", borderColor: "rgba(var(--mh-text-rgb), 0.06)" }}>
+            <div className="services-cinematic-copy">
+              <div className="services-cinematic-badge inline-flex max-w-full items-center gap-[10px] px-[14px] min-h-[36px] rounded-[14px] mb-[28px] border" style={{ backgroundColor: "var(--mh-surface)", borderColor: "rgba(var(--mh-text-rgb), 0.06)" }}>
                 <div className="h-[7px] w-[7px] rounded-full animate-pulse" style={{ backgroundColor: "var(--mh-cta)" }}></div>
                 <span className="text-[12.5px] font-[600] tracking-[-0.01em] uppercase" style={{ color: "var(--mh-text)", letterSpacing: "0.04em" }}>
                   {c.hero?.badge || "Services"}
@@ -123,20 +123,23 @@ export default function Services() {
 
               <h1 className="font-display text-[42px] sm:text-[52px] md:text-[68px] leading-[0.94] md:leading-[0.92] tracking-[-0.035em] md:tracking-[-0.04em] mb-[24px]" style={{ color: "var(--mh-text)" }}>
                 {(Array.isArray(c.hero?.title) ? c.hero.title : [c.hero?.title || "Services"]).map((line: string, index: number) => (
-                  <span key={`${line}-${index}`} style={index > 0 ? { color: "rgba(var(--mh-text-rgb), 0.35)" } : undefined}>
-                    {line}{index < (Array.isArray(c.hero?.title) ? c.hero.title.length : 1) - 1 && <br />}
+                  <span key={`${line}-${index}`} className={`services-title-mask ${index === 1 ? "services-title-mask-delay" : ""}`}>
+                    <span className="services-title-line" style={index > 0 ? { color: "rgba(var(--mh-text-rgb), 0.35)" } : undefined}>
+                      {line}
+                    </span>
+                    {index < (Array.isArray(c.hero?.title) ? c.hero.title.length : 1) - 1 && <br />}
                   </span>
                 ))}
               </h1>
 
-              <p className="text-[18px] leading-[1.65] max-w-[540px] mb-[40px] font-[450]" style={{ color: "rgba(var(--mh-text-rgb), 0.72)" }}>
+              <p className="services-cinematic-subcopy text-[18px] leading-[1.65] max-w-[540px] mb-[40px] font-[450]" style={{ color: "rgba(var(--mh-text-rgb), 0.72)" }}>
                 {c.hero?.subtitle || c.hero?.description}
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-[14px]">
+              <div className="services-cinematic-actions relative flex flex-col sm:flex-row gap-[14px]">
                 <button
                   onClick={scrollToInquiry}
-                  className="h-[52px] px-[28px] rounded-[16px] text-[15.5px] font-[650] flex items-center justify-center gap-[10px] transition-all hover:translate-y-[-1px] active:translate-y-[0px] cursor-pointer"
+                  className="services-primary-cta h-[52px] px-[28px] rounded-[16px] text-[15.5px] font-[650] flex items-center justify-center gap-[10px] transition-all hover:translate-y-[-1px] active:translate-y-[0px] cursor-pointer"
                   style={{ backgroundColor: "var(--mh-cta)", color: "white", boxShadow: "0 12px 28px -8px rgba(var(--mh-cta-rgb), 0.35)" }}
                 >
                   {c.hero?.ctaPrimary || "Get a Quote"}
@@ -146,12 +149,17 @@ export default function Services() {
                 </button>
                 <button
                   onClick={scrollToInquiry}
-                  className="h-[52px] px-[28px] rounded-[16px] text-[15.5px] font-[600] border transition-all hover:translate-y-[-1px] active:translate-y-[0px] flex items-center justify-center gap-[10px] cursor-pointer"
+                  className="services-secondary-cta h-[52px] px-[28px] rounded-[16px] text-[15.5px] font-[600] border transition-all hover:translate-y-[-1px] active:translate-y-[0px] flex items-center justify-center gap-[10px] cursor-pointer"
                   style={{ backgroundColor: "var(--mh-surface)", borderColor: "rgba(var(--mh-text-rgb), 0.12)", color: "var(--mh-text)" }}
                 >
                   {c.hero?.ctaSecondary || "Start a Project"}
                   <span style={{ color: "rgba(var(--mh-text-rgb), 0.35)" }}>&rarr;</span>
                 </button>
+                <span className="services-simulated-cursor" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                    <path d="M4 3L17 12.2L11.1 13.3L8.3 19L4 3Z" fill="white" stroke="rgba(7,6,7,0.75)" strokeWidth="1.25" strokeLinejoin="round"/>
+                  </svg>
+                </span>
               </div>
 
               <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-[28px] mt-[34px] sm:mt-[44px] text-[13px] font-[500]" style={{ color: "rgba(var(--mh-text-rgb), 0.55)" }}>
@@ -174,7 +182,7 @@ export default function Services() {
             </div>
 
             {/* Abstract 3D Visual */}
-            <div className="relative hidden lg:block">
+            <div className="services-cinematic-visual relative hidden lg:block">
               <div className="relative aspect-[4/3.5] w-full">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="relative">
@@ -184,40 +192,45 @@ export default function Services() {
                       boxShadow: "inset 0 0 80px rgba(255,255,255,0.8), 0 32px 64px -16px rgba(var(--mh-text-rgb), 0.15)"
                     }}>
                       <div className="service-orbit-sheen absolute inset-0 rounded-full"></div>
-                      <div className="service-orbit-dots absolute inset-[12px] rounded-full">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                      </div>
                       <div className="absolute inset-0 rounded-full overflow-hidden">
                         <div className="service-orbit-ring absolute inset-[28%] rounded-full border" style={{ borderColor: "rgba(var(--mh-text-rgb), 0.08)", borderStyle: "dashed" }}></div>
                         <div className="service-orbit-ring service-orbit-ring-reverse absolute inset-[18%] rounded-full border" style={{ borderColor: "rgba(var(--mh-text-rgb), 0.05)" }}></div>
-                        <div className="absolute top-1/2 left-0 right-0 h-[1px] -translate-y-1/2" style={{ background: "linear-gradient(90deg, transparent, rgba(var(--mh-text-rgb),0.08), transparent)" }}></div>
-                        <div className="absolute left-1/2 top-0 bottom-0 w-[1px] -translate-x-1/2" style={{ background: "linear-gradient(180deg, transparent, rgba(var(--mh-text-rgb),0.08), transparent)" }}></div>
+                        <div className="service-connector-line service-connector-horizontal absolute top-1/2 left-0 right-0 h-[1px] -translate-y-1/2" style={{ background: "linear-gradient(90deg, transparent, rgba(var(--mh-text-rgb),0.08), transparent)" }}></div>
+                        <div className="service-connector-line service-connector-vertical absolute left-1/2 top-0 bottom-0 w-[1px] -translate-x-1/2" style={{ background: "linear-gradient(180deg, transparent, rgba(var(--mh-text-rgb),0.08), transparent)" }}></div>
                       </div>
-                      <div className="service-float-chip absolute top-[18%] left-[12%] h-[64px] w-[84px] rounded-[16px] backdrop-blur-[12px] flex flex-col items-center justify-center" style={{ backgroundColor: "rgba(var(--mh-surface-rgb), 0.85)", border: "1px solid rgba(var(--mh-text-rgb), 0.06)", boxShadow: "0 8px 24px -4px rgba(var(--mh-text-rgb), 0.12)" }}>
-                        <div className="text-[10px] font-[700] tracking-wider" style={{ color: "rgba(var(--mh-text-rgb), 0.35)" }}>PRICE</div>
-                        <div className="text-[15px] font-[700]" style={{ color: "var(--mh-text)" }}>&#x20B9;5K</div>
+                      <div className="service-orbit-label service-orbit-label-price">
+                        <div className="service-orbit-label-card h-[64px] w-[84px] rounded-[16px] backdrop-blur-[12px] flex flex-col items-center justify-center" style={{ backgroundColor: "rgba(var(--mh-surface-rgb), 0.85)", border: "1px solid rgba(var(--mh-text-rgb), 0.06)", boxShadow: "0 8px 24px -4px rgba(var(--mh-text-rgb), 0.12)" }}>
+                          <div className="text-[10px] font-[700] tracking-wider" style={{ color: "rgba(var(--mh-text-rgb), 0.35)" }}>PRICE</div>
+                          <div className="text-[15px] font-[700]" style={{ color: "var(--mh-text)" }}>&#x20B9;5K</div>
+                        </div>
                       </div>
-                      <div className="service-float-chip service-float-chip-delay absolute bottom-[22%] right-[10%] h-[56px] w-[76px] rounded-[15px] backdrop-blur-[12px] flex flex-col items-center justify-center" style={{ backgroundColor: "rgba(var(--mh-cta-rgb), 0.92)", border: "1px solid rgba(var(--mh-cta-rgb), 0.2)", boxShadow: "0 10px 28px -6px rgba(var(--mh-cta-rgb), 0.4)" }}>
-                        <div className="text-[10px] font-[700] text-white/80 tracking-wider">RATE</div>
-                        <div className="text-[14px] font-[700] text-white">PRO</div>
+                      <div className="service-orbit-label service-orbit-label-rate">
+                        <div className="service-orbit-label-card h-[56px] w-[76px] rounded-[15px] backdrop-blur-[12px] flex flex-col items-center justify-center" style={{ backgroundColor: "rgba(var(--mh-cta-rgb), 0.92)", border: "1px solid rgba(var(--mh-cta-rgb), 0.2)", boxShadow: "0 10px 28px -6px rgba(var(--mh-cta-rgb), 0.4)" }}>
+                          <div className="text-[10px] font-[700] text-white/80 tracking-wider">RATE</div>
+                          <div className="text-[14px] font-[700] text-white">PRO</div>
+                        </div>
                       </div>
-                      <div className="service-float-chip service-float-chip-delay-2 absolute top-[45%] right-[-8%] h-[48px] w-[68px] rounded-[14px] backdrop-blur-[12px] flex items-center justify-center" style={{ backgroundColor: "rgba(var(--mh-secondary-rgb), 0.92)", border: "1px solid rgba(var(--mh-secondary-rgb), 0.3)", boxShadow: "0 8px 20px -4px rgba(var(--mh-secondary-rgb), 0.35)" }}>
-                        <span className="text-[11px] font-[700] text-white tracking-wider">MVP</span>
+                      <div className="service-orbit-label service-orbit-label-mvp">
+                        <div className="service-orbit-label-card h-[48px] w-[68px] rounded-[14px] backdrop-blur-[12px] flex items-center justify-center" style={{ backgroundColor: "rgba(var(--mh-secondary-rgb), 0.92)", border: "1px solid rgba(var(--mh-secondary-rgb), 0.3)", boxShadow: "0 8px 20px -4px rgba(var(--mh-secondary-rgb), 0.35)" }}>
+                          <span className="text-[11px] font-[700] text-white tracking-wider">MVP</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="service-orbit-label service-orbit-label-fixed">
+                      <div className="service-orbit-label-card service-orbit-pill px-[13px] h-[40px] rounded-[13px] flex items-center gap-[8px] text-[12.5px] font-[600] backdrop-blur-[16px]" style={{ backgroundColor: "rgba(var(--mh-surface-rgb), 0.9)", border: "1px solid rgba(var(--mh-text-rgb), 0.06)", color: "var(--mh-text)", boxShadow: "0 12px 28px -8px rgba(var(--mh-text-rgb), 0.1)" }}>
+                        <div className="h-[7px] w-[7px] rounded-full" style={{ backgroundColor: "var(--mh-secondary)" }}></div>
+                        Fixed pricing
+                      </div>
+                    </div>
+                    <div className="service-orbit-label service-orbit-label-surprise">
+                      <div className="service-orbit-label-card service-orbit-pill px-[13px] h-[40px] rounded-[13px] flex items-center gap-[8px] text-[12.5px] font-[600] backdrop-blur-[16px]" style={{ backgroundColor: "rgba(var(--mh-text-rgb), 0.92)", border: "1px solid rgba(var(--mh-text-rgb), 0.08)", color: "var(--mh-surface)", boxShadow: "0 12px 32px -8px rgba(var(--mh-text-rgb), 0.25)" }}>
+                        <div className="h-[5px] w-[5px] rounded-full bg-[var(--mh-cta)]"></div>
+                        No surprises
                       </div>
                     </div>
                     <div className="service-orbit-ring absolute -inset-[24px] rounded-full border" style={{ borderColor: "rgba(var(--mh-cta-rgb), 0.15)", borderWidth: "1.5px", borderStyle: "dashed" }}></div>
                     <div className="service-orbit-ring service-orbit-ring-reverse absolute -inset-[48px] rounded-full border opacity-[0.4]" style={{ borderColor: "rgba(var(--mh-secondary-rgb), 0.2)", borderWidth: "1px" }}></div>
                   </div>
-                </div>
-                <div className="service-float-chip absolute top-[8%] -left-[4%] px-[13px] h-[40px] rounded-[13px] flex items-center gap-[8px] text-[12.5px] font-[600] backdrop-blur-[16px]" style={{ backgroundColor: "rgba(var(--mh-surface-rgb), 0.9)", border: "1px solid rgba(var(--mh-text-rgb), 0.06)", color: "var(--mh-text)", boxShadow: "0 12px 28px -8px rgba(var(--mh-text-rgb), 0.1)" }}>
-                  <div className="h-[7px] w-[7px] rounded-full" style={{ backgroundColor: "var(--mh-secondary)" }}></div>
-                  Fixed pricing
-                </div>
-                <div className="service-float-chip service-float-chip-delay absolute bottom-[14%] -right-[6%] px-[13px] h-[40px] rounded-[13px] flex items-center gap-[8px] text-[12.5px] font-[600] backdrop-blur-[16px]" style={{ backgroundColor: "rgba(var(--mh-text-rgb), 0.92)", border: "1px solid rgba(var(--mh-text-rgb), 0.08)", color: "var(--mh-surface)", boxShadow: "0 12px 32px -8px rgba(var(--mh-text-rgb), 0.25)" }}>
-                  <div className="h-[5px] w-[5px] rounded-full bg-[var(--mh-cta)]"></div>
-                  No surprises
                 </div>
               </div>
             </div>
