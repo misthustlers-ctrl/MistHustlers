@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import { PAGE_META, SITE_URL, SITE_NAME } from "@/utils/metadata";
 import { useContent } from "@/utils/useContent";
+import { DEMO_PROJECTS } from "@/data/demoProjects";
 
 const SEO_DEFAULTS = { siteName: SITE_NAME, ogImage: "" };
 
@@ -51,6 +52,7 @@ const pageTypes: Record<string, string> = {
   about: "AboutPage",
   contact: "ContactPage",
   faq: "FAQPage",
+  projects: "CollectionPage",
 };
 
 const serviceDetails: Record<string, { name: string; description: string; url: string }> = {
@@ -219,6 +221,21 @@ function breadcrumbSchema(page: string) {
   };
 }
 
+function projectsItemListSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "MistHustlers Projects and Business Previews",
+    itemListElement: DEMO_PROJECTS.map((project, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: `${SITE_URL}/projects/demo/${project.slug}`,
+      name: project.title,
+      description: project.purpose || project.description,
+    })),
+  };
+}
+
 export default function SchemaMarkup({ page, faq }: SchemaProps) {
   const logo = useContent("logo", LOGO_DEFAULTS);
   const seo = useContent("seo", SEO_DEFAULTS);
@@ -235,6 +252,11 @@ export default function SchemaMarkup({ page, faq }: SchemaProps) {
     email: "misthustlers@gmail.com",
     telephone: "+91 888 993 7648",
     description: "Premium web development and automation services for startups and founders in Indore. We build websites, MVPs, and AI automation pipelines.",
+    founder: {
+      "@type": "Person",
+      name: "Naveen Salve",
+      jobTitle: "Founder",
+    },
     address: SITE_ADDRESS,
     sameAs: [
       "https://github.com/NaveenSalve",
@@ -289,9 +311,10 @@ export default function SchemaMarkup({ page, faq }: SchemaProps) {
     webPageSchema(page),
     breadcrumbSchema(page),
     serviceSchema(page),
+    page === "projects" ? projectsItemListSchema() : undefined,
   ];
 
-  if ((page === "home" || page === "faq") && faq && faq.length > 0) {
+  if ((page === "home" || page === "faq" || page === "projects") && faq && faq.length > 0) {
     allSchemas.push(faqSchema(faq, page));
   }
 

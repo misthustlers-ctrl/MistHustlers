@@ -1,74 +1,22 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-
-const STORAGE_KEY = "mh-demo-ratings";
-
-type RatingData = Record<string, number>;
-
-function loadRatings(): RatingData {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-  } catch {
-    return {};
-  }
-}
-
-function saveRatings(ratings: RatingData) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(ratings));
-}
-
 export default function StarRating({
-  slug,
   defaultRating = 0,
   size = 24,
+  label = "MistHustlers Quality Score",
 }: {
   slug: string;
   defaultRating?: number;
   size?: number;
+  label?: string;
 }) {
-  const [rating, setRating] = useState(0);
-  const [hovered, setHovered] = useState(0);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    const ratings = loadRatings();
-    if (ratings[slug] !== undefined) {
-      setRating(ratings[slug]);
-    } else {
-      setRating(defaultRating);
-    }
-    setLoaded(true);
-  }, [slug, defaultRating]);
-
-  const handleClick = (value: number) => {
-    const ratings = loadRatings();
-    const newRating = rating === value ? 0 : value;
-    ratings[slug] = newRating;
-    saveRatings(ratings);
-    setRating(newRating);
-  };
-
-  if (!loaded) return null;
-
-  const display = hovered || rating;
+  const display = Math.max(0, Math.min(5, defaultRating));
 
   return (
-    <div className="flex items-center gap-0.5" onMouseLeave={() => setHovered(0)}>
-      {[1, 2, 3, 4, 5].map((star) => {
-        const fillPercent = Math.min(1, Math.max(0, display - (star - 1)));
-
-        return (
-          <motion.button
-            key={star}
-            type="button"
-            whileHover={{ scale: 1.2 }}
-            whileTap={{ scale: 0.85 }}
-            onClick={() => handleClick(star)}
-            onMouseEnter={() => setHovered(star)}
-            className="cursor-pointer relative"
-            aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
-            style={{ width: size, height: size }}
-          >
+    <div className="flex flex-wrap items-center gap-2">
+      <div className="flex items-center gap-0.5" role="img" aria-label={`${label}: ${display}/5. This is an internal project assessment, not a customer review.`}>
+        {[1, 2, 3, 4, 5].map((star) => {
+          const fillPercent = Math.min(1, Math.max(0, display - (star - 1)));
+          return (
+            <span key={star} className="relative inline-block" style={{ width: size, height: size }} aria-hidden="true">
             <svg width={size} height={size} viewBox="0 0 24 24" className="absolute inset-0">
               <polygon
                 points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
@@ -95,14 +43,19 @@ export default function StarRating({
                 strokeLinejoin="round"
               />
             </svg>
-          </motion.button>
-        );
-      })}
-      {display > 0 && (
-        <span className="ml-2 text-sm text-abyssal-ink/50 font-body">
-          {display}/5
-        </span>
-      )}
+          </span>
+          );
+        })}
+      </div>
+      <span className="text-sm text-abyssal-ink/55 font-body">{display}/5</span>
+      <details className="group relative">
+        <summary className="cursor-pointer list-none rounded-full border border-abyssal-ink/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-abyssal-ink/55 outline-none transition-colors hover:bg-abyssal-ink hover:text-white focus-visible:ring-2 focus-visible:ring-digital-orange font-body">
+          {label}
+        </summary>
+        <div className="absolute bottom-full left-0 z-20 mb-2 w-64 rounded-2xl bg-abyssal-ink p-3 text-xs leading-relaxed text-white shadow-xl font-body">
+          Internally assessed based on design, responsiveness, usability, feature completeness and industry relevance. This is not a customer-review rating.
+        </div>
+      </details>
     </div>
   );
 }

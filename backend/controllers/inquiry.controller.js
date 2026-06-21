@@ -14,8 +14,14 @@ export async function submitInquiry(req, res, next) {
       await sendInquiryEmail({ name, email, phone, company: company || "", service, budget, message });
       inquiry = await prisma.inquiry.update({ where: { id: inquiry.id }, data: { emailStatus: "sent" } });
     } catch (emailErr) {
-      console.error("[INQUIRY EMAIL FAILED]", emailErr.message);
-      inquiry = await prisma.inquiry.update({ where: { id: inquiry.id }, data: { emailStatus: "failed" } });
+      const isMissingMailConfig = emailErr.code === "MAIL_NOT_CONFIGURED";
+      if (isMissingMailConfig) {
+        console.warn("[INQUIRY EMAIL SKIPPED]", emailErr.message);
+        inquiry = await prisma.inquiry.update({ where: { id: inquiry.id }, data: { emailStatus: "skipped" } });
+      } else {
+        console.error("[INQUIRY EMAIL FAILED]", emailErr.message);
+        inquiry = await prisma.inquiry.update({ where: { id: inquiry.id }, data: { emailStatus: "failed" } });
+      }
     }
 
     const sheetResult = await syncInquiryToSheet(inquiry);

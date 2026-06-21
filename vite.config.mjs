@@ -42,6 +42,7 @@ export default defineConfig({
   },
   server: {
     port: 5174,
+    allowedHosts: [".trycloudflare.com", "localhost", "127.0.0.1"],
     hmr: {
       clientPort: 5174,
     },

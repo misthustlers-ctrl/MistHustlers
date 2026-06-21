@@ -15,8 +15,8 @@ export interface PageMeta {
 
 export const PAGE_META: Record<string, PageMeta> = {
   home: {
-    title: "Web Development & Automation Services in Indore — MistHustlers",
-    description: "Premium web development, MVP building, and automation services in Indore for startups and founders. Fixed pricing, 48h response. From ₹999.",
+    title: "MistHustlers | Website, MVP & AI Automation Company",
+    description: "MistHustlers builds business websites, MVPs and AI automation solutions for startups, founders and growing businesses in Indore and across India.",
     canonical: SITE_URL,
   },
   services: {
@@ -45,8 +45,8 @@ export const PAGE_META: Record<string, PageMeta> = {
     canonical: `${SITE_URL}/career`,
   },
   projects: {
-    title: "Web Development Portfolio — MistHustlers Indore",
-    description: "Real projects built by MistHustlers in Indore. Automation dashboards, AI pipelines, e-commerce platforms, and more. See our work.",
+    title: "Projects, Website Demos & Digital Products | MistHustlers",
+    description: "Explore business website previews, MVP concepts and internal products designed and developed by MistHustlers.",
     canonical: `${SITE_URL}/projects`,
   },
   notFound: {

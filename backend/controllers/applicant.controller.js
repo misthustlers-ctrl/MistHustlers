@@ -41,7 +41,11 @@ export async function submitApplicant(req, res, next) {
     try {
       await sendApplicantEmail({ name, email, phone, resumeUrl, coverLetter, opportunity });
     } catch (emailErr) {
-      console.error("[APPLICANT EMAIL FAILED]", emailErr.message);
+      if (emailErr.code === "MAIL_NOT_CONFIGURED") {
+        console.warn("[APPLICANT EMAIL SKIPPED]", emailErr.message);
+      } else {
+        console.error("[APPLICANT EMAIL FAILED]", emailErr.message);
+      }
     }
 
     res.status(201).json({

@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import { upload, uploadImage, deleteImage } from "../controllers/upload.controller.js";
 import { auditLog } from "../middleware/audit.middleware.js";
 import { allowRoles, createSessionToken, hashPassword, requireAdmin } from "../middleware/admin-auth.middleware.js";
+import { getMailIntegrationStatus } from "../services/mail.service.js";
 import { getSheetIntegrationStatus } from "../services/sheet.service.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -27,7 +28,7 @@ async function writeJSON(file, data) {
 const CONTENT_PAGES = ["home", "about", "services", "career", "projects", "contact", "logo", "seo"];
 const ACCOUNT_ROLES = ["agent", "partner"];
 const INQUIRY_STATUSES = ["new", "contacted", "archived"];
-const EMAIL_STATUSES = ["pending", "sent", "failed"];
+const EMAIL_STATUSES = ["pending", "sent", "failed", "skipped"];
 const SHEET_STATUSES = ["pending", "sent", "failed", "skipped"];
 const OPPORTUNITY_STATUSES = ["open", "paused", "closed", "archived"];
 const APPLICANT_STATUSES = ["new", "reviewed", "shortlisted", "accepted", "rejected"];
@@ -163,11 +164,7 @@ router.get("/integrations/overview", requireAdmin, async (_, res, next) => {
     }, {});
 
     res.json({
-      gmail: {
-        configured: Boolean(process.env.SMTP_EMAIL && process.env.SMTP_PASSWORD && process.env.EMAIL_TO),
-        from: process.env.SMTP_EMAIL ? process.env.SMTP_EMAIL.replace(/(^.).*(@.*$)/, "$1***$2") : null,
-        to: process.env.EMAIL_TO ? process.env.EMAIL_TO.replace(/(^.).*(@.*$)/, "$1***$2") : null,
-      },
+      gmail: getMailIntegrationStatus(),
       googleSheet: getSheetIntegrationStatus(),
       submissions: {
         total,

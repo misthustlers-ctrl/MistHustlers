@@ -43,7 +43,7 @@ interface DeployStatus {
   service: string; environment: string; gitCommit: string; deployId: string; checkedAt: string;
 }
 interface IntegrationOverview {
-  gmail: { configured: boolean; from?: string | null; to?: string | null };
+  gmail: { configured: boolean; from?: string | null; to?: string | null; missing?: string[] };
   googleSheet: { configured: boolean; mode: string };
   submissions: {
     total: number;
@@ -1150,12 +1150,15 @@ const App: React.FC = () => {
             <div className="rounded-xl bg-white/5 p-4">
               <div className="mb-2 flex items-center justify-between text-xs">
                 <span className="text-white/45">Gmail</span>
-                <span className={integrationOverview?.gmail.configured ? 'text-emerald-300' : 'text-red-300'}>
-                  {integrationOverview?.gmail.configured ? 'Configured' : 'Missing env'}
+                <span className={integrationOverview?.gmail.configured ? 'text-emerald-300' : 'text-yellow-300'}>
+                  {integrationOverview?.gmail.configured ? 'Configured' : 'Not connected'}
                 </span>
               </div>
               <div className="text-2xl font-semibold tabular-nums">{deliveryCount('email', 'sent')}</div>
-              <div className="text-[11px] text-white/40">sent / {deliveryCount('email', 'failed')} failed</div>
+              <div className="text-[11px] text-white/40">sent / {deliveryCount('email', 'failed')} failed / {deliveryCount('email', 'skipped')} skipped</div>
+              {!integrationOverview?.gmail.configured && integrationOverview?.gmail.missing?.length ? (
+                <div className="mt-2 text-[10px] text-yellow-200/70">Missing: {integrationOverview.gmail.missing.join(', ')}</div>
+              ) : null}
             </div>
             <div className="rounded-xl bg-white/5 p-4">
               <div className="mb-2 flex items-center justify-between text-xs">

@@ -6,8 +6,25 @@ const SERVICE_TIER_LABELS = {
   premium: "PREMIUM (₹15,000 – ₹50,000+)",
 };
 
-export async function sendInquiryEmail({ name, email, phone, company, service, budget, message }) {
-  const transporter = nodemailer.createTransport({
+export function getMailIntegrationStatus() {
+  const missing = ["SMTP_EMAIL", "SMTP_PASSWORD", "EMAIL_TO"].filter((key) => !process.env[key]);
+  return {
+    configured: missing.length === 0,
+    missing,
+    from: process.env.SMTP_EMAIL ? process.env.SMTP_EMAIL.replace(/(^.).*(@.*$)/, "$1***$2") : null,
+    to: process.env.EMAIL_TO ? process.env.EMAIL_TO.replace(/(^.).*(@.*$)/, "$1***$2") : null,
+  };
+}
+
+function createMailTransporter() {
+  const status = getMailIntegrationStatus();
+  if (!status.configured) {
+    const err = new Error(`SMTP is not configured (${status.missing.join(", ")})`);
+    err.code = "MAIL_NOT_CONFIGURED";
+    throw err;
+  }
+
+  return nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
     secure: false,
@@ -19,6 +36,10 @@ export async function sendInquiryEmail({ name, email, phone, company, service, b
     greetingTimeout: 10000,
     socketTimeout: 10000,
   });
+}
+
+export async function sendInquiryEmail({ name, email, phone, company, service, budget, message }) {
+  const transporter = createMailTransporter();
 
   const timestamp = new Date().toLocaleString("en-IN", {
     timeZone: "Asia/Kolkata",
@@ -55,18 +76,7 @@ Submitted At: ${timestamp}
 }
 
 export async function sendApplicantEmail({ name, email, phone, resumeUrl, coverLetter, opportunity }) {
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    auth: {
-      user: process.env.SMTP_EMAIL,
-      pass: process.env.SMTP_PASSWORD,
-    },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
-  });
+  const transporter = createMailTransporter();
 
   const timestamp = new Date().toLocaleString("en-IN", {
     timeZone: "Asia/Kolkata",

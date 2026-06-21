@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import JoinEcosystemModal from "./JoinEcosystemModal";
 import { useContent } from "@/utils/useContent";
 
 const NAV_LINKS = [
@@ -21,7 +20,6 @@ const LOGO_DEFAULTS = {
 export default function GlobalNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
   const [logoFailed, setLogoFailed] = useState(false);
   const location = useLocation();
   const logo = useContent("logo", LOGO_DEFAULTS);
@@ -88,12 +86,12 @@ export default function GlobalNavbar() {
                 {link.label}
               </Link>
             ))}
-            <button
-              onClick={() => setModalOpen(true)}
+            <Link
+              to="/contact"
               className="magnetic-btn bg-digital-orange text-white px-6 py-2.5 rounded-[800px] text-sm font-semibold cursor-pointer font-body"
             >
-              Join Ecosystem
-            </button>
+              Start Project
+            </Link>
           </div>
 
           <button
@@ -129,19 +127,18 @@ export default function GlobalNavbar() {
                     {link.label}
                   </Link>
                 ))}
-                <button
-                  onClick={() => { setMobileOpen(false); setModalOpen(true); }}
+                <Link
+                  to="/contact"
+                  onClick={() => setMobileOpen(false)}
                   className="magnetic-btn bg-digital-orange text-white px-6 py-3 rounded-[800px] text-sm font-semibold text-center cursor-pointer font-body"
                 >
-                  Join Ecosystem
-                </button>
+                  Start Project
+                </Link>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </nav>
-
-      <JoinEcosystemModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </>
   );
 }

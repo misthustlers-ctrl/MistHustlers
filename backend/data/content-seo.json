@@ -1,12 +1,12 @@
 {
   "siteName": "MistHustlers",
-  "siteUrl": "https://misthustlers.up.railway.app",
-  "defaultTitle": "MistHustlers - Web Development & Automation Services",
-  "defaultDescription": "MistHustlers builds websites, MVPs, automation systems, and digital products for founders, students, and businesses.",
+  "siteUrl": "https://www.misthustlers.in",
+  "defaultTitle": "MistHustlers | Website, MVP & AI Automation Company",
+  "defaultDescription": "MistHustlers builds business websites, MVPs, AI automation systems and related digital solutions for startups, founders and growing businesses.",
   "pages": {
     "home": {
-      "title": "MistHustlers - Learn, Build, Earn, Grow",
-      "description": "A premium ecosystem for ambitious students, developers, founders, and future builders."
+      "title": "MistHustlers | Website, MVP & AI Automation Company",
+      "description": "MistHustlers builds business websites, MVPs and AI automation solutions for startups, founders and growing businesses in Indore and across India."
     },
     "services": {
       "title": "Services - MistHustlers",
@@ -17,8 +17,8 @@
       "description": "Jobs, internships, events, programs, mentorship, and real builder opportunities."
     },
     "projects": {
-      "title": "Projects - MistHustlers",
-      "description": "Explore projects, demos, and shipped work by MistHustlers builders and partners."
+      "title": "Projects, Website Demos & Digital Products | MistHustlers",
+      "description": "Explore business website previews, MVP concepts and internal products designed and developed by MistHustlers."
     },
     "contact": {
       "title": "Contact - MistHustlers",

@@ -2,6 +2,7 @@ import { useRef } from "react";
 import ServiceInquiryForm from "@/components/ServiceInquiryForm";
 import SEO from "@/components/SEO";
 import SchemaMarkup from "@/components/SchemaMarkup";
+import ScrollReveal from "@/components/ScrollReveal";
 import { useContent } from "@/utils/useContent";
 
 type ServiceStat = { value: string; label: string; desc?: string };
@@ -16,6 +17,14 @@ type PricingTier = {
   imageUrl?: string;
 };
 type ProcessStep = { step: string; title: string; desc: string; active?: boolean };
+type ServiceCard = {
+  title: string;
+  category: string;
+  description: string;
+  price?: string;
+  link?: string;
+  enabled?: boolean;
+};
 type ServicesContent = {
   hero: {
     badge: string;
@@ -27,9 +36,45 @@ type ServicesContent = {
     stats: ServiceStat[];
   };
   pricing: { tiers: PricingTier[] };
+  serviceCards?: ServiceCard[];
   process: { steps: ProcessStep[] };
   trust: { stats: ServiceStat[]; brands: string[] };
 };
+
+const SERVICE_CARD_DEFAULTS: ServiceCard[] = [
+  {
+    title: "Business Websites",
+    category: "Website",
+    description: "Conversion-focused, responsive websites designed to improve credibility, explain services and generate inquiries.",
+    price: "From ₹4,999",
+    link: "/services/web-development",
+    enabled: true,
+  },
+  {
+    title: "MVP Development",
+    category: "Product",
+    description: "Functional first versions for founders who need to validate, demonstrate and launch a product idea.",
+    price: "From ₹15,000",
+    link: "/services/mvp-development",
+    enabled: true,
+  },
+  {
+    title: "AI & Workflow Automation",
+    category: "Automation",
+    description: "Practical automation systems that connect tools, reduce repetitive work and improve lead or operations workflows.",
+    price: "From ₹5,000",
+    link: "/services/automation",
+    enabled: true,
+  },
+  {
+    title: "Website Maintenance & Support",
+    category: "Support",
+    description: "Updates, bug fixes, hosting support, domain and SSL help, backups, uptime checks and performance assistance.",
+    price: "From ₹2,999/mo",
+    link: "/contact",
+    enabled: true,
+  },
+];
 
 const SERVICES_DEFAULTS: ServicesContent = {
   hero: {
@@ -49,6 +94,7 @@ export default function Services() {
   const inquiryRef = useRef<HTMLDivElement>(null);
   const c = useContent("services", SERVICES_DEFAULTS);
   const pricingTiers = c.pricing?.tiers || [];
+  const serviceCards = (c.serviceCards?.length ? c.serviceCards : SERVICE_CARD_DEFAULTS).filter((item) => item.enabled !== false);
   const processSteps = (c.process?.steps || []).map((s, i) => ({ ...s, active: i < 2 }));
   const trustStats = c.trust?.stats || [];
   const brands = c.trust?.brands || [];
@@ -132,38 +178,44 @@ export default function Services() {
               <div className="relative aspect-[4/3.5] w-full">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="relative">
-                    <div className="h-[320px] w-[320px] rounded-full relative" style={{
+                    <div className="service-orbit-core h-[320px] w-[320px] rounded-full relative" style={{
                       background: "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(247,246,242,0.6) 40%, rgba(226,226,223,0.3))",
                       border: "1px solid rgba(var(--mh-text-rgb), 0.06)",
                       boxShadow: "inset 0 0 80px rgba(255,255,255,0.8), 0 32px 64px -16px rgba(var(--mh-text-rgb), 0.15)"
                     }}>
+                      <div className="service-orbit-sheen absolute inset-0 rounded-full"></div>
+                      <div className="service-orbit-dots absolute inset-[12px] rounded-full">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
                       <div className="absolute inset-0 rounded-full overflow-hidden">
-                        <div className="absolute inset-[28%] rounded-full border" style={{ borderColor: "rgba(var(--mh-text-rgb), 0.08)", borderStyle: "dashed" }}></div>
-                        <div className="absolute inset-[18%] rounded-full border" style={{ borderColor: "rgba(var(--mh-text-rgb), 0.05)" }}></div>
+                        <div className="service-orbit-ring absolute inset-[28%] rounded-full border" style={{ borderColor: "rgba(var(--mh-text-rgb), 0.08)", borderStyle: "dashed" }}></div>
+                        <div className="service-orbit-ring service-orbit-ring-reverse absolute inset-[18%] rounded-full border" style={{ borderColor: "rgba(var(--mh-text-rgb), 0.05)" }}></div>
                         <div className="absolute top-1/2 left-0 right-0 h-[1px] -translate-y-1/2" style={{ background: "linear-gradient(90deg, transparent, rgba(var(--mh-text-rgb),0.08), transparent)" }}></div>
                         <div className="absolute left-1/2 top-0 bottom-0 w-[1px] -translate-x-1/2" style={{ background: "linear-gradient(180deg, transparent, rgba(var(--mh-text-rgb),0.08), transparent)" }}></div>
                       </div>
-                      <div className="absolute top-[18%] left-[12%] h-[64px] w-[84px] rounded-[16px] backdrop-blur-[12px] flex flex-col items-center justify-center" style={{ backgroundColor: "rgba(var(--mh-surface-rgb), 0.85)", border: "1px solid rgba(var(--mh-text-rgb), 0.06)", boxShadow: "0 8px 24px -4px rgba(var(--mh-text-rgb), 0.12)" }}>
+                      <div className="service-float-chip absolute top-[18%] left-[12%] h-[64px] w-[84px] rounded-[16px] backdrop-blur-[12px] flex flex-col items-center justify-center" style={{ backgroundColor: "rgba(var(--mh-surface-rgb), 0.85)", border: "1px solid rgba(var(--mh-text-rgb), 0.06)", boxShadow: "0 8px 24px -4px rgba(var(--mh-text-rgb), 0.12)" }}>
                         <div className="text-[10px] font-[700] tracking-wider" style={{ color: "rgba(var(--mh-text-rgb), 0.35)" }}>PRICE</div>
                         <div className="text-[15px] font-[700]" style={{ color: "var(--mh-text)" }}>&#x20B9;5K</div>
                       </div>
-                      <div className="absolute bottom-[22%] right-[10%] h-[56px] w-[76px] rounded-[15px] backdrop-blur-[12px] flex flex-col items-center justify-center" style={{ backgroundColor: "rgba(var(--mh-cta-rgb), 0.92)", border: "1px solid rgba(var(--mh-cta-rgb), 0.2)", boxShadow: "0 10px 28px -6px rgba(var(--mh-cta-rgb), 0.4)" }}>
+                      <div className="service-float-chip service-float-chip-delay absolute bottom-[22%] right-[10%] h-[56px] w-[76px] rounded-[15px] backdrop-blur-[12px] flex flex-col items-center justify-center" style={{ backgroundColor: "rgba(var(--mh-cta-rgb), 0.92)", border: "1px solid rgba(var(--mh-cta-rgb), 0.2)", boxShadow: "0 10px 28px -6px rgba(var(--mh-cta-rgb), 0.4)" }}>
                         <div className="text-[10px] font-[700] text-white/80 tracking-wider">RATE</div>
                         <div className="text-[14px] font-[700] text-white">PRO</div>
                       </div>
-                      <div className="absolute top-[45%] right-[-8%] h-[48px] w-[68px] rounded-[14px] backdrop-blur-[12px] flex items-center justify-center" style={{ backgroundColor: "rgba(var(--mh-secondary-rgb), 0.92)", border: "1px solid rgba(var(--mh-secondary-rgb), 0.3)", boxShadow: "0 8px 20px -4px rgba(var(--mh-secondary-rgb), 0.35)" }}>
+                      <div className="service-float-chip service-float-chip-delay-2 absolute top-[45%] right-[-8%] h-[48px] w-[68px] rounded-[14px] backdrop-blur-[12px] flex items-center justify-center" style={{ backgroundColor: "rgba(var(--mh-secondary-rgb), 0.92)", border: "1px solid rgba(var(--mh-secondary-rgb), 0.3)", boxShadow: "0 8px 20px -4px rgba(var(--mh-secondary-rgb), 0.35)" }}>
                         <span className="text-[11px] font-[700] text-white tracking-wider">MVP</span>
                       </div>
                     </div>
-                    <div className="absolute -inset-[24px] rounded-full border" style={{ borderColor: "rgba(var(--mh-cta-rgb), 0.15)", borderWidth: "1.5px", borderStyle: "dashed" }}></div>
-                    <div className="absolute -inset-[48px] rounded-full border opacity-[0.4]" style={{ borderColor: "rgba(var(--mh-secondary-rgb), 0.2)", borderWidth: "1px" }}></div>
+                    <div className="service-orbit-ring absolute -inset-[24px] rounded-full border" style={{ borderColor: "rgba(var(--mh-cta-rgb), 0.15)", borderWidth: "1.5px", borderStyle: "dashed" }}></div>
+                    <div className="service-orbit-ring service-orbit-ring-reverse absolute -inset-[48px] rounded-full border opacity-[0.4]" style={{ borderColor: "rgba(var(--mh-secondary-rgb), 0.2)", borderWidth: "1px" }}></div>
                   </div>
                 </div>
-                <div className="absolute top-[8%] -left-[4%] px-[13px] h-[40px] rounded-[13px] flex items-center gap-[8px] text-[12.5px] font-[600] backdrop-blur-[16px]" style={{ backgroundColor: "rgba(var(--mh-surface-rgb), 0.9)", border: "1px solid rgba(var(--mh-text-rgb), 0.06)", color: "var(--mh-text)", boxShadow: "0 12px 28px -8px rgba(var(--mh-text-rgb), 0.1)" }}>
+                <div className="service-float-chip absolute top-[8%] -left-[4%] px-[13px] h-[40px] rounded-[13px] flex items-center gap-[8px] text-[12.5px] font-[600] backdrop-blur-[16px]" style={{ backgroundColor: "rgba(var(--mh-surface-rgb), 0.9)", border: "1px solid rgba(var(--mh-text-rgb), 0.06)", color: "var(--mh-text)", boxShadow: "0 12px 28px -8px rgba(var(--mh-text-rgb), 0.1)" }}>
                   <div className="h-[7px] w-[7px] rounded-full" style={{ backgroundColor: "var(--mh-secondary)" }}></div>
                   Fixed pricing
                 </div>
-                <div className="absolute bottom-[14%] -right-[6%] px-[13px] h-[40px] rounded-[13px] flex items-center gap-[8px] text-[12.5px] font-[600] backdrop-blur-[16px]" style={{ backgroundColor: "rgba(var(--mh-text-rgb), 0.92)", border: "1px solid rgba(var(--mh-text-rgb), 0.08)", color: "var(--mh-surface)", boxShadow: "0 12px 32px -8px rgba(var(--mh-text-rgb), 0.25)" }}>
+                <div className="service-float-chip service-float-chip-delay absolute bottom-[14%] -right-[6%] px-[13px] h-[40px] rounded-[13px] flex items-center gap-[8px] text-[12.5px] font-[600] backdrop-blur-[16px]" style={{ backgroundColor: "rgba(var(--mh-text-rgb), 0.92)", border: "1px solid rgba(var(--mh-text-rgb), 0.08)", color: "var(--mh-surface)", boxShadow: "0 12px 32px -8px rgba(var(--mh-text-rgb), 0.25)" }}>
                   <div className="h-[5px] w-[5px] rounded-full bg-[var(--mh-cta)]"></div>
                   No surprises
                 </div>
@@ -190,35 +242,37 @@ export default function Services() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-[20px] lg:gap-[24px]">
-          {[
-            { title: "Web Development", desc: "Business websites, landing pages, full-stack web apps. Built with modern tech and deployed fast.", href: "/services/web-development", accent: "var(--mh-text)" },
-            { title: "AI & Automation", desc: "Workflow automation, AI chatbots, data pipelines, and custom automation systems.", href: "/services/automation", accent: "var(--mh-secondary)" },
-            { title: "MVP Development", desc: "From idea to working product in 2-4 weeks. Fixed pricing, full source code.", href: "/services/mvp-development", accent: "var(--mh-cta)" },
-          ].map((svc) => (
+        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-[20px] lg:gap-[24px]">
+          {serviceCards.map((svc, index) => {
+            const accent = index % 3 === 1 ? "var(--mh-secondary)" : index % 3 === 2 ? "var(--mh-cta)" : "var(--mh-text)";
+            const href = svc.link?.trim() || "/contact";
+            return (
             <a
               key={svc.title}
-              href={svc.href}
+              href={href}
               className="group rounded-[28px] p-[28px] border transition-all hover:-translate-y-1"
               style={{ backgroundColor: "var(--mh-surface)", borderColor: "rgba(var(--mh-text-rgb), 0.08)" }}
             >
-              <div className="h-[48px] w-[48px] rounded-[18px] flex items-center justify-center mb-[24px]" style={{ backgroundColor: `color-mix(in srgb, ${svc.accent} 8%, transparent)` }}>
+              <div className="h-[48px] w-[48px] rounded-[18px] flex items-center justify-center mb-[24px]" style={{ backgroundColor: `color-mix(in srgb, ${accent} 8%, transparent)` }}>
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                  <path d="M11 3L18 8L18 14L11 19L4 14L4 8L11 3Z" stroke={svc.accent} strokeWidth="1.5" strokeLinejoin="round"/>
-                  <path d="M4 8L11 13L18 8" stroke={svc.accent} strokeWidth="1.5"/>
-                  <path d="M11 13L11 19" stroke={svc.accent} strokeWidth="1.5"/>
+                  <path d="M11 3L18 8L18 14L11 19L4 14L4 8L11 3Z" stroke={accent} strokeWidth="1.5" strokeLinejoin="round"/>
+                  <path d="M4 8L11 13L18 8" stroke={accent} strokeWidth="1.5"/>
+                  <path d="M11 13L11 19" stroke={accent} strokeWidth="1.5"/>
                 </svg>
               </div>
+              <span className="text-[11px] font-[700] uppercase tracking-[0.14em]" style={{ color: "rgba(var(--mh-text-rgb), 0.45)" }}>{svc.category}</span>
               <h3 className="text-[22px] font-[700] tracking-[-0.02em] mb-[12px]" style={{ color: "var(--mh-text)" }}>{svc.title}</h3>
-              <p className="text-[14.5px] leading-[1.55] font-[450] mb-[20px]" style={{ color: "rgba(var(--mh-text-rgb), 0.68)" }}>{svc.desc}</p>
-              <span className="text-[13.5px] font-[600] inline-flex items-center gap-[6px] group-hover:gap-[10px] transition-all" style={{ color: svc.accent }}>
+              <p className="text-[14.5px] leading-[1.55] font-[450] mb-[20px]" style={{ color: "rgba(var(--mh-text-rgb), 0.68)" }}>{svc.description}</p>
+              {svc.price && <div className="mb-[18px] text-[13px] font-[700]" style={{ color: "var(--mh-text)" }}>{svc.price}</div>}
+              <span className="text-[13.5px] font-[600] inline-flex items-center gap-[6px] group-hover:gap-[10px] transition-all" style={{ color: accent }}>
                 Learn more
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                   <path d="M5 3L9 7L5 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                 </svg>
               </span>
             </a>
-          ))}
+            );
+          })}
         </div>
       </section>
 
@@ -383,37 +437,43 @@ export default function Services() {
 
       {/* TRUST */}
       <section className="mx-auto max-w-[1200px] px-6 md:px-8 py-[64px] md:py-[84px]">
-        <div className="text-center mb-[56px] max-w-[640px] mx-auto">
-          <h2 className="font-body font-bold text-[32px] md:text-[40px] leading-[1.1] tracking-[-0.03em] mb-[14px]" style={{ color: "var(--mh-text)" }}>
-            Built for builders, by builders
-          </h2>
-          <p className="text-[16px] leading-[1.6] font-[450]" style={{ color: "rgba(var(--mh-text-rgb), 0.68)" }}>
-            Projects shipped, people grown, startups launched
-          </p>
-        </div>
+        <ScrollReveal>
+          <div className="text-center mb-[56px] max-w-[640px] mx-auto">
+            <h2 className="font-body font-bold text-[32px] md:text-[40px] leading-[1.1] tracking-[-0.03em] mb-[14px]" style={{ color: "var(--mh-text)" }}>
+              Built for builders, by builders
+            </h2>
+            <p className="text-[16px] leading-[1.6] font-[450]" style={{ color: "rgba(var(--mh-text-rgb), 0.68)" }}>
+              Projects shipped, people grown, startups launched
+            </p>
+          </div>
+        </ScrollReveal>
 
         <div className="grid md:grid-cols-3 gap-[18px] mb-[64px]">
-          {trustStats.map((stat) => (
-            <div key={stat.label} className="rounded-[26px] p-[28px] border text-center" style={{ backgroundColor: "var(--mh-surface)", borderColor: "rgba(var(--mh-text-rgb), 0.06)" }}>
-              <div className="text-[42px] font-[700] tracking-[-0.03em] leading-none mb-[10px]" style={{ color: "var(--mh-text)" }}>{stat.value}</div>
-              <div className="text-[15px] font-[650] mb-[6px]" style={{ color: "var(--mh-text)" }}>{stat.label}</div>
-              <div className="text-[13.5px] leading-[1.5] font-[450]" style={{ color: "rgba(var(--mh-text-rgb), 0.65)" }}>{stat.desc}</div>
-            </div>
+          {trustStats.map((stat, index) => (
+            <ScrollReveal key={stat.label} delay={index * 0.08}>
+              <div className="rounded-[26px] p-[28px] border text-center" style={{ backgroundColor: "var(--mh-surface)", borderColor: "rgba(var(--mh-text-rgb), 0.06)" }}>
+                <div className="text-[42px] font-[700] tracking-[-0.03em] leading-none mb-[10px]" style={{ color: "var(--mh-text)" }}>{stat.value}</div>
+                <div className="text-[15px] font-[650] mb-[6px]" style={{ color: "var(--mh-text)" }}>{stat.label}</div>
+                <div className="text-[13.5px] leading-[1.5] font-[450]" style={{ color: "rgba(var(--mh-text-rgb), 0.65)" }}>{stat.desc}</div>
+              </div>
+            </ScrollReveal>
           ))}
         </div>
 
-        <div className="pt-[48px] border-t" style={{ borderColor: "rgba(var(--mh-text-rgb), 0.08)" }}>
-          <div className="text-[11px] font-[700] tracking-[0.12em] uppercase text-center mb-[32px]" style={{ color: "rgba(var(--mh-text-rgb), 0.45)" }}>
-            Trusted by founders across
+        <ScrollReveal delay={0.1}>
+          <div className="pt-[48px] border-t" style={{ borderColor: "rgba(var(--mh-text-rgb), 0.08)" }}>
+            <div className="text-[11px] font-[700] tracking-[0.12em] uppercase text-center mb-[32px]" style={{ color: "rgba(var(--mh-text-rgb), 0.45)" }}>
+              Trusted by founders across
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-[16px]">
+              {brands.map((brand) => (
+                <div key={brand} className="h-[56px] rounded-[18px] flex items-center justify-center border transition-all hover:border-opacity-[0.16]" style={{ backgroundColor: "rgba(var(--mh-surface-rgb), 0.65)", borderColor: "rgba(var(--mh-text-rgb), 0.08)" }}>
+                  <span className="text-[13px] font-[600] tracking-[-0.01em]" style={{ color: "rgba(var(--mh-text-rgb), 0.75)" }}>{brand}</span>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-[16px]">
-            {brands.map((brand) => (
-              <div key={brand} className="h-[56px] rounded-[18px] flex items-center justify-center border transition-all hover:border-opacity-[0.16]" style={{ backgroundColor: "rgba(var(--mh-surface-rgb), 0.65)", borderColor: "rgba(var(--mh-text-rgb), 0.08)" }}>
-                <span className="text-[13px] font-[600] tracking-[-0.01em]" style={{ color: "rgba(var(--mh-text-rgb), 0.75)" }}>{brand}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* INQUIRY FORM */}

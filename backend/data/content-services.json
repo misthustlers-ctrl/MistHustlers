@@ -48,6 +48,40 @@
     ],
     "notice": "Final pricing confirmed after requirement review. No hidden costs."
   },
+  "serviceCards": [
+    {
+      "title": "Business Websites",
+      "category": "Website",
+      "description": "Conversion-focused, responsive websites designed to improve credibility, explain services and generate inquiries.",
+      "price": "From ₹4,999",
+      "link": "/services/web-development",
+      "enabled": true
+    },
+    {
+      "title": "MVP Development",
+      "category": "Product",
+      "description": "Functional first versions for founders who need to validate, demonstrate and launch a product idea.",
+      "price": "From ₹15,000",
+      "link": "/services/mvp-development",
+      "enabled": true
+    },
+    {
+      "title": "AI & Workflow Automation",
+      "category": "Automation",
+      "description": "Practical automation systems that connect tools, reduce repetitive work and improve lead or operations workflows.",
+      "price": "From ₹5,000",
+      "link": "/services/automation",
+      "enabled": true
+    },
+    {
+      "title": "Website Maintenance & Support",
+      "category": "Support",
+      "description": "Updates, bug fixes, hosting support, domain and SSL help, backups, uptime checks and performance assistance.",
+      "price": "From ₹2,999/mo",
+      "link": "/contact",
+      "enabled": true
+    }
+  ],
   "process": {
     "title": "How execution happens",
     "description": "Five steps from inquiry to delivery. No middlemen. Direct communication throughout.",

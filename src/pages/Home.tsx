@@ -4,14 +4,23 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import ScrollReveal from "@/components/ScrollReveal";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import FAQItem from "@/components/FAQItem";
-import JoinEcosystemModal from "@/components/JoinEcosystemModal";
 import SEO from "@/components/SEO";
 import SchemaMarkup from "@/components/SchemaMarkup";
 import { useContent } from "@/utils/useContent";
 
-function EmojiIcon({ src, alt, className }: { src: string; alt: string; className: string }) {
+function CustomIcon({ src, alt, className }: { src: string; alt: string; className: string }) {
   if (!src) return null;
   return <img src={src} alt={alt} className={className} />;
+}
+
+function ServiceMark({ label, sublabel, accent = "orange" }: { label: string; sublabel: string; accent?: "orange" | "violet" | "ink" }) {
+  const accentClass = accent === "violet" ? "text-cyber-violet" : accent === "ink" ? "text-abyssal-ink" : "text-digital-orange";
+  return (
+    <div className="flex h-full w-full flex-col items-center justify-center gap-1 text-center">
+      <span className={`font-display text-2xl tracking-[0.06em] leading-none ${accentClass}`}>{label}</span>
+      <span className="font-body text-[9px] font-bold uppercase tracking-[0.16em] text-abyssal-ink/45">{sublabel}</span>
+    </div>
+  );
 }
 
 function Hero3DVisual({ emojiLightning, emojiTools, emojiGrowth, emojiRocket }: { emojiLightning?: string; emojiTools?: string; emojiGrowth?: string; emojiRocket?: string }) {
@@ -25,22 +34,22 @@ function Hero3DVisual({ emojiLightning, emojiTools, emojiGrowth, emojiRocket }: 
       </div>
       <div className="hidden md:block absolute top-8 right-12 animate-float-slow preserve-3d" style={{ animationDelay: "0.3s" }}>
         <div className="w-24 h-32 rounded-2xl bg-white/80 backdrop-blur border border-abyssal-ink/5 shadow-lg rotate-6 flex items-center justify-center">
-          {emojiLightning ? <EmojiIcon src={emojiLightning} alt="Lightning" className="w-8 h-8" /> : <span className="text-2xl">⚡</span>}
+          {emojiLightning ? <CustomIcon src={emojiLightning} alt="Website icon" className="w-8 h-8" /> : <ServiceMark label="WEB" sublabel="Sites" />}
         </div>
       </div>
       <div className="hidden md:block absolute top-20 left-8 animate-float-slow preserve-3d" style={{ animationDelay: "1s" }}>
         <div className="w-20 h-28 rounded-2xl bg-white/80 backdrop-blur border border-abyssal-ink/5 shadow-lg -rotate-3 flex items-center justify-center">
-          {emojiTools ? <EmojiIcon src={emojiTools} alt="Tools" className="w-7 h-7" /> : <span className="text-xl">🛠</span>}
+          {emojiTools ? <CustomIcon src={emojiTools} alt="MVP icon" className="w-7 h-7" /> : <ServiceMark label="MVP" sublabel="Launch" accent="violet" />}
         </div>
       </div>
       <div className="hidden md:block absolute bottom-16 right-20 animate-float-slow preserve-3d" style={{ animationDelay: "1.8s" }}>
         <div className="w-28 h-20 rounded-2xl bg-white/80 backdrop-blur border border-abyssal-ink/5 shadow-lg -rotate-6 flex items-center justify-center">
-          {emojiGrowth ? <EmojiIcon src={emojiGrowth} alt="Growth" className="w-7 h-7" /> : <span className="text-xl">📈</span>}
+          {emojiGrowth ? <CustomIcon src={emojiGrowth} alt="Automation icon" className="w-7 h-7" /> : <ServiceMark label="AI" sublabel="Automation" />}
         </div>
       </div>
       <div className="hidden md:block absolute bottom-24 left-16 animate-float-slow preserve-3d" style={{ animationDelay: "2.4s" }}>
         <div className="w-20 h-20 rounded-full bg-cyber-violet/10 backdrop-blur border border-cyber-violet/20 shadow-lg flex items-center justify-center">
-          {emojiRocket ? <EmojiIcon src={emojiRocket} alt="Rocket" className="w-7 h-7" /> : <span className="text-lg">🚀</span>}
+          {emojiRocket ? <CustomIcon src={emojiRocket} alt="Support icon" className="w-7 h-7" /> : <ServiceMark label="24" sublabel="Support" accent="ink" />}
         </div>
       </div>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-40 rounded-3xl glass-card -rotate-2 opacity-60" />
@@ -66,6 +75,8 @@ type HomeJourneyStep = { step: string; title: string; desc: string };
 type HomeFeature = { title: string; desc: string };
 type HomeFaqItem = { q: string; a: string };
 type HomeProject = { title: string; category: string; visual?: string; imageUrl?: string; link?: string };
+type PricingTier = { id: string; name: string; price: string; description: string; features: string[]; popular?: boolean; accent?: string };
+type ServiceCard = { title: string; category: string; description: string; price?: string; link?: string; enabled?: boolean };
 
 type HomeContent = {
   hero: {
@@ -113,50 +124,50 @@ type HomeContent = {
 
 const HOME_DEFAULTS: HomeContent = {
   hero: {
-    badge: "Premium Ecosystem",
-    title: ["LEARN.", "BUILD.", "EARN.", "GROW."],
-    highlightWord: "GROW.",
-    description: "A Premium Ecosystem for Ambitious Students, Developers & Future Builders.",
-    tagline: "No fluff. Real skills. Real execution.",
-    ctaPrimary: "Join MistHustlers",
-    ctaSecondary: "Explore Careers",
+    badge: "Websites • MVPs • AI Automation",
+    title: ["WEB DEVELOPMENT", "AI AUTOMATION", "INDORE AGENCY."],
+    highlightWord: "INDORE AGENCY.",
+    description: "MistHustlers helps startups, founders and growing businesses turn ideas into production-ready websites, MVPs and automation systems through clear planning, practical execution and complete project ownership.",
+    tagline: "Based in Indore. Available for remote projects across India.",
+    ctaPrimary: "Start Your Project",
+    ctaSecondary: "Explore Our Work",
   },
   stats: [
-    { value: 10000, suffix: "+", label: "Students Guided" },
-    { value: 1200, suffix: "+", label: "Projects Built" },
-    { value: 5000, suffix: "+", label: "Mentorship Hours" },
-    { value: 80, suffix: "+", label: "Career Opportunities" },
+    { value: 10, suffix: "+", label: "Business Website Previews" },
+    { value: 4, suffix: "", label: "Core Service Categories" },
+    { value: 6, suffix: "", label: "Execution Stages Covered" },
+    { value: 1, suffix: "", label: "Direct Founder Communication" },
   ],
-  brands: ["STRIPE", "LINEAR", "VERCEL", "GITHUB", "NOTION"],
+  brands: ["Transparent Scope", "Clear Milestones", "Source-Code Handover", "Post-Launch Support"],
   servicesTeaser: {
-    badge: "Services",
-    title: "Build premium products",
-    description: "From automation to full-stack development - we ship production-grade work for startups and founders.",
+    badge: "Core Services",
+    title: "Websites, MVPs and automations built for real business needs",
+    description: "Business websites, startup MVPs, AI workflow automation and maintenance support - planned with clear scope and built for practical execution.",
     cta: "Explore Services",
   },
   careerTeaser: {
-    badge: "Career",
-    title: "Your career, accelerated",
-    description: "Jobs, internships, events, programs, and mentorship - all in one place.",
-    cta: "Explore Career",
+    badge: "Builder Ecosystem",
+    title: "More than an agency - a growing builder ecosystem",
+    description: "Alongside client execution, MistHustlers creates opportunities for developers, students and emerging builders to learn through practical projects, collaborations and career opportunities.",
+    cta: "Explore Careers",
   },
   journey: { badge: "How We Work", title: "From Idea to Launch", description: "A streamlined process from requirements to delivery. Direct communication. No middlemen." },
   journeySteps: [
-    { step: "01", title: "Learn", desc: "Master in-demand skills through our structured bootcamps, workshops, and curated learning paths designed by industry experts." },
-    { step: "02", title: "Build", desc: "Apply your knowledge by building real projects. From automation pipelines to full-stack apps - your portfolio grows here." },
-    { step: "03", title: "Earn", desc: "Monetize your skills through freelancing, internships, and career placements. We connect you directly to opportunities." },
-    { step: "04", title: "Grow", desc: "Scale your career with ongoing mentorship, advanced projects, leadership skills, and a network of ambitious builders." },
+    { step: "01", title: "Understand", desc: "We understand the business, target audience, requirements and expected outcome before recommending a build path." },
+    { step: "02", title: "Plan", desc: "We define project scope, deliverables, technical approach, milestones and timeline before development begins." },
+    { step: "03", title: "Build", desc: "We design, develop, test and share progress throughout execution so the work stays aligned with the requirement." },
+    { step: "04", title: "Launch and Support", desc: "We deploy the final product, complete project handover and provide the agreed support after launch." },
   ],
   mentorship: {
-    badge: "Mentorship",
-    title: "Guided by those who've done it.",
-    description: "Our mentors are active practitioners who share real, actionable guidance. No theory. Just practice.",
-    cta: "Find a Mentor",
+    badge: "Why MistHustlers",
+    title: "Business-first execution with clear ownership.",
+    description: "MistHustlers is a digital product and technology execution company based in Indore, Madhya Pradesh. It builds business websites, MVPs, AI automation systems and related digital solutions for startups, founders and growing businesses.",
+    cta: "Start a Project",
     features: [
-      { title: "1:1 Guidance", desc: "Personalized sessions with practitioners who've been where you want to go." },
-      { title: "Career Roadmap", desc: "A custom growth plan designed around your goals and timeline." },
-      { title: "Accountability", desc: "Weekly check-ins to keep you on track and moving forward." },
-      { title: "Project Reviews", desc: "Get expert feedback on your code, design, and architecture decisions." },
+      { title: "Direct Communication", desc: "Project discussion stays close to the execution team so decisions move faster." },
+      { title: "Clear Scope", desc: "Deliverables, milestones and technical approach are clarified before development begins." },
+      { title: "Responsive Builds", desc: "Websites and products are planned for mobile usability, performance and practical business use." },
+      { title: "Project Handover", desc: "Source-code handover and post-launch support follow the agreed project scope." },
     ],
   },
   projectsShowcase: {
@@ -175,25 +186,79 @@ const HOME_DEFAULTS: HomeContent = {
   faq: {
     badge: "FAQ",
     title: ["You ask.", "We answer."],
-    items: [],
+    items: [
+      { q: "What does MistHustlers do?", a: "MistHustlers builds business websites, MVPs, AI automation systems and related digital solutions for startups, founders and growing businesses." },
+      { q: "Where is MistHustlers based?", a: "MistHustlers is based in Indore, Madhya Pradesh, and provides digital execution services to businesses across India through remote collaboration." },
+      { q: "What types of websites does MistHustlers build?", a: "MistHustlers builds landing pages, business websites, service websites, portfolios, custom web applications and industry-focused website solutions." },
+      { q: "Does MistHustlers build MVPs?", a: "Yes. MistHustlers develops functional MVPs that help founders demonstrate, validate and launch early-stage digital product ideas." },
+      { q: "Does MistHustlers provide AI automation?", a: "Yes. MistHustlers builds workflow and AI automation solutions for repetitive business operations, lead handling, notifications and tool integrations." },
+      { q: "How can a business start a project?", a: "A business can submit the project inquiry form or contact MistHustlers through WhatsApp. Requirements are reviewed before scope, timeline and pricing are finalized." },
+    ],
   },
   finalCta: {
-    title: ["STOP WATCHING.", "START BUILDING."],
-    highlightWord: "START BUILDING.",
-    description: "Join the premium ecosystem built for ambitious future builders.",
-    cta: "JOIN MISTHUSTLERS",
+    title: ["HAVE AN IDEA OR", "BUSINESS REQUIREMENT?"],
+    highlightWord: "BUSINESS REQUIREMENT?",
+    description: "Tell us what you are building. We will help you define the right scope, execution plan and next step.",
+    cta: "START YOUR PROJECT",
   },
   faqData: [],
   projects: [],
 };
 
+const SERVICE_CARD_DEFAULTS: ServiceCard[] = [
+  {
+    title: "Business Websites",
+    category: "Website",
+    description: "Conversion-focused, responsive websites designed to explain services and generate enquiries.",
+    price: "From ₹4,999",
+    link: "/services/web-development",
+  },
+  {
+    title: "MVP Development",
+    category: "Product",
+    description: "Functional first versions for founders who need to validate, demonstrate and launch a product idea.",
+    price: "From ₹15,000",
+    link: "/services/mvp-development",
+  },
+  {
+    title: "AI & Workflow Automation",
+    category: "Automation",
+    description: "Practical automations that connect tools, reduce repetitive work and improve lead or operations workflows.",
+    price: "From ₹5,000",
+    link: "/services/automation",
+  },
+  {
+    title: "Website Maintenance & Support",
+    category: "Support",
+    description: "Updates, bug fixes, hosting support, domain and SSL help, backups, uptime checks and performance assistance.",
+    price: "From ₹2,999/mo",
+    link: "/services",
+  },
+];
+
+const SERVICES_PRICING_DEFAULTS = {
+  serviceCards: SERVICE_CARD_DEFAULTS,
+  pricing: {
+    tiers: [
+      { id: "starter", name: "STARTER", price: "₹999 – ₹4,999", description: "Essential presence for new founders", features: ["Landing Page Design", "Portfolio Website", "Basic Automation Setup", "14-Day Support"], popular: false, accent: "#070607" },
+      { id: "growth", name: "GROWTH", price: "₹5,000 – ₹15,000", description: "Complete digital identity for scaling", features: ["Business Website", "Web App UI", "Automation Systems", "Basic Backend", "30-Day Support"], popular: true, accent: "#fc5000" },
+      { id: "premium", name: "PREMIUM", price: "₹15,000 – ₹50,000+", description: "Full product development for serious ventures", features: ["Full Stack App", "MVP Development", "AI Automation Systems", "Scalable Platforms", "90-Day Partnership"], popular: false, accent: "#524ae9" },
+    ] as PricingTier[],
+  },
+};
+
 export default function Home() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
   const logoData = useContent("logo", LOGO_DEFAULTS);
   const c = useContent("home", HOME_DEFAULTS);
+  const servicesContent = useContent("services", SERVICES_PRICING_DEFAULTS);
   const stats = useMemo(() => c.stats ?? [], [c.stats]);
+  const pricingTiers = useMemo(() => servicesContent.pricing?.tiers?.slice(0, 3) ?? [], [servicesContent.pricing?.tiers]);
+  const serviceCards = useMemo(
+    () => ((servicesContent.serviceCards?.length ? servicesContent.serviceCards : SERVICE_CARD_DEFAULTS) as ServiceCard[]).filter((item) => item.enabled !== false).slice(0, 4),
+    [servicesContent.serviceCards],
+  );
   const journeySteps = useMemo(() => c.journeySteps ?? [], [c.journeySteps]);
   const faqData = useMemo(() => c.faq?.items ?? c.faqData ?? [], [c.faq, c.faqData]);
   const projectPreview = useMemo(() => c.projectsShowcase?.projects ?? c.projects ?? [], [c.projectsShowcase, c.projects]);
@@ -231,7 +296,7 @@ export default function Home() {
                 <span className="inline-block px-4 py-1.5 rounded-full bg-abyssal-ink/5 text-abyssal-ink/60 text-xs font-semibold tracking-wider uppercase mb-6 font-body">
                   {c.hero?.badge || HOME_DEFAULTS.hero.badge}
                 </span>
-                <h1 className="font-display text-[clamp(34px,12vw,110px)] leading-[0.92] sm:leading-[0.9] tracking-[0.02em] text-abyssal-ink">
+                <h1 className="font-display text-[clamp(34px,7vw,64px)] leading-[0.98] sm:leading-[0.94] tracking-[0.02em] text-abyssal-ink">
                   {(heroLines.length ? heroLines : HOME_DEFAULTS.hero.title).map((line, index) => (
                     <span key={`${line}-${index}`} className={index === heroLines.length - 1 ? "text-digital-orange" : ""}>
                       {line}{index < heroLines.length - 1 && <br />}
@@ -265,16 +330,16 @@ export default function Home() {
                 className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4"
               >
                 <button
-                  onClick={() => setModalOpen(true)}
+                  onClick={() => navigate("/contact")}
                   className="magnetic-btn bg-digital-orange text-white px-6 sm:px-8 py-4 rounded-[800px] text-base font-semibold cursor-pointer font-body text-center"
                 >
                   {c.hero?.ctaPrimary || "Get a Quote"}
                 </button>
                 <button
-                  onClick={() => navigate("/services")}
+                  onClick={() => navigate("/projects")}
                   className="magnetic-btn bg-transparent border-2 border-abyssal-ink text-abyssal-ink px-6 sm:px-8 py-4 rounded-[800px] text-base font-semibold cursor-pointer hover:bg-abyssal-ink hover:text-white transition-colors duration-300 font-body text-center"
                 >
-                  {c.hero?.ctaSecondary || "View Services"}
+                  {c.hero?.ctaSecondary || "Explore Our Work"}
                 </button>
               </motion.div>
             </div>
@@ -311,9 +376,26 @@ export default function Home() {
           </div>
 
           <ScrollReveal delay={0.3}>
-            <div className="mt-16 flex flex-wrap items-center justify-center gap-8 opacity-30">
+            <div className="mt-16 flex flex-wrap items-center justify-center gap-8 opacity-60">
               {(c.brands || []).map((p) => (
-                <span key={p} className="font-display text-xl tracking-[0.1em] text-abyssal-ink/40">{p}</span>
+                <span key={p} className="font-display text-xl tracking-[0.1em] text-abyssal-ink/55">{p}</span>
+              ))}
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.35}>
+            <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                { title: "Fixed scope clarity", desc: "Deliverables and timeline are discussed before execution starts." },
+                { title: "Direct communication", desc: "You speak close to the people planning and building the work." },
+                { title: "Source-code handover", desc: "Ownership and handover follow the agreed project scope." },
+                { title: "Support after launch", desc: "Post-launch fixes and maintenance can be planned with the project." },
+              ].map((item) => (
+                <div key={item.title} className="rounded-[22px] border border-abyssal-ink/5 bg-ash-white p-5 text-left">
+                  <div className="mb-3 h-2 w-2 rounded-full bg-digital-orange" />
+                  <h3 className="font-body text-sm font-bold text-abyssal-ink">{item.title}</h3>
+                  <p className="mt-2 text-xs leading-relaxed text-abyssal-ink/55 font-body">{item.desc}</p>
+                </div>
               ))}
             </div>
           </ScrollReveal>
@@ -335,6 +417,25 @@ export default function Home() {
             </div>
           </ScrollReveal>
           <ScrollReveal delay={0.15}>
+            <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {serviceCards.map((svc, index) => (
+                <button
+                  key={`${svc.title}-${index}`}
+                  onClick={() => navigate(svc.link || "/services")}
+                  className="card-lift h-full rounded-[24px] border border-abyssal-ink/5 bg-basalt-canvas p-5 text-left transition-colors hover:border-digital-orange/25"
+                >
+                  <span className={`mb-5 flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold font-body ${index === 1 ? "bg-cyber-violet/10 text-cyber-violet" : index === 2 ? "bg-digital-orange/10 text-digital-orange" : "bg-abyssal-ink/5 text-abyssal-ink/55"}`}>
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-abyssal-ink/40 font-body">{svc.category}</span>
+                  <h3 className="mt-2 font-body text-lg font-bold leading-tight text-abyssal-ink">{svc.title}</h3>
+                  <p className="mt-3 min-h-20 text-sm leading-relaxed text-abyssal-ink/58 font-body">{svc.description}</p>
+                  {svc.price && <p className="mt-5 text-xs font-bold text-abyssal-ink font-body">{svc.price}</p>}
+                </button>
+              ))}
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={0.2}>
             <div className="text-center">
               <button
                 onClick={() => navigate("/services")}
@@ -346,6 +447,60 @@ export default function Home() {
           </ScrollReveal>
         </div>
       </section>
+
+      {/* PRICING PLANS */}
+      {pricingTiers.length > 0 && (
+      <section className="py-16 md:py-24">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
+          <ScrollReveal>
+            <div className="mb-12 text-center">
+              <span className="text-sm font-semibold tracking-wider uppercase text-digital-orange font-body">Execution Plans</span>
+              <h2 className="font-body font-bold text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
+                Choose a plan that matches the work
+              </h2>
+              <p className="text-abyssal-ink/50 mt-4 max-w-xl mx-auto font-body">
+                These plans help clients understand budget range before discussion. Final pricing is confirmed after requirement review.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <div className="grid gap-5 md:grid-cols-3">
+            {pricingTiers.map((tier, i) => (
+              <ScrollReveal key={tier.id || tier.name} delay={i * 0.08}>
+                <div className={`h-full rounded-[28px] border p-6 ${tier.popular ? "border-digital-orange bg-ash-white shadow-xl shadow-digital-orange/10" : "border-abyssal-ink/5 bg-ash-white"}`}>
+                  <div className="mb-5 flex items-start justify-between gap-4">
+                    <div>
+                      <span className="text-xs font-bold uppercase tracking-[0.14em] text-abyssal-ink/45 font-body">{tier.name}</span>
+                      <div className="mt-2 font-display text-3xl tracking-[0.02em] text-abyssal-ink">{tier.price}</div>
+                    </div>
+                    {tier.popular && <span className="rounded-full bg-digital-orange px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white font-body">Most Chosen</span>}
+                  </div>
+                  <p className="min-h-12 text-sm leading-relaxed text-abyssal-ink/60 font-body">{tier.description}</p>
+                  <div className="mt-6 space-y-3">
+                    {(tier.features || []).slice(0, 5).map((feature) => (
+                      <div key={feature} className="flex items-center gap-3 text-sm text-abyssal-ink font-body">
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-digital-orange/10 text-digital-orange">
+                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                            <path d="M3 6.1L5 8L9 3.8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </span>
+                        <span>{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => navigate("/contact")}
+                    className={`mt-7 w-full rounded-[800px] px-5 py-3 text-sm font-semibold transition-colors font-body ${tier.popular ? "bg-digital-orange text-white hover:bg-digital-orange/90" : "bg-abyssal-ink text-white hover:bg-digital-orange"}`}
+                  >
+                    Start with {tier.name}
+                  </button>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+      )}
 
       {/* JOURNEY */}
       <section className="py-16 md:py-24">
@@ -378,33 +533,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CAREER TEASER */}
-      <section className="py-16 md:py-20 bg-ash-white">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
-          <ScrollReveal>
-            <div className="mb-12 text-center">
-              <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">{c.careerTeaser?.badge || "Career"}</span>
-              <h2 className="font-body font-bold text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
-                {c.careerTeaser?.title || "Your career, accelerated"}
-              </h2>
-              <p className="text-abyssal-ink/50 mt-4 max-w-lg mx-auto font-body">
-                {c.careerTeaser?.description || "Jobs, internships, events, programs, and mentorship - all in one place."}
-              </p>
-            </div>
-          </ScrollReveal>
-          <ScrollReveal delay={0.15}>
-            <div className="text-center">
-              <button
-                onClick={() => navigate("/career")}
-                className="magnetic-btn bg-digital-orange text-white px-8 py-4 rounded-[800px] text-base font-semibold cursor-pointer font-body"
-              >
-                {c.careerTeaser?.cta || "Explore Career"} &rarr;
-              </button>
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
-
       {/* MENTORSHIP TEASER */}
       <section className="py-16 md:py-24">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
@@ -418,7 +546,7 @@ export default function Home() {
                 {c.mentorship?.description || "Our mentors are active practitioners who share real, actionable guidance. No theory. Just practice."}
               </p>
               <button
-                onClick={() => navigate("/career")}
+                onClick={() => navigate("/contact")}
                 className="magnetic-btn bg-abyssal-ink text-white px-8 py-4 rounded-[800px] text-base font-semibold cursor-pointer hover:bg-digital-orange transition-colors duration-300 font-body"
               >
                 {c.mentorship?.cta || "Find a Mentor"} &rarr;
@@ -438,6 +566,52 @@ export default function Home() {
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
+      {/* FOUNDER TRUST */}
+      <section className="py-16 md:py-20 bg-ash-white">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
+          <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+            <ScrollReveal>
+              <div className="rounded-[28px] border border-abyssal-ink/5 bg-basalt-canvas p-6 md:p-8">
+                <div className="flex items-center gap-5">
+                  <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[28px] bg-abyssal-ink text-white">
+                    <span className="font-display text-3xl tracking-[0.02em]">NS</span>
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold uppercase tracking-[0.16em] text-digital-orange font-body">Founder-led execution</span>
+                    <h2 className="mt-2 font-body text-2xl font-bold text-abyssal-ink">Naveen Salve</h2>
+                    <p className="mt-1 text-sm text-abyssal-ink/55 font-body">Developer, AI generalist and automation builder based in Indore.</p>
+                  </div>
+                </div>
+                <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                  {["Web Development", "AI Automation", "MVP Planning"].map((skill) => (
+                    <span key={skill} className="rounded-full bg-abyssal-ink/5 px-4 py-2 text-center text-xs font-semibold text-abyssal-ink/65 font-body">{skill}</span>
+                  ))}
+                </div>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={0.12}>
+              <div>
+                <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">Real person, direct accountability</span>
+                <h2 className="mt-2 font-body font-bold text-[clamp(34px,5vw,52px)] tracking-[0.02em] leading-[1.05] text-abyssal-ink">
+                  Clients should know who is planning the work.
+                </h2>
+                <p className="mt-5 text-abyssal-ink/60 leading-relaxed font-body">
+                  MistHustlers is founder-led, which means project scope, execution planning and delivery decisions stay close to the person responsible for the build. This keeps communication direct and reduces confusion during execution.
+                </p>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <button onClick={() => navigate("/about")} className="rounded-[800px] border border-abyssal-ink/15 px-5 py-3 text-sm font-semibold text-abyssal-ink hover:bg-abyssal-ink hover:text-white font-body">
+                    Meet MistHustlers
+                  </button>
+                  <button onClick={() => navigate("/contact")} className="rounded-[800px] bg-digital-orange px-5 py-3 text-sm font-semibold text-white hover:bg-digital-orange/90 font-body">
+                    Discuss a Project
+                  </button>
                 </div>
               </div>
             </ScrollReveal>
@@ -500,6 +674,29 @@ export default function Home() {
       </section>
       )}
 
+      {/* BUILDER ECOSYSTEM */}
+      <section className="py-16 md:py-20">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
+          <ScrollReveal>
+            <div className="mx-auto max-w-2xl text-center">
+              <span className="text-sm font-semibold tracking-wider uppercase text-cyber-violet font-body">{c.careerTeaser?.badge || "Builder Ecosystem"}</span>
+              <h2 className="font-body font-bold text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
+                {c.careerTeaser?.title || "More than an agency - a growing builder ecosystem"}
+              </h2>
+              <p className="text-abyssal-ink/50 mt-4 font-body">
+                {c.careerTeaser?.description || "Alongside client execution, MistHustlers creates opportunities for developers, students and emerging builders to learn through practical projects, collaborations and career opportunities."}
+              </p>
+              <button
+                onClick={() => navigate("/career")}
+                className="magnetic-btn mt-8 bg-abyssal-ink text-white px-8 py-4 rounded-[800px] text-base font-semibold cursor-pointer hover:bg-digital-orange transition-colors duration-300 font-body"
+              >
+                {c.careerTeaser?.cta || "Explore Careers"} &rarr;
+              </button>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
       {/* FAQ */}
       <section id="faq" className="py-16 md:py-24">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
@@ -557,8 +754,6 @@ export default function Home() {
       </section>
 
       </main>
-
-      <JoinEcosystemModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );
 }
