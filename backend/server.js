@@ -153,10 +153,10 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       imgSrc: ["'self'", "data:", "blob:", "https:"],
       frameSrc: ["'self'", "https://www.google.com", "https://maps.google.com"],
-      fontSrc: ["'self'", "data:"],
+      fontSrc: ["'self'", "data:", "https://fonts.gstatic.com"],
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
       formAction: ["'self'"],
