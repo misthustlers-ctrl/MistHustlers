@@ -83,7 +83,19 @@ async function prerender() {
 
     try {
       const page = await context.newPage();
-      await page.goto(url, { waitUntil: "networkidle", timeout: 30000 });
+      await page.route("**/*", (routeRequest) => {
+        const requestUrl = new URL(routeRequest.request().url());
+        const isLocalAsset = requestUrl.hostname === "localhost" || requestUrl.hostname === "127.0.0.1";
+
+        if (!isLocalAsset) {
+          routeRequest.abort();
+          return;
+        }
+
+        routeRequest.continue();
+      });
+
+      await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
 
       await page.waitForSelector("#root > *", { timeout: 15000 }).catch(() => {});
 

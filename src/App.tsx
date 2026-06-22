@@ -2,10 +2,10 @@ import { useEffect, lazy, Suspense } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Layout from "@/components/Layout";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import Home from "@/pages/Home";
 import Projects from "@/pages/Projects";
 import DynamicTheme from "@/components/DynamicTheme";
 
-const Home = lazy(() => import("./pages/Home"));
 const Services = lazy(() => import("./pages/Services"));
 const WebDevelopment = lazy(() => import("./pages/services/WebDevelopment"));
 const Automation = lazy(() => import("./pages/services/Automation"));
