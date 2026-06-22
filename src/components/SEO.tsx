@@ -46,6 +46,7 @@ export default function SEO({ page, overrides, robots }: SEOProps) {
     <Helmet>
       <title>{title}</title>
       <meta name="description" content={description} />
+      {meta.keywords && <meta name="keywords" content={meta.keywords} />}
       {robots && <meta name="robots" content={robots} />}
       <link rel="canonical" href={url} />
 

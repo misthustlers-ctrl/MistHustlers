@@ -15,6 +15,8 @@ type PricingTier = {
   popular: boolean;
   accent: string;
   imageUrl?: string;
+  delivery?: string;
+  bestFor?: string;
 };
 type ProcessStep = { step: string; title: string; desc: string; active?: boolean };
 type ServiceCard = {
@@ -35,7 +37,7 @@ type ServicesContent = {
     ctaSecondary: string;
     stats: ServiceStat[];
   };
-  pricing: { tiers: PricingTier[] };
+  pricing: { badge?: string; title?: string; description?: string; notice?: string; tiers: PricingTier[] };
   serviceCards?: ServiceCard[];
   process: { steps: ProcessStep[] };
   trust: { stats: ServiceStat[]; brands: string[] };
@@ -43,37 +45,52 @@ type ServicesContent = {
 
 const SERVICE_CARD_DEFAULTS: ServiceCard[] = [
   {
-    title: "Business Websites",
+    title: "Website Development",
     category: "Website",
-    description: "Conversion-focused, responsive websites designed to improve credibility, explain services and generate inquiries.",
-    price: "From ₹4,999",
+    description: "Landing pages and business websites with responsive layouts, lead forms, WhatsApp, Maps, SEO basics and deployment support.",
+    price: "From ₹3,999",
     link: "/services/web-development",
     enabled: true,
   },
   {
     title: "MVP Development",
     category: "Product",
-    description: "Functional first versions for founders who need to validate, demonstrate and launch a product idea.",
-    price: "From ₹15,000",
+    description: "Clickable prototypes and launch-ready web MVPs for founders who need to validate, demonstrate and ship one core workflow.",
+    price: "From ₹7,999",
     link: "/services/mvp-development",
     enabled: true,
   },
   {
     title: "AI & Workflow Automation",
     category: "Automation",
-    description: "Practical automation systems that connect tools, reduce repetitive work and improve lead or operations workflows.",
-    price: "From ₹5,000",
+    description: "Lead capture, Google Sheets, Gmail alerts, CRM sync, follow-up automation and AI-assisted workflow processing.",
+    price: "From ₹3,999",
     link: "/services/automation",
     enabled: true,
   },
   {
     title: "Website Maintenance & Support",
     category: "Support",
-    description: "Updates, bug fixes, hosting support, domain and SSL help, backups, uptime checks and performance assistance.",
-    price: "From ₹2,999/mo",
+    description: "Monthly backup, uptime checks, SSL/domain monitoring, integration checks, content updates and performance support.",
+    price: "From ₹999/mo",
     link: "/contact",
     enabled: true,
   },
+];
+
+const PRICING_TIER_DEFAULTS: PricingTier[] = [
+  { id: "launch-landing-page", name: "Launch Landing Page", price: "₹3,999", description: "One-page website for freelancers, personal brands, events and single-service businesses.", features: ["One-page website with up to 5 sections", "Mobile-responsive layout", "Contact or lead form plus WhatsApp", "Basic on-page SEO", "SSL and deployment support", "7 days of bug support"], popular: false, accent: "#070607", delivery: "4-6 working days", bestFor: "Freelancers, events and single-service businesses" },
+  { id: "business-starter-website", name: "Business Starter Website", price: "₹7,999", description: "A professional four-page website for local and growing businesses.", features: ["Home, About, Services and Contact", "Mobile and tablet responsiveness", "Contact form, WhatsApp and Maps", "Basic SEO and performance setup", "Google Analytics setup", "15 days of bug support"], popular: true, accent: "#fc5000", delivery: "7-10 working days", bestFor: "Clinics, gyms, consultants, salons, coaching centres and local businesses" },
+  { id: "business-growth-website", name: "Business Growth Website", price: "₹12,999", description: "A stronger business website with more content, credibility and selected CMS support.", features: ["Up to 7 pages", "Customized visual styling", "Service-detail pages", "Portfolio or project section", "FAQ and basic schema markup", "30 days of bug support"], popular: false, accent: "#524ae9", delivery: "12-18 working days", bestFor: "Growing businesses requiring stronger credibility" },
+  { id: "mvp-idea-prototype", name: "MVP Idea Prototype", price: "₹7,999", description: "Clickable prototype for founders who want to present or validate an idea before development.", features: ["Requirement discussion", "Basic user-flow planning", "Up to 6 interface screens", "Clickable prototype", "Landing-page concept", "Basic feature roadmap"], popular: false, accent: "#070607", delivery: "7-10 working days", bestFor: "Founders validating an idea before backend development" },
+  { id: "micro-mvp", name: "Micro MVP", price: "Starting at ₹24,999", description: "A functional web MVP focused on one user role and one core workflow.", features: ["Responsive web application", "One user role and one core workflow", "Registration and login", "Database setup", "Basic dashboard and admin management", "30 days of bug support"], popular: false, accent: "#524ae9", delivery: "3-5 weeks", bestFor: "Founders testing one core digital-product idea" },
+  { id: "startup-mvp", name: "Startup MVP", price: "Starting at ₹44,999", description: "A stronger first usable product with more workflows and launch-ready foundations.", features: ["Responsive web application", "Up to 2 user roles", "Up to 2 core workflows", "Admin dashboard", "Search and filters", "One external API integration"], popular: false, accent: "#fc5000", delivery: "5-8 weeks", bestFor: "Founders requiring a stronger first usable product" },
+  { id: "quick-workflow-automation", name: "Quick Workflow Automation", price: "₹3,999", description: "One simple repetitive task automated with testing and short documentation.", features: ["One automation workflow", "Up to 2 connected tools", "Trigger and action setup", "Basic error notification", "Testing", "7 days of technical support"], popular: false, accent: "#070607", delivery: "3-5 working days", bestFor: "One simple repetitive task" },
+  { id: "business-workflow-package", name: "Business Workflow Package", price: "₹9,999", description: "Up to three connected workflows for related daily business processes.", features: ["Up to 3 connected workflows", "Up to 4 tools", "Lead collection", "Automated notifications", "Spreadsheet or CRM synchronization", "15 days of support"], popular: false, accent: "#fc5000", delivery: "7-14 working days", bestFor: "Businesses automating related daily processes" },
+  { id: "ai-automation-starter", name: "AI Automation Starter", price: "Starting at ₹19,999", description: "AI-assisted workflows with summarization, classification or reply drafts.", features: ["Up to 3 AI-assisted workflows", "AI summarization or classification", "AI-generated reply drafts", "One approval step", "Spreadsheet or CRM connection", "30 days of support"], popular: false, accent: "#524ae9", delivery: "2-4 weeks", bestFor: "Businesses that need AI-assisted processing" },
+  { id: "essential-care", name: "Essential Care", price: "₹999/month", description: "Monthly maintenance for basic website health and small changes.", features: ["Monthly backup", "Uptime check", "SSL and domain monitoring", "Basic dependency updates", "Up to 30 minutes of small changes", "Email support"], popular: false, accent: "#070607", delivery: "Monthly", bestFor: "Small websites needing basic care" },
+  { id: "business-care", name: "Business Care", price: "₹2,499/month", description: "Maintenance plan with weekly backups, checks and priority support.", features: ["Everything in Essential Care", "Weekly backup", "Form and integration checks", "Basic security monitoring", "Performance check", "Up to 2 hours of changes"], popular: false, accent: "#fc5000", delivery: "Monthly", bestFor: "Business websites with active forms and integrations" },
+  { id: "growth-care", name: "Growth Care", price: "₹4,999/month", description: "Growth support for automation monitoring, content updates and monthly summaries.", features: ["Everything in Business Care", "Automation monitoring", "Content updates", "Up to 5 hours of changes", "Monthly performance summary", "One consultation call"], popular: false, accent: "#524ae9", delivery: "Monthly", bestFor: "Growing businesses with ongoing digital operations" },
 ];
 
 const SERVICES_DEFAULTS: ServicesContent = {
@@ -85,7 +102,13 @@ const SERVICES_DEFAULTS: ServicesContent = {
     ctaSecondary: "Start a Project",
     stats: [],
   },
-  pricing: { tiers: [] },
+  pricing: {
+    badge: "Service Pricing",
+    title: "Service packages with clear launch pricing",
+    description: "Transparent launch pricing with clearly defined scope. Choose only what your business currently needs.",
+    notice: "Domain, hosting, paid APIs, subscriptions and third-party tools are separate unless included in writing.",
+    tiers: PRICING_TIER_DEFAULTS,
+  },
   process: { steps: [] },
   trust: { stats: [], brands: [] },
 };
@@ -294,13 +317,13 @@ export default function Services() {
         <div className="max-w-[720px] mb-[64px] md:mb-[84px]">
           <div className="inline-flex items-center gap-[8px] mb-[24px]">
             <div className="h-[4px] w-[4px] rounded-full" style={{ backgroundColor: "var(--mh-cta)" }}></div>
-            <span className="text-[12px] font-[700] uppercase tracking-[0.14em]" style={{ color: "rgba(var(--mh-text-rgb), 0.55)" }}>Service Pricing</span>
+            <span className="text-[12px] font-[700] uppercase tracking-[0.14em]" style={{ color: "rgba(var(--mh-text-rgb), 0.55)" }}>{c.pricing?.badge || "Service Pricing"}</span>
           </div>
           <h2 className="font-body font-bold text-[40px] md:text-[52px] leading-[1.05] tracking-[-0.03em] mb-[20px]" style={{ color: "var(--mh-text)" }}>
-            Pick your execution level
+            {c.pricing?.title || "Pick your execution level"}
           </h2>
           <p className="text-[17px] leading-[1.6] font-[450]" style={{ color: "rgba(var(--mh-text-rgb), 0.68)" }}>
-            Final pricing depends on project complexity. All projects include source code, documentation, and direct communication.
+            {c.pricing?.description || "Final pricing depends on project complexity. All projects include source code, documentation, and direct communication."}
           </p>
         </div>
 
@@ -338,6 +361,12 @@ export default function Services() {
                       </div>
                     </div>
                     <p className="text-[14px] leading-[1.55] font-[450]" style={{ color: "rgba(var(--mh-text-rgb), 0.68)" }}>{tier.description}</p>
+                    {(tier.bestFor || tier.delivery) && (
+                      <div className="mt-4 space-y-1 rounded-[16px] p-3 text-[12.5px] leading-[1.45]" style={{ backgroundColor: "rgba(var(--mh-text-rgb), 0.035)", color: "rgba(var(--mh-text-rgb), 0.62)" }}>
+                        {tier.bestFor && <p><span className="font-[700]" style={{ color: "rgba(var(--mh-text-rgb), 0.78)" }}>Best for:</span> {tier.bestFor}</p>}
+                        {tier.delivery && <p><span className="font-[700]" style={{ color: "rgba(var(--mh-text-rgb), 0.78)" }}>Delivery:</span> {tier.delivery}</p>}
+                      </div>
+                    )}
                   </div>
 
                   {tier.imageUrl && (
@@ -385,7 +414,7 @@ export default function Services() {
               <circle cx="7" cy="7" r="5.25" stroke="currentColor" strokeWidth="1.25"/>
               <path d="M7 4.2V7.7M7 9.8H7.007" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round"/>
             </svg>
-            Final pricing confirmed after requirement review. No hidden costs.
+            {c.pricing?.notice || "Final pricing confirmed after requirement review. No hidden costs."}
           </p>
         </div>
       </section>

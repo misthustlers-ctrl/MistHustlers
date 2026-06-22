@@ -2,15 +2,17 @@
   "siteName": "MistHustlers",
   "siteUrl": "https://www.misthustlers.in",
   "defaultTitle": "MistHustlers | Website, MVP & AI Automation Company",
-  "defaultDescription": "MistHustlers builds business websites, MVPs, AI automation systems and related digital solutions for startups, founders and growing businesses.",
+  "defaultDescription": "MistHustlers builds business websites, MVPs, AI automation, CMS and CRM workflow systems for startups, founders and growing businesses.",
   "pages": {
     "home": {
       "title": "MistHustlers | Website, MVP & AI Automation Company",
-      "description": "MistHustlers builds business websites, MVPs and AI automation solutions for startups, founders and growing businesses in Indore and across India."
+      "description": "MistHustlers builds business websites, MVPs, AI automation, CMS and CRM workflow systems for startups, founders and growing businesses in Indore and across India.",
+      "keywords": "web development agency in Indore, AI automation agency Indore, MVP development India, CMS dashboard, CRM workflow, AEO, GEO, SEO"
     },
     "services": {
-      "title": "Services - MistHustlers",
-      "description": "Transparent web development, MVP development, and automation services with fixed-price execution."
+      "title": "Website, MVP, Automation, CMS & CRM Services - MistHustlers",
+      "description": "Website packages, MVP development, AI workflow automation, CMS, CRM and maintenance services by MistHustlers in Indore with transparent launch pricing.",
+      "keywords": "website development packages Indore, MVP development pricing, AI automation packages, CMS development, CRM dashboard, AEO optimization, GEO optimization"
     },
     "career": {
       "title": "Career - MistHustlers",

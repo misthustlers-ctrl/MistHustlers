@@ -75,7 +75,7 @@ type HomeJourneyStep = { step: string; title: string; desc: string };
 type HomeFeature = { title: string; desc: string };
 type HomeFaqItem = { q: string; a: string };
 type HomeProject = { title: string; category: string; visual?: string; imageUrl?: string; link?: string };
-type PricingTier = { id: string; name: string; price: string; description: string; features: string[]; popular?: boolean; accent?: string };
+type PricingTier = { id: string; name: string; price: string; description: string; features: string[]; popular?: boolean; accent?: string; delivery?: string; bestFor?: string };
 type ServiceCard = { title: string; category: string; description: string; price?: string; link?: string; enabled?: boolean };
 
 type HomeContent = {
@@ -207,31 +207,31 @@ const HOME_DEFAULTS: HomeContent = {
 
 const SERVICE_CARD_DEFAULTS: ServiceCard[] = [
   {
-    title: "Business Websites",
+    title: "Website Development",
     category: "Website",
-    description: "Conversion-focused, responsive websites designed to explain services and generate enquiries.",
-    price: "From ₹4,999",
+    description: "Landing pages and business websites with responsive layouts, lead forms, WhatsApp, Maps, SEO basics and deployment support.",
+    price: "From ₹3,999",
     link: "/services/web-development",
   },
   {
     title: "MVP Development",
     category: "Product",
-    description: "Functional first versions for founders who need to validate, demonstrate and launch a product idea.",
-    price: "From ₹15,000",
+    description: "Clickable prototypes and launch-ready web MVPs for founders who need to validate, demonstrate and ship one core workflow.",
+    price: "From ₹7,999",
     link: "/services/mvp-development",
   },
   {
     title: "AI & Workflow Automation",
     category: "Automation",
-    description: "Practical automations that connect tools, reduce repetitive work and improve lead or operations workflows.",
-    price: "From ₹5,000",
+    description: "Lead capture, Google Sheets, Gmail alerts, CRM sync, follow-up automation and AI-assisted workflow processing.",
+    price: "From ₹3,999",
     link: "/services/automation",
   },
   {
     title: "Website Maintenance & Support",
     category: "Support",
-    description: "Updates, bug fixes, hosting support, domain and SSL help, backups, uptime checks and performance assistance.",
-    price: "From ₹2,999/mo",
+    description: "Monthly backup, uptime checks, SSL/domain monitoring, integration checks, content updates and performance support.",
+    price: "From ₹999/mo",
     link: "/services",
   },
 ];
@@ -240,12 +240,14 @@ const SERVICES_PRICING_DEFAULTS = {
   serviceCards: SERVICE_CARD_DEFAULTS,
   pricing: {
     tiers: [
-      { id: "starter", name: "STARTER", price: "₹999 – ₹4,999", description: "Essential presence for new founders", features: ["Landing Page Design", "Portfolio Website", "Basic Automation Setup", "14-Day Support"], popular: false, accent: "#070607" },
-      { id: "growth", name: "GROWTH", price: "₹5,000 – ₹15,000", description: "Complete digital identity for scaling", features: ["Business Website", "Web App UI", "Automation Systems", "Basic Backend", "30-Day Support"], popular: true, accent: "#fc5000" },
-      { id: "premium", name: "PREMIUM", price: "₹15,000 – ₹50,000+", description: "Full product development for serious ventures", features: ["Full Stack App", "MVP Development", "AI Automation Systems", "Scalable Platforms", "90-Day Partnership"], popular: false, accent: "#524ae9" },
+      { id: "business-starter-website", name: "Business Starter Website", price: "₹7,999", description: "A professional four-page website for local and growing businesses.", features: ["Home, About, Services and Contact", "Contact form, WhatsApp and Maps", "Basic SEO and Analytics setup", "15 days of bug support"], popular: true, accent: "#fc5000", delivery: "7-10 working days", bestFor: "Clinics, gyms, consultants, salons and local businesses" },
+      { id: "micro-mvp", name: "Micro MVP", price: "Starting at ₹24,999", description: "A functional web MVP focused on one user role and one core workflow.", features: ["Responsive web application", "Login, database and basic dashboard", "Basic admin management", "30 days of bug support"], popular: false, accent: "#524ae9", delivery: "3-5 weeks", bestFor: "Founders testing one core product idea" },
+      { id: "business-workflow-automation", name: "Business Workflow Automation", price: "₹9,999", description: "Up to three connected workflows for repetitive business processes.", features: ["Up to 3 connected workflows", "Lead collection and notifications", "Spreadsheet or CRM synchronization", "15 days of support"], popular: false, accent: "#070607", delivery: "7-14 working days", bestFor: "Teams automating daily operations" },
     ] as PricingTier[],
   },
 };
+
+const HOMEPAGE_PACKAGE_IDS = ["business-starter-website", "micro-mvp", "business-workflow-package"];
 
 export default function Home() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -254,7 +256,11 @@ export default function Home() {
   const c = useContent("home", HOME_DEFAULTS);
   const servicesContent = useContent("services", SERVICES_PRICING_DEFAULTS);
   const stats = useMemo(() => c.stats ?? [], [c.stats]);
-  const pricingTiers = useMemo(() => servicesContent.pricing?.tiers?.slice(0, 3) ?? [], [servicesContent.pricing?.tiers]);
+  const pricingTiers = useMemo(() => {
+    const tiers = servicesContent.pricing?.tiers ?? [];
+    const featured = HOMEPAGE_PACKAGE_IDS.map((id) => tiers.find((tier) => tier.id === id)).filter(Boolean) as PricingTier[];
+    return featured.length ? featured : tiers.slice(0, 3);
+  }, [servicesContent.pricing?.tiers]);
   const serviceCards = useMemo(
     () => ((servicesContent.serviceCards?.length ? servicesContent.serviceCards : SERVICE_CARD_DEFAULTS) as ServiceCard[]).filter((item) => item.enabled !== false).slice(0, 4),
     [servicesContent.serviceCards],
@@ -476,6 +482,12 @@ export default function Home() {
                     {tier.popular && <span className="rounded-full bg-digital-orange px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white font-body">Most Chosen</span>}
                   </div>
                   <p className="min-h-12 text-sm leading-relaxed text-abyssal-ink/60 font-body">{tier.description}</p>
+                  {(tier.bestFor || tier.delivery) && (
+                    <div className="mt-4 space-y-1 rounded-2xl bg-abyssal-ink/[0.03] p-3 text-xs leading-relaxed text-abyssal-ink/55 font-body">
+                      {tier.bestFor && <p><span className="font-bold text-abyssal-ink/70">Best for:</span> {tier.bestFor}</p>}
+                      {tier.delivery && <p><span className="font-bold text-abyssal-ink/70">Delivery:</span> {tier.delivery}</p>}
+                    </div>
+                  )}
                   <div className="mt-6 space-y-3">
                     {(tier.features || []).slice(0, 5).map((feature) => (
                       <div key={feature} className="flex items-center gap-3 text-sm text-abyssal-ink font-body">

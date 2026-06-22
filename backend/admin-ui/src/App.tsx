@@ -126,12 +126,12 @@ async function api<T>(url: string, init?: RequestInit): Promise<T> {
 
 const tabs: { id: TabType; label: string; icon: React.ElementType }[] = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { id: 'work', label: 'Client Work', icon: Handshake },
+  { id: 'work', label: 'Client CRM', icon: Handshake },
   { id: 'leads', label: 'Leads', icon: Mail },
   { id: 'workers', label: 'Workers', icon: Users },
   { id: 'career', label: 'Career', icon: BriefcaseBusiness },
   { id: 'projects', label: 'Projects', icon: FolderKanban },
-  { id: 'content', label: 'Content', icon: FileText },
+  { id: 'content', label: 'CMS Content', icon: FileText },
   { id: 'media', label: 'Media', icon: Image },
   { id: 'logo', label: 'Logo', icon: Settings },
   { id: 'accounts', label: 'Accounts', icon: UserPlus },
@@ -1765,7 +1765,18 @@ const App: React.FC = () => {
         </div>
 
         <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
-          <h3 className="text-sm font-semibold mb-4">Pricing Section</h3>
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-semibold">Service Packages</h3>
+              <p className="mt-1 text-[11px] text-white/40">CMS-managed packages shown on the Services page and used by the homepage pricing preview.</p>
+            </div>
+            <button
+              onClick={() => updateContentField(setServicesContent, ['pricing', 'tiers'], [...(c.pricing?.tiers || []), { id: `package-${Date.now()}`, name: 'New Package', price: '', description: '', bestFor: '', delivery: '', features: [], popular: false, accent: '#fc5000', imageUrl: '' }])}
+              className="rounded-lg border border-white/15 px-3 py-1.5 text-xs hover:bg-white hover:text-black"
+            >
+              Add Package
+            </button>
+          </div>
           <div className="grid grid-cols-3 gap-4 mb-4">
             <div>
               <label className="block text-[11px] text-white/50 mb-1">Badge</label>
@@ -1789,10 +1800,13 @@ const App: React.FC = () => {
           <div key={tier.id || idx} className="bg-[#111] border border-white/10 rounded-2xl p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-semibold">Tier {idx + 1}: {tier.name}</h3>
-              <label className="flex items-center gap-2 text-[11px] text-white/50">
-                <input type="checkbox" checked={tier.popular || false} onChange={e => updateContentField(setServicesContent, ['pricing', 'tiers', String(idx), 'popular'], e.target.checked)} className="accent-white" />
-                Popular
-              </label>
+              <div className="flex items-center gap-3">
+                <label className="flex items-center gap-2 text-[11px] text-white/50">
+                  <input type="checkbox" checked={tier.popular || false} onChange={e => updateContentField(setServicesContent, ['pricing', 'tiers', String(idx), 'popular'], e.target.checked)} className="accent-white" />
+                  Popular
+                </label>
+                <button onClick={() => updateContentField(setServicesContent, ['pricing', 'tiers'], (c.pricing?.tiers || []).filter((_: any, i: number) => i !== idx))} className="rounded-lg border border-red-400/30 px-2 py-1 text-xs text-red-300 hover:bg-red-500 hover:text-white">Remove</button>
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
@@ -1806,6 +1820,14 @@ const App: React.FC = () => {
               <div className="col-span-2">
                 <label className="block text-[11px] text-white/50 mb-1">Description</label>
                 <input className="field text-sm" value={tier.description || ''} onChange={e => updateContentField(setServicesContent, ['pricing', 'tiers', String(idx), 'description'], e.target.value)} />
+              </div>
+              <div>
+                <label className="block text-[11px] text-white/50 mb-1">Best For</label>
+                <input className="field text-sm" value={tier.bestFor || ''} onChange={e => updateContentField(setServicesContent, ['pricing', 'tiers', String(idx), 'bestFor'], e.target.value)} />
+              </div>
+              <div>
+                <label className="block text-[11px] text-white/50 mb-1">Delivery</label>
+                <input className="field text-sm" value={tier.delivery || ''} onChange={e => updateContentField(setServicesContent, ['pricing', 'tiers', String(idx), 'delivery'], e.target.value)} />
               </div>
               <div>
                 <label className="block text-[11px] text-white/50 mb-1">Accent Color</label>
@@ -2591,7 +2613,7 @@ const App: React.FC = () => {
   const renderContentEditor = () => (
     <section>
       <div className="flex justify-between mb-4 items-end">
-        <div><div className="text-[11px] tracking-[1px] text-white/50">CONTENT MANAGEMENT</div><div className="text-lg font-semibold">Edit Page Content</div></div>
+        <div><div className="text-[11px] tracking-[1px] text-white/50">CMS CONTENT MANAGEMENT</div><div className="text-lg font-semibold">Edit Website Content</div></div>
         <div className="flex gap-1.5">
           {['services', 'home', 'about', 'career', 'projects', 'contact', 'seo'].map((page) => (
             <button key={page} onClick={() => { setContentTab(page); if (!isPreviewSession) fetchContent(page); }} className={`px-3 py-1.5 text-[11px] rounded-lg border ${contentTab === page ? 'bg-white text-black border-white' : 'border-white/10 text-white/60 hover:bg-white/5'}`}>

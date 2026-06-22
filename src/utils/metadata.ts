@@ -11,18 +11,21 @@ export interface PageMeta {
   ogDescription?: string;
   canonical?: string;
   h1?: string;
+  keywords?: string;
 }
 
 export const PAGE_META: Record<string, PageMeta> = {
   home: {
     title: "MistHustlers | Website, MVP & AI Automation Company",
-    description: "MistHustlers builds business websites, MVPs and AI automation solutions for startups, founders and growing businesses in Indore and across India.",
+    description: "MistHustlers builds business websites, MVPs, AI automation, CMS and CRM workflow systems for startups, founders and growing businesses in Indore and across India.",
     canonical: SITE_URL,
+    keywords: "web development agency in Indore, AI automation agency Indore, MVP development India, CMS dashboard, CRM workflow, AEO, GEO, SEO",
   },
   services: {
     title: "Web Development Services in Indore — MistHustlers",
-    description: "Get your website, MVP, or automation system built by expert developers in Indore. Transparent pricing from ₹999. No agency overhead. Direct access.",
+    description: "Website packages, MVP development, AI workflow automation, CMS, CRM and maintenance services by MistHustlers in Indore with transparent launch pricing.",
     canonical: `${SITE_URL}/services`,
+    keywords: "website development packages Indore, MVP development pricing, AI automation packages, CMS development, CRM dashboard, AEO optimization, GEO optimization",
   },
   webDevelopment: {
     title: "Web Development Company in Indore | MistHustlers",

@@ -139,11 +139,15 @@ const serviceSchema = (page: string) => {
   areaServed: "IN",
   hasOfferCatalog: {
     "@type": "OfferCatalog",
-    name: "Execution Plans",
+    name: "MistHustlers Service Packages",
     itemListElement: [
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "STARTER" }, price: "₹999", priceCurrency: "INR" },
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "GROWTH" }, price: "₹5,000", priceCurrency: "INR" },
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "PREMIUM" }, price: "₹15,000", priceCurrency: "INR" },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Launch Landing Page" }, price: "3999", priceCurrency: "INR" },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Business Starter Website" }, price: "7999", priceCurrency: "INR" },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Business Growth Website" }, price: "12999", priceCurrency: "INR" },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "MVP Idea Prototype" }, price: "7999", priceCurrency: "INR" },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Micro MVP" }, price: "24999", priceCurrency: "INR" },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Business Workflow Package" }, price: "9999", priceCurrency: "INR" },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "AI Automation Starter" }, price: "19999", priceCurrency: "INR" },
     ],
   },
 };
