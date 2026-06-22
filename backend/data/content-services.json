@@ -12,8 +12,8 @@
   },
   "pricing": {
     "badge": "Service Pricing",
-    "title": "Service packages with clear launch pricing",
-    "description": "Transparent launch pricing with clearly defined scope. Choose only what your business currently needs.",
+    "title": "Execution plans starting from budget-friendly options",
+    "description": "Start with a smaller package, validate the work, and upgrade only when your business needs more scope.",
     "tiers": [
       {
         "id": "launch-landing-page",

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import ServiceInquiryForm from "@/components/ServiceInquiryForm";
 import SEO from "@/components/SEO";
 import SchemaMarkup from "@/components/SchemaMarkup";
@@ -42,6 +42,36 @@ type ServicesContent = {
   process: { steps: ProcessStep[] };
   trust: { stats: ServiceStat[]; brands: string[] };
 };
+
+const PRICE_FILTERS = [
+  { id: "budget", label: "Budget friendly", description: "Under ₹10k first" },
+  { id: "website", label: "Website", description: "Landing and business sites" },
+  { id: "automation", label: "Automation", description: "Workflow and AI automation" },
+  { id: "mvp", label: "MVP", description: "Founder product plans" },
+  { id: "monthly", label: "Monthly care", description: "Support plans" },
+  { id: "all", label: "All plans", description: "Show every package" },
+];
+
+function priceNumber(price = "") {
+  const match = price.replace(/,/g, "").match(/\d+/);
+  return match ? Number(match[0]) : Number.POSITIVE_INFINITY;
+}
+
+function tierCategory(tier: PricingTier) {
+  const text = `${tier.id} ${tier.name}`.toLowerCase();
+  if (text.includes("mvp") || text.includes("prototype")) return "mvp";
+  if (text.includes("automation") || text.includes("workflow")) return "automation";
+  if (text.includes("care") || text.includes("maintenance") || text.includes("month")) return "monthly";
+  return "website";
+}
+
+function tierServiceLink(tier: PricingTier) {
+  const category = tierCategory(tier);
+  if (category === "mvp") return "/services/mvp-development";
+  if (category === "automation") return "/services/automation";
+  if (category === "monthly") return "/contact";
+  return "/services/web-development";
+}
 
 const SERVICE_CARD_DEFAULTS: ServiceCard[] = [
   {
@@ -104,8 +134,8 @@ const SERVICES_DEFAULTS: ServicesContent = {
   },
   pricing: {
     badge: "Service Pricing",
-    title: "Service packages with clear launch pricing",
-    description: "Transparent launch pricing with clearly defined scope. Choose only what your business currently needs.",
+    title: "Execution plans starting from budget-friendly options",
+    description: "Start with a smaller package, validate the work, and upgrade only when your business needs more scope.",
     notice: "Domain, hosting, paid APIs, subscriptions and third-party tools are separate unless included in writing.",
     tiers: PRICING_TIER_DEFAULTS,
   },
@@ -115,9 +145,30 @@ const SERVICES_DEFAULTS: ServicesContent = {
 
 export default function Services() {
   const inquiryRef = useRef<HTMLDivElement>(null);
+  const [serviceFilter, setServiceFilter] = useState("All");
+  const [serviceSearch, setServiceSearch] = useState("");
+  const [priceFilter, setPriceFilter] = useState("budget");
   const c = useContent("services", SERVICES_DEFAULTS);
   const pricingTiers = c.pricing?.tiers || [];
   const serviceCards = (c.serviceCards?.length ? c.serviceCards : SERVICE_CARD_DEFAULTS).filter((item) => item.enabled !== false);
+  const serviceCategories = useMemo(() => ["All", ...Array.from(new Set(serviceCards.map((item) => item.category).filter(Boolean)))], [serviceCards]);
+  const filteredServiceCards = useMemo(() => {
+    const query = serviceSearch.trim().toLowerCase();
+    return serviceCards.filter((item) => {
+      const categoryMatches = serviceFilter === "All" || item.category === serviceFilter;
+      const searchMatches = !query || `${item.title} ${item.category} ${item.description} ${item.price || ""}`.toLowerCase().includes(query);
+      return categoryMatches && searchMatches;
+    });
+  }, [serviceCards, serviceFilter, serviceSearch]);
+  const filteredPricingTiers = useMemo(() => {
+    return [...pricingTiers]
+      .sort((a, b) => priceNumber(a.price) - priceNumber(b.price))
+      .filter((tier) => {
+        if (priceFilter === "all") return true;
+        if (priceFilter === "budget") return priceNumber(tier.price) <= 10000;
+        return tierCategory(tier) === priceFilter;
+      });
+  }, [pricingTiers, priceFilter]);
   const processSteps = (c.process?.steps || []).map((s, i) => ({ ...s, active: i < 2 }));
   const trustStats = c.trust?.stats || [];
   const brands = c.trust?.brands || [];
@@ -274,12 +325,46 @@ export default function Services() {
             What we build
           </h2>
           <p className="text-[17px] leading-[1.6] font-[450]" style={{ color: "rgba(var(--mh-text-rgb), 0.68)" }}>
-            Web development, AI automation, and MVP development for founders and startups.
+            Find the right service by category, price range and business need.
           </p>
         </div>
 
+        <div className="mb-8 grid gap-3 md:grid-cols-[1fr_auto] md:items-center">
+          <label className="relative block">
+            <span className="sr-only">Search services</span>
+            <input
+              value={serviceSearch}
+              onChange={(event) => setServiceSearch(event.target.value)}
+              placeholder="Search website, automation, MVP, maintenance..."
+              className="h-12 w-full rounded-[16px] border px-4 pr-11 text-sm font-[500] outline-none"
+              style={{ backgroundColor: "var(--mh-surface)", borderColor: "rgba(var(--mh-text-rgb), 0.08)", color: "var(--mh-text)" }}
+            />
+            <svg className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 opacity-45" width="17" height="17" viewBox="0 0 17 17" fill="none">
+              <circle cx="7.4" cy="7.4" r="4.7" stroke="currentColor" strokeWidth="1.5"/>
+              <path d="M11 11L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+          </label>
+          <div className="flex gap-2 overflow-x-auto pb-1 md:justify-end">
+            {serviceCategories.map((category) => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => setServiceFilter(category)}
+                className="h-10 shrink-0 rounded-[14px] border px-4 text-xs font-[700] transition-colors"
+                style={{
+                  backgroundColor: serviceFilter === category ? "var(--mh-text)" : "var(--mh-surface)",
+                  borderColor: serviceFilter === category ? "var(--mh-text)" : "rgba(var(--mh-text-rgb), 0.08)",
+                  color: serviceFilter === category ? "var(--mh-surface)" : "rgba(var(--mh-text-rgb), 0.68)",
+                }}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-[20px] lg:gap-[24px]">
-          {serviceCards.map((svc, index) => {
+          {filteredServiceCards.map((svc, index) => {
             const accent = index % 3 === 1 ? "var(--mh-secondary)" : index % 3 === 2 ? "var(--mh-cta)" : "var(--mh-text)";
             const href = svc.link?.trim() || "/contact";
             return (
@@ -301,7 +386,7 @@ export default function Services() {
               <p className="text-[14.5px] leading-[1.55] font-[450] mb-[20px]" style={{ color: "rgba(var(--mh-text-rgb), 0.68)" }}>{svc.description}</p>
               {svc.price && <div className="mb-[18px] text-[13px] font-[700]" style={{ color: "var(--mh-text)" }}>{svc.price}</div>}
               <span className="text-[13.5px] font-[600] inline-flex items-center gap-[6px] group-hover:gap-[10px] transition-all" style={{ color: accent }}>
-                Learn more
+                Visit service
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                   <path d="M5 3L9 7L5 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                 </svg>
@@ -310,6 +395,11 @@ export default function Services() {
             );
           })}
         </div>
+        {!filteredServiceCards.length && (
+          <div className="mt-8 rounded-[20px] border p-6 text-center text-sm font-[500]" style={{ backgroundColor: "var(--mh-surface)", borderColor: "rgba(var(--mh-text-rgb), 0.08)", color: "rgba(var(--mh-text-rgb), 0.62)" }}>
+            No service found. Try another keyword or category.
+          </div>
+        )}
       </section>
 
       {/* PRICING TIERS */}
@@ -327,8 +417,27 @@ export default function Services() {
           </p>
         </div>
 
+        <div className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+          {PRICE_FILTERS.map((filter) => (
+            <button
+              key={filter.id}
+              type="button"
+              onClick={() => setPriceFilter(filter.id)}
+              className="rounded-[18px] border p-4 text-left transition-all hover:-translate-y-0.5"
+              style={{
+                backgroundColor: priceFilter === filter.id ? "var(--mh-text)" : "var(--mh-surface)",
+                borderColor: priceFilter === filter.id ? "var(--mh-text)" : "rgba(var(--mh-text-rgb), 0.08)",
+                color: priceFilter === filter.id ? "var(--mh-surface)" : "var(--mh-text)",
+              }}
+            >
+              <span className="block text-[13px] font-[800]">{filter.label}</span>
+              <span className="mt-1 block text-[11.5px] font-[500] opacity-65">{filter.description}</span>
+            </button>
+          ))}
+        </div>
+
         <div className="grid md:grid-cols-3 gap-[20px] lg:gap-[24px]">
-          {pricingTiers.map((tier) => (
+          {filteredPricingTiers.map((tier) => (
             <div key={tier.id} className="relative group">
               <div className="h-full rounded-[28px] p-[1px] transition-all duration-300"
                 style={{
@@ -402,11 +511,27 @@ export default function Services() {
                       <path d="M5 3L9 7L5 11" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/>
                     </svg>
                   </button>
+                  <a
+                    href={tierServiceLink(tier)}
+                    className="mt-3 flex h-[44px] w-full items-center justify-center gap-2 rounded-[15px] border text-[14px] font-[700] transition-all hover:-translate-y-[1px]"
+                    style={{ borderColor: "rgba(var(--mh-text-rgb), 0.12)", color: "var(--mh-text)" }}
+                  >
+                    Visit service
+                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                      <path d="M4.5 2.5H10.5V8.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M10 3L3 10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                    </svg>
+                  </a>
                 </div>
               </div>
             </div>
           ))}
         </div>
+        {!filteredPricingTiers.length && (
+          <div className="mt-8 rounded-[20px] border p-6 text-center text-sm font-[500]" style={{ backgroundColor: "var(--mh-surface)", borderColor: "rgba(var(--mh-text-rgb), 0.08)", color: "rgba(var(--mh-text-rgb), 0.62)" }}>
+            No plan in this filter. Select All plans to view every package.
+          </div>
+        )}
 
         <div className="mt-[28px] text-center">
           <p className="text-[13.5px] font-[500] inline-flex items-center gap-[8px] px-[16px] h-[36px] rounded-[14px] border" style={{ backgroundColor: "rgba(var(--mh-surface-rgb), 0.7)", borderColor: "rgba(var(--mh-text-rgb), 0.06)", color: "rgba(var(--mh-text-rgb), 0.7)" }}>
