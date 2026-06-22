@@ -13,10 +13,34 @@ const packageData = {
   serviceCards: source.serviceCards,
 };
 
+function mergeArrayByKey(sourceItems = [], existingItems = [], key = "id") {
+  const existingByKey = new Map(existingItems.filter((item) => item?.[key]).map((item) => [item[key], item]));
+  const merged = sourceItems.map((item) => {
+    const existing = item?.[key] ? existingByKey.get(item[key]) : null;
+    return existing ? { ...item, ...existing } : item;
+  });
+  const sourceKeys = new Set(sourceItems.map((item) => item?.[key]).filter(Boolean));
+  const customItems = existingItems.filter((item) => !item?.[key] || !sourceKeys.has(item[key]));
+  return [...merged, ...customItems];
+}
+
+function mergePricing(existingPricing = {}) {
+  return {
+    ...packageData.pricing,
+    ...existingPricing,
+    homepageFeaturedIds: existingPricing.homepageFeaturedIds?.length
+      ? existingPricing.homepageFeaturedIds
+      : packageData.pricing.homepageFeaturedIds,
+    tiers: mergeArrayByKey(packageData.pricing.tiers, existingPricing.tiers || [], "id"),
+  };
+}
+
 function mergeServicesContent(existing = {}) {
   return {
     ...existing,
-    ...packageData,
+    pricing: mergePricing(existing.pricing || {}),
+    categories: existing.categories?.length ? existing.categories : packageData.categories,
+    serviceCards: existing.serviceCards?.length ? existing.serviceCards : packageData.serviceCards,
   };
 }
 

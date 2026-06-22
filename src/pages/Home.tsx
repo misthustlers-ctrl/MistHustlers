@@ -239,15 +239,16 @@ const SERVICE_CARD_DEFAULTS: ServiceCard[] = [
 const SERVICES_PRICING_DEFAULTS = {
   serviceCards: SERVICE_CARD_DEFAULTS,
   pricing: {
+    homepageFeaturedIds: ["launch-landing-page", "quick-workflow-automation", "business-starter-website"],
     tiers: [
+      { id: "launch-landing-page", name: "Launch Landing Page", price: "₹3,999", description: "One-page website for freelancers, personal brands, events and single-service businesses.", features: ["One-page website with up to 5 sections", "Mobile-responsive layout", "Contact or lead form plus WhatsApp", "Basic on-page SEO", "7 days of bug support"], popular: false, accent: "#070607", delivery: "4-6 working days", bestFor: "Freelancers, events and single-service businesses" },
+      { id: "quick-workflow-automation", name: "Quick Workflow Automation", price: "₹3,999", description: "One simple repetitive task automated with testing and short documentation.", features: ["One automation workflow", "Up to 2 connected tools", "Trigger and action setup", "Basic error notification", "7 days of technical support"], popular: false, accent: "#524ae9", delivery: "3-5 working days", bestFor: "One simple repetitive task" },
       { id: "business-starter-website", name: "Business Starter Website", price: "₹7,999", description: "A professional four-page website for local and growing businesses.", features: ["Home, About, Services and Contact", "Contact form, WhatsApp and Maps", "Basic SEO and Analytics setup", "15 days of bug support"], popular: true, accent: "#fc5000", delivery: "7-10 working days", bestFor: "Clinics, gyms, consultants, salons and local businesses" },
-      { id: "micro-mvp", name: "Micro MVP", price: "Starting at ₹24,999", description: "A functional web MVP focused on one user role and one core workflow.", features: ["Responsive web application", "Login, database and basic dashboard", "Basic admin management", "30 days of bug support"], popular: false, accent: "#524ae9", delivery: "3-5 weeks", bestFor: "Founders testing one core product idea" },
-      { id: "business-workflow-automation", name: "Business Workflow Automation", price: "₹9,999", description: "Up to three connected workflows for repetitive business processes.", features: ["Up to 3 connected workflows", "Lead collection and notifications", "Spreadsheet or CRM synchronization", "15 days of support"], popular: false, accent: "#070607", delivery: "7-14 working days", bestFor: "Teams automating daily operations" },
     ] as PricingTier[],
   },
 };
 
-const HOMEPAGE_PACKAGE_IDS = ["business-starter-website", "micro-mvp", "business-workflow-package"];
+const HOMEPAGE_PACKAGE_IDS = ["launch-landing-page", "quick-workflow-automation", "business-starter-website"];
 
 export default function Home() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -258,9 +259,10 @@ export default function Home() {
   const stats = useMemo(() => c.stats ?? [], [c.stats]);
   const pricingTiers = useMemo(() => {
     const tiers = servicesContent.pricing?.tiers ?? [];
-    const featured = HOMEPAGE_PACKAGE_IDS.map((id) => tiers.find((tier) => tier.id === id)).filter(Boolean) as PricingTier[];
-    return featured.length ? featured : tiers.slice(0, 3);
-  }, [servicesContent.pricing?.tiers]);
+    const featuredIds = servicesContent.pricing?.homepageFeaturedIds?.length ? servicesContent.pricing.homepageFeaturedIds : HOMEPAGE_PACKAGE_IDS;
+    const featured = featuredIds.map((id: string) => tiers.find((tier) => tier.id === id)).filter(Boolean) as PricingTier[];
+    return (featured.length ? featured : tiers).slice(0, 3);
+  }, [servicesContent.pricing?.homepageFeaturedIds, servicesContent.pricing?.tiers]);
   const serviceCards = useMemo(
     () => ((servicesContent.serviceCards?.length ? servicesContent.serviceCards : SERVICE_CARD_DEFAULTS) as ServiceCard[]).filter((item) => item.enabled !== false).slice(0, 4),
     [servicesContent.serviceCards],
@@ -462,10 +464,10 @@ export default function Home() {
             <div className="mb-12 text-center">
               <span className="text-sm font-semibold tracking-wider uppercase text-digital-orange font-body">Execution Plans</span>
               <h2 className="font-body font-bold text-[clamp(36px,5vw,56px)] tracking-[0.02em] text-abyssal-ink mt-2 leading-[1.05]">
-                Choose a plan that matches the work
+                Start with a budget-friendly plan
               </h2>
               <p className="text-abyssal-ink/50 mt-4 max-w-xl mx-auto font-body">
-                These plans help clients understand budget range before discussion. Final pricing is confirmed after requirement review.
+                Low-entry execution plans help clients start without pressure. Larger packages are available on the full Services page.
               </p>
             </div>
           </ScrollReveal>

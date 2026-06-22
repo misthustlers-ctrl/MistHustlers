@@ -1699,6 +1699,11 @@ const App: React.FC = () => {
     const c = servicesContent;
     const serviceCategories = c.categories || [];
     const serviceCards = c.serviceCards || [];
+    const homepageFeaturedIds = c.pricing?.homepageFeaturedIds || [];
+    const toggleHomepagePackage = (id: string, checked: boolean) => {
+      const next = checked ? [...new Set([...homepageFeaturedIds, id])] : homepageFeaturedIds.filter((item: string) => item !== id);
+      updateContentField(setServicesContent, ['pricing', 'homepageFeaturedIds'], next);
+    };
     return (
       <div className="space-y-6">
         <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
@@ -1795,12 +1800,25 @@ const App: React.FC = () => {
             <label className="block text-[11px] text-white/50 mb-1">Description</label>
             <textarea className="field text-sm h-16 resize-y" value={c.pricing?.description || ''} onChange={e => updateContentField(setServicesContent, ['pricing', 'description'], e.target.value)} />
           </div>
+          <div className="mt-4 rounded-xl border border-white/10 bg-black/25 p-3 text-xs text-white/50">
+            Select <span className="text-white/80">Show on homepage</span> on any package below to control the Home page Execution Plans. The website shows the first 3 selected packages.
+          </div>
         </div>
         {(c.pricing?.tiers || []).map((tier: any, idx: number) => (
           <div key={tier.id || idx} className="bg-[#111] border border-white/10 rounded-2xl p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-semibold">Tier {idx + 1}: {tier.name}</h3>
               <div className="flex items-center gap-3">
+                <label className="flex items-center gap-2 text-[11px] text-white/50">
+                  <input
+                    type="checkbox"
+                    checked={Boolean(tier.id && homepageFeaturedIds.includes(tier.id))}
+                    disabled={!tier.id}
+                    onChange={e => toggleHomepagePackage(tier.id, e.target.checked)}
+                    className="accent-white"
+                  />
+                  Show on homepage
+                </label>
                 <label className="flex items-center gap-2 text-[11px] text-white/50">
                   <input type="checkbox" checked={tier.popular || false} onChange={e => updateContentField(setServicesContent, ['pricing', 'tiers', String(idx), 'popular'], e.target.checked)} className="accent-white" />
                   Popular
