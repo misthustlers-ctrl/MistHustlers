@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --configLoader native",
     "build": "cd backend && npm install && npx prisma generate && cd admin-ui && npm install && npm run build && cd ../.. && npx vite build --configLoader native && npx playwright install --with-deps chromium && node scripts/prerender.mjs && node scripts/verify-seo.mjs",
-    "start": "cd backend && npx prisma migrate deploy && node server.js",
+    "start": "cd backend && node scripts/resolve-service-packages-migration.js && npx prisma migrate deploy && node scripts/sync-service-packages.js && node server.js",
     "server": "node backend/server.js",
     "prerender": "node scripts/prerender.mjs",
     "verify-seo": "node scripts/verify-seo.mjs",
