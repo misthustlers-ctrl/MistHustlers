@@ -7,7 +7,7 @@ import rateLimit from "express-rate-limit";
 import crypto from "crypto";
 import { join, dirname, extname } from "path";
 import { fileURLToPath } from "url";
-import { existsSync, mkdirSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import inquiryRoutes from "./routes/inquiry.routes.js";
 import contentRoutes from "./routes/content.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
@@ -73,6 +73,31 @@ function isPublicPagePath(path) {
 function routeKeyForPath(path) {
   const normalized = normalizePath(path);
   return normalized === "/" ? "index" : normalized.slice(1).replace(/\//g, "-");
+}
+
+function contentPageForPath(path) {
+  const normalized = normalizePath(path);
+  if (normalized === "/") return "home";
+  const firstSegment = normalized.split("/").filter(Boolean)[0];
+  return ["about", "services", "career", "projects", "contact"].includes(firstSegment) ? firstSegment : null;
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function replaceFirst(source, pattern, replacement) {
+  let replaced = false;
+  return source.replace(pattern, (match, ...args) => {
+    if (replaced) return match;
+    replaced = true;
+    return typeof replacement === "function" ? replacement(match, ...args) : replacement;
+  });
 }
 
 function isPrivatePath(path) {
@@ -239,6 +264,72 @@ const frontendDist = join(__dirname, "..", "dist");
 if (existsSync(frontendDist)) {
   app.use(express.static(frontendDist, { ...staticOptions, index: false }));
 
+  async function getInitialContentForRequest(req) {
+    const page = contentPageForPath(req.path);
+    const pages = ["logo", "seo", page].filter(Boolean);
+    const entries = await prisma.content.findMany({ where: { page: { in: pages } } });
+    return Object.fromEntries(entries.map((entry) => [entry.page, entry.data]));
+  }
+
+  function injectInitialContent(html, content) {
+    const json = JSON.stringify(content).replace(/</g, "\\u003c");
+    const script = `<script>window.__MH_INITIAL_CONTENT__=${json};</script>`;
+    return html.includes("</head>") ? html.replace("</head>", `${script}</head>`) : `${script}${html}`;
+  }
+
+  function alignPrerenderedHtmlWithInitialContent(html, content, req) {
+    if (contentPageForPath(req.path) !== "home") return html;
+    const hero = content.home?.hero;
+    if (!hero || typeof hero !== "object") return html;
+
+    let nextHtml = html;
+    const titleLines = Array.isArray(hero.title)
+      ? hero.title.filter(Boolean)
+      : String(hero.title || "").split("\n").filter(Boolean);
+
+    if (titleLines.length) {
+      nextHtml = replaceFirst(
+        nextHtml,
+        /(<h1 class="font-display text-\[clamp\(34px,7vw,64px\)\][^"]*text-abyssal-ink">)([\s\S]*?)(<\/h1>)/,
+        (match, open, _current, close) => {
+          const lines = titleLines.map((line, index) => {
+            const isLast = index === titleLines.length - 1;
+            const className = isLast ? "text-digital-orange" : "";
+            const br = isLast ? "" : "<br>";
+            return `<span class="${className}">${escapeHtml(line)}${br}</span>`;
+          }).join("");
+          return `${open}${lines}${close}`;
+        },
+      );
+    }
+
+    const replacements = [
+      ["Websites • MVPs • AI Automation", hero.badge],
+      ["MistHustlers helps startups, founders and growing businesses turn ideas into production-ready websites, MVPs and automation systems through clear planning, practical execution and complete project ownership.", hero.description],
+      ["Based in Indore. Available for remote projects across India.", hero.tagline],
+      ["Start Your Project", hero.ctaPrimary],
+      ["Explore Our Work", hero.ctaSecondary],
+    ];
+
+    for (const [from, to] of replacements) {
+      if (to) nextHtml = nextHtml.replaceAll(from, escapeHtml(to));
+    }
+
+    return nextHtml;
+  }
+
+  async function sendHtmlWithInitialContent(req, res, filePath, status = 200) {
+    try {
+      let html = readFileSync(filePath, "utf-8");
+      const content = await getInitialContentForRequest(req);
+      html = alignPrerenderedHtmlWithInitialContent(html, content, req);
+      res.status(status).type("html").send(injectInitialContent(html, content));
+    } catch (err) {
+      console.error(`[HTML] Failed to inject initial content for ${req.path}:`, err.message);
+      res.status(status).sendFile(filePath);
+    }
+  }
+
   const prerenderedDir = join(frontendDist, "__prerendered");
   if (existsSync(prerenderedDir)) {
     app.use((req, res, next) => {
@@ -248,7 +339,7 @@ if (existsSync(frontendDist)) {
       const routeKey = routeKeyForPath(req.path);
       const filePath = join(prerenderedDir, routeKey + ".html");
       if (existsSync(filePath)) {
-        return res.sendFile(filePath);
+        return sendHtmlWithInitialContent(req, res, filePath);
       }
       next();
     });
@@ -264,7 +355,7 @@ if (existsSync(frontendDist)) {
     }
 
     const status = isPublicPagePath(req.path) ? 200 : 404;
-    res.status(status).sendFile(join(frontendDist, "index.html"));
+    sendHtmlWithInitialContent(req, res, join(frontendDist, "index.html"), status);
   });
 }
 

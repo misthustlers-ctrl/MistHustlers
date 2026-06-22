@@ -2,6 +2,13 @@ import { useState, useEffect } from "react";
 
 const CACHE_PREFIX = "mh_content_";
 
+function readInitialContent<T>(page: string, defaults: T): T | null {
+  if (typeof window === "undefined") return null;
+  const initialContent = (window as typeof window & { __MH_INITIAL_CONTENT__?: Record<string, unknown> }).__MH_INITIAL_CONTENT__;
+  const data = initialContent?.[page];
+  return data && typeof data === "object" ? { ...defaults, ...(data as Partial<T>) } : null;
+}
+
 function readCachedContent<T>(page: string, defaults: T): T {
   if (typeof window === "undefined") return defaults;
   try {
@@ -13,7 +20,7 @@ function readCachedContent<T>(page: string, defaults: T): T {
 }
 
 export function useContent<T>(page: string, defaults: T): T {
-  const [data, setData] = useState<T>(() => readCachedContent(page, defaults));
+  const [data, setData] = useState<T>(() => readInitialContent(page, defaults) || readCachedContent(page, defaults));
 
   useEffect(() => {
     fetch(`/api/content/${page}`)
