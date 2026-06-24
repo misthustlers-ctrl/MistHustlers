@@ -14,6 +14,7 @@ import adminRoutes from "./routes/admin.routes.js";
 import publicRoutes from "./routes/public.routes.js";
 import { adminAuth } from "./middleware/admin-auth.middleware.js";
 import { seed } from "./prisma/seed.js";
+import prisma from "./prisma/client.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
