@@ -52,6 +52,20 @@ const APPLICANT_STATUSES = ["new", "reviewed", "shortlisted", "accepted", "rejec
 const PROJECT_STATUSES = ["planning", "in-progress", "review", "completed"];
 const WORK_STATUSES = ["lead", "quoted", "assigned", "in-progress", "review", "completed", "paid", "lost"];
 const PARTNER_WORK_STATUSES = ["assigned", "in-progress", "review", "completed"];
+const REFERRAL_OWNER_ROLES = [ROLES.AGENT, ROLES.ACQUISITION_PARTNER, ROLES.AFFILIATE_PARTNER];
+const accountSelect = {
+  id: true,
+  username: true,
+  displayName: true,
+  role: true,
+  status: true,
+  createdAt: true,
+  updatedAt: true,
+  referralCodes: {
+    orderBy: { createdAt: "asc" },
+    select: { id: true, code: true, status: true, createdAt: true, updatedAt: true },
+  },
+};
 
 function toId(value) {
   const id = Number(value);
@@ -67,6 +81,34 @@ function text(value, max = 5000) {
 function nullableText(value, max = 5000) {
   const normalized = text(value, max);
   return normalized ? normalized : null;
+}
+
+function normalizeReferralCode(value) {
+  return text(value, 32)?.toUpperCase().replace(/[^A-Z0-9_-]/g, "");
+}
+
+function referralCodeSeed(account) {
+  const base = normalizeReferralCode(account.displayName || account.username || "PARTNER") || "PARTNER";
+  return base.replace(/[_-]+/g, "-").replace(/^-|-$/g, "").slice(0, 16) || "PARTNER";
+}
+
+async function createUniqueReferralCode(account, requestedCode) {
+  const preferred = normalizeReferralCode(requestedCode);
+  if (requestedCode !== undefined && (!preferred || preferred.length < 4)) {
+    const err = new Error("Referral code must be 4-32 characters using letters, numbers, dash, or underscore");
+    err.status = 400;
+    throw err;
+  }
+  const seed = preferred || referralCodeSeed(account);
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    const suffix = Math.random().toString(36).slice(2, 6).toUpperCase();
+    const candidate = preferred || `${seed}-${suffix}`.slice(0, 32);
+    const existing = await prisma.referralCode.findUnique({ where: { code: candidate } });
+    if (!existing || existing.ownerId === account.id) return candidate;
+  }
+  const err = new Error("Could not generate a unique referral code. Try a manual code.");
+  err.status = 409;
+  throw err;
 }
 
 function requireText(value, label, max = 5000) {
@@ -278,7 +320,7 @@ router.get("/accounts", requireAdmin, async (_, res, next) => {
   try {
     const accounts = await prisma.adminUser.findMany({
       orderBy: { createdAt: "desc" },
-      select: { id: true, username: true, displayName: true, role: true, status: true, createdAt: true, updatedAt: true },
+      select: accountSelect,
     });
     res.json(accounts);
   } catch (err) { next(err); }
@@ -300,7 +342,7 @@ router.post("/accounts", requireAdmin, async (req, res, next) => {
     const { salt, passwordHash } = hashPassword(password);
     const account = await prisma.adminUser.create({
       data: { username: safeUsername, displayName: nullableText(displayName, 120), role, salt, passwordHash },
-      select: { id: true, username: true, displayName: true, role: true, status: true, createdAt: true, updatedAt: true },
+      select: accountSelect,
     });
     await logActivity(req, "create-account", `account:${account.id}`, `${account.role}:${account.username}`);
     res.status(201).json(account);
@@ -327,12 +369,48 @@ router.put("/accounts", requireAdmin, async (req, res, next) => {
     const account = await prisma.adminUser.update({
       where: { id: accountId },
       data,
-      select: { id: true, username: true, displayName: true, role: true, status: true, createdAt: true, updatedAt: true },
+      select: accountSelect,
     });
     await logActivity(req, "update-account", `account:${account.id}`, account.username);
     res.json(account);
   } catch (err) {
     if (err.code === "P2025") return res.status(404).json({ success: false, message: "Account not found" });
+    next(err);
+  }
+});
+
+router.post("/accounts/referral-code", requireAdmin, async (req, res, next) => {
+  try {
+    const accountId = toId(req.body.accountId);
+    if (!accountId) return res.status(400).json({ success: false, message: "Valid account id is required" });
+
+    const account = await prisma.adminUser.findUnique({
+      where: { id: accountId },
+      select: { id: true, username: true, displayName: true, role: true },
+    });
+    if (!account) return res.status(404).json({ success: false, message: "Account not found" });
+    if (!REFERRAL_OWNER_ROLES.includes(account.role)) {
+      return res.status(400).json({ success: false, message: "Referral code is available for agent, acquisition partner, and affiliate partner accounts" });
+    }
+
+    const existing = await prisma.referralCode.findFirst({
+      where: { ownerId: accountId },
+      orderBy: { createdAt: "asc" },
+    });
+    const status = req.body.status === "disabled" ? "disabled" : "active";
+    const code = req.body.code === undefined && existing
+      ? existing.code
+      : await createUniqueReferralCode(account, req.body.code);
+
+    const referralCode = existing
+      ? await prisma.referralCode.update({ where: { id: existing.id }, data: { code, status } })
+      : await prisma.referralCode.create({ data: { code, status, ownerId: account.id, ownerRole: account.role } });
+
+    await logActivity(req, "update-referral-code", `account:${account.id}`, `${account.username}:${referralCode.code}`);
+    const updatedAccount = await prisma.adminUser.findUnique({ where: { id: accountId }, select: accountSelect });
+    res.json(updatedAccount);
+  } catch (err) {
+    if (err.code === "P2002") return res.status(409).json({ success: false, message: "Referral code already exists" });
     next(err);
   }
 });
@@ -500,7 +578,15 @@ router.delete("/work-orders", requireAdmin, async (req, res, next) => {
 
 router.get("/inquiries", allowRoles("admin", "agent", "acquisition_partner", "affiliate_partner"), async (req, res, next) => {
   try {
-    const items = await prisma.inquiry.findMany({ where: inquiryWhereFor(req), orderBy: { createdAt: "desc" } });
+    const items = await prisma.inquiry.findMany({
+      where: inquiryWhereFor(req),
+      include: {
+        owner: { select: { id: true, username: true, displayName: true, role: true } },
+        acquisitionPartner: { select: { id: true, username: true, displayName: true, role: true } },
+        affiliatePartner: { select: { id: true, username: true, displayName: true, role: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    });
     res.json(items.map((item) => sanitizeInquiryForRole(req, item)));
   } catch (err) { next(err); }
 });

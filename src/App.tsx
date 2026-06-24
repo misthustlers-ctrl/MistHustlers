@@ -5,6 +5,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import Home from "@/pages/Home";
 import Projects from "@/pages/Projects";
 import DynamicTheme from "@/components/DynamicTheme";
+import { captureReferralFromUrl, getStoredReferralCode } from "@/utils/referral";
 
 const Services = lazy(() => import("./pages/Services"));
 const WebDevelopment = lazy(() => import("./pages/services/WebDevelopment"));
@@ -44,6 +45,23 @@ function ScrollManager() {
   return null;
 }
 
+function ReferralCapture() {
+  const location = useLocation();
+
+  useEffect(() => {
+    const code = captureReferralFromUrl(location.search);
+    if (!code || sessionStorage.getItem(`mh_ref_seen_${code}`)) return;
+    sessionStorage.setItem(`mh_ref_seen_${code}`, "1");
+    fetch("/api/referral-click", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ referralCode: getStoredReferralCode(), path: `${location.pathname}${location.search}` }),
+    }).catch(() => {});
+  }, [location.pathname, location.search]);
+
+  return null;
+}
+
 export default function App() {
   const location = useLocation();
 
@@ -63,6 +81,7 @@ export default function App() {
     <>
       <DynamicTheme />
       <ScrollManager />
+      <ReferralCapture />
       <ErrorBoundary key={location.pathname}>
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-basalt-canvas"><div className="font-display text-2xl text-abyssal-ink/50">Loading...</div></div>}>
           <Routes>

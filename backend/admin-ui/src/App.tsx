@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 import {
-  Archive, Bell, Briefcase, Check, ExternalLink, Mail, Phone, Plus,
+  Archive, Bell, Briefcase, Check, Copy, ExternalLink, Mail, Phone, Plus,
   RefreshCw, Trash2, UserCircle, Users, X, LayoutDashboard, FolderKanban,
   BriefcaseBusiness, FileText, Image, Trash, Upload, Save, Settings, ChevronDown,
   UserPlus, Shield, Handshake, IndianRupee
@@ -10,6 +10,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 interface Inquiry {
   id: number; name?: string; email?: string; phone?: string; service: string; budget: string;
   status: string; message?: string; company?: string; notes?: string; emailStatus?: string; sheetStatus?: string; sheetError?: string | null; leadSource?: string | null;
+  owner?: WorkAccount | null; acquisitionPartner?: WorkAccount | null; affiliatePartner?: WorkAccount | null;
   createdAt: string; updatedAt?: string;
 }
 interface Opportunity {
@@ -59,6 +60,7 @@ interface AdminSessionUser {
 }
 interface AdminAccount {
   id: number; username: string; displayName?: string | null; role: Exclude<AdminRole, 'admin'>; status: string;
+  referralCodes?: Array<{ id: number; code: string; status: string; createdAt: string; updatedAt?: string }>;
   createdAt: string; updatedAt?: string;
 }
 interface WorkAccount {
@@ -82,6 +84,7 @@ type TabType = 'dashboard' | 'work' | 'leads' | 'workers' | 'career' | 'projects
 type ModalType = 'job' | 'event' | 'program' | 'applicant' | 'project' | null;
 
 const API = '/api/admin';
+const PUBLIC_SITE_URL = (import.meta.env.VITE_SITE_URL || 'https://www.misthustlers.in').replace(/\/$/, '');
 
 function getAuth(): string {
   try {
@@ -153,6 +156,10 @@ const loginRoles: AdminRole[] = ['admin', 'agent', 'delivery_partner', 'hr_partn
 
 function normalizeRole(role: AdminRole): AdminRole {
   return role === 'partner' ? 'delivery_partner' : role;
+}
+
+function accountName(account?: WorkAccount | null) {
+  return account?.displayName || account?.username || '';
 }
 
 const roleTabs: Record<AdminRole, TabType[]> = {
@@ -1002,6 +1009,34 @@ const App: React.FC = () => {
     }
   };
 
+  const referralLink = (code: string) => `${PUBLIC_SITE_URL}/?ref=${encodeURIComponent(code)}`;
+
+  const saveReferralCode = async (account: AdminAccount, options: { code?: string; status?: string } = {}) => {
+    try {
+      const updated = await api<AdminAccount>(`${API}/accounts/referral-code`, {
+        method: 'POST',
+        body: JSON.stringify({ accountId: account.id, ...options }),
+      });
+      setAccounts(prev => prev.map(item => item.id === updated.id ? updated : item));
+      notify(options.code ? 'Referral code saved' : 'Referral code updated');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update referral code');
+      notify(err instanceof Error ? err.message : 'Failed to update referral code', 'error');
+    }
+  };
+
+  const copyReferralLink = async (code: string) => {
+    try {
+      const link = referralLink(code);
+      await navigator.clipboard.writeText(link);
+      setCopied(link);
+      setTimeout(() => setCopied(null), 2000);
+      notify('Referral link copied');
+    } catch {
+      notify('Could not copy referral link', 'error');
+    }
+  };
+
   const deleteAccount = async (account: AdminAccount) => {
     if (!window.confirm(`Delete ${account.username}? This removes their dashboard login.`)) return;
     await api<{ ok: boolean }>(`${API}/accounts`, { method: 'DELETE', body: JSON.stringify({ id: account.id }) });
@@ -1420,6 +1455,14 @@ const App: React.FC = () => {
             <button onClick={() => setSelectedInquiry(inquiry)} className="text-left min-w-0">
               <div className="font-medium truncate">{isAffiliatePartner ? 'Referral lead' : inquiry.name || 'Assigned lead'}</div>
               <div className="text-[11px] text-white/45 truncate">{isAffiliatePartner ? `Source: ${inquiry.leadSource || 'Referral'}` : `${inquiry.email || 'No email'} | ${inquiry.phone || 'No phone'}`}</div>
+              {isAdmin && (
+                <div className="mt-1 truncate text-[10px] text-white/35">
+                  Source: {inquiry.leadSource || 'website'}
+                  {accountName(inquiry.affiliatePartner) && ` | Affiliate: ${accountName(inquiry.affiliatePartner)}`}
+                  {accountName(inquiry.acquisitionPartner) && ` | Acquisition: ${accountName(inquiry.acquisitionPartner)}`}
+                  {accountName(inquiry.owner) && ` | Owner: ${accountName(inquiry.owner)}`}
+                </div>
+              )}
             </button>
             <div className="text-xs text-white/60">
               <div>{inquiry.service} | {inquiry.budget}</div>
@@ -1738,25 +1781,66 @@ const App: React.FC = () => {
         </div>
 
         <div className="bg-[#111] border border-white/10 rounded-2xl overflow-hidden text-sm">
-          {accounts.map((account) => (
-            <div key={account.id} className="grid grid-cols-[1.3fr_110px_110px_auto] gap-3 items-center px-5 py-4 border-b border-white/10 last:border-b-0">
-              <div className="min-w-0">
-                <div className="font-medium truncate">{account.displayName || account.username}</div>
-                <div className="text-[11px] text-white/45 truncate">{account.username}</div>
+          {accounts.map((account) => {
+            const referral = account.referralCodes?.[0];
+            const canHaveReferral = ['agent', 'acquisition_partner', 'affiliate_partner'].includes(account.role);
+            const link = referral?.code ? referralLink(referral.code) : '';
+            return (
+              <div key={account.id} className="grid grid-cols-[1.15fr_120px_96px_1.25fr_auto] gap-3 items-center px-5 py-4 border-b border-white/10 last:border-b-0">
+                <div className="min-w-0">
+                  <div className="font-medium truncate">{account.displayName || account.username}</div>
+                  <div className="text-[11px] text-white/45 truncate">{account.username}</div>
+                </div>
+                <span className="capitalize rounded-lg bg-white/10 px-2 py-1 text-[11px] text-center">{account.role}</span>
+                <button onClick={() => updateAccount(account, { status: account.status === 'active' ? 'disabled' : 'active' })} className={`rounded-lg px-2 py-1 text-[11px] capitalize ${account.status === 'active' ? 'bg-emerald-500/15 text-emerald-300' : 'bg-red-500/15 text-red-300'}`}>
+                  {account.status}
+                </button>
+                <div className="min-w-0">
+                  {canHaveReferral ? (
+                    <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="text-[10px] uppercase tracking-[1px] text-white/35">Referral</div>
+                          <div className={`truncate font-mono text-xs ${referral?.status === 'disabled' ? 'text-red-200/70' : 'text-emerald-200'}`}>
+                            {referral?.code || 'No code yet'}
+                          </div>
+                        </div>
+                        {referral?.code && (
+                          <button title="Copy referral link" onClick={() => copyReferralLink(referral.code)} className="rounded-lg border border-white/15 p-1.5 hover:bg-white hover:text-black">
+                            <Copy className="h-3.5 w-3.5" />
+                          </button>
+                        )}
+                      </div>
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        <button onClick={() => saveReferralCode(account)} className="rounded-lg border border-white/15 px-2 py-1 text-[10px] hover:bg-white hover:text-black">
+                          {referral?.code ? 'Regenerate' : 'Generate'}
+                        </button>
+                        <button onClick={() => {
+                          const code = window.prompt('Referral code (4-32 letters, numbers, dash, underscore)', referral?.code || '');
+                          if (code) saveReferralCode(account, { code });
+                        }} className="rounded-lg border border-white/15 px-2 py-1 text-[10px] hover:bg-white hover:text-black">Set</button>
+                        {referral?.code && (
+                          <button onClick={() => saveReferralCode(account, { status: referral.status === 'disabled' ? 'active' : 'disabled' })} className="rounded-lg border border-white/15 px-2 py-1 text-[10px] hover:bg-white hover:text-black">
+                            {referral.status === 'disabled' ? 'Enable' : 'Disable'}
+                          </button>
+                        )}
+                      </div>
+                      {link && <div className="mt-1 truncate text-[10px] text-white/35">{copied === link ? 'Copied' : link}</div>}
+                    </div>
+                  ) : (
+                    <div className="text-[11px] text-white/30">Referral not needed</div>
+                  )}
+                </div>
+                <div className="flex gap-1.5">
+                  <button onClick={() => {
+                    const password = window.prompt(`New password for ${account.username} (minimum 8 characters)`);
+                    if (password) updateAccount(account, { password });
+                  }} className="px-2.5 py-1.5 rounded-lg border border-white/15 text-[11px] hover:bg-white hover:text-black">Reset</button>
+                  <button onClick={() => deleteAccount(account)} className="px-2.5 py-1.5 rounded-lg border border-white/15 text-[11px] hover:bg-red-500"><Trash2 className="w-3 h-3" /></button>
+                </div>
               </div>
-              <span className="capitalize rounded-lg bg-white/10 px-2 py-1 text-[11px] text-center">{account.role}</span>
-              <button onClick={() => updateAccount(account, { status: account.status === 'active' ? 'disabled' : 'active' })} className={`rounded-lg px-2 py-1 text-[11px] capitalize ${account.status === 'active' ? 'bg-emerald-500/15 text-emerald-300' : 'bg-red-500/15 text-red-300'}`}>
-                {account.status}
-              </button>
-              <div className="flex gap-1.5">
-                <button onClick={() => {
-                  const password = window.prompt(`New password for ${account.username} (minimum 8 characters)`);
-                  if (password) updateAccount(account, { password });
-                }} className="px-2.5 py-1.5 rounded-lg border border-white/15 text-[11px] hover:bg-white hover:text-black">Reset</button>
-                <button onClick={() => deleteAccount(account)} className="px-2.5 py-1.5 rounded-lg border border-white/15 text-[11px] hover:bg-red-500"><Trash2 className="w-3 h-3" /></button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
           {!accounts.length && <div className="p-8 text-center text-white/40 text-sm">No agent or partner accounts yet.</div>}
         </div>
       </div>
@@ -3015,6 +3099,12 @@ const App: React.FC = () => {
               <div className="text-lg tracking-[-0.4px] mb-0.5">{isAffiliatePartner ? 'Referral lead' : selectedInquiry.name || 'Assigned lead'}</div>
               <div className="text-xs text-white/60 mb-5">{isAffiliatePartner ? `Source: ${selectedInquiry.leadSource || 'Referral'}` : `${selectedInquiry.email || 'No email'} | ${selectedInquiry.phone || 'No phone'}`}</div>
               <div className="space-y-3 text-sm">
+                <div className="rounded-xl bg-white/5 p-3 text-xs leading-5 text-white/65">
+                  <div><span className="text-white/35">Source:</span> {selectedInquiry.leadSource || 'website'}</div>
+                  {accountName(selectedInquiry.affiliatePartner) && <div><span className="text-white/35">Affiliate:</span> {accountName(selectedInquiry.affiliatePartner)}</div>}
+                  {accountName(selectedInquiry.acquisitionPartner) && <div><span className="text-white/35">Acquisition:</span> {accountName(selectedInquiry.acquisitionPartner)}</div>}
+                  {accountName(selectedInquiry.owner) && <div><span className="text-white/35">Owner:</span> {accountName(selectedInquiry.owner)}</div>}
+                </div>
                 <div><span className="text-white/40">Service:</span> {selectedInquiry.service}</div>
                 <div><span className="text-white/40">Budget:</span> {selectedInquiry.budget}</div>
                 <div className="flex flex-wrap gap-2">

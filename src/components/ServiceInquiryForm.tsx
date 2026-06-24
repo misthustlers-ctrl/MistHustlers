@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useContent } from "@/utils/useContent";
+import { getStoredReferralCode } from "@/utils/referral";
 
 const DEFAULT_TIERS = [
   { id: "starter", name: "STARTER", price: "", description: "", features: [], popular: false, accent: "var(--mh-text)" as const, imageUrl: "" },
@@ -37,7 +38,7 @@ export default function ServiceInquiryForm() {
       const res = await fetch("/api/inquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, referralCode: getStoredReferralCode() || undefined }),
       });
 
       if (!res.ok) {

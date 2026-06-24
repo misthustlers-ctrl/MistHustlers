@@ -184,7 +184,7 @@ const HOME_DEFAULTS: HomeContent = {
     { value: 6, suffix: "", label: "Execution Stages Covered" },
     { value: 1, suffix: "", label: "Direct Founder Communication" },
   ],
-  brands: ["Founder-led execution", "Source-code handover included", "Transparent pricing from Rs. 3,999", "Remote projects across India"],
+  brands: ["STRIPE", "LINEAR", "VERCEL", "GITHUB", "NOTION"],
   servicesTeaser: {
     badge: "Core Services",
     title: "Websites, MVPs and automations built for real business needs",
@@ -351,7 +351,7 @@ export default function Home() {
                 <span className="inline-block rounded-full bg-abyssal-ink/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-abyssal-ink/60 font-body">
                   {c.hero?.badge || HOME_DEFAULTS.hero.badge}
                 </span>
-                <h1 className="mt-5 max-w-[760px] font-display text-[clamp(34px,7vw,70px)] leading-[1.02] tracking-[0.02em] text-abyssal-ink sm:mt-6 sm:leading-[0.98]">
+                <h1 className="mt-5 max-w-[720px] font-display text-[clamp(36px,5.8vw,66px)] leading-[1.08] tracking-[0.01em] text-abyssal-ink sm:mt-6 sm:leading-[1.03]">
                   {(heroLines.length ? heroLines : HOME_DEFAULTS.hero.title).map((line, index) => (
                     <span key={`${line}-${index}`} className="hero-title-mask block">
                       <span className={`hero-title-line ${line === c.hero?.highlightWord || index === (heroLines.length ? heroLines.length : HOME_DEFAULTS.hero.title.length) - 1 ? "text-digital-orange" : ""}`}>
@@ -417,18 +417,13 @@ export default function Home() {
       <section className="border-y border-abyssal-ink/5 py-8 md:py-10">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <ScrollReveal>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
               {(c.brands?.length ? c.brands : HOME_DEFAULTS.brands).map((item, index) => (
-                <div key={item} className="card-lift rounded-2xl border border-abyssal-ink/10 bg-ash-white px-5 py-4">
-                  <div className="flex items-start gap-3">
-                    <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-digital-orange/10 text-digital-orange">
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                        <path d="M3 6.2L5 8L9 3.8" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </span>
-                    <p className="text-sm font-semibold leading-snug text-abyssal-ink/70 font-body">{item}</p>
+                <div key={item} className="card-lift rounded-2xl border border-abyssal-ink/10 bg-ash-white px-5 py-5">
+                  <div className="flex items-end justify-between gap-3">
+                    <p className="text-sm font-bold uppercase tracking-[0.18em] text-abyssal-ink/72 font-body">{item}</p>
+                    <span className="font-display text-2xl leading-none text-digital-orange/80">0{index + 1}</span>
                   </div>
-                  <span className="mt-3 block text-[10px] font-bold uppercase tracking-[0.18em] text-abyssal-ink/30 font-body">0{index + 1}</span>
                 </div>
               ))}
             </div>

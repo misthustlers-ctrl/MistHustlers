@@ -31,6 +31,12 @@ export const validateInquiry = [
     .trim()
     .notEmpty().withMessage("Message is required")
     .isLength({ max: 5000 }).withMessage("Message too long"),
+
+  body("referralCode")
+    .optional({ nullable: true, checkFalsy: true })
+    .trim()
+    .isLength({ min: 4, max: 32 }).withMessage("Invalid referral code")
+    .matches(/^[a-zA-Z0-9_-]+$/).withMessage("Invalid referral code"),
 ];
 
 export const validateApplicant = [

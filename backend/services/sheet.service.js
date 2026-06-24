@@ -10,6 +10,10 @@ function buildInquiryPayload(inquiry) {
     message: inquiry.message,
     status: inquiry.status,
     emailStatus: inquiry.emailStatus,
+    leadSource: inquiry.leadSource || "website",
+    ownerId: inquiry.ownerId || "",
+    acquisitionPartnerId: inquiry.acquisitionPartnerId || "",
+    affiliatePartnerId: inquiry.affiliatePartnerId || "",
     createdAt: inquiry.createdAt,
     source: "MistHustlers Website",
   };

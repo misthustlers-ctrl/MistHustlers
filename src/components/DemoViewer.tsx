@@ -88,7 +88,7 @@ export default function DemoViewer() {
         <iframe
           src={`/demo/${project.slug}/index.html`}
           title={`${project.title} Demo`}
-          className="w-full border-none"
+          className="demo-preview-frame w-full border-none"
           style={{ height: "calc(100dvh - 116px)" }}
           loading="lazy"
           sandbox="allow-scripts allow-same-origin allow-forms allow-popups"

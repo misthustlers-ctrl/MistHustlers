@@ -14,7 +14,7 @@
     { "value": 6, "suffix": "", "label": "Execution Stages Covered" },
     { "value": 1, "suffix": "", "label": "Direct Founder Communication" }
   ],
-  "brands": ["Founder-led execution", "Source-code handover included", "Transparent pricing from Rs. 3,999", "Remote projects across India"],
+  "brands": ["STRIPE", "LINEAR", "VERCEL", "GITHUB", "NOTION"],
   "journeySteps": [
     { "step": "01", "title": "Understand", "desc": "We understand the business, target audience, requirements and expected outcome before recommending a build path." },
     { "step": "02", "title": "Plan", "desc": "We define project scope, deliverables, technical approach, milestones and timeline before development begins." },

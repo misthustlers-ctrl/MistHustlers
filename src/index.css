@@ -503,6 +503,11 @@ button, input, textarea {
   animation: whatsappHeroPulse 10s ease-in-out both;
 }
 
+.demo-preview-frame {
+  display: block;
+  background: #09090b;
+}
+
 .hero-cinematic {
   background:
     radial-gradient(circle at 80% 16%, rgba(252, 80, 0, 0.12), transparent 30%),
@@ -517,11 +522,7 @@ button, input, textarea {
   display: block;
   max-width: 100%;
   white-space: normal;
-  animation: heroTitleReveal 0.82s cubic-bezier(0.33, 1, 0.68, 1) both;
-}
-
-.hero-title-mask:nth-child(2) .hero-title-line {
-  animation-delay: 0.12s;
+  text-wrap: balance;
 }
 
 .hero-product-visual {
