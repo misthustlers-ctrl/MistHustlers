@@ -1807,7 +1807,7 @@ const App: React.FC = () => {
               <h3 className="text-sm font-semibold">Services by Category</h3>
               <p className="mt-1 text-[11px] text-white/40">Use this to manage every service offer under the correct category.</p>
             </div>
-            <button onClick={() => updateContentField(setServicesContent, ['serviceCards'], [...serviceCards, { title: 'New Service', category: serviceCategories[0]?.name || 'General', description: '', price: '', link: '/services', enabled: true }])} className="rounded-lg border border-white/15 px-3 py-1.5 text-xs hover:bg-white hover:text-black">Add Service</button>
+            <button onClick={() => updateContentField(setServicesContent, ['serviceCards'], [...serviceCards, { title: 'New Service', category: serviceCategories[0]?.name || 'General', description: '', price: '', link: '/services', features: [], imageUrl: '', accent: '#fc5000', sortOrder: serviceCards.length + 1, enabled: true }])} className="rounded-lg border border-white/15 px-3 py-1.5 text-xs hover:bg-white hover:text-black">Add Service</button>
           </div>
           <div className="space-y-3">
             {serviceCards.map((service: any, idx: number) => (
@@ -1827,6 +1827,31 @@ const App: React.FC = () => {
                   <div><label className="block text-[11px] text-white/50 mb-1">Price / Range</label><input className="field text-sm" value={service.price || ''} onChange={e => updateContentField(setServicesContent, ['serviceCards', String(idx), 'price'], e.target.value)} /></div>
                   <div className="col-span-2"><label className="block text-[11px] text-white/50 mb-1">Description</label><input className="field text-sm" value={service.description || ''} onChange={e => updateContentField(setServicesContent, ['serviceCards', String(idx), 'description'], e.target.value)} /></div>
                   <div><label className="block text-[11px] text-white/50 mb-1">Link</label><input className="field text-sm" value={service.link || ''} onChange={e => updateContentField(setServicesContent, ['serviceCards', String(idx), 'link'], e.target.value)} /></div>
+                  <div>
+                    <label className="block text-[11px] text-white/50 mb-1">Accent Color</label>
+                    <div className="flex gap-2 items-center">
+                      <input type="color" className="w-8 h-8 rounded-lg border border-white/10 bg-transparent cursor-pointer" value={service.accent || '#fc5000'} onChange={e => updateContentField(setServicesContent, ['serviceCards', String(idx), 'accent'], e.target.value)} />
+                      <input className="field text-sm flex-1" value={service.accent || ''} onChange={e => updateContentField(setServicesContent, ['serviceCards', String(idx), 'accent'], e.target.value)} />
+                    </div>
+                  </div>
+                  <div><label className="block text-[11px] text-white/50 mb-1">Sort Order</label><input className="field text-sm" type="number" value={service.sortOrder ?? idx + 1} onChange={e => updateContentField(setServicesContent, ['serviceCards', String(idx), 'sortOrder'], Number(e.target.value))} /></div>
+                  <div><label className="block text-[11px] text-white/50 mb-1">Image / Icon</label><ImageUpload currentUrl={service.imageUrl || ''} onUploaded={(url) => updateContentField(setServicesContent, ['serviceCards', String(idx), 'imageUrl'], url)} /></div>
+                  <div className="col-span-3">
+                    <label className="block text-[11px] text-white/50 mb-2">Feature Bullets ({service.features?.length || 0})</label>
+                    <div className="space-y-1.5">
+                      {(service.features || []).map((feature: string, fi: number) => (
+                        <div key={fi} className="flex gap-2 items-center">
+                          <input className="field text-sm flex-1" value={feature} onChange={e => {
+                            const updated = [...(service.features || [])];
+                            updated[fi] = e.target.value;
+                            updateContentField(setServicesContent, ['serviceCards', String(idx), 'features'], updated);
+                          }} />
+                          <button onClick={() => updateContentField(setServicesContent, ['serviceCards', String(idx), 'features'], (service.features || []).filter((_: any, i: number) => i !== fi))} className="text-red-400 hover:text-red-300 text-xs p-1"><X className="w-3 h-3" /></button>
+                        </div>
+                      ))}
+                      <button onClick={() => updateContentField(setServicesContent, ['serviceCards', String(idx), 'features'], [...(service.features || []), ''])} className="text-xs text-white/40 hover:text-white mt-1">+ Add feature bullet</button>
+                    </div>
+                  </div>
                   <label className="col-span-3 flex items-center justify-between rounded-xl border border-white/10 bg-black/25 px-3 py-2 text-xs text-white/60">
                     <span>Enabled in service manager</span>
                     <input type="checkbox" checked={service.enabled !== false} onChange={e => updateContentField(setServicesContent, ['serviceCards', String(idx), 'enabled'], e.target.checked)} className="accent-white" />

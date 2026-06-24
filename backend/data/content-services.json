@@ -177,6 +177,10 @@
       "description": "Landing pages and business websites with responsive layouts, lead forms, WhatsApp, Maps, SEO basics and deployment support.",
       "price": "From ₹3,999",
       "link": "/services/web-development",
+      "features": ["Responsive pages", "Lead form + WhatsApp", "SEO basics"],
+      "imageUrl": "",
+      "accent": "#fc5000",
+      "sortOrder": 1,
       "enabled": true
     },
     {
@@ -185,6 +189,10 @@
       "description": "Clickable prototypes and launch-ready web MVPs for founders who need to validate, demonstrate and ship one core workflow.",
       "price": "From ₹7,999",
       "link": "/services/mvp-development",
+      "features": ["Prototype planning", "Core workflow", "Admin basics"],
+      "imageUrl": "",
+      "accent": "#524ae9",
+      "sortOrder": 2,
       "enabled": true
     },
     {
@@ -193,6 +201,10 @@
       "description": "Lead capture, Google Sheets, Gmail alerts, CRM sync, follow-up automation and AI-assisted workflow processing.",
       "price": "From ₹3,999",
       "link": "/services/automation",
+      "features": ["Sheets/Gmail sync", "CRM workflows", "AI-assisted steps"],
+      "imageUrl": "",
+      "accent": "#fc5000",
+      "sortOrder": 3,
       "enabled": true
     },
     {
@@ -201,6 +213,10 @@
       "description": "Monthly backup, uptime checks, SSL/domain monitoring, integration checks, content updates and performance support.",
       "price": "From ₹999/mo",
       "link": "/contact",
+      "features": ["Backups", "Uptime checks", "Content updates"],
+      "imageUrl": "",
+      "accent": "#070607",
+      "sortOrder": 4,
       "enabled": true
     },
     {
@@ -209,6 +225,10 @@
       "description": "Additional pages, content writing, CMS setup, animated sections, payment gateway, appointment booking, API integration and speed optimization.",
       "price": "From ₹499",
       "link": "/contact",
+      "features": ["Extra pages", "Integrations", "Speed optimization"],
+      "imageUrl": "",
+      "accent": "#524ae9",
+      "sortOrder": 5,
       "enabled": true
     }
   ],

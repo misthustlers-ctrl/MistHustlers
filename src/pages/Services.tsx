@@ -25,6 +25,10 @@ type ServiceCard = {
   description: string;
   price?: string;
   link?: string;
+  features?: string[];
+  imageUrl?: string;
+  accent?: string;
+  sortOrder?: number;
   enabled?: boolean;
 };
 type ServicesContent = {
@@ -150,7 +154,9 @@ export default function Services() {
   const [priceFilter, setPriceFilter] = useState("budget");
   const c = useContent("services", SERVICES_DEFAULTS);
   const pricingTiers = c.pricing?.tiers || [];
-  const serviceCards = (c.serviceCards?.length ? c.serviceCards : SERVICE_CARD_DEFAULTS).filter((item) => item.enabled !== false);
+  const serviceCards = (c.serviceCards?.length ? c.serviceCards : SERVICE_CARD_DEFAULTS)
+    .filter((item) => item.enabled !== false)
+    .sort((a, b) => Number(a.sortOrder ?? 999) - Number(b.sortOrder ?? 999));
   const serviceCategories = useMemo(() => ["All", ...Array.from(new Set(serviceCards.map((item) => item.category).filter(Boolean)))], [serviceCards]);
   const filteredServiceCards = useMemo(() => {
     const query = serviceSearch.trim().toLowerCase();
@@ -365,7 +371,7 @@ export default function Services() {
 
         <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-[20px] lg:gap-[24px]">
           {filteredServiceCards.map((svc, index) => {
-            const accent = index % 3 === 1 ? "var(--mh-secondary)" : index % 3 === 2 ? "var(--mh-cta)" : "var(--mh-text)";
+            const accent = svc.accent || (index % 3 === 1 ? "var(--mh-secondary)" : index % 3 === 2 ? "var(--mh-cta)" : "var(--mh-text)");
             const href = svc.link?.trim() || "/contact";
             return (
             <a
@@ -374,16 +380,30 @@ export default function Services() {
               className="group rounded-[28px] p-[28px] border transition-all hover:-translate-y-1"
               style={{ backgroundColor: "var(--mh-surface)", borderColor: "rgba(var(--mh-text-rgb), 0.08)" }}
             >
-              <div className="h-[48px] w-[48px] rounded-[18px] flex items-center justify-center mb-[24px]" style={{ backgroundColor: `color-mix(in srgb, ${accent} 8%, transparent)` }}>
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                  <path d="M11 3L18 8L18 14L11 19L4 14L4 8L11 3Z" stroke={accent} strokeWidth="1.5" strokeLinejoin="round"/>
-                  <path d="M4 8L11 13L18 8" stroke={accent} strokeWidth="1.5"/>
-                  <path d="M11 13L11 19" stroke={accent} strokeWidth="1.5"/>
-                </svg>
+              <div className="h-[48px] w-[48px] rounded-[18px] flex items-center justify-center mb-[24px] overflow-hidden" style={{ backgroundColor: `color-mix(in srgb, ${accent} 8%, transparent)` }}>
+                {svc.imageUrl ? (
+                  <img src={svc.imageUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
+                ) : (
+                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                    <path d="M11 3L18 8L18 14L11 19L4 14L4 8L11 3Z" stroke={accent} strokeWidth="1.5" strokeLinejoin="round"/>
+                    <path d="M4 8L11 13L18 8" stroke={accent} strokeWidth="1.5"/>
+                    <path d="M11 13L11 19" stroke={accent} strokeWidth="1.5"/>
+                  </svg>
+                )}
               </div>
               <span className="text-[11px] font-[700] uppercase tracking-[0.14em]" style={{ color: "rgba(var(--mh-text-rgb), 0.45)" }}>{svc.category}</span>
               <h3 className="text-[22px] font-[700] tracking-[-0.02em] mb-[12px]" style={{ color: "var(--mh-text)" }}>{svc.title}</h3>
               <p className="text-[14.5px] leading-[1.55] font-[450] mb-[20px]" style={{ color: "rgba(var(--mh-text-rgb), 0.68)" }}>{svc.description}</p>
+              {!!svc.features?.length && (
+                <div className="mb-[18px] space-y-2">
+                  {svc.features.slice(0, 3).map((feature) => (
+                    <div key={feature} className="flex items-center gap-2 text-[12.5px] font-[600]" style={{ color: "rgba(var(--mh-text-rgb), 0.62)" }}>
+                      <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: accent }} />
+                      <span>{feature}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
               {svc.price && <div className="mb-[18px] text-[13px] font-[700]" style={{ color: "var(--mh-text)" }}>{svc.price}</div>}
               <span className="text-[13.5px] font-[600] inline-flex items-center gap-[6px] group-hover:gap-[10px] transition-all" style={{ color: accent }}>
                 Visit service

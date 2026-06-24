@@ -122,7 +122,7 @@ type HomeFeature = { title: string; desc: string };
 type HomeFaqItem = { q: string; a: string };
 type HomeProject = { title: string; category: string; visual?: string; imageUrl?: string; link?: string };
 type PricingTier = { id: string; name: string; price: string; description: string; features: string[]; popular?: boolean; accent?: string; delivery?: string; bestFor?: string };
-type ServiceCard = { title: string; category: string; description: string; price?: string; link?: string; enabled?: boolean };
+type ServiceCard = { title: string; category: string; description: string; price?: string; link?: string; features?: string[]; imageUrl?: string; accent?: string; sortOrder?: number; enabled?: boolean };
 
 type HomeContent = {
   hero: {
@@ -308,7 +308,10 @@ export default function Home() {
     return (featured.length ? featured : tiers).slice(0, 3);
   }, [servicesContent.pricing?.homepageFeaturedIds, servicesContent.pricing?.tiers]);
   const serviceCards = useMemo(
-    () => ((servicesContent.serviceCards?.length ? servicesContent.serviceCards : SERVICE_CARD_DEFAULTS) as ServiceCard[]).filter((item) => item.enabled !== false).slice(0, 4),
+    () => ((servicesContent.serviceCards?.length ? servicesContent.serviceCards : SERVICE_CARD_DEFAULTS) as ServiceCard[])
+      .filter((item) => item.enabled !== false)
+      .sort((a, b) => Number(a.sortOrder ?? 999) - Number(b.sortOrder ?? 999))
+      .slice(0, 4),
     [servicesContent.serviceCards],
   );
   const journeySteps = useMemo(() => c.journeySteps ?? [], [c.journeySteps]);
@@ -456,11 +459,21 @@ export default function Home() {
                   className="card-lift h-full rounded-[24px] border border-abyssal-ink/5 bg-basalt-canvas p-5 text-left transition-colors hover:border-digital-orange/25"
                 >
                   <span className={`mb-5 flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold font-body ${index === 1 ? "bg-cyber-violet/10 text-cyber-violet" : index === 2 ? "bg-digital-orange/10 text-digital-orange" : "bg-abyssal-ink/5 text-abyssal-ink/55"}`}>
-                    {String(index + 1).padStart(2, "0")}
+                    {svc.imageUrl ? <img src={svc.imageUrl} alt="" loading="lazy" className="h-full w-full rounded-full object-cover" /> : String(index + 1).padStart(2, "0")}
                   </span>
                   <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-abyssal-ink/40 font-body">{svc.category}</span>
                   <h3 className="mt-2 font-body text-lg font-bold leading-tight text-abyssal-ink">{svc.title}</h3>
                   <p className="mt-3 min-h-20 text-sm leading-relaxed text-abyssal-ink/60 font-body">{svc.description}</p>
+                  {!!svc.features?.length && (
+                    <div className="mt-4 space-y-2">
+                      {svc.features.slice(0, 2).map((feature) => (
+                        <div key={feature} className="flex items-center gap-2 text-xs font-semibold text-abyssal-ink/55 font-body">
+                          <span className="h-1.5 w-1.5 rounded-full bg-digital-orange" />
+                          <span>{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   {svc.price && <p className="mt-5 text-xs font-bold text-abyssal-ink font-body">{svc.price}</p>}
                 </button>
               ))}
