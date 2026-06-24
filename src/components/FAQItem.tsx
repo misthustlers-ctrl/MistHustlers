@@ -5,6 +5,7 @@ export default function FAQItem({ q, a, isOpen, onClick }: { q: string; a: strin
     <div className="border-b border-abyssal-ink/10 last:border-b-0">
       <button
         onClick={onClick}
+        aria-expanded={isOpen}
         className="w-full flex items-start justify-between gap-4 py-5 sm:py-6 text-left group cursor-pointer"
       >
         <span className="text-base sm:text-lg font-semibold text-abyssal-ink font-body">{q}</span>

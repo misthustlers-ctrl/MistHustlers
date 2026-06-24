@@ -8,8 +8,8 @@ import {
 import { AnimatePresence, motion } from 'framer-motion';
 
 interface Inquiry {
-  id: number; name: string; email: string; phone: string; service: string; budget: string;
-  status: string; message: string; company?: string; notes?: string; emailStatus?: string; sheetStatus?: string; sheetError?: string | null;
+  id: number; name?: string; email?: string; phone?: string; service: string; budget: string;
+  status: string; message?: string; company?: string; notes?: string; emailStatus?: string; sheetStatus?: string; sheetError?: string | null; leadSource?: string | null;
   createdAt: string; updatedAt?: string;
 }
 interface Opportunity {
@@ -24,7 +24,7 @@ interface Applicant {
 }
 interface Project {
   id: number; name: string; description?: string; clientName?: string; status: string;
-  startDate?: string; endDate?: string;
+  startDate?: string; endDate?: string; deliveryPartnerId?: number | null; acquisitionPartnerId?: number | null; affiliatePartnerId?: number | null; assignedHrId?: number | null;
   createdAt: string; updatedAt?: string;
 }
 interface BinItem {
@@ -53,12 +53,12 @@ interface IntegrationOverview {
   recentFailures: Array<{ id: number; name: string; email: string; emailStatus?: string; sheetStatus?: string; sheetError?: string | null; createdAt: string }>;
   checkedAt: string;
 }
-type AdminRole = 'admin' | 'agent' | 'partner';
+type AdminRole = 'admin' | 'agent' | 'partner' | 'delivery_partner' | 'hr_partner' | 'acquisition_partner' | 'affiliate_partner';
 interface AdminSessionUser {
   id: number; username: string; displayName?: string | null; role: AdminRole; source?: string;
 }
 interface AdminAccount {
-  id: number; username: string; displayName?: string | null; role: 'agent' | 'partner'; status: string;
+  id: number; username: string; displayName?: string | null; role: Exclude<AdminRole, 'admin'>; status: string;
   createdAt: string; updatedAt?: string;
 }
 interface WorkAccount {
@@ -68,8 +68,8 @@ interface WorkPayment {
   id: number; workId: number; role: 'agent' | 'partner'; amount: number; note?: string | null; createdBy?: string | null; createdAt: string;
 }
 interface ClientWork {
-  id: number; clientName: string; clientPhone?: string | null; service: string; price: number;
-  status: string; notes?: string | null; deliveryLink?: string | null; deliveryNotes?: string | null; submittedAt?: string | null; agentId?: number | null; partnerId?: number | null;
+  id: number; clientName?: string; clientPhone?: string | null; service: string; price?: number;
+  status: string; notes?: string | null; deliveryLink?: string | null; deliveryNotes?: string | null; submittedAt?: string | null; agentId?: number | null; partnerId?: number | null; inquiryId?: number | null; acquisitionPartnerId?: number | null; deliveryPartnerId?: number | null; affiliatePartnerId?: number | null; assignedHrId?: number | null;
   agentCommission: number; agentPaid: number; partnerPayout: number; partnerPaid: number;
   agent?: WorkAccount | null; partner?: WorkAccount | null; payments?: WorkPayment[]; createdAt: string; updatedAt?: string;
 }
@@ -138,10 +138,31 @@ const tabs: { id: TabType; label: string; icon: React.ElementType }[] = [
   { id: 'bin', label: 'Bin', icon: Trash },
 ];
 
+const roleLabels: Record<AdminRole, string> = {
+  admin: 'Admin',
+  agent: 'Agent',
+  partner: 'Delivery Partner',
+  delivery_partner: 'Delivery Partner',
+  hr_partner: 'HR Partner',
+  acquisition_partner: 'Acquisition Partner',
+  affiliate_partner: 'Affiliate Partner',
+};
+
+const accountRoles: Exclude<AdminRole, 'admin'>[] = ['agent', 'delivery_partner', 'hr_partner', 'acquisition_partner', 'affiliate_partner'];
+const loginRoles: AdminRole[] = ['admin', 'agent', 'delivery_partner', 'hr_partner', 'acquisition_partner', 'affiliate_partner'];
+
+function normalizeRole(role: AdminRole): AdminRole {
+  return role === 'partner' ? 'delivery_partner' : role;
+}
+
 const roleTabs: Record<AdminRole, TabType[]> = {
   admin: ['dashboard', 'work', 'leads', 'workers', 'career', 'projects', 'content', 'media', 'logo', 'accounts', 'bin'],
-  agent: ['dashboard', 'work', 'leads', 'workers', 'career'],
+  agent: ['dashboard', 'work', 'leads'],
   partner: ['dashboard', 'work', 'projects'],
+  delivery_partner: ['dashboard', 'work', 'projects'],
+  hr_partner: ['dashboard', 'workers', 'career'],
+  acquisition_partner: ['dashboard', 'work', 'leads'],
+  affiliate_partner: ['dashboard', 'work', 'leads'],
 };
 
 function getStoredUser(): AdminSessionUser | null {
@@ -254,8 +275,11 @@ const App: React.FC = () => {
   const [loginError, setLoginError] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
 
-  const currentRole = currentUser?.role || 'admin';
+  const currentRole = normalizeRole(currentUser?.role || 'admin');
   const isAdmin = currentRole === 'admin';
+  const isLeadRole = ['agent', 'acquisition_partner'].includes(currentRole);
+  const isAffiliatePartner = currentRole === 'affiliate_partner';
+  const canContactLeads = !['delivery_partner', 'affiliate_partner'].includes(currentRole);
   const isPreviewSession = currentUser?.source === 'local-preview';
   const visibleTabs = tabs.filter((tab) => roleTabs[currentRole].includes(tab.id));
 
@@ -277,14 +301,14 @@ const App: React.FC = () => {
       setLoading(false);
       return;
     }
-    const role = currentUser?.role || 'admin';
+    const role = normalizeRole(currentUser?.role || 'admin');
     try {
       const [inq, opp, app, proj, work, bin, acct] = await Promise.all([
-        ['admin', 'agent'].includes(role) ? api<Inquiry[]>(`${API}/inquiries`) : Promise.resolve([]),
-        ['admin', 'agent'].includes(role) ? api<Opportunity[]>(`${API}/opportunities`) : Promise.resolve([]),
-        ['admin', 'agent'].includes(role) ? api<Applicant[]>(`${API}/applicants`) : Promise.resolve([]),
-        ['admin', 'partner'].includes(role) ? api<Project[]>(`${API}/projects`) : Promise.resolve([]),
-        ['admin', 'agent', 'partner'].includes(role) ? api<ClientWork[]>(`${API}/work-orders`) : Promise.resolve([]),
+        ['admin', 'agent', 'acquisition_partner', 'affiliate_partner'].includes(role) ? api<Inquiry[]>(`${API}/inquiries`) : Promise.resolve([]),
+        ['admin', 'hr_partner'].includes(role) ? api<Opportunity[]>(`${API}/opportunities`) : Promise.resolve([]),
+        ['admin', 'hr_partner'].includes(role) ? api<Applicant[]>(`${API}/applicants`) : Promise.resolve([]),
+        ['admin', 'delivery_partner'].includes(role) ? api<Project[]>(`${API}/projects`) : Promise.resolve([]),
+        ['admin', 'agent', 'delivery_partner', 'acquisition_partner', 'affiliate_partner'].includes(role) ? api<ClientWork[]>(`${API}/work-orders`) : Promise.resolve([]),
         role === 'admin' ? api<BinItem[]>(`${API}/bin`) : Promise.resolve([]),
         role === 'admin' ? api<AdminAccount[]>(`${API}/accounts`) : Promise.resolve([]),
       ]);
@@ -440,7 +464,7 @@ const App: React.FC = () => {
   };
 
   const agentAccounts = accounts.filter((account) => account.role === 'agent' && account.status === 'active');
-  const partnerAccounts = accounts.filter((account) => account.role === 'partner' && account.status === 'active');
+  const partnerAccounts = accounts.filter((account) => normalizeRole(account.role) === 'delivery_partner' && account.status === 'active');
   const rupee = (value: number) => `₹${Math.round(Number(value) || 0).toLocaleString('en-IN')}`;
   const deliveryCount = (kind: 'email' | 'sheet', status: string) => integrationOverview?.submissions?.[kind]?.[status] || 0;
   const statusPill = (status?: string) => {
@@ -547,7 +571,7 @@ const App: React.FC = () => {
       });
       setFormData({});
       fetchAll();
-      notify(currentRole === 'agent' ? 'Client lead added' : 'Client work added');
+      notify(isLeadRole ? 'Client lead added' : 'Client work added');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create work');
       notify(err instanceof Error ? err.message : 'Failed to create work', 'error');
@@ -642,7 +666,7 @@ const App: React.FC = () => {
     try {
       await api<Project>(`${API}/projects`, {
         method: 'PUT',
-        body: JSON.stringify({ id: selectedProject.id, name: formData.name, clientName: formData.client || null, description: formData.description || null, status: formData.status }),
+        body: JSON.stringify({ id: selectedProject.id, name: formData.name, clientName: formData.client || null, description: formData.description || null, status: formData.status, deliveryPartnerId: formData.deliveryPartnerId ? Number(formData.deliveryPartnerId) : null }),
       });
       setSelectedProject(null);
       setFormData({});
@@ -694,6 +718,25 @@ const App: React.FC = () => {
     fetchAll();
   };
 
+  const cleanupData = async (target: string, label: string) => {
+    const typed = window.prompt(`This will permanently clean ${label}. Type CLEAN ${target} to continue.`);
+    if (typed !== `CLEAN ${target}`) {
+      notify('Cleanup cancelled', 'error');
+      return;
+    }
+    try {
+      await api<{ success: boolean }>(`${API}/cleanup`, {
+        method: 'POST',
+        body: JSON.stringify({ target, confirm: typed }),
+      });
+      notify(`${label} cleaned`);
+      fetchAll();
+      refreshAdminMeta();
+    } catch (err) {
+      notify(err instanceof Error ? err.message : 'Cleanup failed', 'error');
+    }
+  };
+
   const binTitle = (item: BinItem) => {
     const data = item.data || {};
     return String(data.title || data.name || data.email || `Deleted ${item.type}`);
@@ -701,7 +744,8 @@ const App: React.FC = () => {
 
   const contactLead = async (inquiry: Inquiry) => {
     await updateInquiry(inquiry.id, { status: 'contacted' });
-    window.location.href = `mailto:${inquiry.email}?subject=MistHustlers inquiry&body=Hi ${encodeURIComponent(inquiry.name)},%0D%0A%0D%0A`;
+      if (!inquiry.email) return;
+      window.location.href = `mailto:${inquiry.email}?subject=MistHustlers inquiry&body=Hi ${encodeURIComponent(inquiry.name || "there")},%0D%0A%0D%0A`;
   };
 
   const submitModal = async () => {
@@ -710,7 +754,7 @@ const App: React.FC = () => {
         if (!formData.title) throw new Error('Project name is required');
         await api<Project>(`${API}/projects`, {
           method: 'POST',
-          body: JSON.stringify({ name: formData.title, clientName: formData.client || 'Internal', description: formData.description || '', status: formData.status || 'planning' }),
+          body: JSON.stringify({ name: formData.title, clientName: formData.client || 'Internal', description: formData.description || '', status: formData.status || 'planning', deliveryPartnerId: formData.deliveryPartnerId ? Number(formData.deliveryPartnerId) : null }),
         });
       } else if (modalType === 'applicant') {
         if (!formData.name || !formData.email) throw new Error('Applicant name and email are required');
@@ -924,7 +968,7 @@ const App: React.FC = () => {
 
   const createAccount = async () => {
     try {
-      const role = formData.role === 'partner' ? 'partner' : 'agent';
+      const role = accountRoles.includes(formData.role as Exclude<AdminRole, 'admin'>) ? formData.role : 'agent';
       if (!formData.username || !formData.password) throw new Error('Username and password are required');
       await api<AdminAccount>(`${API}/accounts`, {
         method: 'POST',
@@ -987,8 +1031,8 @@ const App: React.FC = () => {
       const r = await fetch(`${API}/session`, { headers: { Authorization: testAuth } });
       if (!r.ok) throw new Error('Invalid');
       const data = await r.json();
-      if (data.user?.role !== loginRole) {
-        throw new Error(`This login is ${data.user?.role || 'unknown'} access. Select the correct portal type.`);
+      if (normalizeRole(data.user?.role || 'admin') !== normalizeRole(loginRole)) {
+        throw new Error(`This login is ${roleLabels[normalizeRole(data.user?.role || 'admin')] || data.user?.role || 'unknown'} access. Select the correct portal type.`);
       }
       sessionStorage.setItem('admin_token', data.token);
       sessionStorage.setItem('admin_user', JSON.stringify(data.user));
@@ -1081,10 +1125,10 @@ const App: React.FC = () => {
 
       <div className="grid grid-cols-4 gap-3 mb-8">
         {[
-          { label: currentRole === 'partner' ? 'Assigned Work' : currentRole === 'agent' ? 'Clients Given' : 'Client Work', value: metrics.work, icon: Handshake },
-          { label: currentRole === 'partner' ? 'Total Payout' : 'Total Client Price', value: rupee(currentRole === 'partner' ? metrics.partnerPayout : metrics.workValue), icon: IndianRupee },
-          { label: currentRole === 'partner' ? 'Partner Due' : 'Agent Due', value: rupee(currentRole === 'partner' ? metrics.partnerDue : metrics.agentDue), icon: Users },
-          { label: currentRole === 'agent' ? 'Open Roles' : 'Active Projects', value: currentRole === 'agent' ? metrics.openRoles : metrics.projects, icon: Briefcase },
+          { label: currentRole === 'delivery_partner' ? 'Assigned Work' : isLeadRole ? 'Clients Given' : 'Client Work', value: metrics.work, icon: Handshake },
+          { label: currentRole === 'delivery_partner' ? 'Total Payout' : 'Total Client Price', value: rupee(currentRole === 'delivery_partner' ? metrics.partnerPayout : metrics.workValue), icon: IndianRupee },
+          { label: currentRole === 'delivery_partner' ? 'Partner Due' : 'Agent Due', value: rupee(currentRole === 'delivery_partner' ? metrics.partnerDue : metrics.agentDue), icon: Users },
+          { label: currentRole === 'agent' || currentRole === 'hr_partner' ? 'Open Roles' : 'Active Projects', value: currentRole === 'agent' || currentRole === 'hr_partner' ? metrics.openRoles : metrics.projects, icon: Briefcase },
         ].map((item) => (
           <div key={item.label} className="bg-[#111] border border-white/10 rounded-xl p-5">
             <item.icon className="w-4 h-4 text-white/40 mb-3" />
@@ -1260,18 +1304,18 @@ const App: React.FC = () => {
 
   const renderWork = () => {
     const statuses = ['lead', 'quoted', 'assigned', 'in-progress', 'review', 'completed', 'paid', 'lost'];
-    const editableStatuses = currentRole === 'partner' ? ['assigned', 'in-progress', 'review', 'completed'] : statuses;
+    const editableStatuses = currentRole === 'delivery_partner' ? ['assigned', 'in-progress', 'review', 'completed'] : statuses;
     return (
       <section>
         <div className="flex items-end justify-between mb-4">
           <div>
             <div className="text-[11px] tracking-[1px] text-white/50">CLIENT WORKFLOW</div>
-            <div className="text-lg font-semibold">{isAdmin ? 'Agent, Partner & Payment Overview' : currentRole === 'agent' ? 'My Client Leads' : 'My Assigned Work'}</div>
+            <div className="text-lg font-semibold">{isAdmin ? 'Agent, Partner & Payment Overview' : isLeadRole ? 'My Client Leads' : 'My Assigned Work'}</div>
           </div>
-          <div className="text-xs text-white/40">{workOrders.length} records / {rupee(currentRole === 'partner' ? metrics.partnerPayout : metrics.workValue)}</div>
+          <div className="text-xs text-white/40">{workOrders.length} records / {rupee(currentRole === 'delivery_partner' ? metrics.partnerPayout : metrics.workValue)}</div>
         </div>
 
-        {(isAdmin || currentRole === 'agent') && (
+        {(isAdmin || isLeadRole) && (
           <div className="mb-4 rounded-2xl border border-white/10 bg-[#111] p-4">
             <div className="mb-3 text-sm font-semibold">{isAdmin ? 'Add client work' : 'Add client lead'}</div>
             <div className="grid grid-cols-4 gap-3">
@@ -1308,7 +1352,7 @@ const App: React.FC = () => {
             <div key={item.id} className="grid grid-cols-[1.1fr_0.85fr_0.8fr_0.8fr_0.8fr_auto] gap-3 border-b border-white/10 px-5 py-4 last:border-b-0">
               <button onClick={() => {
                 setFormData({
-                  clientName: item.clientName,
+                  clientName: item.clientName || '',
                   clientPhone: item.clientPhone || '',
                   service: item.service,
                   price: String(item.price || ''),
@@ -1324,12 +1368,12 @@ const App: React.FC = () => {
                   notes: item.notes || '',
                 });
                 setSelectedWork(item);
-              }} className="min-w-0 text-left">
-                <div className="truncate font-medium">{item.clientName}</div>
-                <div className="truncate text-[11px] text-white/45">{item.clientPhone || 'No phone'} | {item.service}</div>
+              }} className="min-w-0 text-left" disabled={isAffiliatePartner}>
+                <div className="truncate font-medium">{isAffiliatePartner ? 'Referral work' : item.clientName || 'Client work'}</div>
+                <div className="truncate text-[11px] text-white/45">{isAffiliatePartner ? 'Contact hidden' : item.clientPhone || 'No phone'} | {item.service}</div>
               </button>
               <div className="text-xs text-white/60">
-                <div>{currentRole === 'partner' ? 'Payout' : 'Price'}: <span className="text-white">{rupee(currentRole === 'partner' ? item.partnerPayout : item.price)}</span></div>
+                <div>{isAffiliatePartner ? 'Commission' : currentRole === 'delivery_partner' ? 'Payout' : 'Price'}: <span className="text-white">{isAffiliatePartner ? 'Pending' : rupee(currentRole === 'delivery_partner' ? item.partnerPayout : item.price || 0)}</span></div>
                 <div>Agent: {item.agent?.displayName || item.agent?.username || '-'}</div>
               </div>
               <div className="text-xs text-white/60">
@@ -1346,17 +1390,19 @@ const App: React.FC = () => {
                 <div className="text-emerald-300">{rupee(item.partnerPaid)} / {rupee(item.partnerPayout)}</div>
               </div>
               <div className="flex items-start gap-1.5">
-                <select value={item.status} onChange={(e) => updateWorkOrder(item.id, { status: e.target.value } as Partial<ClientWork>)} className="rounded-lg border border-white/10 bg-black px-2 py-1 text-[11px]">
-                  {[...new Set([item.status, ...editableStatuses])].map((status) => <option key={status} value={status}>{status}</option>)}
-                </select>
-                {currentRole === 'partner' && item.status !== 'review' && item.status !== 'completed' && item.status !== 'paid' && (
+                {!isAffiliatePartner ? (
+                  <select value={item.status} onChange={(e) => updateWorkOrder(item.id, { status: e.target.value } as Partial<ClientWork>)} className="rounded-lg border border-white/10 bg-black px-2 py-1 text-[11px]">
+                    {[...new Set([item.status, ...editableStatuses])].map((status) => <option key={status} value={status}>{status}</option>)}
+                  </select>
+                ) : <span className="rounded-lg border border-white/10 px-2 py-1 text-[11px] text-white/45">Read only</span>}
+                {currentRole === 'delivery_partner' && item.status !== 'review' && item.status !== 'completed' && item.status !== 'paid' && (
                   <button onClick={() => updateWorkOrder(item.id, { status: 'review' } as Partial<ClientWork>)} className="rounded-lg border border-emerald-400/25 px-2 py-1.5 text-[11px] text-emerald-200 hover:bg-emerald-500/20">Submit</button>
                 )}
                 {isAdmin && <button onClick={() => deleteWorkOrder(item.id)} className="rounded-lg border border-white/15 px-2 py-1.5 text-[11px] hover:bg-red-500"><Trash2 className="h-3 w-3" /></button>}
               </div>
             </div>
           ))}
-          {!workOrders.length && <div className="p-8 text-center text-white/40 text-sm">{currentRole === 'partner' ? 'No work assigned yet.' : 'No client work yet.'}</div>}
+          {!workOrders.length && <div className="p-8 text-center text-white/40 text-sm">{currentRole === 'delivery_partner' ? 'No work assigned yet.' : 'No client work yet.'}</div>}
         </div>
       </section>
     );
@@ -1372,8 +1418,8 @@ const App: React.FC = () => {
         {inquiries.map((inquiry) => (
           <div key={inquiry.id} className="grid grid-cols-[1.4fr_1fr_1fr_auto] gap-3 items-center px-5 py-4 border-b border-white/10 last:border-none text-sm">
             <button onClick={() => setSelectedInquiry(inquiry)} className="text-left min-w-0">
-              <div className="font-medium truncate">{inquiry.name}</div>
-              <div className="text-[11px] text-white/45 truncate">{inquiry.email} | {inquiry.phone}</div>
+              <div className="font-medium truncate">{isAffiliatePartner ? 'Referral lead' : inquiry.name || 'Assigned lead'}</div>
+              <div className="text-[11px] text-white/45 truncate">{isAffiliatePartner ? `Source: ${inquiry.leadSource || 'Referral'}` : `${inquiry.email || 'No email'} | ${inquiry.phone || 'No phone'}`}</div>
             </button>
             <div className="text-xs text-white/60">
               <div>{inquiry.service} | {inquiry.budget}</div>
@@ -1384,7 +1430,7 @@ const App: React.FC = () => {
             </div>
             <span className={`w-fit px-2 py-0.5 text-[10px] rounded ${inquiry.status === 'new' ? 'bg-blue-500/20 text-blue-300' : 'bg-white/10 text-white/65'}`}>{inquiry.status || 'new'}</span>
             <div className="flex gap-1.5">
-              {currentRole !== 'partner' && <button onClick={() => contactLead(inquiry)} className="px-2.5 py-1 text-[10px] rounded-xl border border-white/15 hover:bg-white hover:text-black"><Mail className="inline w-2.5 h-2.5 mr-0.5" />Contact</button>}
+              {canContactLeads && <button onClick={() => contactLead(inquiry)} className="px-2.5 py-1 text-[10px] rounded-xl border border-white/15 hover:bg-white hover:text-black"><Mail className="inline w-2.5 h-2.5 mr-0.5" />Contact</button>}
               {isAdmin && <button onClick={() => deleteInquiry(inquiry.id)} className="px-2.5 py-1 text-[10px] rounded-xl border border-white/15 hover:bg-red-500"><Trash2 className="w-2.5 h-2.5" /></button>}
             </div>
           </div>
@@ -1525,7 +1571,7 @@ const App: React.FC = () => {
             <div className="uppercase text-[10px] tracking-[1px] text-white/40 mb-3">{status.replace('-', ' ')}</div>
             {projects.filter((project) => project.status === status).map((project) => (
               <div key={project.id} className="bg-[#1A1A1A] p-4 rounded-xl mb-2 border border-white/5">
-                <button onClick={() => { setFormData({ name: project.name, client: project.clientName || '', description: project.description || '', status: project.status }); setSelectedProject(project); }} className="w-full text-left">
+                <button onClick={() => { setFormData({ name: project.name, client: project.clientName || '', description: project.description || '', status: project.status, deliveryPartnerId: project.deliveryPartnerId ? String(project.deliveryPartnerId) : '' }); setSelectedProject(project); }} className="w-full text-left">
                   <div className="font-medium text-sm mb-0.5 hover:text-white/80">{project.name}</div>
                   <div className="text-[11px] text-white/60 mb-3">{project.clientName || '-'}</div>
                 </button>
@@ -1564,6 +1610,30 @@ const App: React.FC = () => {
           </div>
         ))}
         {!binItems.length && <div className="p-6 text-center text-white/40 text-sm">Bin is empty.</div>}
+      </div>
+      <div className="mt-6 rounded-2xl border border-red-400/20 bg-red-500/5 p-5">
+        <div className="mb-4 flex items-end justify-between gap-4">
+          <div>
+            <div className="text-[11px] tracking-[1px] text-red-200/60">ADMIN ONLY</div>
+            <div className="text-lg font-semibold text-red-50">Data Cleanup</div>
+          </div>
+          <div className="max-w-lg text-right text-[11px] leading-5 text-red-100/55">Use this for test/stale operational data only. Accounts, CMS content, media, SEO and logo settings are not touched.</div>
+        </div>
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            ['inquiries', 'Leads / inquiries'],
+            ['applicants', 'Applicants / worker inquiries'],
+            ['client-work', 'Client work and payments'],
+            ['projects', 'Projects'],
+            ['referrals', 'Referral tracking data'],
+            ['activity', 'Activity log'],
+          ].map(([target, label]) => (
+            <button key={target} onClick={() => cleanupData(target, label)} className="rounded-xl border border-red-300/20 bg-black/20 px-3 py-3 text-left text-xs text-red-50 hover:bg-red-500/20">
+              <span className="block font-semibold">{label}</span>
+              <span className="mt-1 block text-[10px] text-red-100/45">Requires typing CLEAN {target}</span>
+            </button>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -1658,8 +1728,7 @@ const App: React.FC = () => {
             <input className="field text-sm" placeholder="Display name" value={formData.displayName || ''} onChange={(e) => setField('displayName', e.target.value)} />
             <input className="field text-sm" type="password" placeholder="Temporary password" value={formData.password || ''} onChange={(e) => setField('password', e.target.value)} />
             <select className="field text-sm" value={formData.role || 'agent'} onChange={(e) => setField('role', e.target.value)}>
-              <option value="agent">Agent dashboard</option>
-              <option value="partner">Partner dashboard</option>
+              {accountRoles.map((role) => <option key={role} value={role}>{roleLabels[role]}</option>)}
             </select>
             <div className="rounded-xl bg-white/5 px-3 py-2 text-[11px] leading-5 text-white/45">Password minimum 8 characters. These accounts cannot open admin-only tabs.</div>
             <button onClick={createAccount} className="w-full py-3 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90">
@@ -2716,15 +2785,15 @@ const App: React.FC = () => {
           <p className="text-sm text-white/50 mt-1">Choose your access type and sign in</p>
         </div>
         <form onSubmit={handleLogin} className="space-y-4">
-          <div className="grid grid-cols-3 gap-2">
-            {(['admin', 'partner', 'agent'] as AdminRole[]).map((role) => (
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            {loginRoles.map((role) => (
               <button
                 key={role}
                 type="button"
                 onClick={() => setLoginRole(role)}
-                className={`rounded-xl border px-3 py-2.5 text-xs font-semibold capitalize ${loginRole === role ? 'border-white bg-white text-black' : 'border-white/10 bg-white/5 text-white/60 hover:text-white'}`}
+                className={`rounded-xl border px-3 py-2.5 text-xs font-semibold ${loginRole === role ? 'border-white bg-white text-black' : 'border-white/10 bg-white/5 text-white/60 hover:text-white'}`}
               >
-                {role}
+                {roleLabels[role]}
               </button>
             ))}
           </div>
@@ -2805,6 +2874,12 @@ const App: React.FC = () => {
                   <>
                     <input className="field text-sm" placeholder={modalType === 'project' ? 'Project name' : 'Title'} value={formData.title || ''} onChange={(event) => setField('title', event.target.value)} />
                     {modalType === 'project' && <input className="field text-sm" placeholder="Client name" value={formData.client || ''} onChange={(event) => setField('client', event.target.value)} />}
+                    {modalType === 'project' && (
+                      <select className="field text-sm" value={formData.deliveryPartnerId || ''} onChange={(event) => setField('deliveryPartnerId', event.target.value)}>
+                        <option value="">No delivery partner</option>
+                        {partnerAccounts.map((account) => <option key={account.id} value={account.id}>{account.displayName || account.username}</option>)}
+                      </select>
+                    )}
                     {modalType !== 'project' && <input className="field text-sm" placeholder="Department" value={formData.department || ''} onChange={(event) => setField('department', event.target.value)} />}
                     {modalType !== 'project' && <input className="field text-sm" placeholder="Location" value={formData.location || ''} onChange={(event) => setField('location', event.target.value)} />}
                     {modalType === 'project' && (
@@ -2827,7 +2902,7 @@ const App: React.FC = () => {
               <div className="flex justify-between mb-6"><div className="text-base tracking-tight">Edit Client Work</div><X className="cursor-pointer w-4 h-4" onClick={() => { setSelectedWork(null); setFormData({}); }} /></div>
               <div className="grid grid-cols-2 gap-3">
                 <div><label className="block text-[11px] text-white/50 mb-1">Client Name</label><input disabled={!isAdmin} className="field text-sm disabled:opacity-55" value={formData.clientName || ''} onChange={(event) => setField('clientName', event.target.value)} /></div>
-                <div><label className="block text-[11px] text-white/50 mb-1">Phone</label><input disabled={!isAdmin && currentRole !== 'agent'} className="field text-sm disabled:opacity-55" value={formData.clientPhone || ''} onChange={(event) => setField('clientPhone', event.target.value)} /></div>
+                <div><label className="block text-[11px] text-white/50 mb-1">Phone</label><input disabled={!isAdmin && !isLeadRole} className="field text-sm disabled:opacity-55" value={formData.clientPhone || ''} onChange={(event) => setField('clientPhone', event.target.value)} /></div>
                 <div><label className="block text-[11px] text-white/50 mb-1">Service</label><input disabled={!isAdmin} className="field text-sm disabled:opacity-55" value={formData.service || ''} onChange={(event) => setField('service', event.target.value)} /></div>
                 <div><label className="block text-[11px] text-white/50 mb-1">Status</label>
                   <select className="field text-sm" value={formData.status || 'lead'} onChange={(event) => setField('status', event.target.value)}>
@@ -2839,11 +2914,11 @@ const App: React.FC = () => {
               <div className="mt-4 grid grid-cols-1 gap-3 border-t border-white/10 pt-4">
                 <div>
                   <label className="block text-[11px] text-white/50 mb-1">Delivery Link</label>
-                  <input disabled={currentRole === 'agent'} className="field text-sm disabled:opacity-55" placeholder="Website, Drive, GitHub, Figma, etc." value={formData.deliveryLink || ''} onChange={(event) => setField('deliveryLink', event.target.value)} />
+                  <input disabled={isLeadRole} className="field text-sm disabled:opacity-55" placeholder="Website, Drive, GitHub, Figma, etc." value={formData.deliveryLink || ''} onChange={(event) => setField('deliveryLink', event.target.value)} />
                 </div>
                 <div>
                   <label className="block text-[11px] text-white/50 mb-1">Delivery Notes</label>
-                  <textarea disabled={currentRole === 'agent'} className="field h-20 resize-y text-sm disabled:opacity-55" placeholder="Partner update, handoff notes, pending items" value={formData.deliveryNotes || ''} onChange={(event) => setField('deliveryNotes', event.target.value)} />
+                  <textarea disabled={isLeadRole} className="field h-20 resize-y text-sm disabled:opacity-55" placeholder="Partner update, handoff notes, pending items" value={formData.deliveryNotes || ''} onChange={(event) => setField('deliveryNotes', event.target.value)} />
                 </div>
                 {selectedWork.submittedAt && <div className="text-[11px] text-white/40">Submitted for review: {new Date(selectedWork.submittedAt).toLocaleString()}</div>}
               </div>
@@ -2904,7 +2979,7 @@ const App: React.FC = () => {
                 <label className="block text-[11px] text-white/50 mb-1">Notes</label>
                 <textarea className="field h-24 resize-y text-sm" value={formData.notes || ''} onChange={(event) => setField('notes', event.target.value)} />
               </div>
-              <button onClick={updateWorkField} className="mt-6 w-full py-3.5 bg-white text-black font-medium rounded-xl text-sm">Save Work</button>
+              {!isAffiliatePartner && <button onClick={updateWorkField} className="mt-6 w-full py-3.5 bg-white text-black font-medium rounded-xl text-sm">Save Work</button>}
             </motion.div>
           </div>
         )}
@@ -2912,8 +2987,8 @@ const App: React.FC = () => {
         {selectedInquiry && (
           <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[60]" onClick={() => setSelectedInquiry(null)}>
             <div onClick={(event) => event.stopPropagation()} className="bg-[#111] border border-white/10 rounded-2xl p-6 max-w-md w-full">
-              <div className="text-lg tracking-[-0.4px] mb-0.5">{selectedInquiry.name}</div>
-              <div className="text-xs text-white/60 mb-5">{selectedInquiry.email} | {selectedInquiry.phone}</div>
+              <div className="text-lg tracking-[-0.4px] mb-0.5">{isAffiliatePartner ? 'Referral lead' : selectedInquiry.name || 'Assigned lead'}</div>
+              <div className="text-xs text-white/60 mb-5">{isAffiliatePartner ? `Source: ${selectedInquiry.leadSource || 'Referral'}` : `${selectedInquiry.email || 'No email'} | ${selectedInquiry.phone || 'No phone'}`}</div>
               <div className="space-y-3 text-sm">
                 <div><span className="text-white/40">Service:</span> {selectedInquiry.service}</div>
                 <div><span className="text-white/40">Budget:</span> {selectedInquiry.budget}</div>
@@ -2922,11 +2997,11 @@ const App: React.FC = () => {
                   <span className={statusPill(selectedInquiry.sheetStatus)}>Sheet {selectedInquiry.sheetStatus || 'pending'}</span>
                 </div>
                 {selectedInquiry.sheetError && <div className="rounded-xl bg-red-500/10 p-3 text-xs text-red-200"><span className="text-red-300">Sheet error:</span> {selectedInquiry.sheetError}</div>}
-                <div className="pt-3 border-t border-white/10 text-white/80 text-sm">{selectedInquiry.message}</div>
+                {!isAffiliatePartner && <div className="pt-3 border-t border-white/10 text-white/80 text-sm">{selectedInquiry.message}</div>}
               </div>
               <div className="flex gap-2 mt-5">
-                {currentRole !== 'partner' && <button onClick={() => contactLead(selectedInquiry)} className="flex-1 py-2.5 border border-white/20 rounded-xl text-sm">Email Lead</button>}
-                {currentRole !== 'partner' && <button onClick={() => { updateInquiry(selectedInquiry.id, { status: 'archived' }); setSelectedInquiry(null); }} className="flex-1 py-2.5 bg-white text-black rounded-xl text-sm">Archive</button>}
+                {canContactLeads && <button onClick={() => contactLead(selectedInquiry)} className="flex-1 py-2.5 border border-white/20 rounded-xl text-sm">Email Lead</button>}
+                {canContactLeads && <button onClick={() => { updateInquiry(selectedInquiry.id, { status: 'archived' }); setSelectedInquiry(null); }} className="flex-1 py-2.5 bg-white text-black rounded-xl text-sm">Archive</button>}
                 {isAdmin && <button onClick={() => deleteInquiry(selectedInquiry.id)} className="flex-1 py-2.5 border border-white/20 rounded-xl text-sm hover:bg-red-500">Delete</button>}
               </div>
             </div>
@@ -2982,6 +3057,14 @@ const App: React.FC = () => {
               <div className="space-y-3">
                 <div><label className="block text-[11px] text-white/50 mb-1">Project Name</label><input className="field text-sm" value={formData.name || ''} onChange={(event) => setField('name', event.target.value)} /></div>
                 <div><label className="block text-[11px] text-white/50 mb-1">Client Name</label><input className="field text-sm" value={formData.client || ''} onChange={(event) => setField('client', event.target.value)} /></div>
+                {isAdmin && (
+                  <div><label className="block text-[11px] text-white/50 mb-1">Delivery Partner</label>
+                    <select className="field text-sm" value={formData.deliveryPartnerId || ''} onChange={(event) => setField('deliveryPartnerId', event.target.value)}>
+                      <option value="">No delivery partner</option>
+                      {partnerAccounts.map((account) => <option key={account.id} value={account.id}>{account.displayName || account.username}</option>)}
+                    </select>
+                  </div>
+                )}
                 <div><label className="block text-[11px] text-white/50 mb-1">Status</label>
                   <select className="field text-sm" value={formData.status || 'planning'} onChange={(event) => setField('status', event.target.value)}>
                     {statusFlow.map((s) => <option key={s} value={s}>{s.replace('-', ' ')}</option>)}

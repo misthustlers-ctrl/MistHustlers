@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import prisma from "../prisma/client.js";
+import { hasAnyRole, isLoginRole } from "../config/roles.js";
 
-const VALID_ROLES = ["admin", "agent", "partner"];
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000;
 
 function sessionSecret() {
@@ -35,7 +35,7 @@ export function readSessionToken(token) {
   try {
     const payload = JSON.parse(Buffer.from(encoded, "base64url").toString("utf-8"));
     if (!payload.exp || payload.exp < Date.now()) return null;
-    if (!VALID_ROLES.includes(payload.role)) return null;
+    if (!isLoginRole(payload.role)) return null;
     return payload;
   } catch {
     return null;
@@ -93,7 +93,7 @@ export async function adminAuth(req, res, next) {
 
     if (username !== expectedUser || password !== expectedPass) {
       const user = await prisma.adminUser.findUnique({ where: { username } }).catch(() => null);
-      if (!user || user.status !== "active" || !VALID_ROLES.includes(user.role) || !verifyPassword(password, user.salt, user.passwordHash)) {
+      if (!user || user.status !== "active" || !isLoginRole(user.role) || !verifyPassword(password, user.salt, user.passwordHash)) {
         return res.status(401).json({ success: false, message: "Invalid credentials" });
       }
       req.admin = { id: user.id, username: user.username, displayName: user.displayName, role: user.role, source: "database" };
@@ -116,7 +116,7 @@ export function requireAdmin(req, res, next) {
 
 export function allowRoles(...roles) {
   return (req, res, next) => {
-    if (!req.admin || !roles.includes(req.admin.role)) {
+    if (!req.admin || !hasAnyRole(req.admin.role, roles)) {
       return res.status(403).json({ success: false, message: "You do not have permission for this action" });
     }
     next();

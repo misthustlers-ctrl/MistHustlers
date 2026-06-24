@@ -7,6 +7,7 @@ const NAV_LINKS = [
   { label: "Home", to: "/" },
   { label: "Services", to: "/services" },
   { label: "Projects", to: "/projects" },
+  { label: "Career", to: "/career" },
   { label: "About", to: "/about" },
   { label: "FAQ", to: "/faq" },
   { label: "Contact", to: "/contact" },
@@ -55,8 +56,19 @@ export default function GlobalNavbar() {
     }
   };
 
+  const isActiveLink = (to: string) => {
+    if (to === "/") return location.pathname === "/";
+    return location.pathname === to || location.pathname.startsWith(`${to}/`);
+  };
+
   return (
     <>
+      <a
+        href="#main-content"
+        className="fixed left-4 top-4 z-[80] -translate-y-24 rounded-full bg-abyssal-ink px-4 py-2 text-sm font-semibold text-white transition-transform focus:translate-y-0 font-body"
+      >
+        Skip to content
+      </a>
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
@@ -75,14 +87,16 @@ export default function GlobalNavbar() {
             )}
           </Link>
 
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-5 xl:gap-7">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.label}
                 to={link.to}
                 onClick={() => handleNavClick(link.to)}
-                aria-current={location.pathname === link.to ? "page" : undefined}
-                className="text-sm font-medium text-abyssal-ink/70 hover:text-abyssal-ink transition-colors duration-200 font-body min-h-[44px] flex items-center"
+                aria-current={isActiveLink(link.to) ? "page" : undefined}
+                className={`nav-link relative text-sm font-medium transition-colors duration-200 font-body min-h-[44px] flex items-center ${
+                  isActiveLink(link.to) ? "text-abyssal-ink" : "text-abyssal-ink/70 hover:text-abyssal-ink"
+                }`}
               >
                 {link.label}
               </Link>
@@ -123,7 +137,10 @@ export default function GlobalNavbar() {
                     key={link.label}
                     to={link.to}
                     onClick={() => handleNavClick(link.to)}
-                    className="min-h-11 rounded-2xl px-3 text-sm font-medium text-abyssal-ink/70 hover:text-abyssal-ink hover:bg-abyssal-ink/5 transition-colors py-2 font-body flex items-center"
+                    aria-current={isActiveLink(link.to) ? "page" : undefined}
+                    className={`min-h-11 rounded-2xl px-3 text-sm font-medium transition-colors py-2 font-body flex items-center ${
+                      isActiveLink(link.to) ? "bg-abyssal-ink text-white" : "text-abyssal-ink/70 hover:text-abyssal-ink hover:bg-abyssal-ink/5"
+                    }`}
                   >
                     {link.label}
                   </Link>

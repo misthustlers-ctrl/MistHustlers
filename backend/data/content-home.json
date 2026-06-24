@@ -1,11 +1,11 @@
 {
   "hero": {
-    "badge": "Websites • MVPs • AI Automation",
-    "title": ["WEB DEVELOPMENT", "AI AUTOMATION", "INDORE AGENCY."],
-    "highlightWord": "INDORE AGENCY.",
-    "description": "MistHustlers helps startups, founders and growing businesses turn ideas into production-ready websites, MVPs and automation systems through clear planning, practical execution and complete project ownership.",
-    "tagline": "Based in Indore. Available for remote projects across India.",
-    "ctaPrimary": "Start Your Project",
+    "badge": "WEB DEVELOPMENT · MVP · AI AUTOMATION",
+    "title": ["Web Development, MVP", "& AI Automation Agency in Indore"],
+    "highlightWord": "& AI Automation Agency in Indore",
+    "description": "Founder-led websites, MVPs and automation systems for businesses that need clear scope, fast execution and source-code handover.",
+    "tagline": "BASED IN INDORE · REMOTE PROJECTS ACROSS INDIA",
+    "ctaPrimary": "Start Your Project ->",
     "ctaSecondary": "Explore Our Work"
   },
   "stats": [
@@ -14,7 +14,7 @@
     { "value": 6, "suffix": "", "label": "Execution Stages Covered" },
     { "value": 1, "suffix": "", "label": "Direct Founder Communication" }
   ],
-  "brands": ["Transparent Scope", "Clear Milestones", "Source-Code Handover", "Post-Launch Support"],
+  "brands": ["Founder-led execution", "Source-code handover included", "Transparent pricing from Rs. 3,999", "Remote projects across India"],
   "journeySteps": [
     { "step": "01", "title": "Understand", "desc": "We understand the business, target audience, requirements and expected outcome before recommending a build path." },
     { "step": "02", "title": "Plan", "desc": "We define project scope, deliverables, technical approach, milestones and timeline before development begins." },

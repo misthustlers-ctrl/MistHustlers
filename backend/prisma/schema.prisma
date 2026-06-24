@@ -79,9 +79,24 @@ model Inquiry {
   emailStatus String @default("pending") @map("email_status")
   sheetStatus String @default("pending") @map("sheet_status")
   sheetError  String? @map("sheet_error")
+  ownerId   Int?     @map("owner_id")
+  acquisitionPartnerId Int? @map("acquisition_partner_id")
+  affiliatePartnerId   Int? @map("affiliate_partner_id")
+  assignedHrId Int?   @map("assigned_hr_id")
+  leadSource String?  @map("lead_source")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  owner AdminUser? @relation("OwnedInquiries", fields: [ownerId], references: [id], onDelete: SetNull)
+  acquisitionPartner AdminUser? @relation("AcquisitionPartnerInquiries", fields: [acquisitionPartnerId], references: [id], onDelete: SetNull)
+  affiliatePartner AdminUser? @relation("AffiliatePartnerInquiries", fields: [affiliatePartnerId], references: [id], onDelete: SetNull)
+  assignedHr AdminUser? @relation("AssignedHrInquiries", fields: [assignedHrId], references: [id], onDelete: SetNull)
+  clientWorks ClientWork[]
+
+  @@index([ownerId])
+  @@index([acquisitionPartnerId])
+  @@index([affiliatePartnerId])
+  @@index([assignedHrId])
   @@map("inquiries")
 }
 
@@ -112,11 +127,18 @@ model Applicant {
   coverLetter   String?   @map("cover_letter")
   status        String    @default("new")
   notes         String?
+  assignedHrId  Int?      @map("assigned_hr_id")
+  positionId    Int?      @map("position_id")
+  applicationType String  @default("career") @map("application_type")
+  currentStage  String    @default("new") @map("current_stage")
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
 
   opportunity   Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  assignedHr    AdminUser? @relation("AssignedHrApplicants", fields: [assignedHrId], references: [id], onDelete: SetNull)
 
+  @@index([assignedHrId])
+  @@index([positionId])
   @@map("applicants")
 }
 
@@ -128,9 +150,22 @@ model Project {
   status      String    @default("planning")
   startDate   DateTime? @map("start_date")
   endDate     DateTime? @map("end_date")
+  acquisitionPartnerId Int? @map("acquisition_partner_id")
+  deliveryPartnerId Int? @map("delivery_partner_id")
+  affiliatePartnerId Int? @map("affiliate_partner_id")
+  assignedHrId Int? @map("assigned_hr_id")
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
 
+  acquisitionPartner AdminUser? @relation("AcquisitionPartnerProjects", fields: [acquisitionPartnerId], references: [id], onDelete: SetNull)
+  deliveryPartner AdminUser? @relation("DeliveryPartnerProjects", fields: [deliveryPartnerId], references: [id], onDelete: SetNull)
+  affiliatePartner AdminUser? @relation("AffiliatePartnerProjects", fields: [affiliatePartnerId], references: [id], onDelete: SetNull)
+  assignedHr AdminUser? @relation("AssignedHrProjects", fields: [assignedHrId], references: [id], onDelete: SetNull)
+
+  @@index([acquisitionPartnerId])
+  @@index([deliveryPartnerId])
+  @@index([affiliatePartnerId])
+  @@index([assignedHrId])
   @@map("projects")
 }
 
@@ -147,6 +182,21 @@ model AdminUser {
 
   agentWorks   ClientWork[] @relation("AgentWorks")
   partnerWorks ClientWork[] @relation("PartnerWorks")
+  ownedInquiries Inquiry[] @relation("OwnedInquiries")
+  acquisitionPartnerInquiries Inquiry[] @relation("AcquisitionPartnerInquiries")
+  affiliatePartnerInquiries Inquiry[] @relation("AffiliatePartnerInquiries")
+  assignedHrInquiries Inquiry[] @relation("AssignedHrInquiries")
+  assignedHrApplicants Applicant[] @relation("AssignedHrApplicants")
+  acquisitionPartnerProjects Project[] @relation("AcquisitionPartnerProjects")
+  deliveryPartnerProjects Project[] @relation("DeliveryPartnerProjects")
+  affiliatePartnerProjects Project[] @relation("AffiliatePartnerProjects")
+  assignedHrProjects Project[] @relation("AssignedHrProjects")
+  acquisitionPartnerWorks ClientWork[] @relation("AcquisitionPartnerWorks")
+  deliveryPartnerWorks ClientWork[] @relation("DeliveryPartnerWorks")
+  affiliatePartnerWorks ClientWork[] @relation("AffiliatePartnerWorks")
+  assignedHrWorks ClientWork[] @relation("AssignedHrWorks")
+  referralCodes ReferralCode[]
+  partnerProfile PartnerProfile?
 
   @@map("admin_users")
 }
@@ -164,6 +214,11 @@ model ClientWork {
   submittedAt     DateTime? @map("submitted_at")
   agentId         Int?      @map("agent_id")
   partnerId       Int?      @map("partner_id")
+  inquiryId       Int?      @map("inquiry_id")
+  acquisitionPartnerId Int? @map("acquisition_partner_id")
+  deliveryPartnerId Int? @map("delivery_partner_id")
+  affiliatePartnerId Int? @map("affiliate_partner_id")
+  assignedHrId    Int?      @map("assigned_hr_id")
   agentCommission Int       @default(0) @map("agent_commission")
   agentPaid       Int       @default(0) @map("agent_paid")
   partnerPayout   Int       @default(0) @map("partner_payout")
@@ -173,11 +228,84 @@ model ClientWork {
 
   agent           AdminUser? @relation("AgentWorks", fields: [agentId], references: [id], onDelete: SetNull)
   partner         AdminUser? @relation("PartnerWorks", fields: [partnerId], references: [id], onDelete: SetNull)
+  inquiry         Inquiry? @relation(fields: [inquiryId], references: [id], onDelete: SetNull)
+  acquisitionPartner AdminUser? @relation("AcquisitionPartnerWorks", fields: [acquisitionPartnerId], references: [id], onDelete: SetNull)
+  deliveryPartner AdminUser? @relation("DeliveryPartnerWorks", fields: [deliveryPartnerId], references: [id], onDelete: SetNull)
+  affiliatePartner AdminUser? @relation("AffiliatePartnerWorks", fields: [affiliatePartnerId], references: [id], onDelete: SetNull)
+  assignedHr      AdminUser? @relation("AssignedHrWorks", fields: [assignedHrId], references: [id], onDelete: SetNull)
   payments        WorkPayment[]
 
   @@index([agentId])
   @@index([partnerId])
+  @@index([inquiryId])
+  @@index([acquisitionPartnerId])
+  @@index([deliveryPartnerId])
+  @@index([affiliatePartnerId])
+  @@index([assignedHrId])
   @@map("client_work")
+}
+
+model PartnerProfile {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique @map("user_id")
+  partnerType String @map("partner_type")
+  category  String?
+  status    String   @default("active")
+  notes     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([partnerType])
+  @@map("partner_profiles")
+}
+
+model ReferralCode {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique
+  ownerId   Int      @map("owner_id")
+  ownerRole String   @map("owner_role")
+  status    String   @default("active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  owner AdminUser @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  events ReferralEvent[]
+  attributions ReferralAttribution[]
+
+  @@index([ownerId])
+  @@map("referral_codes")
+}
+
+model ReferralEvent {
+  id        Int      @id @default(autoincrement())
+  referralCodeId Int @map("referral_code_id")
+  eventType String  @map("event_type")
+  path      String?
+  ipHash    String? @map("ip_hash")
+  userAgent String? @map("user_agent")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  referralCode ReferralCode @relation(fields: [referralCodeId], references: [id], onDelete: Cascade)
+
+  @@index([referralCodeId])
+  @@map("referral_events")
+}
+
+model ReferralAttribution {
+  id        Int      @id @default(autoincrement())
+  referralCodeId Int @map("referral_code_id")
+  targetType String @map("target_type")
+  targetId   Int    @map("target_id")
+  status     String @default("pending")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  referralCode ReferralCode @relation(fields: [referralCodeId], references: [id], onDelete: Cascade)
+
+  @@index([referralCodeId])
+  @@index([targetType, targetId])
+  @@map("referral_attributions")
 }
 
 model WorkPayment {

@@ -9,6 +9,24 @@ import { auditLog } from "../middleware/audit.middleware.js";
 import { allowRoles, createSessionToken, hashPassword, requireAdmin } from "../middleware/admin-auth.middleware.js";
 import { getMailIntegrationStatus } from "../services/mail.service.js";
 import { getSheetIntegrationStatus } from "../services/sheet.service.js";
+import { ACCOUNT_ROLES, ROLES } from "../config/roles.js";
+import {
+  adminId,
+  applicantWhereFor,
+  canAccessApplicant,
+  canAccessInquiry,
+  canAccessProject,
+  canAccessWork,
+  canEditInquiry,
+  currentRole,
+  inquiryWhereFor,
+  isAdmin,
+  isDeliveryPartner,
+  projectWhereFor,
+  sanitizeInquiryForRole,
+  sanitizeWorkForRole,
+  workWhereFor,
+} from "../config/permissions.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, "..", "data");
@@ -26,7 +44,6 @@ async function writeJSON(file, data) {
 }
 
 const CONTENT_PAGES = ["home", "about", "services", "career", "projects", "contact", "logo", "seo"];
-const ACCOUNT_ROLES = ["agent", "partner"];
 const INQUIRY_STATUSES = ["new", "contacted", "archived"];
 const EMAIL_STATUSES = ["pending", "sent", "failed", "skipped"];
 const SHEET_STATUSES = ["pending", "sent", "failed", "skipped"];
@@ -74,6 +91,9 @@ function money(value) {
 const workInclude = {
   agent: { select: { id: true, username: true, displayName: true, role: true, status: true } },
   partner: { select: { id: true, username: true, displayName: true, role: true, status: true } },
+  acquisitionPartner: { select: { id: true, username: true, displayName: true, role: true, status: true } },
+  deliveryPartner: { select: { id: true, username: true, displayName: true, role: true, status: true } },
+  affiliatePartner: { select: { id: true, username: true, displayName: true, role: true, status: true } },
   payments: { orderBy: { createdAt: "desc" } },
 };
 
@@ -184,6 +204,59 @@ router.get("/activity", requireAdmin, async (_, res, next) => {
   } catch (err) { next(err); }
 });
 
+const CLEANUP_TARGETS = {
+  inquiries: {
+    label: "Leads / inquiries",
+    run: async () => ({ inquiries: await prisma.inquiry.deleteMany() }),
+  },
+  applicants: {
+    label: "Applicants / worker inquiries",
+    run: async () => ({ applicants: await prisma.applicant.deleteMany() }),
+  },
+  projects: {
+    label: "Projects",
+    run: async () => ({ projects: await prisma.project.deleteMany() }),
+  },
+  "client-work": {
+    label: "Client work and payment history",
+    run: async () => {
+      const payments = await prisma.workPayment.deleteMany();
+      const work = await prisma.clientWork.deleteMany();
+      return { payments, work };
+    },
+  },
+  referrals: {
+    label: "Referral tracking data",
+    run: async () => {
+      const attributions = await prisma.referralAttribution.deleteMany();
+      const events = await prisma.referralEvent.deleteMany();
+      const codes = await prisma.referralCode.deleteMany();
+      return { attributions, events, codes };
+    },
+  },
+  activity: {
+    label: "Activity log",
+    run: async () => ({ activity: await prisma.activityLog.deleteMany() }),
+  },
+};
+
+router.post("/cleanup", requireAdmin, async (req, res, next) => {
+  try {
+    const target = String(req.body?.target || "");
+    const confirm = String(req.body?.confirm || "");
+    const cleanup = CLEANUP_TARGETS[target];
+    if (!cleanup) {
+      return res.status(400).json({ success: false, message: "Invalid cleanup target" });
+    }
+    if (confirm !== `CLEAN ${target}`) {
+      return res.status(400).json({ success: false, message: `Type CLEAN ${target} to confirm this cleanup` });
+    }
+    const result = await cleanup.run();
+    await logActivity(req, "cleanup-data", `cleanup:${target}`, cleanup.label);
+    res.json({ success: true, target, label: cleanup.label, result });
+  } catch (err) { next(err); }
+});
+
 router.delete("/bin", requireAdmin, async (req, res, next) => {
   try {
     const { id } = req.body;
@@ -278,43 +351,55 @@ router.delete("/accounts", requireAdmin, async (req, res, next) => {
   }
 });
 
-router.get("/work-orders", allowRoles("admin", "agent", "partner"), async (req, res, next) => {
+router.get("/work-orders", allowRoles("admin", "agent", "partner", "acquisition_partner", "affiliate_partner"), async (req, res, next) => {
   try {
-    const where = req.admin.role === "agent"
-      ? { agentId: Number(req.admin.id) }
-      : req.admin.role === "partner"
-        ? { partnerId: Number(req.admin.id) }
-        : {};
     const items = await prisma.clientWork.findMany({
-      where,
+      where: workWhereFor(req),
       include: workInclude,
       orderBy: { createdAt: "desc" },
     });
-    res.json(items);
+    res.json(items.map((item) => sanitizeWorkForRole(req, item)));
   } catch (err) { next(err); }
 });
 
-router.post("/work-orders", allowRoles("admin", "agent"), async (req, res, next) => {
+router.post("/work-orders", allowRoles("admin", "agent", "acquisition_partner"), async (req, res, next) => {
   try {
-    const isAdmin = req.admin.role === "admin";
-    const agentId = isAdmin ? toId(req.body.agentId) : Number(req.admin.id);
-    const partnerId = isAdmin ? toId(req.body.partnerId) : null;
+    const ownerRole = currentRole(req);
+    const adminUser = isAdmin(req);
+    let sourceInquiry = null;
+    const inquiryId = toId(req.body.inquiryId);
+    if (!adminUser && ownerRole === ROLES.ACQUISITION_PARTNER) {
+      if (!inquiryId) return res.status(400).json({ success: false, message: "Acquisition partner can create work only from an assigned lead" });
+      sourceInquiry = await prisma.inquiry.findUnique({ where: { id: inquiryId } });
+      if (!sourceInquiry || !canAccessInquiry(req, sourceInquiry)) {
+        return res.status(403).json({ success: false, message: "You can create work only from your assigned leads" });
+      }
+    }
+    const agentId = adminUser ? toId(req.body.agentId) : ownerRole === ROLES.AGENT ? adminId(req) : null;
+    const acquisitionPartnerId = adminUser ? toId(req.body.acquisitionPartnerId) : ownerRole === ROLES.ACQUISITION_PARTNER ? adminId(req) : null;
+    const partnerId = adminUser ? toId(req.body.partnerId) : null;
+    const deliveryPartnerId = adminUser ? toId(req.body.deliveryPartnerId) || partnerId : null;
     const item = await prisma.clientWork.create({
       data: {
-        clientName: requireText(req.body.clientName, "Client name", 180),
-        clientPhone: nullableText(req.body.clientPhone, 60),
+        clientName: requireText(req.body.clientName || sourceInquiry?.name, "Client name", 180),
+        clientPhone: nullableText(req.body.clientPhone || sourceInquiry?.phone, 60),
         service: requireText(req.body.service || "Website", "Service", 160),
-        price: isAdmin ? money(req.body.price) : 0,
-        status: isAdmin ? pickStatus(req.body.status, WORK_STATUSES, "lead") : "lead",
+        price: adminUser ? money(req.body.price) : 0,
+        status: adminUser ? pickStatus(req.body.status, WORK_STATUSES, "lead") : "lead",
         notes: nullableText(req.body.notes, 5000),
         deliveryLink: nullableText(req.body.deliveryLink, 800),
         deliveryNotes: nullableText(req.body.deliveryNotes, 5000),
+        inquiryId,
         agentId,
         partnerId,
-        agentCommission: isAdmin ? money(req.body.agentCommission) : 0,
-        agentPaid: isAdmin ? money(req.body.agentPaid) : 0,
-        partnerPayout: isAdmin ? money(req.body.partnerPayout) : 0,
-        partnerPaid: isAdmin ? money(req.body.partnerPaid) : 0,
+        acquisitionPartnerId,
+        deliveryPartnerId,
+        affiliatePartnerId: adminUser ? toId(req.body.affiliatePartnerId) : sourceInquiry?.affiliatePartnerId || null,
+        assignedHrId: adminUser ? toId(req.body.assignedHrId) : null,
+        agentCommission: adminUser ? money(req.body.agentCommission) : 0,
+        agentPaid: adminUser ? money(req.body.agentPaid) : 0,
+        partnerPayout: adminUser ? money(req.body.partnerPayout) : 0,
+        partnerPaid: adminUser ? money(req.body.partnerPaid) : 0,
       },
       include: workInclude,
     });
@@ -322,27 +407,29 @@ router.post("/work-orders", allowRoles("admin", "agent"), async (req, res, next)
   } catch (err) { next(err); }
 });
 
-router.put("/work-orders", allowRoles("admin", "agent", "partner"), async (req, res, next) => {
+router.put("/work-orders", allowRoles("admin", "agent", "partner", "acquisition_partner"), async (req, res, next) => {
   try {
     const id = toId(req.body.id);
     if (!id) return res.status(400).json({ success: false, message: "Valid work id is required" });
     const existing = await prisma.clientWork.findUnique({ where: { id } });
     if (!existing) return res.status(404).json({ success: false, message: "Work item not found" });
-    if (req.admin.role === "agent" && existing.agentId !== Number(req.admin.id)) {
-      return res.status(403).json({ success: false, message: "You can only update your own clients" });
-    }
-    if (req.admin.role === "partner" && existing.partnerId !== Number(req.admin.id)) {
-      return res.status(403).json({ success: false, message: "You can only update assigned work" });
+    if (!canAccessWork(req, existing)) {
+      return res.status(403).json({ success: false, message: "You can update only records assigned to you" });
     }
 
     const data = {};
-    if (req.admin.role === "admin") {
+    if (isAdmin(req)) {
       if (req.body.clientName !== undefined) data.clientName = requireText(req.body.clientName, "Client name", 180);
       if (req.body.clientPhone !== undefined) data.clientPhone = nullableText(req.body.clientPhone, 60);
       if (req.body.service !== undefined) data.service = requireText(req.body.service, "Service", 160);
       if (req.body.price !== undefined) data.price = money(req.body.price);
       if (req.body.agentId !== undefined) data.agentId = toId(req.body.agentId);
       if (req.body.partnerId !== undefined) data.partnerId = toId(req.body.partnerId);
+      if (req.body.inquiryId !== undefined) data.inquiryId = toId(req.body.inquiryId);
+      if (req.body.acquisitionPartnerId !== undefined) data.acquisitionPartnerId = toId(req.body.acquisitionPartnerId);
+      if (req.body.deliveryPartnerId !== undefined) data.deliveryPartnerId = toId(req.body.deliveryPartnerId);
+      if (req.body.affiliatePartnerId !== undefined) data.affiliatePartnerId = toId(req.body.affiliatePartnerId);
+      if (req.body.assignedHrId !== undefined) data.assignedHrId = toId(req.body.assignedHrId);
       if (req.body.agentCommission !== undefined) data.agentCommission = money(req.body.agentCommission);
       if (req.body.agentPaid !== undefined) data.agentPaid = money(req.body.agentPaid);
       if (req.body.partnerPayout !== undefined) data.partnerPayout = money(req.body.partnerPayout);
@@ -350,13 +437,13 @@ router.put("/work-orders", allowRoles("admin", "agent", "partner"), async (req, 
       if (req.body.deliveryLink !== undefined) data.deliveryLink = nullableText(req.body.deliveryLink, 800);
       if (req.body.deliveryNotes !== undefined) data.deliveryNotes = nullableText(req.body.deliveryNotes, 5000);
     }
-    if (req.admin.role === "partner") {
+    if (isDeliveryPartner(req)) {
       if (req.body.deliveryLink !== undefined) data.deliveryLink = nullableText(req.body.deliveryLink, 800);
       if (req.body.deliveryNotes !== undefined) data.deliveryNotes = nullableText(req.body.deliveryNotes, 5000);
     }
     if (req.body.notes !== undefined) data.notes = nullableText(req.body.notes, 5000);
     if (req.body.status !== undefined) {
-      const allowedStatuses = req.admin.role === "partner" ? PARTNER_WORK_STATUSES : WORK_STATUSES;
+      const allowedStatuses = isDeliveryPartner(req) ? PARTNER_WORK_STATUSES : WORK_STATUSES;
       data.status = pickStatus(req.body.status, allowedStatuses, existing.status);
       if (data.status === "review" && existing.status !== "review") data.submittedAt = new Date();
     }
@@ -411,22 +498,34 @@ router.delete("/work-orders", requireAdmin, async (req, res, next) => {
   }
 });
 
-router.get("/inquiries", allowRoles("admin", "agent"), async (_, res, next) => {
+router.get("/inquiries", allowRoles("admin", "agent", "acquisition_partner", "affiliate_partner"), async (req, res, next) => {
   try {
-    const items = await prisma.inquiry.findMany({ orderBy: { createdAt: "desc" } });
-    res.json(items);
+    const items = await prisma.inquiry.findMany({ where: inquiryWhereFor(req), orderBy: { createdAt: "desc" } });
+    res.json(items.map((item) => sanitizeInquiryForRole(req, item)));
   } catch (err) { next(err); }
 });
 
-router.put("/inquiries", allowRoles("admin", "agent"), async (req, res, next) => {
+router.put("/inquiries", allowRoles("admin", "agent", "acquisition_partner"), async (req, res, next) => {
   try {
     const id = toId(req.body.id);
     if (!id) return res.status(400).json({ success: false, message: "Valid inquiry id is required" });
+    const existing = await prisma.inquiry.findUnique({ where: { id } });
+    if (!existing) return res.status(404).json({ error: "Not found" });
+    if (!canEditInquiry(req, existing)) {
+      return res.status(403).json({ success: false, message: "You can update only assigned leads" });
+    }
     const data = {};
     if (req.body.status !== undefined) data.status = pickStatus(req.body.status, INQUIRY_STATUSES, "new");
     if (req.body.notes !== undefined) data.notes = nullableText(req.body.notes, 3000);
-    if (req.admin.role === "admin" && req.body.emailStatus !== undefined) data.emailStatus = pickStatus(req.body.emailStatus, EMAIL_STATUSES, "pending");
-    if (req.admin.role === "admin" && req.body.sheetStatus !== undefined) data.sheetStatus = pickStatus(req.body.sheetStatus, SHEET_STATUSES, "pending");
+    if (isAdmin(req)) {
+      if (req.body.emailStatus !== undefined) data.emailStatus = pickStatus(req.body.emailStatus, EMAIL_STATUSES, "pending");
+      if (req.body.sheetStatus !== undefined) data.sheetStatus = pickStatus(req.body.sheetStatus, SHEET_STATUSES, "pending");
+      if (req.body.ownerId !== undefined) data.ownerId = toId(req.body.ownerId);
+      if (req.body.acquisitionPartnerId !== undefined) data.acquisitionPartnerId = toId(req.body.acquisitionPartnerId);
+      if (req.body.affiliatePartnerId !== undefined) data.affiliatePartnerId = toId(req.body.affiliatePartnerId);
+      if (req.body.assignedHrId !== undefined) data.assignedHrId = toId(req.body.assignedHrId);
+      if (req.body.leadSource !== undefined) data.leadSource = nullableText(req.body.leadSource, 120);
+    }
     const item = await prisma.inquiry.update({ where: { id }, data });
     res.json(item);
   } catch (err) {
@@ -447,7 +546,7 @@ router.delete("/inquiries", requireAdmin, async (req, res, next) => {
   }
 });
 
-router.get("/opportunities", allowRoles("admin", "agent"), async (_, res, next) => {
+router.get("/opportunities", allowRoles("admin", "hr_partner"), async (_, res, next) => {
   try {
     const items = await prisma.opportunity.findMany({ orderBy: { createdAt: "desc" } });
     res.json(items);
@@ -471,7 +570,7 @@ router.post("/opportunities", requireAdmin, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-router.put("/opportunities", allowRoles("admin", "agent"), async (req, res, next) => {
+router.put("/opportunities", requireAdmin, async (req, res, next) => {
   try {
     const id = toId(req.body.id);
     if (!id) return res.status(400).json({ success: false, message: "Valid opportunity id is required" });
@@ -507,9 +606,9 @@ router.delete("/opportunities", requireAdmin, async (req, res, next) => {
   }
 });
 
-router.get("/applicants", allowRoles("admin", "agent"), async (_, res, next) => {
+router.get("/applicants", allowRoles("admin", "hr_partner"), async (req, res, next) => {
   try {
-    const items = await prisma.applicant.findMany({ orderBy: { createdAt: "desc" } });
+    const items = await prisma.applicant.findMany({ where: applicantWhereFor(req), orderBy: { createdAt: "desc" } });
     res.json(items);
   } catch (err) { next(err); }
 });
@@ -537,19 +636,29 @@ router.post("/applicants", requireAdmin, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-router.put("/applicants", allowRoles("admin", "agent"), async (req, res, next) => {
+router.put("/applicants", allowRoles("admin", "hr_partner"), async (req, res, next) => {
   try {
     const id = toId(req.body.id);
     if (!id) return res.status(400).json({ success: false, message: "Valid applicant id is required" });
+    const existing = await prisma.applicant.findUnique({ where: { id } });
+    if (!existing) return res.status(404).json({ error: "Not found" });
+    if (!canAccessApplicant(req, existing)) {
+      return res.status(403).json({ success: false, message: "You can update only assigned candidates" });
+    }
     const data = {};
-    if (req.admin.role === "admin") {
+    if (isAdmin(req)) {
       if (req.body.name !== undefined) data.name = requireText(req.body.name, "Applicant name", 180);
       if (req.body.email !== undefined) data.email = requireText(req.body.email, "Applicant email", 200);
       if (req.body.phone !== undefined) data.phone = nullableText(req.body.phone, 50);
       if (req.body.resumeUrl !== undefined) data.resumeUrl = nullableText(req.body.resumeUrl, 500);
       if (req.body.coverLetter !== undefined) data.coverLetter = nullableText(req.body.coverLetter, 5000);
+      if (req.body.assignedHrId !== undefined) data.assignedHrId = toId(req.body.assignedHrId);
+      if (req.body.positionId !== undefined) data.positionId = toId(req.body.positionId);
+      if (req.body.applicationType !== undefined) data.applicationType = text(req.body.applicationType || "career", 80);
     }
     if (req.body.status !== undefined) data.status = pickStatus(req.body.status, APPLICANT_STATUSES, "new");
+    if (req.body.currentStage !== undefined) data.currentStage = pickStatus(req.body.currentStage, APPLICANT_STATUSES, "new");
+    if (req.body.notes !== undefined) data.notes = nullableText(req.body.notes, 3000);
     const item = await prisma.applicant.update({ where: { id }, data });
     res.json(item);
   } catch (err) {
@@ -574,9 +683,9 @@ router.delete("/applicants", requireAdmin, async (req, res, next) => {
   }
 });
 
-router.get("/projects", allowRoles("admin", "partner"), async (_, res, next) => {
+router.get("/projects", allowRoles("admin", "partner"), async (req, res, next) => {
   try {
-    const items = await prisma.project.findMany({ orderBy: { createdAt: "desc" } });
+    const items = await prisma.project.findMany({ where: projectWhereFor(req), orderBy: { createdAt: "desc" } });
     res.json(items);
   } catch (err) { next(err); }
 });
@@ -589,6 +698,10 @@ router.post("/projects", requireAdmin, async (req, res, next) => {
         clientName: nullableText(req.body.clientName, 180),
         description: nullableText(req.body.description, 5000),
         status: pickStatus(req.body.status, PROJECT_STATUSES, "planning"),
+        acquisitionPartnerId: toId(req.body.acquisitionPartnerId),
+        deliveryPartnerId: toId(req.body.deliveryPartnerId) || toId(req.body.partnerId),
+        affiliatePartnerId: toId(req.body.affiliatePartnerId),
+        assignedHrId: toId(req.body.assignedHrId),
       },
     });
     res.status(201).json(item);
@@ -599,11 +712,20 @@ router.put("/projects", allowRoles("admin", "partner"), async (req, res, next) =
   try {
     const id = toId(req.body.id);
     if (!id) return res.status(400).json({ success: false, message: "Valid project id is required" });
+    const existing = await prisma.project.findUnique({ where: { id } });
+    if (!existing) return res.status(404).json({ error: "Not found" });
+    if (!canAccessProject(req, existing)) {
+      return res.status(403).json({ success: false, message: "You can update only assigned projects" });
+    }
     const data = {};
-    if (req.admin.role === "admin") {
+    if (isAdmin(req)) {
       if (req.body.name !== undefined) data.name = requireText(req.body.name, "Project name", 180);
       if (req.body.clientName !== undefined) data.clientName = nullableText(req.body.clientName, 180);
       if (req.body.description !== undefined) data.description = nullableText(req.body.description, 5000);
+      if (req.body.acquisitionPartnerId !== undefined) data.acquisitionPartnerId = toId(req.body.acquisitionPartnerId);
+      if (req.body.deliveryPartnerId !== undefined) data.deliveryPartnerId = toId(req.body.deliveryPartnerId);
+      if (req.body.affiliatePartnerId !== undefined) data.affiliatePartnerId = toId(req.body.affiliatePartnerId);
+      if (req.body.assignedHrId !== undefined) data.assignedHrId = toId(req.body.assignedHrId);
     }
     if (req.body.status !== undefined) data.status = pickStatus(req.body.status, PROJECT_STATUSES, "planning");
     const item = await prisma.project.update({ where: { id }, data });

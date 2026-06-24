@@ -18,9 +18,11 @@ const CONTACT_DEFAULTS = {
 const FOOTER_LINKS = [
   { label: "Home", to: "/" },
   { label: "Services", to: "/services" },
-  { label: "Career", to: "/career" },
   { label: "Projects", to: "/projects" },
+  { label: "Career", to: "/career" },
+  { label: "About", to: "/about" },
   { label: "FAQ", to: "/faq" },
+  { label: "Contact", to: "/contact" },
 ];
 
 export default function Footer() {
@@ -45,9 +47,9 @@ export default function Footer() {
             <p className="text-sm text-abyssal-ink/40 font-body">&copy; {new Date().getFullYear()} {logo.brandPrefix}{logo.brandHighlight}. All rights reserved.</p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm text-abyssal-ink/50 font-body">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-5 text-sm text-abyssal-ink/50 font-body">
             {FOOTER_LINKS.map((link) => (
-              <Link key={link.label} to={link.to} className="hover:text-abyssal-ink transition-colors">
+              <Link key={link.label} to={link.to} className="footer-link rounded-full px-2 py-1 transition-colors hover:text-abyssal-ink">
                 {link.label}
               </Link>
             ))}

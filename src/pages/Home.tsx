@@ -2,73 +2,119 @@ import { useState, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import ScrollReveal from "@/components/ScrollReveal";
-import AnimatedCounter from "@/components/AnimatedCounter";
 import FAQItem from "@/components/FAQItem";
 import SEO from "@/components/SEO";
 import SchemaMarkup from "@/components/SchemaMarkup";
 import { useContent } from "@/utils/useContent";
 
-function CustomIcon({ src, alt, className }: { src: string; alt: string; className: string }) {
-  if (!src) return null;
-  return <img src={src} alt={alt} className={className} />;
-}
-
-function ServiceMark({ label, sublabel, accent = "orange" }: { label: string; sublabel: string; accent?: "orange" | "violet" | "ink" }) {
-  const accentClass = accent === "violet" ? "text-cyber-violet" : accent === "ink" ? "text-abyssal-ink" : "text-digital-orange";
+function HeroBrowserVisual() {
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-1 text-center">
-      <span className={`font-display text-2xl tracking-[0.06em] leading-none ${accentClass}`}>{label}</span>
-      <span className="font-body text-[9px] font-bold uppercase tracking-[0.16em] text-abyssal-ink/45">{sublabel}</span>
+    <div className="hero-product-visual relative mx-auto w-full max-w-[560px]" aria-hidden="true">
+      <div className="hero-product-glow" />
+      <div className="hero-preview-window relative overflow-hidden rounded-[28px] border border-abyssal-ink/10 bg-ash-white shadow-2xl shadow-abyssal-ink/10">
+        <div className="home-orbit-stage absolute inset-0">
+          <div className="home-orbit-ring home-orbit-ring-a" />
+          <div className="home-orbit-ring home-orbit-ring-b" />
+          <div className="home-orbit-nodes">
+            <span />
+            <span />
+            <span />
+          </div>
+          <div className="home-orbit-chip home-orbit-chip-web">WEB</div>
+          <div className="home-orbit-chip home-orbit-chip-mvp">MVP</div>
+          <div className="home-orbit-chip home-orbit-chip-ai">AI</div>
+        </div>
+        <div className="hero-preview-topbar relative z-10 flex h-10 items-center justify-between border-b border-abyssal-ink/10 bg-white/70 px-4">
+          <div className="flex gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full bg-digital-orange" />
+            <span className="h-2.5 w-2.5 rounded-full bg-abyssal-ink/20" />
+            <span className="h-2.5 w-2.5 rounded-full bg-cyber-violet/70" />
+          </div>
+          <span className="rounded-full bg-abyssal-ink/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-abyssal-ink/45 font-body">
+            Live Preview
+          </span>
+        </div>
+        <div className="relative z-10 grid gap-5 p-5 sm:grid-cols-[1.1fr_0.9fr] sm:p-7">
+          <div className="space-y-4">
+            <div className="hero-preview-badge inline-flex h-7 items-center rounded-full bg-digital-orange/12 px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-digital-orange font-body">
+              Project Command
+            </div>
+            <div className="hero-preview-headline rounded-[22px] p-4">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-abyssal-ink/45 font-body">Live Build</span>
+                  <div className="mt-2 font-display text-3xl leading-none tracking-[0.03em] text-abyssal-ink">Launch Ready</div>
+                </div>
+                <span className="rounded-full bg-digital-orange px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white font-body">92%</span>
+              </div>
+              <div className="mt-4 h-2 rounded-full bg-abyssal-ink/8">
+                <div className="hero-preview-progress h-full rounded-full bg-digital-orange" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                ["Website", "5 pages"],
+                ["MVP", "Core flow"],
+                ["Automation", "Leads sync"],
+                ["Support", "Handover"],
+              ].map(([item, meta], index) => (
+                <div key={item} className="hero-preview-tile rounded-2xl border border-abyssal-ink/10 bg-basalt-canvas p-3" style={{ animationDelay: `${0.55 + index * 0.08}s` }}>
+                  <div className={`mb-3 h-7 w-7 rounded-full ${index === 1 ? "bg-cyber-violet/20" : index === 2 ? "bg-digital-orange/20" : "bg-abyssal-ink/10"}`} />
+                  <div className="text-xs font-bold text-abyssal-ink font-body">{item}</div>
+                  <div className="mt-1 text-[10px] font-semibold text-abyssal-ink/42 font-body">{meta}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="hero-preview-panel rounded-[24px] p-4">
+            <div className="mb-5 flex items-center justify-between">
+              <span className="font-display text-3xl tracking-[0.02em] text-abyssal-ink">MH</span>
+              <span className="hero-preview-pulse h-9 w-9 rounded-full bg-digital-orange" />
+            </div>
+            <div className="mb-4 rounded-2xl bg-ash-white/75 p-3">
+              <div className="mb-3 flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.14em] text-abyssal-ink/45 font-body">
+                <span>Today</span>
+                <span>+14 leads</span>
+              </div>
+              <div className="hero-preview-chart flex h-16 items-end gap-2">
+                {[42, 64, 48, 78, 58, 88].map((height, index) => (
+                  <span key={index} style={{ height: `${height}%` }} />
+                ))}
+              </div>
+            </div>
+            <div className="space-y-3">
+              {["Scope locked", "Build sprint", "Launch ready"].map((item, index) => (
+                <div key={item} className="hero-preview-step flex items-center gap-3 rounded-2xl bg-ash-white/75 p-3" style={{ animationDelay: `${0.72 + index * 0.1}s` }}>
+                  <span className={`h-2.5 w-2.5 rounded-full ${index === 1 ? "bg-cyber-violet" : "bg-digital-orange"}`} />
+                  <span className="text-xs font-semibold text-abyssal-ink/72 font-body">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="hero-product-chip hero-product-chip-a">Source-code handover</div>
+      <div className="hero-product-chip hero-product-chip-b">From Rs. 3,999</div>
     </div>
   );
 }
 
-function Hero3DVisual({ emojiLightning, emojiTools, emojiGrowth, emojiRocket }: { emojiLightning?: string; emojiTools?: string; emojiGrowth?: string; emojiRocket?: string }) {
+function ProjectMockup({ visual, title, category }: { visual?: string; title: string; category: string }) {
   return (
-    <div className="perspective-3d relative w-full h-[300px] md:h-[500px] flex items-center justify-center">
-      <div className="animate-float3d preserve-3d relative z-10">
-        <div className="w-36 h-36 rounded-[40px] bg-ash-white border border-abyssal-ink/5 flex items-center justify-center shadow-2xl shadow-abyssal-ink/5">
-          <span className="font-display text-5xl tracking-[0.02em] text-abyssal-ink leading-none">MH</span>
-        </div>
-        <div className="absolute -inset-4 rounded-[50px] border border-digital-orange/20 animate-pulse-glow" />
-      </div>
-      <div className="hidden md:block absolute top-8 right-12 animate-float-slow preserve-3d" style={{ animationDelay: "0.3s" }}>
-        <div className="w-24 h-32 rounded-2xl bg-white/80 backdrop-blur border border-abyssal-ink/5 shadow-lg rotate-6 flex items-center justify-center">
-          {emojiLightning ? <CustomIcon src={emojiLightning} alt="Website icon" className="w-8 h-8" /> : <ServiceMark label="WEB" sublabel="Sites" />}
-        </div>
-      </div>
-      <div className="hidden md:block absolute top-20 left-8 animate-float-slow preserve-3d" style={{ animationDelay: "1s" }}>
-        <div className="w-20 h-28 rounded-2xl bg-white/80 backdrop-blur border border-abyssal-ink/5 shadow-lg -rotate-3 flex items-center justify-center">
-          {emojiTools ? <CustomIcon src={emojiTools} alt="MVP icon" className="w-7 h-7" /> : <ServiceMark label="MVP" sublabel="Launch" accent="violet" />}
-        </div>
-      </div>
-      <div className="hidden md:block absolute bottom-16 right-20 animate-float-slow preserve-3d" style={{ animationDelay: "1.8s" }}>
-        <div className="w-28 h-20 rounded-2xl bg-white/80 backdrop-blur border border-abyssal-ink/5 shadow-lg -rotate-6 flex items-center justify-center">
-          {emojiGrowth ? <CustomIcon src={emojiGrowth} alt="Automation icon" className="w-7 h-7" /> : <ServiceMark label="AI" sublabel="Automation" />}
-        </div>
-      </div>
-      <div className="hidden md:block absolute bottom-24 left-16 animate-float-slow preserve-3d" style={{ animationDelay: "2.4s" }}>
-        <div className="w-20 h-20 rounded-full bg-cyber-violet/10 backdrop-blur border border-cyber-violet/20 shadow-lg flex items-center justify-center">
-          {emojiRocket ? <CustomIcon src={emojiRocket} alt="Support icon" className="w-7 h-7" /> : <ServiceMark label="24" sublabel="Support" accent="ink" />}
-        </div>
-      </div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-40 rounded-3xl glass-card -rotate-2 opacity-60" />
-      <div className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: "radial-gradient(circle, #070607 1px, transparent 1px)",
-          backgroundSize: "20px 20px",
-        }}
-      />
+    <div className="project-showcase-visual relative flex h-full w-full items-center justify-center overflow-hidden">
+      <span className="project-showcase-grid absolute inset-0" />
+      <span className="project-showcase-orb project-showcase-orb-a" />
+      <span className="project-showcase-orb project-showcase-orb-b" />
+      <span className="project-showcase-mark relative font-display text-5xl tracking-[0.08em] text-abyssal-ink/18">
+        {visual || "MH"}
+      </span>
+      <span className="project-showcase-chip absolute bottom-4 left-4 rounded-full bg-ash-white/88 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-abyssal-ink/55 font-body">
+        {category}
+      </span>
+      <span className="sr-only">{title}</span>
     </div>
   );
 }
-
-const LOGO_DEFAULTS = {
-  emojiLightning: "",
-  emojiTools: "",
-  emojiGrowth: "",
-  emojiRocket: "",
-};
 
 type HomeStat = { value: number; suffix?: string; label: string };
 type HomeJourneyStep = { step: string; title: string; desc: string };
@@ -124,12 +170,12 @@ type HomeContent = {
 
 const HOME_DEFAULTS: HomeContent = {
   hero: {
-    badge: "Websites • MVPs • AI Automation",
-    title: ["WEB DEVELOPMENT", "AI AUTOMATION", "INDORE AGENCY."],
-    highlightWord: "INDORE AGENCY.",
-    description: "MistHustlers helps startups, founders and growing businesses turn ideas into production-ready websites, MVPs and automation systems through clear planning, practical execution and complete project ownership.",
-    tagline: "Based in Indore. Available for remote projects across India.",
-    ctaPrimary: "Start Your Project",
+    badge: "WEB DEVELOPMENT · MVP · AI AUTOMATION",
+    title: ["Web Development, MVP", "& AI Automation Agency in Indore"],
+    highlightWord: "& AI Automation Agency in Indore",
+    description: "Founder-led websites, MVPs and automation systems for businesses that need clear scope, fast execution and source-code handover.",
+    tagline: "BASED IN INDORE · REMOTE PROJECTS ACROSS INDIA",
+    ctaPrimary: "Start Your Project ->",
     ctaSecondary: "Explore Our Work",
   },
   stats: [
@@ -138,7 +184,7 @@ const HOME_DEFAULTS: HomeContent = {
     { value: 6, suffix: "", label: "Execution Stages Covered" },
     { value: 1, suffix: "", label: "Direct Founder Communication" },
   ],
-  brands: ["Transparent Scope", "Clear Milestones", "Source-Code Handover", "Post-Launch Support"],
+  brands: ["Founder-led execution", "Source-code handover included", "Transparent pricing from Rs. 3,999", "Remote projects across India"],
   servicesTeaser: {
     badge: "Core Services",
     title: "Websites, MVPs and automations built for real business needs",
@@ -253,10 +299,8 @@ const HOMEPAGE_PACKAGE_IDS = ["launch-landing-page", "quick-workflow-automation"
 export default function Home() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const navigate = useNavigate();
-  const logoData = useContent("logo", LOGO_DEFAULTS);
   const c = useContent("home", HOME_DEFAULTS);
   const servicesContent = useContent("services", SERVICES_PRICING_DEFAULTS);
-  const stats = useMemo(() => c.stats ?? [], [c.stats]);
   const pricingTiers = useMemo(() => {
     const tiers = servicesContent.pricing?.tiers ?? [];
     const featuredIds = servicesContent.pricing?.homepageFeaturedIds?.length ? servicesContent.pricing.homepageFeaturedIds : HOMEPAGE_PACKAGE_IDS;
@@ -290,24 +334,27 @@ export default function Home() {
     <div className="bg-basalt-canvas min-h-screen">
       <SEO page="home" />
       <SchemaMarkup page="home" faq={faqData} />
-      <main>
+      <main id="main-content">
 
-      <section ref={heroRef} className="relative pt-20 md:pt-32 pb-16 sm:pb-20 overflow-hidden">
+      <section ref={heroRef} className="hero-cinematic relative overflow-hidden pb-12 pt-24 sm:pb-16 md:pt-32">
         <motion.div style={{ opacity: heroOpacity, y: heroY }} className="max-w-[1200px] mx-auto px-4 sm:px-6">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
+          <div className="grid gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
+            <div className="max-w-[680px] space-y-6 sm:space-y-8 lg:max-w-none">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, ease: [0.33, 1, 0.68, 1] }}
               >
-                <span className="inline-block px-4 py-1.5 rounded-full bg-abyssal-ink/5 text-abyssal-ink/60 text-xs font-semibold tracking-wider uppercase mb-6 font-body">
+                <span className="inline-block rounded-full bg-abyssal-ink/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-abyssal-ink/60 font-body">
                   {c.hero?.badge || HOME_DEFAULTS.hero.badge}
                 </span>
-                <h1 className="font-display text-[clamp(34px,7vw,64px)] leading-[0.98] sm:leading-[0.94] tracking-[0.02em] text-abyssal-ink">
+                <h1 className="mt-5 max-w-[760px] font-display text-[clamp(34px,7vw,70px)] leading-[1.02] tracking-[0.02em] text-abyssal-ink sm:mt-6 sm:leading-[0.98]">
                   {(heroLines.length ? heroLines : HOME_DEFAULTS.hero.title).map((line, index) => (
-                    <span key={`${line}-${index}`} className={index === heroLines.length - 1 ? "text-digital-orange" : ""}>
-                      {line}{index < heroLines.length - 1 && <br />}
+                    <span key={`${line}-${index}`} className="hero-title-mask block">
+                      <span className={`hero-title-line ${line === c.hero?.highlightWord || index === (heroLines.length ? heroLines.length : HOME_DEFAULTS.hero.title.length) - 1 ? "text-digital-orange" : ""}`}>
+                        {line}
+                      </span>
+                      {index < (heroLines.length ? heroLines.length : HOME_DEFAULTS.hero.title.length) - 1 && <span className="sr-only"> </span>}
                     </span>
                   ))}
                 </h1>
@@ -317,7 +364,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.15, ease: [0.33, 1, 0.68, 1] }}
-                className="text-base md:text-lg text-abyssal-ink/60 max-w-md leading-relaxed font-body"
+                className="max-w-xl text-base leading-relaxed text-abyssal-ink/60 md:text-lg font-body"
               >
                 {c.hero?.description}
               </motion.p>
@@ -326,7 +373,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.25 }}
-                className="text-sm text-abyssal-ink/40 font-medium tracking-wider uppercase font-body"
+                className="text-xs font-bold uppercase tracking-[0.18em] text-abyssal-ink/45 font-body"
               >
                 {c.hero?.tagline}
               </motion.p>
@@ -356,53 +403,29 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.2, ease: [0.33, 1, 0.68, 1] }}
+              className="mt-2 lg:mt-0"
             >
-              <Hero3DVisual
-                emojiLightning={logoData.emojiLightning}
-                emojiTools={logoData.emojiTools}
-                emojiGrowth={logoData.emojiGrowth}
-                emojiRocket={logoData.emojiRocket}
-              />
+              <HeroBrowserVisual />
             </motion.div>
           </div>
         </motion.div>
       </section>
 
-      <section className="py-12 md:py-16 border-t border-abyssal-ink/5">
+      <section className="border-y border-abyssal-ink/5 py-8 md:py-10">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {stats.map((stat, i) => (
-              <ScrollReveal key={stat.label} delay={i * 0.1}>
-                <div className="text-center">
-                  <div className="font-display text-[clamp(32px,5vw,56px)] tracking-[0.02em] text-abyssal-ink leading-none">
-                    <AnimatedCounter target={stat.value} suffix={stat.suffix || ""} />
+          <ScrollReveal>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {(c.brands?.length ? c.brands : HOME_DEFAULTS.brands).map((item, index) => (
+                <div key={item} className="card-lift rounded-2xl border border-abyssal-ink/10 bg-ash-white px-5 py-4">
+                  <div className="flex items-start gap-3">
+                    <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-digital-orange/10 text-digital-orange">
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                        <path d="M3 6.2L5 8L9 3.8" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
+                    <p className="text-sm font-semibold leading-snug text-abyssal-ink/70 font-body">{item}</p>
                   </div>
-                  <p className="text-sm text-abyssal-ink/50 mt-2 font-medium font-body">{stat.label}</p>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-
-          <ScrollReveal delay={0.3}>
-            <div className="mt-16 flex flex-wrap items-center justify-center gap-8 opacity-60">
-              {(c.brands || []).map((p) => (
-                <span key={p} className="font-display text-xl tracking-[0.1em] text-abyssal-ink/55">{p}</span>
-              ))}
-            </div>
-          </ScrollReveal>
-
-          <ScrollReveal delay={0.35}>
-            <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                { title: "Fixed scope clarity", desc: "Deliverables and timeline are discussed before execution starts." },
-                { title: "Direct communication", desc: "You speak close to the people planning and building the work." },
-                { title: "Source-code handover", desc: "Ownership and handover follow the agreed project scope." },
-                { title: "Support after launch", desc: "Post-launch fixes and maintenance can be planned with the project." },
-              ].map((item) => (
-                <div key={item.title} className="rounded-[22px] border border-abyssal-ink/5 bg-ash-white p-5 text-left">
-                  <div className="mb-3 h-2 w-2 rounded-full bg-digital-orange" />
-                  <h3 className="font-body text-sm font-bold text-abyssal-ink">{item.title}</h3>
-                  <p className="mt-2 text-xs leading-relaxed text-abyssal-ink/55 font-body">{item.desc}</p>
+                  <span className="mt-3 block text-[10px] font-bold uppercase tracking-[0.18em] text-abyssal-ink/30 font-body">0{index + 1}</span>
                 </div>
               ))}
             </div>
@@ -437,7 +460,7 @@ export default function Home() {
                   </span>
                   <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-abyssal-ink/40 font-body">{svc.category}</span>
                   <h3 className="mt-2 font-body text-lg font-bold leading-tight text-abyssal-ink">{svc.title}</h3>
-                  <p className="mt-3 min-h-20 text-sm leading-relaxed text-abyssal-ink/58 font-body">{svc.description}</p>
+                  <p className="mt-3 min-h-20 text-sm leading-relaxed text-abyssal-ink/60 font-body">{svc.description}</p>
                   {svc.price && <p className="mt-5 text-xs font-bold text-abyssal-ink font-body">{svc.price}</p>}
                 </button>
               ))}
@@ -475,7 +498,7 @@ export default function Home() {
           <div className="grid gap-5 md:grid-cols-3">
             {pricingTiers.map((tier, i) => (
               <ScrollReveal key={tier.id || tier.name} delay={i * 0.08}>
-                <div className={`h-full rounded-[28px] border p-6 ${tier.popular ? "border-digital-orange bg-ash-white shadow-xl shadow-digital-orange/10" : "border-abyssal-ink/5 bg-ash-white"}`}>
+                <div className={`card-lift h-full rounded-[28px] border p-6 ${tier.popular ? "border-digital-orange bg-ash-white shadow-xl shadow-digital-orange/10" : "border-abyssal-ink/5 bg-ash-white"}`}>
                   <div className="mb-5 flex items-start justify-between gap-4">
                     <div>
                       <span className="text-xs font-bold uppercase tracking-[0.14em] text-abyssal-ink/45 font-body">{tier.name}</span>
@@ -568,7 +591,7 @@ export default function Home() {
             </ScrollReveal>
 
             <ScrollReveal delay={0.15}>
-              <div className="bg-ash-white rounded-[28px] md:rounded-[40px] p-6 md:p-10 border border-abyssal-ink/5 relative overflow-hidden">
+              <div className="card-lift bg-ash-white rounded-[28px] md:rounded-[40px] p-6 md:p-10 border border-abyssal-ink/5 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-cyber-violet/5 rounded-full -translate-y-1/2 translate-x-1/2" />
                 <div className="relative space-y-6">
                   {(c.mentorship?.features ?? []).map((item, i) => (
@@ -592,15 +615,15 @@ export default function Home() {
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <ScrollReveal>
-              <div className="rounded-[28px] border border-abyssal-ink/5 bg-basalt-canvas p-6 md:p-8">
-                <div className="flex items-center gap-5">
-                  <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[28px] bg-abyssal-ink text-white">
-                    <span className="font-display text-3xl tracking-[0.02em]">NS</span>
+              <div className="founder-card card-lift relative overflow-hidden rounded-[28px] border border-abyssal-ink/5 bg-basalt-canvas p-6 md:p-8">
+                <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+                  <div className="founder-avatar flex h-32 w-32 shrink-0 items-center justify-center rounded-[32px] bg-abyssal-ink text-white shadow-2xl shadow-abyssal-ink/10">
+                    <span className="font-display text-5xl tracking-[0.02em]">NS</span>
                   </div>
                   <div>
                     <span className="text-xs font-bold uppercase tracking-[0.16em] text-digital-orange font-body">Founder-led execution</span>
                     <h2 className="mt-2 font-body text-2xl font-bold text-abyssal-ink">Naveen Salve</h2>
-                    <p className="mt-1 text-sm text-abyssal-ink/55 font-body">Developer, AI generalist and automation builder based in Indore.</p>
+                    <p className="mt-1 text-sm leading-relaxed text-abyssal-ink/55 font-body">Developer, AI generalist and automation builder based in Indore.</p>
                   </div>
                 </div>
                 <div className="mt-6 grid gap-3 sm:grid-cols-3">
@@ -655,24 +678,21 @@ export default function Home() {
           </ScrollReveal>
 
           <ScrollReveal delay={0.08}>
-            <div className="project-marquee relative overflow-hidden">
-              <div className="project-marquee__track flex w-max gap-5">
+            <div className="project-marquee relative -mx-4 overflow-hidden px-4 sm:-mx-6 sm:px-6">
+              <div className="project-marquee__track flex w-max gap-5 py-1">
                 {movingProjects.map((proj, i) => (
                   <a
                     key={`${proj.title}-${i}`}
                     href={projectHref(proj.link)}
                     target={isExternalProjectLink(proj.link) ? "_blank" : undefined}
                     rel={isExternalProjectLink(proj.link) ? "noopener noreferrer" : undefined}
-                    className="card-lift group h-[220px] w-[280px] flex-shrink-0 overflow-hidden rounded-[28px] border border-abyssal-ink/5 bg-basalt-canvas text-left sm:w-[340px]"
+                    className="project-showcase-card card-lift group h-[220px] w-[280px] flex-shrink-0 overflow-hidden rounded-[28px] border border-abyssal-ink/5 bg-basalt-canvas text-left sm:w-[340px]"
                   >
-                    <div className="relative flex h-28 items-center justify-center overflow-hidden bg-abyssal-ink/3">
+                    <div className="relative h-36 overflow-hidden bg-abyssal-ink/5">
                       {proj.imageUrl ? (
                         <img src={proj.imageUrl} alt={proj.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                       ) : (
-                        <>
-                          <span className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(252,80,0,0.12),transparent_38%),radial-gradient(circle_at_70%_45%,rgba(82,74,233,0.12),transparent_34%)] opacity-80 transition-transform duration-500 group-hover:scale-110" />
-                          <span className="relative font-display text-5xl tracking-[0.08em] text-abyssal-ink/18">{proj.visual || "MH"}</span>
-                        </>
+                        <ProjectMockup visual={proj.visual} title={proj.title} category={proj.category} />
                       )}
                     </div>
                     <div className="p-6">
