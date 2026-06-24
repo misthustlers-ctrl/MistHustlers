@@ -25,6 +25,12 @@ const FOOTER_LINKS = [
   { label: "Contact", to: "/contact" },
 ];
 
+const LEGAL_LINKS = [
+  { label: "Privacy Policy", to: "/privacy-policy" },
+  { label: "Terms of Service", to: "/terms-of-service" },
+  { label: "Refund Policy", to: "/refund-policy" },
+];
+
 export default function Footer() {
   const [logoFailed, setLogoFailed] = useState(false);
   const logo = useContent("logo", LOGO_DEFAULTS);
@@ -47,9 +53,9 @@ export default function Footer() {
             <p className="text-sm text-abyssal-ink/40 font-body">&copy; {new Date().getFullYear()} {logo.brandPrefix}{logo.brandHighlight}. All rights reserved.</p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-5 text-sm text-abyssal-ink/50 font-body">
+          <div className="grid grid-cols-2 gap-2 text-sm text-abyssal-ink/50 font-body min-[420px]:flex min-[420px]:flex-wrap min-[420px]:items-center min-[420px]:justify-center min-[420px]:gap-3 sm:gap-5">
             {FOOTER_LINKS.map((link) => (
-              <Link key={link.label} to={link.to} className="footer-link rounded-full px-2 py-1 transition-colors hover:text-abyssal-ink">
+              <Link key={link.label} to={link.to} className="footer-link rounded-full px-3 py-2 text-center transition-colors hover:text-abyssal-ink">
                 {link.label}
               </Link>
             ))}
@@ -66,10 +72,12 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8 text-sm text-abyssal-ink/45 font-body">
-          <Link to="/privacy-policy" className="hover:text-abyssal-ink/60 transition-colors">Privacy Policy</Link>
-          <Link to="/terms-of-service" className="hover:text-abyssal-ink/60 transition-colors">Terms of Service</Link>
-          <Link to="/refund-policy" className="hover:text-abyssal-ink/60 transition-colors">Refund Policy</Link>
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-2 text-sm text-abyssal-ink/45 font-body md:justify-between md:gap-8">
+          {LEGAL_LINKS.map((link) => (
+            <Link key={link.label} to={link.to} className="rounded-full bg-abyssal-ink/5 px-4 py-2 text-center transition-colors hover:bg-abyssal-ink hover:text-white">
+              {link.label}
+            </Link>
+          ))}
         </div>
       </div>
     </footer>

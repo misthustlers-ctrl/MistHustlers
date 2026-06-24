@@ -13,6 +13,12 @@ const NAV_LINKS = [
   { label: "Contact", to: "/contact" },
 ];
 
+const LEGAL_LINKS = [
+  { label: "Privacy", to: "/privacy-policy" },
+  { label: "Terms", to: "/terms-of-service" },
+  { label: "Refund", to: "/refund-policy" },
+];
+
 const LOGO_DEFAULTS = {
   logoMain: "",
   brandPrefix: "MIST",
@@ -131,27 +137,41 @@ export default function GlobalNavbar() {
               transition={{ duration: 0.3 }}
               className="lg:hidden bg-ash-white border-b border-abyssal-ink/5 overflow-hidden"
             >
-              <div className="px-4 sm:px-6 py-5 flex flex-col gap-2">
-                {NAV_LINKS.map((link) => (
-                  <Link
-                    key={link.label}
-                    to={link.to}
-                    onClick={() => handleNavClick(link.to)}
-                    aria-current={isActiveLink(link.to) ? "page" : undefined}
-                    className={`min-h-11 rounded-2xl px-3 text-sm font-medium transition-colors py-2 font-body flex items-center ${
-                      isActiveLink(link.to) ? "bg-abyssal-ink text-white" : "text-abyssal-ink/70 hover:text-abyssal-ink hover:bg-abyssal-ink/5"
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+              <div className="px-4 sm:px-6 py-5">
+                <div className="grid grid-cols-2 gap-2">
+                  {NAV_LINKS.map((link) => (
+                    <Link
+                      key={link.label}
+                      to={link.to}
+                      onClick={() => handleNavClick(link.to)}
+                      aria-current={isActiveLink(link.to) ? "page" : undefined}
+                      className={`min-h-11 rounded-2xl px-3 text-sm font-medium transition-colors py-2 font-body flex items-center ${
+                        isActiveLink(link.to) ? "bg-abyssal-ink text-white" : "text-abyssal-ink/70 hover:text-abyssal-ink hover:bg-abyssal-ink/5"
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
                 <Link
                   to="/contact"
                   onClick={() => setMobileOpen(false)}
-                  className="magnetic-btn bg-digital-orange text-white px-6 py-3 rounded-[800px] text-sm font-semibold text-center cursor-pointer font-body"
+                  className="magnetic-btn mt-3 flex min-h-11 items-center justify-center bg-digital-orange text-white px-6 py-3 rounded-[800px] text-sm font-semibold text-center cursor-pointer font-body"
                 >
                   Start Project
                 </Link>
+                <div className="mt-4 flex flex-wrap items-center justify-center gap-2 border-t border-abyssal-ink/5 pt-4">
+                  {LEGAL_LINKS.map((link) => (
+                    <Link
+                      key={link.label}
+                      to={link.to}
+                      onClick={() => setMobileOpen(false)}
+                      className="rounded-full bg-abyssal-ink/5 px-3 py-2 text-[11px] font-semibold text-abyssal-ink/55 transition-colors hover:bg-abyssal-ink hover:text-white font-body"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
               </div>
             </motion.div>
           )}
