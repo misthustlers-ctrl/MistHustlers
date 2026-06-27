@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useContent } from "@/utils/useContent";
+import GlobalNavbar from "@/components/GlobalNavbar";
 import SEO from "@/components/SEO";
 import StarRating from "@/components/StarRating";
 import { getDemoBySlug } from "@/data/demoProjects";
@@ -14,6 +16,18 @@ export default function DemoViewer() {
   const waText = encodeURIComponent(contact.whatsappText || "Hi, I saw your demo and want to discuss a similar project");
   const waHref = `https://wa.me/${phone}?text=${waText}`;
   const telHref = `tel:${phone}`;
+  const [showPreviewInfo, setShowPreviewInfo] = useState(true);
+
+  useEffect(() => {
+    setShowPreviewInfo(true);
+    const timer = window.setTimeout(() => setShowPreviewInfo(false), 4200);
+    return () => window.clearTimeout(timer);
+  }, [slug]);
+
+  useEffect(() => {
+    document.body.classList.add("demo-viewer-active");
+    return () => document.body.classList.remove("demo-viewer-active");
+  }, []);
 
   if (!project) {
     return (
@@ -28,7 +42,7 @@ export default function DemoViewer() {
   }
 
   return (
-    <div className="demo-viewer-page bg-basalt-canvas min-h-[100dvh] flex flex-col">
+    <div className="demo-viewer-page flex h-[100dvh] flex-col overflow-hidden bg-basalt-canvas">
       <SEO
         page="projects"
         robots="noindex, follow"
@@ -40,49 +54,56 @@ export default function DemoViewer() {
           ogDescription: project.purpose,
         }}
       />
-      <div className="sticky top-0 z-50 bg-abyssal-ink/90 backdrop-blur-xl border-b border-white/10">
-        <div className="mx-auto flex min-h-16 max-w-[1400px] items-center justify-between gap-3 px-3 py-2 sm:px-6 sm:py-3">
-          <div className="flex items-center gap-4 min-w-0">
+      <GlobalNavbar alwaysSolid />
+
+      <main id="main-content" className="flex min-h-0 flex-1 flex-col pt-[60px] lg:pt-[68px]">
+        <section
+          aria-hidden={!showPreviewInfo}
+          className={`shrink-0 overflow-hidden bg-basalt-canvas transition-[max-height,opacity,border-color] duration-700 ease-out ${
+            showPreviewInfo ? "max-h-64 border-b border-abyssal-ink/5 opacity-100" : "pointer-events-none max-h-0 border-0 border-transparent opacity-0"
+          }`}
+        >
+          <div className="mx-auto flex min-h-16 max-w-[1200px] items-center gap-3 px-4 py-2 sm:px-6 lg:hidden">
             <Link
               to="/projects"
-              className="shrink-0 flex items-center justify-center w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-abyssal-ink/5 text-abyssal-ink"
               aria-label="Back to projects"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M19 12H5M12 19l-7-7 7-7" />
               </svg>
             </Link>
             <div className="min-w-0">
-              <h1 className="text-white font-body font-bold text-sm sm:text-base truncate leading-tight">
-                {project.title}
-              </h1>
-              <p className="text-[11px] text-white/45 font-body">{project.category} preview &bull; {project.client}</p>
+              <h1 className="truncate text-sm font-bold leading-tight text-abyssal-ink font-body">{project.title}</h1>
+              <p className="truncate text-[11px] text-abyssal-ink/45 font-body">{project.category} preview &bull; {project.client}</p>
             </div>
           </div>
 
-          <div className="hidden items-center gap-4 shrink-0 sm:flex">
-            <Link to="/" className="text-xs text-white/60 hover:text-white transition-colors font-body">Home</Link>
-            <Link to="/contact" className="text-xs text-white/60 hover:text-white transition-colors font-body">Contact</Link>
-            <StarRating slug={project.slug} defaultRating={project.defaultRating} size={20} />
-          </div>
-        </div>
-      </div>
-
-      <main className="flex min-h-0 flex-1 flex-col">
-        <section className="hidden bg-basalt-canvas border-b border-abyssal-ink/5 md:block">
-          <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-6 grid gap-5 lg:grid-cols-[1.2fr_0.8fr]">
-            <div>
-              <span className="inline-block rounded-full bg-digital-orange/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-digital-orange font-body">
-                {project.category} Preview
-              </span>
-              <p className="mt-3 text-sm leading-relaxed text-abyssal-ink/60 font-body">
+          <div className="mx-auto hidden max-w-[1200px] gap-6 px-6 py-5 lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(300px,0.85fr)] lg:items-center">
+            <div className="grid grid-cols-[44px_minmax(0,1fr)] gap-4">
+              <Link
+                to="/projects"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-abyssal-ink/5 text-abyssal-ink transition-colors hover:bg-abyssal-ink hover:text-white"
+                aria-label="Back to projects"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+              </Link>
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-3">
+                  <h1 className="truncate text-lg font-bold text-abyssal-ink font-body">{project.title}</h1>
+                  <span className="rounded-full bg-digital-orange/10 px-3 py-1 text-[10px] font-bold uppercase text-digital-orange font-body">
+                    {project.category} Preview
+                  </span>
+                </div>
+              <p className="mt-1 text-xs text-abyssal-ink/45 font-body">{project.client}</p>
+              <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-abyssal-ink/60 font-body">
                 {project.purpose}
               </p>
-              <p className="mt-2 text-xs leading-relaxed text-abyssal-ink/45 font-body">
-                This preview was created by MistHustlers to demonstrate website design and development capabilities for businesses in this category.
-              </p>
+              </div>
             </div>
-            <div className="rounded-[24px] bg-ash-white p-4 border border-abyssal-ink/5">
+            <div className="rounded-[20px] border border-abyssal-ink/5 bg-ash-white p-4">
               <StarRating slug={project.slug} defaultRating={project.defaultRating} size={18} />
               <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-abyssal-ink/55 font-body">
                 <span>Design: {project.ratingBreakdown.design}/5</span>

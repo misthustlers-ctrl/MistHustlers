@@ -556,13 +556,15 @@ button:focus-visible, a:focus-visible, summary:focus-visible {
 .demo-preview-frame {
   display: block;
   background: #09090b;
-  height: calc(100dvh - 64px);
+  height: auto;
+  min-height: 0;
+  flex: 1 1 0%;
 }
 
 @media (min-width: 768px) {
   .demo-preview-frame {
-    height: calc(100dvh - 116px);
-    min-height: 560px;
+    height: auto;
+    min-height: 0;
   }
 }
 
@@ -1156,6 +1158,11 @@ button:focus-visible, a:focus-visible, summary:focus-visible {
     padding-bottom: calc(24px + env(safe-area-inset-bottom));
   }
 
+  body.demo-viewer-active {
+    overflow: hidden;
+    padding-bottom: 0;
+  }
+
   input, select, textarea {
     font-size: 16px !important;
   }
@@ -1412,8 +1419,8 @@ input:focus-visible, textarea:focus-visible, select:focus-visible {
 
 @media (max-width: 639px) {
   .demo-viewer-page .demo-preview-frame {
-    height: calc(100dvh - 124px);
-    min-height: 320px;
+    height: auto;
+    min-height: 0;
   }
 }
 
@@ -1476,104 +1483,6 @@ input:focus-visible, textarea:focus-visible, select:focus-visible {
   }
 }
 
-/* ─── Footer Mobile Grouped ─── */
-@media (max-width: 767px) {
-  .footer-grouped {
-    display: grid;
-    gap: 24px;
-  }
-
-  .footer-grouped .footer-section-title {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: rgba(7, 6, 7, 0.35);
-    margin-bottom: 12px;
-  }
-
-  .footer-grouped .footer-columns {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
-
-  .footer-grouped .footer-columns a,
-  .footer-grouped .footer-legal a {
-    display: flex;
-    align-items: center;
-    min-height: 44px;
-    padding: 8px 12px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 500;
-    color: rgba(7, 6, 7, 0.6);
-    text-decoration: none;
-    transition: background 0.2s, color 0.2s;
-  }
-
-  .footer-grouped .footer-columns a:active,
-  .footer-grouped .footer-legal a:active {
-    background: rgba(7, 6, 7, 0.05);
-    color: #070607;
-  }
-
-  .footer-grouped .footer-legal {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-
-  .footer-grouped .footer-legal a {
-    flex: 1;
-    min-width: calc(50% - 4px);
-    justify-content: center;
-    text-align: center;
-    font-size: 13px;
-    background: rgba(7, 6, 7, 0.04);
-    border-radius: 800px;
-    padding: 10px 12px;
-  }
-
-  .footer-grouped .footer-contact {
-    font-size: 13px;
-    color: rgba(7, 6, 7, 0.5);
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .footer-grouped .footer-contact a {
-    color: rgba(7, 6, 7, 0.6);
-    text-decoration: none;
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-  }
-
-  .footer-grouped .footer-copyright {
-    font-size: 12px;
-    color: rgba(7, 6, 7, 0.35);
-    text-align: center;
-    padding-top: 16px;
-    border-top: 1px solid rgba(7, 6, 7, 0.06);
-  }
-}
-
-@media (min-width: 768px) {
-  .footer-grouped {
-    display: contents;
-  }
-
-  .footer-grouped .footer-section-title,
-  .footer-grouped .footer-columns,
-  .footer-grouped .footer-legal,
-  .footer-grouped .footer-contact,
-  .footer-grouped .footer-copyright {
-    display: none;
-  }
-}
-
 /* ─── Image Presets ─── */
 .img-priority {
   loading: eager;
@@ -1629,20 +1538,63 @@ input:focus-visible, textarea:focus-visible, select:focus-visible {
   mask-image: radial-gradient(circle at center, black 30%, transparent 85%);
 }
 
-.floating-card {
-  animation: floatCard 8s ease-in-out infinite;
-  transform-style: preserve-3d;
+.career-card-stage {
+  isolation: isolate;
 }
 
-.floating-delay-1 {
-  animation-delay: 1.4s;
+@media (min-width: 1024px) {
+  .career-hero-card {
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  .career-hero-card:hover {
+    z-index: 10;
+    animation-play-state: paused;
+  }
+
+  .career-hero-card h2,
+  .career-hero-card p {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+  }
+
+  .career-hero-card h2 {
+    -webkit-line-clamp: 2;
+  }
+
+  .career-hero-card p {
+    -webkit-line-clamp: 4;
+  }
+
+  .career-hero-card--primary {
+    z-index: 3;
+    animation: careerCardPrimary 7s ease-in-out infinite;
+  }
+
+  .career-hero-card--secondary {
+    z-index: 2;
+    animation: careerCardSecondary 7.8s ease-in-out 0.6s infinite;
+  }
+
+  .career-hero-card--tertiary {
+    z-index: 1;
+    animation: careerCardTertiary 8.6s ease-in-out 1.2s infinite;
+  }
 }
 
-.floating-delay-2 {
-  animation-delay: 2.8s;
+@keyframes careerCardPrimary {
+  0%, 100% { transform: perspective(1000px) rotateY(5deg) rotateZ(-5deg) translate3d(0, 0, 24px); }
+  50% { transform: perspective(1000px) rotateY(2deg) rotateZ(-4deg) translate3d(0, -9px, 32px); }
 }
 
-@keyframes floatCard {
-  0%, 100% { transform: translate3d(0, 0, 0); }
-  50% { transform: translate3d(0, -10px, 0); }
+@keyframes careerCardSecondary {
+  0%, 100% { transform: perspective(1000px) rotateY(-5deg) rotateZ(5deg) translate3d(0, 0, 12px); }
+  50% { transform: perspective(1000px) rotateY(-2deg) rotateZ(4deg) translate3d(0, -7px, 18px); }
+}
+
+@keyframes careerCardTertiary {
+  0%, 100% { transform: perspective(1000px) rotateY(3deg) rotateZ(-2deg) translate3d(0, 0, 0); }
+  50% { transform: perspective(1000px) rotateY(1deg) rotateZ(-1deg) translate3d(0, -6px, 8px); }
 }

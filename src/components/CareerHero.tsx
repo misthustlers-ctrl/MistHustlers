@@ -32,15 +32,16 @@ export default function CareerHero({
   opportunities: Opportunity[];
 }) {
   const featuredInternship = opportunities.find((o) => o.type === "Internship") ?? opportunities[0];
-  const hotEvent = opportunities.find((o) => o.title === "AI Automation Workshop") ?? opportunities[2];
-  const heroCards = [featuredInternship, hotEvent, opportunities[3]].filter((x): x is Opportunity => !!x);
+  const heroCards = [featuredInternship, ...opportunities.filter((item) => item.id !== featuredInternship?.id)]
+    .filter((x): x is Opportunity => !!x)
+    .slice(0, 3);
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
-    <section className="mx-auto grid max-w-7xl gap-10 pb-14 pt-8 sm:pb-18 sm:pt-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:pt-16">
+    <section className="mx-auto grid max-w-7xl gap-10 pb-14 pt-8 sm:pb-18 sm:pt-10 lg:grid-cols-[minmax(0,1.12fr)_minmax(390px,0.88fr)] lg:items-center lg:gap-14 lg:pt-12">
       <div className="space-y-8">
         <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-[var(--mh-text)]/10 bg-[var(--mh-surface)]/90 px-4 py-2 text-sm font-medium text-[var(--mh-text)]/70 shadow-[0_10px_25px_rgba(var(--mh-text-rgb),0.05)]">
           <span className="h-2.5 w-2.5 rounded-full bg-[var(--mh-cta)]" />
@@ -48,7 +49,7 @@ export default function CareerHero({
         </div>
 
         <div className="space-y-5">
-          <h1 className="mh-heading max-w-4xl text-[clamp(36px,11vw,42px)] leading-[1.02] sm:text-6xl sm:leading-[0.98] lg:text-8xl">
+          <h1 className="mh-heading max-w-[760px] text-[clamp(36px,11vw,48px)] leading-[1.02] sm:text-6xl sm:leading-[0.98] lg:text-[clamp(60px,4.2vw,72px)] lg:leading-[0.94]">
             {hero.title || "Opportunities for Builders"}
           </h1>
           <p className="max-w-2xl text-lg leading-8 text-[var(--mh-text)]/70 sm:text-xl">
@@ -88,16 +89,17 @@ export default function CareerHero({
         </div>
       </div>
 
-      <div className="relative grid gap-4 lg:block lg:min-h-[420px]">
+      <div className="career-card-stage perspective-3d relative grid gap-4 lg:block lg:min-h-[520px]">
         {heroCards.map((card, index) => (
           <article
             key={card.id}
-            className={`floating-card rounded-[24px] border border-white/60 bg-[var(--mh-surface)]/92 p-5 shadow-[0_24px_60px_rgba(var(--mh-text-rgb),0.10)] backdrop-blur lg:absolute lg:w-[78%] lg:rounded-[30px] lg:p-6 ${
+            style={{ "--career-card-index": index } as React.CSSProperties}
+            className={`career-hero-card rounded-[24px] border border-white/60 bg-[var(--mh-surface)]/95 p-5 shadow-[0_24px_60px_rgba(var(--mh-text-rgb),0.12)] backdrop-blur lg:absolute lg:w-[86%] lg:rounded-[30px] lg:p-6 ${
               index === 0
-                ? "lg:left-[4%] lg:top-[8%] lg:rotate-[-8deg]"
+                ? "career-hero-card--primary lg:left-[1%] lg:top-[4%]"
                 : index === 1
-                  ? "floating-delay-1 lg:right-[4%] lg:top-[32%] lg:rotate-[7deg]"
-                  : "floating-delay-2 lg:left-[18%] lg:bottom-[7%] lg:rotate-[-3deg]"
+                  ? "career-hero-card--secondary lg:right-[1%] lg:top-[29%]"
+                  : "career-hero-card--tertiary lg:left-[10%] lg:bottom-[1%]"
             }`}
           >
             <div className="flex items-center justify-between gap-3">
@@ -109,11 +111,16 @@ export default function CareerHero({
             <h2 className="mt-5 text-xl font-bold text-[var(--mh-text)] sm:text-2xl">{card.title}</h2>
             <p className="mt-3 text-sm leading-6 text-[var(--mh-text)]/65">{card.description}</p>
             <div className="mt-5 flex flex-wrap gap-2">
-              {card.skills.map((skill) => (
+              {card.skills.slice(0, 3).map((skill) => (
                 <span key={skill} className="rounded-full bg-white/80 px-3 py-1.5 text-xs font-medium text-[var(--mh-text)]/70 ring-1 ring-[var(--mh-text)]/8">
                   {skill}
                 </span>
               ))}
+              {card.skills.length > 3 ? (
+                <span className="rounded-full bg-white/80 px-3 py-1.5 text-xs font-medium text-[var(--mh-text)]/55 ring-1 ring-[var(--mh-text)]/8">
+                  +{card.skills.length - 3}
+                </span>
+              ) : null}
             </div>
           </article>
         ))}

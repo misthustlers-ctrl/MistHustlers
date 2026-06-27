@@ -25,7 +25,7 @@ const LOGO_DEFAULTS = {
   brandHighlight: "HUSTLERS",
 };
 
-export default function GlobalNavbar() {
+export default function GlobalNavbar({ alwaysSolid = false }: { alwaysSolid?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [logoFailed, setLogoFailed] = useState(false);
@@ -99,7 +99,7 @@ export default function GlobalNavbar() {
       </a>
       <nav
         className={`fixed top-0 left-0 right-0 z-[70] transition-all duration-300 ${
-          scrolled
+          scrolled || alwaysSolid
             ? "nav-blur bg-basalt-canvas/90 border-b border-abyssal-ink/5 py-2 lg:py-3"
             : "bg-transparent py-3 lg:py-5"
         }`}
@@ -169,11 +169,12 @@ export default function GlobalNavbar() {
                 role="dialog"
                 aria-modal="true"
                 aria-label="Mobile navigation"
+                style={{ width: "min(100vw, 420px)", maxWidth: "100vw" }}
                 initial={{ x: "100%" }}
                 animate={{ x: 0 }}
                 exit={{ x: "100%" }}
                 transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
-                className="fixed inset-y-0 right-0 z-[60] flex h-[100dvh] w-[min(100%,420px)] flex-col overflow-hidden border-l border-abyssal-ink/10 bg-ash-white shadow-2xl lg:hidden"
+                className="fixed inset-y-0 right-0 z-[60] flex h-[100dvh] flex-col overflow-hidden border-l border-abyssal-ink/10 bg-ash-white shadow-2xl lg:hidden"
               >
                 <div className="flex min-h-16 items-center justify-between border-b border-abyssal-ink/8 px-4 sm:px-6">
                   <span className="font-display text-xl tracking-[0.02em] text-abyssal-ink">Navigation</span>

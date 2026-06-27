@@ -40,10 +40,10 @@ export default function Footer() {
   const contact = useContent("contact", CONTACT_DEFAULTS);
   const tel = (contact.phoneHref || contact.phone || "").replace(/\s/g, "");
   return (
-    <footer id="contact" className="py-16 border-t border-abyssal-ink/5 bg-basalt-canvas">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="flex flex-col items-center md:items-start gap-2">
+    <footer id="contact" className="border-t border-abyssal-ink/5 bg-basalt-canvas">
+      <div className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6 lg:py-12">
+        <div className="hidden lg:grid lg:grid-cols-[1.15fr_0.7fr_0.85fr_1.15fr] lg:items-start lg:gap-10 xl:gap-14">
+          <div>
             <Link to="/" className="flex items-center gap-2">
               {logo.logoFooter && !logoFailed ? (
                 <img src={logo.logoFooter} alt="MistHustlers" onError={() => setLogoFailed(true)} className="h-7 w-auto" />
@@ -53,66 +53,67 @@ export default function Footer() {
                 </span>
               )}
             </Link>
+            <p className="mt-4 max-w-[230px] text-sm leading-6 text-abyssal-ink/45 font-body">
+              Digital products and automation built in Indore.
+            </p>
           </div>
 
-          <div className="hidden md:grid grid-cols-2 gap-2 text-sm text-abyssal-ink/50 font-body md:flex md:flex-wrap md:items-center md:justify-center md:gap-3 lg:gap-5">
-            {[...EXPLORE_LINKS, ...COMPANY_LINKS].map((link) => (
-              <Link key={link.label} to={link.to} className="footer-link rounded-full px-3 py-2 text-center transition-colors hover:text-abyssal-ink">
-                {link.label}
-              </Link>
-            ))}
-          </div>
+          <FooterLinkGroup title="Explore" links={EXPLORE_LINKS} />
+          <FooterLinkGroup title="Company" links={COMPANY_LINKS} />
 
-          <div className="hidden md:flex flex-col items-center md:items-end gap-2 text-sm text-abyssal-ink/50 font-body">
-            <span className="text-abyssal-ink/60">{contact.address}</span>
-            <a href={`mailto:${contact.email}`} className="hover:text-abyssal-ink transition-colors">
+          <div className="flex flex-col items-start gap-2 font-body">
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-abyssal-ink/40">Contact</p>
+            <span className="mt-1 text-[15px] text-abyssal-ink/60">{contact.address}</span>
+            <a href={`mailto:${contact.email}`} className="text-[15px] text-abyssal-ink/55 transition-colors hover:text-abyssal-ink">
               {contact.email}
             </a>
-            <a href={`tel:${tel}`} className="hover:text-abyssal-ink transition-colors">
+            <a href={`tel:${tel}`} className="text-[15px] text-abyssal-ink/55 transition-colors hover:text-abyssal-ink">
               {contact.phone}
             </a>
           </div>
         </div>
 
-        <div className="footer-grouped md:hidden mt-8">
-          <div>
-            <div className="footer-section-title">Explore</div>
-            <div className="footer-columns">
-              {EXPLORE_LINKS.map((link) => (
-                <Link key={link.label} to={link.to}>{link.label}</Link>
-              ))}
-            </div>
+        <div className="lg:hidden">
+          <div className="flex items-center justify-between border-b border-abyssal-ink/8 pb-6">
+            <Link to="/" className="flex items-center gap-2">
+              {logo.logoFooter && !logoFailed ? (
+                <img src={logo.logoFooter} alt="MistHustlers" onError={() => setLogoFailed(true)} className="h-7 w-auto" />
+              ) : (
+                <span className="font-display text-xl tracking-[0.02em] text-abyssal-ink">
+                  {logo.brandPrefix}<span className="text-digital-orange">{logo.brandHighlight}</span>
+                </span>
+              )}
+            </Link>
+            <Link to="/contact" className="rounded-full bg-abyssal-ink px-4 py-2.5 text-xs font-semibold text-white font-body">
+              Start Project
+            </Link>
           </div>
-          <div>
-            <div className="footer-section-title">Company</div>
-            <div className="footer-columns">
-              {COMPANY_LINKS.map((link) => (
-                <Link key={link.label} to={link.to}>{link.label}</Link>
-              ))}
-            </div>
+
+          <div className="grid grid-cols-2 gap-x-8 py-6 font-body">
+            <FooterLinkGroup title="Explore" links={EXPLORE_LINKS} />
+            <FooterLinkGroup title="Company" links={COMPANY_LINKS} />
           </div>
-          <div>
-            <div className="footer-section-title">Legal</div>
-            <div className="footer-legal">
-              {LEGAL_LINKS.map((link) => (
-                <Link key={link.label} to={link.to}>{link.label}</Link>
-              ))}
-            </div>
-          </div>
-          <div>
-            <div className="footer-section-title">Contact</div>
-            <div className="footer-contact">
+
+          <div className="border-t border-abyssal-ink/8 py-5 font-body">
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-abyssal-ink/40">Contact</p>
+            <div className="mt-2 grid gap-1 text-sm text-abyssal-ink/55 sm:grid-cols-3 sm:items-center sm:gap-4">
               <span>{contact.address}</span>
-              <a href={`mailto:${contact.email}`}>{contact.email}</a>
-              <a href={`tel:${tel}`}>{contact.phone}</a>
+              <a href={`mailto:${contact.email}`} className="flex min-h-9 items-center break-all sm:min-h-0">{contact.email}</a>
+              <a href={`tel:${tel}`} className="flex min-h-9 items-center sm:min-h-0">{contact.phone}</a>
             </div>
           </div>
-          <div className="footer-copyright">
-            &copy; {new Date().getFullYear()} {logo.brandPrefix}{logo.brandHighlight}. All rights reserved.
+
+          <div className="flex flex-wrap gap-2 border-t border-abyssal-ink/8 pt-5 font-body">
+            {LEGAL_LINKS.map((link) => (
+              <Link key={link.label} to={link.to} className="flex min-h-9 flex-1 items-center justify-center whitespace-nowrap rounded-full bg-abyssal-ink/5 px-3 py-2 text-center text-[11px] font-medium text-abyssal-ink/55">
+                {link.label}
+              </Link>
+            ))}
           </div>
+          <p className="mt-4 text-center text-xs text-abyssal-ink/35 font-body">&copy; {new Date().getFullYear()} {logo.brandPrefix}{logo.brandHighlight}. All rights reserved.</p>
         </div>
 
-        <div className="hidden md:mt-10 md:flex md:flex-wrap md:items-center md:justify-between md:gap-8 text-sm text-abyssal-ink/45 font-body">
+        <div className="mt-12 hidden items-center justify-between border-t border-abyssal-ink/8 pt-6 text-sm text-abyssal-ink/45 font-body lg:flex">
           <div className="flex flex-wrap items-center justify-center gap-2">
             {LEGAL_LINKS.map((link) => (
               <Link key={link.label} to={link.to} className="rounded-full bg-abyssal-ink/5 px-4 py-2 text-center transition-colors hover:bg-abyssal-ink hover:text-white">
@@ -120,9 +121,24 @@ export default function Footer() {
               </Link>
             ))}
           </div>
-          <p className="hidden md:block text-sm text-abyssal-ink/40 font-body">&copy; {new Date().getFullYear()} {logo.brandPrefix}{logo.brandHighlight}. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} {logo.brandPrefix}{logo.brandHighlight}. All rights reserved.</p>
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterLinkGroup({ title, links }: { title: string; links: Array<{ label: string; to: string }> }) {
+  return (
+    <div>
+      <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-abyssal-ink/40 lg:text-[11px]">{title}</p>
+      <nav aria-label={`${title} footer links`} className="mt-2 grid gap-0.5 lg:mt-3">
+        {links.map((link) => (
+          <Link key={link.label} to={link.to} className="footer-link flex min-h-9 items-center text-sm text-abyssal-ink/60 transition-colors hover:text-abyssal-ink lg:min-h-10 lg:text-[15px]">
+            {link.label}
+          </Link>
+        ))}
+      </nav>
+    </div>
   );
 }

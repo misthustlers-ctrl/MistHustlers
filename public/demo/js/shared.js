@@ -154,19 +154,6 @@
     }, 1200);
   }
 
-  // 6. Sticky footer after scroll
-  function initStickyFooter() {
-    const footer = document.querySelector('.sticky-footer');
-    if (!footer) return;
-    let shown = false;
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 400 && !shown) {
-        footer.classList.add('show');
-        shown = true;
-      }
-    }, { passive: true });
-  }
-
   function initMobileBookingForms() {
     const selector = '.form-card, .booking-form, .reservation-form, .trial-form, .lead-form, .consult-form, .rfq-form';
     const mobileQuery = window.matchMedia('(max-width: 767px)');
@@ -225,12 +212,12 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.sticky-footer').forEach((footer) => footer.remove());
     preserveUTMs();
     initReveal();
     initCounters();
     initWhatsAppLinks();
     initCTATracking();
-    initStickyFooter();
     initMobileBookingForms();
   });
 
