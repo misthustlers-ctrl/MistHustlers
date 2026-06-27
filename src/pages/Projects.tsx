@@ -146,17 +146,38 @@ export default function Projects() {
                         <p className="text-sm text-abyssal-ink/60 font-body leading-relaxed mt-2 flex-1">
                           {project.purpose || project.description}
                         </p>
-                        <div className="mt-4 flex flex-wrap gap-2">
+                      <div className="mt-4">
+                        <div className="flex flex-wrap gap-2">
                           {project.features.slice(0, 3).map((feature) => (
                             <span key={feature} className="rounded-full bg-abyssal-ink/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-abyssal-ink/55 font-body">{feature}</span>
                           ))}
                         </div>
+                      </div>
+                      <details className="group md:hidden mt-2">
+                        <summary className="list-none text-xs font-semibold cursor-pointer py-1 text-digital-orange">
+                          <span className="group-open:hidden">Show details & rating</span>
+                          <span className="hidden group-open:inline">Show less</span>
+                          <svg className="inline-block ml-1 w-3 h-3 transition-transform group-open:rotate-180" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                            <path d="M3 5l3 3 3-3" />
+                          </svg>
+                        </summary>
+                        <div className="mt-3 space-y-3">
+                          <div className="pt-4 border-t border-abyssal-ink/5">
+                            <StarRating slug={project.slug} defaultRating={project.defaultRating} size={18} />
+                          </div>
+                          <p className="text-xs text-abyssal-ink/45 font-body">
+                            Preview project created to show MistHustlers' design and development capability. Quality score is internal, not a customer review.
+                          </p>
+                        </div>
+                      </details>
+                      <div className="hidden md:block">
                         <div className="mt-4 pt-4 border-t border-abyssal-ink/5">
                           <StarRating slug={project.slug} defaultRating={project.defaultRating} size={18} />
                         </div>
                         <p className="mt-3 text-xs text-abyssal-ink/45 font-body">
                           Preview project created to show MistHustlers' design and development capability. Quality score is internal, not a customer review.
                         </p>
+                      </div>
                         <div className="mt-5 grid gap-2 sm:grid-cols-2">
                           <Link to={`/projects/demo/${project.slug}`} className="flex min-h-11 items-center justify-center rounded-full bg-abyssal-ink px-4 py-2 text-center text-xs font-semibold text-white transition-colors hover:bg-digital-orange font-body" onClick={() => trackEvent("project_detail_click", { project: project.slug })}>
                             View Demo
@@ -180,7 +201,7 @@ export default function Projects() {
         </div>
       </section>
 
-      <section className="py-16 sm:py-24">
+      <section className="content-visibility-auto py-16 sm:py-24">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
             <ScrollReveal>
@@ -214,7 +235,7 @@ export default function Projects() {
         </div>
       </section>
 
-      <section className="py-16 sm:py-24 bg-ash-white">
+      <section className="content-visibility-auto py-16 sm:py-24 bg-ash-white">
         <div className="max-w-[900px] mx-auto px-4 sm:px-6">
           <ScrollReveal>
             <h2 className="font-display text-[clamp(32px,5vw,56px)] leading-[0.95] tracking-[0.02em] text-abyssal-ink mb-8 text-center">
@@ -232,7 +253,7 @@ export default function Projects() {
         </div>
       </section>
 
-      <section className="py-16 sm:py-24 bg-abyssal-ink/5">
+      <section className="content-visibility-auto py-16 sm:py-24 bg-abyssal-ink/5">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 text-center">
           <ScrollReveal>
             <span className="inline-block px-4 py-1.5 rounded-full bg-digital-orange/10 text-digital-orange text-xs font-semibold tracking-wider uppercase mb-6 font-body">

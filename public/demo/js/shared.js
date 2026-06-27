@@ -11,7 +11,7 @@
 */
 
 (function () {
-  const WHATSAPP_NUMBER = 'XXXXXXXXXX'; // Replace with real MistHustlers number
+  const WHATSAPP_NUMBER = '918889937648';
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // 1. UTM Tracking: preserve query params on all internal links
@@ -167,6 +167,63 @@
     }, { passive: true });
   }
 
+  function initMobileBookingForms() {
+    const selector = '.form-card, .booking-form, .reservation-form, .trial-form, .lead-form, .consult-form, .rfq-form';
+    const mobileQuery = window.matchMedia('(max-width: 767px)');
+
+    document.querySelectorAll(selector).forEach((form, index) => {
+      if (!(form instanceof HTMLFormElement) || form.classList.contains('waitlist-form') || form.classList.contains('final-form')) return;
+
+      form.classList.add('mobile-booking-form');
+      if (!form.id) form.id = `mobile-booking-form-${index + 1}`;
+
+      const toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'mobile-booking-toggle';
+      toggle.setAttribute('aria-controls', form.id);
+      toggle.textContent = 'Book or enquire now';
+      form.parentElement.insertBefore(toggle, form);
+
+      let expanded = false;
+      const render = () => {
+        const isMobile = mobileQuery.matches;
+        form.hidden = isMobile && !expanded;
+        toggle.hidden = !isMobile;
+        toggle.setAttribute('aria-expanded', String(isMobile && expanded));
+        toggle.textContent = expanded ? 'Hide booking form' : 'Book or enquire now';
+      };
+      const expand = () => {
+        expanded = true;
+        render();
+      };
+
+      toggle.addEventListener('click', () => {
+        expanded = !expanded;
+        render();
+        if (expanded) form.querySelector('input, select, textarea')?.focus({ preventScroll: true });
+      });
+      mobileQuery.addEventListener?.('change', render);
+      form._expandMobileBooking = expand;
+      render();
+    });
+
+    document.addEventListener('click', (event) => {
+      const link = event.target instanceof Element ? event.target.closest('a[href^="#"]') : null;
+      if (!link || !mobileQuery.matches) return;
+      const hash = link.getAttribute('href');
+      if (!hash || hash.length < 2) return;
+      const target = document.querySelector(hash);
+      const form = target?.matches?.(selector) ? target : target?.querySelector?.(selector);
+      form?._expandMobileBooking?.();
+    });
+
+    if (window.location.hash.length > 1) {
+      const target = document.querySelector(window.location.hash);
+      const form = target?.matches?.(selector) ? target : target?.querySelector?.(selector);
+      form?._expandMobileBooking?.();
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     preserveUTMs();
     initReveal();
@@ -174,6 +231,7 @@
     initWhatsAppLinks();
     initCTATracking();
     initStickyFooter();
+    initMobileBookingForms();
   });
 
   // Expose globally

@@ -321,7 +321,7 @@ export default function Services() {
       </section>
 
       {/* SERVICE CATEGORIES */}
-      <section className="mx-auto max-w-[1200px] px-4 sm:px-6 md:px-8 py-[72px] md:py-[120px]">
+      <section className="content-visibility-auto mx-auto max-w-[1200px] px-4 sm:px-6 md:px-8 py-[72px] md:py-[120px]">
         <div className="max-w-[720px] mb-[64px] md:mb-[84px]">
           <div className="inline-flex items-center gap-[8px] mb-[24px]">
             <div className="h-[4px] w-[4px] rounded-full" style={{ backgroundColor: "var(--mh-cta)" }}></div>
@@ -428,7 +428,7 @@ export default function Services() {
       </section>
 
       {/* PRICING TIERS */}
-      <section id="tiers" className="mx-auto max-w-[1200px] px-4 sm:px-6 md:px-8 py-[72px] md:py-[120px]">
+      <section id="tiers" className="content-visibility-auto mx-auto max-w-[1200px] px-4 sm:px-6 md:px-8 py-[72px] md:py-[120px]">
         <div className="max-w-[720px] mb-[64px] md:mb-[84px]">
           <div className="inline-flex items-center gap-[8px] mb-[24px]">
             <div className="h-[4px] w-[4px] rounded-full" style={{ backgroundColor: "var(--mh-cta)" }}></div>
@@ -516,7 +516,7 @@ export default function Services() {
 
                   <div className="space-y-[13px] mb-[32px] flex-1">
                     {tier.features.map((feature, i) => (
-                      <div key={i} className="flex items-center gap-[12px] text-[14.5px]">
+                      <div key={i} className={`${i >= 3 ? "hidden md:flex" : "flex"} items-center gap-[12px] text-[14.5px]`}>
                         <div className="h-[18px] w-[18px] rounded-[8px] flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `color-mix(in srgb, ${tier.accent} 8%, transparent)` }}>
                           <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
                             <path d="M2.5 5L4 6.5L7.5 3" stroke={tier.accent} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -525,6 +525,29 @@ export default function Services() {
                         <span className="font-[500]" style={{ color: "var(--mh-text)" }}>{feature}</span>
                       </div>
                     ))}
+                    {tier.features.length > 3 && (
+                      <details className="group max-md:block hidden mt-2">
+                        <summary className="list-none text-[13px] font-[600] cursor-pointer py-2" style={{ color: "var(--mh-cta)" }}>
+                          <span className="group-open:hidden">View all features ({tier.features.length - 3} more)</span>
+                          <span className="hidden group-open:inline">Show less</span>
+                          <svg className="inline-block ml-1 w-3 h-3 transition-transform group-open:rotate-180" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                            <path d="M3 5l3 3 3-3" />
+                          </svg>
+                        </summary>
+                        <div className="space-y-[13px] mt-3">
+                          {tier.features.slice(3).map((feature, i) => (
+                            <div key={i} className="flex items-center gap-[12px] text-[14.5px]">
+                              <div className="h-[18px] w-[18px] rounded-[8px] flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `color-mix(in srgb, ${tier.accent} 8%, transparent)` }}>
+                                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                                  <path d="M2.5 5L4 6.5L7.5 3" stroke={tier.accent} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                              </div>
+                              <span className="font-[500]" style={{ color: "var(--mh-text)" }}>{feature}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </details>
+                    )}
                   </div>
 
                   <button
@@ -577,7 +600,7 @@ export default function Services() {
       {/* ═══ FREE ECOSYSTEM REMOVED ═══ */}
 
       {/* HOW IT WORKS */}
-      <section id="process" className="mx-auto max-w-[1200px] px-6 md:px-8 py-[88px] md:py-[112px]">
+      <section id="process" className="content-visibility-auto mx-auto max-w-[1200px] px-6 md:px-8 py-[88px] md:py-[112px]">
         <div className="max-w-[720px] mb-[72px]">
           <h2 className="font-body font-bold text-[40px] md:text-[48px] leading-[1.06] tracking-[-0.03em] mb-[18px]" style={{ color: "var(--mh-text)" }}>
             How execution happens
@@ -633,7 +656,7 @@ export default function Services() {
       </section>
 
       {/* TRUST */}
-      <section className="mx-auto max-w-[1200px] px-6 md:px-8 py-[64px] md:py-[84px]">
+      <section className="content-visibility-auto mx-auto max-w-[1200px] px-6 md:px-8 py-[64px] md:py-[84px]">
         <ScrollReveal>
           <div className="text-center mb-[56px] max-w-[640px] mx-auto">
             <h2 className="font-body font-bold text-[32px] md:text-[40px] leading-[1.1] tracking-[-0.03em] mb-[14px]" style={{ color: "var(--mh-text)" }}>
@@ -677,7 +700,7 @@ export default function Services() {
       <section
         id="service-inquiry"
         ref={inquiryRef}
-        className="mx-auto max-w-[1200px] px-4 sm:px-6 md:px-8 py-[72px] md:py-[120px] scroll-mt-24"
+        className="content-visibility-auto mx-auto max-w-[1200px] px-4 sm:px-6 md:px-8 py-[72px] md:py-[120px] scroll-mt-24"
       >
         <ServiceInquiryForm />
       </section>

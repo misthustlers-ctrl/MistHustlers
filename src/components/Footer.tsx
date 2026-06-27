@@ -15,10 +15,13 @@ const CONTACT_DEFAULTS = {
   phoneHref: "+918889937648",
 };
 
-const FOOTER_LINKS = [
+const EXPLORE_LINKS = [
   { label: "Home", to: "/" },
   { label: "Services", to: "/services" },
   { label: "Projects", to: "/projects" },
+];
+
+const COMPANY_LINKS = [
   { label: "Career", to: "/career" },
   { label: "About", to: "/about" },
   { label: "FAQ", to: "/faq" },
@@ -50,18 +53,17 @@ export default function Footer() {
                 </span>
               )}
             </Link>
-            <p className="text-sm text-abyssal-ink/40 font-body">&copy; {new Date().getFullYear()} {logo.brandPrefix}{logo.brandHighlight}. All rights reserved.</p>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 text-sm text-abyssal-ink/50 font-body min-[420px]:flex min-[420px]:flex-wrap min-[420px]:items-center min-[420px]:justify-center min-[420px]:gap-3 sm:gap-5">
-            {FOOTER_LINKS.map((link) => (
+          <div className="hidden md:grid grid-cols-2 gap-2 text-sm text-abyssal-ink/50 font-body md:flex md:flex-wrap md:items-center md:justify-center md:gap-3 lg:gap-5">
+            {[...EXPLORE_LINKS, ...COMPANY_LINKS].map((link) => (
               <Link key={link.label} to={link.to} className="footer-link rounded-full px-3 py-2 text-center transition-colors hover:text-abyssal-ink">
                 {link.label}
               </Link>
             ))}
           </div>
 
-          <div className="flex flex-col items-center md:items-end gap-2 text-sm text-abyssal-ink/50 font-body">
+          <div className="hidden md:flex flex-col items-center md:items-end gap-2 text-sm text-abyssal-ink/50 font-body">
             <span className="text-abyssal-ink/60">{contact.address}</span>
             <a href={`mailto:${contact.email}`} className="hover:text-abyssal-ink transition-colors">
               {contact.email}
@@ -72,12 +74,53 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-2 text-sm text-abyssal-ink/45 font-body md:justify-between md:gap-8">
-          {LEGAL_LINKS.map((link) => (
-            <Link key={link.label} to={link.to} className="rounded-full bg-abyssal-ink/5 px-4 py-2 text-center transition-colors hover:bg-abyssal-ink hover:text-white">
-              {link.label}
-            </Link>
-          ))}
+        <div className="footer-grouped md:hidden mt-8">
+          <div>
+            <div className="footer-section-title">Explore</div>
+            <div className="footer-columns">
+              {EXPLORE_LINKS.map((link) => (
+                <Link key={link.label} to={link.to}>{link.label}</Link>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div className="footer-section-title">Company</div>
+            <div className="footer-columns">
+              {COMPANY_LINKS.map((link) => (
+                <Link key={link.label} to={link.to}>{link.label}</Link>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div className="footer-section-title">Legal</div>
+            <div className="footer-legal">
+              {LEGAL_LINKS.map((link) => (
+                <Link key={link.label} to={link.to}>{link.label}</Link>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div className="footer-section-title">Contact</div>
+            <div className="footer-contact">
+              <span>{contact.address}</span>
+              <a href={`mailto:${contact.email}`}>{contact.email}</a>
+              <a href={`tel:${tel}`}>{contact.phone}</a>
+            </div>
+          </div>
+          <div className="footer-copyright">
+            &copy; {new Date().getFullYear()} {logo.brandPrefix}{logo.brandHighlight}. All rights reserved.
+          </div>
+        </div>
+
+        <div className="hidden md:mt-10 md:flex md:flex-wrap md:items-center md:justify-between md:gap-8 text-sm text-abyssal-ink/45 font-body">
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {LEGAL_LINKS.map((link) => (
+              <Link key={link.label} to={link.to} className="rounded-full bg-abyssal-ink/5 px-4 py-2 text-center transition-colors hover:bg-abyssal-ink hover:text-white">
+                {link.label}
+              </Link>
+            ))}
+          </div>
+          <p className="hidden md:block text-sm text-abyssal-ink/40 font-body">&copy; {new Date().getFullYear()} {logo.brandPrefix}{logo.brandHighlight}. All rights reserved.</p>
         </div>
       </div>
     </footer>

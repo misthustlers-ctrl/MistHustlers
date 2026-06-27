@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -298,7 +298,20 @@ const HOMEPAGE_PACKAGE_IDS = ["launch-landing-page", "quick-workflow-automation"
 
 export default function Home() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+  const [marqueeVisible, setMarqueeVisible] = useState(true);
+  const marqueeRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const el = marqueeRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setMarqueeVisible(entry.isIntersecting),
+      { threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
   const c = useContent("home", HOME_DEFAULTS);
   const servicesContent = useContent("services", SERVICES_PRICING_DEFAULTS);
   const pricingTiers = useMemo(() => {
@@ -432,7 +445,7 @@ export default function Home() {
       </section>
 
       {/* SERVICES TEASER */}
-      <section className="py-16 md:py-20 bg-ash-white">
+      <section className="content-visibility-auto py-16 md:py-20 bg-ash-white">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <ScrollReveal>
             <div className="mb-12 text-center">
@@ -467,6 +480,22 @@ export default function Home() {
                           <span>{feature}</span>
                         </div>
                       ))}
+                      {svc.features.length > 2 && (
+                        <details className="group md:hidden">
+                          <summary className="list-none text-xs font-semibold text-digital-orange cursor-pointer py-1">
+                            <span className="group-open:hidden">+{svc.features.length - 2} more</span>
+                            <span className="hidden group-open:inline">Show less</span>
+                          </summary>
+                          <div className="mt-2 space-y-2">
+                            {svc.features.slice(2).map((feature) => (
+                              <div key={feature} className="flex items-center gap-2 text-xs font-semibold text-abyssal-ink/55 font-body">
+                                <span className="h-1.5 w-1.5 rounded-full bg-digital-orange" />
+                                <span>{feature}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </details>
+                      )}
                     </div>
                   )}
                   {svc.price && <p className="mt-5 text-xs font-bold text-abyssal-ink font-body">{svc.price}</p>}
@@ -489,7 +518,7 @@ export default function Home() {
 
       {/* PRICING PLANS */}
       {pricingTiers.length > 0 && (
-      <section className="py-16 md:py-24">
+      <section className="content-visibility-auto py-16 md:py-24">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <ScrollReveal>
             <div className="mb-12 text-center">
@@ -548,7 +577,7 @@ export default function Home() {
       )}
 
       {/* JOURNEY */}
-      <section className="py-16 md:py-24">
+      <section className="content-visibility-auto py-16 md:py-24">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <ScrollReveal>
             <div className="mb-16 text-center">
@@ -579,7 +608,7 @@ export default function Home() {
       </section>
 
       {/* MENTORSHIP TEASER */}
-      <section className="py-16 md:py-24">
+      <section className="content-visibility-auto py-16 md:py-24">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <div className="grid lg:grid-cols-2 gap-10 md:gap-16 items-center">
             <ScrollReveal>
@@ -619,7 +648,7 @@ export default function Home() {
       </section>
 
       {/* FOUNDER TRUST */}
-      <section className="py-16 md:py-20 bg-ash-white">
+      <section className="content-visibility-auto py-16 md:py-20 bg-ash-white">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <ScrollReveal>
@@ -666,7 +695,7 @@ export default function Home() {
 
       {/* PROJECT PREVIEW */}
       {c.projectsShowcase?.enabled !== false && movingProjects.length > 0 && (
-      <section className="py-16 md:py-24 bg-ash-white">
+      <section className="content-visibility-auto py-16 md:py-24 bg-ash-white">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <ScrollReveal>
             <div className="mb-12 flex flex-col gap-5 text-center md:flex-row md:items-end md:justify-between md:text-left">
@@ -686,7 +715,7 @@ export default function Home() {
           </ScrollReveal>
 
           <ScrollReveal delay={0.08}>
-            <div className="project-marquee relative -mx-4 overflow-hidden px-4 sm:-mx-6 sm:px-6">
+            <div ref={marqueeRef} className="project-marquee relative -mx-4 overflow-hidden px-4 sm:-mx-6 sm:px-6" data-visible={marqueeVisible}>
               <div className="project-marquee__track flex w-max gap-5 py-1">
                 {movingProjects.map((proj, i) => (
                   <a
@@ -717,7 +746,7 @@ export default function Home() {
       )}
 
       {/* BUILDER ECOSYSTEM */}
-      <section className="py-16 md:py-20">
+      <section className="content-visibility-auto py-16 md:py-20">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <ScrollReveal>
             <div className="mx-auto max-w-2xl text-center">
@@ -740,7 +769,7 @@ export default function Home() {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="py-16 md:py-24">
+      <section id="faq" className="content-visibility-auto py-16 md:py-24">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <div className="max-w-2xl mx-auto">
             <ScrollReveal>
@@ -772,7 +801,7 @@ export default function Home() {
       </section>
 
       {/* FINAL CTA */}
-      <section className="py-16 md:py-20 bg-abyssal-ink text-white">
+      <section className="content-visibility-auto py-16 md:py-20 bg-abyssal-ink text-white">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 text-center">
           <ScrollReveal>
             <h2 className="font-body font-bold text-[clamp(32px,6vw,80px)] tracking-[0.02em] leading-[0.95] mb-6">

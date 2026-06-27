@@ -328,6 +328,71 @@ select.form-control {
   font-weight: 600;
 }
 
+.mobile-booking-toggle {
+  display: none;
+}
+
+.embedded-demo .sticky-footer,
+.embedded-demo .whatsapp-float {
+  display: none !important;
+}
+
+@media (max-width: 767px) {
+  .mobile-booking-toggle {
+    width: 100%;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 auto 16px;
+    padding: 12px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    color: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-align: left;
+  }
+
+  .mobile-booking-toggle::after {
+    content: "+";
+    flex: 0 0 auto;
+    font-size: 1.35rem;
+    line-height: 1;
+  }
+
+  .mobile-booking-toggle[aria-expanded="true"]::after {
+    content: "−";
+  }
+
+  .mobile-booking-form {
+    padding: 20px !important;
+    border-radius: 18px !important;
+  }
+
+  .mobile-booking-form .form-group {
+    margin-bottom: 16px;
+  }
+
+  .mobile-booking-form .form-control {
+    min-height: 48px;
+    font-size: 16px;
+  }
+
+  .form-section,
+  .booking-section,
+  .reservation-section,
+  .trial-section,
+  .consult-section,
+  .lead-section,
+  .cta-section {
+    padding-top: 56px !important;
+    padding-bottom: 56px !important;
+  }
+}
+
 /* Scroll reveal animations */
 .reveal {
   opacity: 0;

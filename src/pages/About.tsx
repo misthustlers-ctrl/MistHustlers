@@ -124,7 +124,7 @@ export default function About() {
             </div>
 
             <ScrollReveal>
-              <div className="bg-ash-white rounded-[28px] sm:rounded-[40px] p-6 sm:p-10 border border-abyssal-ink/5 mb-16 sm:mb-20">
+              <div className="content-visibility-auto bg-ash-white rounded-[28px] sm:rounded-[40px] p-6 sm:p-10 border border-abyssal-ink/5 mb-16 sm:mb-20">
                 <h2 className="font-body font-bold text-3xl tracking-[0.02em] text-abyssal-ink mb-8 text-center">{c.whyTitle}</h2>
                 <div className="grid md:grid-cols-4 gap-8">
                   {(c.reasons || []).map((item) => (
@@ -138,7 +138,7 @@ export default function About() {
             </ScrollReveal>
 
             <ScrollReveal>
-              <div className="text-center">
+              <div className="content-visibility-auto text-center">
                 <h2 className="font-body font-bold text-3xl tracking-[0.02em] text-abyssal-ink mb-4">{c.stackTitle}</h2>
                 <p className="text-abyssal-ink/50 mb-8 font-body">{c.stackDescription}</p>
                 <div className="flex flex-wrap justify-center gap-4">

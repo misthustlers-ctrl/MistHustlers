@@ -207,29 +207,61 @@ function Career() {
                     <p className="text-sm leading-7 text-[var(--mh-text)]/65">{opportunity.description}</p>
                   </div>
 
-                  <div className="mt-6">
+                  <div className="mt-6 md:hidden">
+                    <details className="group">
+                      <summary className="list-none flex items-center justify-between py-2 text-xs font-bold uppercase tracking-[0.18em] text-[var(--mh-text)]/40 cursor-pointer">
+                        <span>Skills &amp; details</span>
+                        <svg className="w-4 h-4 transition-transform group-open:rotate-180" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                          <path d="M3 5l3 3 3-3" />
+                        </svg>
+                      </summary>
+                      <div className="mt-3 space-y-4">
+                        <div>
+                          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--mh-text)]/40 mb-3">Skills required</p>
+                          <div className="flex flex-wrap gap-2">
+                            {opportunity.skills.map((skill) => (
+                              <span key={skill} className="rounded-full border border-[var(--mh-text)]/10 bg-white/70 px-3 py-1.5 text-xs font-semibold text-[var(--mh-text)]/65">{skill}</span>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="grid gap-3 min-[420px]:grid-cols-3">
+                          <div className="rounded-2xl bg-white/65 p-4 ring-1 ring-[var(--mh-text)]/8">
+                            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--mh-text)]/35">{primaryMetaLabel}</p>
+                            <p className="mt-2 text-sm font-semibold leading-6 text-[var(--mh-text)]">{displayMetaValue}</p>
+                          </div>
+                          <div className="rounded-2xl bg-white/65 p-4 ring-1 ring-[var(--mh-text)]/8">
+                            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--mh-text)]/35">Level</p>
+                            <p className="mt-2 text-sm font-semibold text-[var(--mh-text)]">{opportunity.level}</p>
+                          </div>
+                          <div className="rounded-2xl bg-white/65 p-4 ring-1 ring-[var(--mh-text)]/8">
+                            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--mh-text)]/35">Path</p>
+                            <p className="mt-2 text-sm font-semibold text-[var(--mh-text)]">Inquiry Form</p>
+                          </div>
+                        </div>
+                      </div>
+                    </details>
+                  </div>
+
+                  <div className="hidden md:block mt-6">
                     <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--mh-text)]/40">Skills required</p>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {opportunity.skills.map((skill) => (
-                        <span key={skill} className="rounded-full border border-[var(--mh-text)]/10 bg-white/70 px-3 py-1.5 text-xs font-semibold text-[var(--mh-text)]/65">
-                          {skill}
-                        </span>
+                        <span key={skill} className="rounded-full border border-[var(--mh-text)]/10 bg-white/70 px-3 py-1.5 text-xs font-semibold text-[var(--mh-text)]/65">{skill}</span>
                       ))}
                     </div>
-                  </div>
-
-                  <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                    <div className="rounded-2xl bg-white/65 p-4 ring-1 ring-[var(--mh-text)]/8">
-                      <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--mh-text)]/35">{primaryMetaLabel}</p>
-                      <p className="mt-2 text-sm font-semibold leading-6 text-[var(--mh-text)]">{displayMetaValue}</p>
-                    </div>
-                    <div className="rounded-2xl bg-white/65 p-4 ring-1 ring-[var(--mh-text)]/8">
-                      <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--mh-text)]/35">Level</p>
-                      <p className="mt-2 text-sm font-semibold text-[var(--mh-text)]">{opportunity.level}</p>
-                    </div>
-                    <div className="rounded-2xl bg-white/65 p-4 ring-1 ring-[var(--mh-text)]/8">
-                      <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--mh-text)]/35">Path</p>
-                      <p className="mt-2 text-sm font-semibold text-[var(--mh-text)]">Inquiry Form</p>
+                    <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                      <div className="rounded-2xl bg-white/65 p-4 ring-1 ring-[var(--mh-text)]/8">
+                        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--mh-text)]/35">{primaryMetaLabel}</p>
+                        <p className="mt-2 text-sm font-semibold leading-6 text-[var(--mh-text)]">{displayMetaValue}</p>
+                      </div>
+                      <div className="rounded-2xl bg-white/65 p-4 ring-1 ring-[var(--mh-text)]/8">
+                        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--mh-text)]/35">Level</p>
+                        <p className="mt-2 text-sm font-semibold text-[var(--mh-text)]">{opportunity.level}</p>
+                      </div>
+                      <div className="rounded-2xl bg-white/65 p-4 ring-1 ring-[var(--mh-text)]/8">
+                        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--mh-text)]/35">Path</p>
+                        <p className="mt-2 text-sm font-semibold text-[var(--mh-text)]">Inquiry Form</p>
+                      </div>
                     </div>
                   </div>
 
