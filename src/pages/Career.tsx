@@ -90,7 +90,7 @@ function Career() {
 
   return (
     <div className="min-h-screen bg-[#e2e2df] text-[var(--mh-text)]">
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+      <div className="career-atmosphere pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute left-[-10%] top-[-5%] h-80 w-80 rounded-full bg-[var(--mh-secondary)]/12 blur-3xl" />
         <div className="absolute right-[-5%] top-[18%] h-96 w-96 rounded-full bg-[var(--mh-cta)]/10 blur-3xl" />
         <div className="absolute bottom-[-10%] left-[25%] h-80 w-80 rounded-full bg-white/40 blur-3xl" />
@@ -127,15 +127,19 @@ function Career() {
               </label>
             </div>
 
-            <div className="mt-5 flex flex-wrap gap-2.5">
+            <div className="mobile-tab-shell mt-5">
+              <div className="mobile-tab-row flex gap-2.5 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible sm:pb-0">
               {filters.map((filter) => {
                 const isActive = activeFilter === filter.value;
                 return (
                   <button
                     key={filter.value}
                     type="button"
-                    onClick={() => setActiveFilter(filter.value as FilterValue)}
-                    className={`rounded-full px-4 py-2.5 text-sm font-bold transition cursor-pointer ${
+                    onClick={(event) => {
+                      setActiveFilter(filter.value as FilterValue);
+                      event.currentTarget.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+                    }}
+                    className={`min-h-11 shrink-0 whitespace-nowrap rounded-full px-4 py-2.5 text-sm font-bold transition cursor-pointer ${
                       isActive
                         ? "bg-[var(--mh-text)] text-[var(--mh-surface)] shadow-[0_14px_24px_rgba(var(--mh-text-rgb),0.14)]"
                         : "bg-white/70 text-[var(--mh-text)]/70 ring-1 ring-[var(--mh-text)]/8 hover:bg-[var(--mh-secondary)]/10 hover:text-[var(--mh-secondary)]"
@@ -146,6 +150,7 @@ function Career() {
                   </button>
                 );
               })}
+              </div>
             </div>
           </div>
         </section>

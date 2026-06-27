@@ -71,21 +71,27 @@ export default function Projects() {
             </div>
           </motion.div>
 
-          <div className="flex flex-wrap justify-center gap-2 mb-12">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => { setActiveCategory(cat); trackEvent("project_filter_click", { category: cat }); }}
-                aria-pressed={activeCategory === cat}
-                className={`min-h-10 px-3 sm:px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-200 font-body ${
-                  activeCategory === cat
-                    ? "bg-abyssal-ink text-ash-white"
-                    : "bg-abyssal-ink/5 text-abyssal-ink/60 hover:bg-abyssal-ink/10"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
+          <div className="mobile-tab-shell mb-12">
+            <div className="mobile-tab-row flex gap-2 overflow-x-auto pb-2 sm:flex-wrap sm:justify-center sm:overflow-visible sm:pb-0">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={(event) => {
+                    setActiveCategory(cat);
+                    event.currentTarget.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+                    trackEvent("project_filter_click", { category: cat });
+                  }}
+                  aria-pressed={activeCategory === cat}
+                  className={`min-h-11 shrink-0 whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-200 font-body ${
+                    activeCategory === cat
+                      ? "bg-abyssal-ink text-ash-white"
+                      : "bg-abyssal-ink/5 text-abyssal-ink/60 hover:bg-abyssal-ink/10"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
           </div>
 
           <AnimatePresence mode="wait">
@@ -102,7 +108,7 @@ export default function Projects() {
                   <article className="bg-ash-white rounded-[28px] sm:rounded-[40px] border border-abyssal-ink/5 overflow-hidden h-full flex flex-col hover:shadow-xl hover:shadow-abyssal-ink/5 transition-all duration-500">
                     <Link to={`/projects/demo/${project.slug}`} className="block group" onClick={() => trackEvent("project_demo_click", { project: project.slug })}>
                       <div
-                        className="relative h-48 overflow-hidden flex items-center justify-center"
+                        className="relative h-44 overflow-hidden flex items-center justify-center sm:h-48"
                         style={{ background: project.gradient }}
                       >
                         <img
@@ -152,10 +158,10 @@ export default function Projects() {
                           Preview project created to show MistHustlers' design and development capability. Quality score is internal, not a customer review.
                         </p>
                         <div className="mt-5 grid gap-2 sm:grid-cols-2">
-                          <Link to={`/projects/demo/${project.slug}`} className="min-h-10 rounded-full bg-abyssal-ink px-4 py-2 text-center text-xs font-semibold text-white transition-colors hover:bg-digital-orange font-body" onClick={() => trackEvent("project_detail_click", { project: project.slug })}>
+                          <Link to={`/projects/demo/${project.slug}`} className="flex min-h-11 items-center justify-center rounded-full bg-abyssal-ink px-4 py-2 text-center text-xs font-semibold text-white transition-colors hover:bg-digital-orange font-body" onClick={() => trackEvent("project_detail_click", { project: project.slug })}>
                             View Demo
                           </Link>
-                          <Link to="/contact" className="min-h-10 rounded-full border border-abyssal-ink/15 px-4 py-2 text-center text-xs font-semibold text-abyssal-ink transition-colors hover:bg-abyssal-ink hover:text-white font-body" onClick={() => trackEvent("build_similar_project_click", { project: project.slug })}>
+                          <Link to="/contact" className="flex min-h-11 items-center justify-center rounded-full border border-abyssal-ink/15 px-4 py-2 text-center text-xs font-semibold text-abyssal-ink transition-colors hover:bg-abyssal-ink hover:text-white font-body" onClick={() => trackEvent("build_similar_project_click", { project: project.slug })}>
                             Build Similar
                           </Link>
                         </div>

@@ -20,7 +20,7 @@ export default function DemoViewer() {
   }
 
   return (
-    <div className="bg-basalt-canvas min-h-screen flex flex-col">
+    <div className="demo-viewer-page bg-basalt-canvas min-h-[100dvh] flex flex-col">
       <SEO
         page="projects"
         robots="noindex, follow"
@@ -33,11 +33,11 @@ export default function DemoViewer() {
         }}
       />
       <div className="sticky top-0 z-50 bg-abyssal-ink/90 backdrop-blur-xl border-b border-white/10">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
+        <div className="mx-auto flex min-h-16 max-w-[1400px] items-center justify-between gap-3 px-3 py-2 sm:px-6 sm:py-3">
           <div className="flex items-center gap-4 min-w-0">
             <Link
               to="/projects"
-              className="shrink-0 flex items-center justify-center w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+              className="shrink-0 flex items-center justify-center w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
               aria-label="Back to projects"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -52,7 +52,7 @@ export default function DemoViewer() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+          <div className="hidden items-center gap-4 shrink-0 sm:flex">
             <Link to="/" className="text-xs text-white/60 hover:text-white transition-colors font-body">Home</Link>
             <Link to="/contact" className="text-xs text-white/60 hover:text-white transition-colors font-body">Contact</Link>
             <StarRating slug={project.slug} defaultRating={project.defaultRating} size={20} />
@@ -60,8 +60,8 @@ export default function DemoViewer() {
         </div>
       </div>
 
-      <main className="flex-1">
-        <section className="bg-basalt-canvas border-b border-abyssal-ink/5">
+      <main className="flex min-h-0 flex-1 flex-col">
+        <section className="hidden bg-basalt-canvas border-b border-abyssal-ink/5 md:block">
           <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-6 grid gap-5 lg:grid-cols-[1.2fr_0.8fr]">
             <div>
               <span className="inline-block rounded-full bg-digital-orange/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-digital-orange font-body">
@@ -89,7 +89,6 @@ export default function DemoViewer() {
           src={`/demo/${project.slug}/index.html`}
           title={`${project.title} Demo`}
           className="demo-preview-frame w-full border-none"
-          style={{ height: "calc(100dvh - 116px)" }}
           loading="lazy"
           sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
         />

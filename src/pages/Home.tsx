@@ -417,7 +417,7 @@ export default function Home() {
       <section className="border-y border-abyssal-ink/5 py-8 md:py-10">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <ScrollReveal>
-            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
               {(c.brands?.length ? c.brands : HOME_DEFAULTS.brands).map((item, index) => (
                 <div key={item} className="card-lift rounded-2xl border border-abyssal-ink/10 bg-ash-white px-5 py-5">
                   <div className="flex items-end justify-between gap-3">
@@ -694,7 +694,7 @@ export default function Home() {
                     href={projectHref(proj.link)}
                     target={isExternalProjectLink(proj.link) ? "_blank" : undefined}
                     rel={isExternalProjectLink(proj.link) ? "noopener noreferrer" : undefined}
-                    className="project-showcase-card card-lift group h-[220px] w-[280px] flex-shrink-0 overflow-hidden rounded-[28px] border border-abyssal-ink/5 bg-basalt-canvas text-left sm:w-[340px]"
+                    className="project-showcase-card card-lift group h-[210px] w-[min(280px,calc(100vw-48px))] flex-shrink-0 overflow-hidden rounded-[24px] border border-abyssal-ink/5 bg-basalt-canvas text-left sm:h-[220px] sm:w-[340px] sm:rounded-[28px]"
                   >
                     <div className="relative h-36 overflow-hidden bg-abyssal-ink/5">
                       {proj.imageUrl ? (

@@ -106,12 +106,12 @@ export default function About() {
                     <p key={item} className="text-abyssal-ink/60 font-body leading-relaxed">{item}</p>
                   ))}
                   {c.mapEmbedUrl && (
-                    <div className="overflow-hidden rounded-[28px] border border-abyssal-ink/5 bg-ash-white min-h-[280px]">
+                    <div className="min-h-[240px] overflow-hidden rounded-[28px] border border-abyssal-ink/5 bg-ash-white sm:min-h-[280px]">
                       <iframe
                         src={c.mapEmbedUrl}
                         width="100%"
                         height="100%"
-                        style={{ border: 0, minHeight: "280px" }}
+                        style={{ border: 0, minHeight: "inherit" }}
                         allowFullScreen
                         loading="lazy"
                         referrerPolicy="no-referrer-when-downgrade"

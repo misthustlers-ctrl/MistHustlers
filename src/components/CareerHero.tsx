@@ -48,7 +48,7 @@ export default function CareerHero({
         </div>
 
         <div className="space-y-5">
-          <h1 className="mh-heading max-w-4xl text-[42px] leading-[0.98] sm:text-6xl lg:text-8xl">
+          <h1 className="mh-heading max-w-4xl text-[clamp(36px,11vw,42px)] leading-[1.02] sm:text-6xl sm:leading-[0.98] lg:text-8xl">
             {hero.title || "Opportunities for Builders"}
           </h1>
           <p className="max-w-2xl text-lg leading-8 text-[var(--mh-text)]/70 sm:text-xl">

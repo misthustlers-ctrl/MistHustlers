@@ -350,22 +350,27 @@ export default function Services() {
               <path d="M11 11L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
           </label>
-          <div className="flex gap-2 overflow-x-auto pb-1 md:justify-end">
-            {serviceCategories.map((category) => (
-              <button
-                key={category}
-                type="button"
-                onClick={() => setServiceFilter(category)}
-                className="h-10 shrink-0 rounded-[14px] border px-4 text-xs font-[700] transition-colors"
-                style={{
-                  backgroundColor: serviceFilter === category ? "var(--mh-text)" : "var(--mh-surface)",
-                  borderColor: serviceFilter === category ? "var(--mh-text)" : "rgba(var(--mh-text-rgb), 0.08)",
-                  color: serviceFilter === category ? "var(--mh-surface)" : "rgba(var(--mh-text-rgb), 0.68)",
-                }}
-              >
-                {category}
-              </button>
-            ))}
+          <div className="mobile-tab-shell min-w-0">
+            <div className="mobile-tab-row flex gap-2 overflow-x-auto pb-1 md:justify-end md:overflow-visible">
+              {serviceCategories.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  onClick={(event) => {
+                    setServiceFilter(category);
+                    event.currentTarget.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+                  }}
+                  className="h-11 shrink-0 whitespace-nowrap rounded-[14px] border px-4 text-xs font-[700] transition-colors"
+                  style={{
+                    backgroundColor: serviceFilter === category ? "var(--mh-text)" : "var(--mh-surface)",
+                    borderColor: serviceFilter === category ? "var(--mh-text)" : "rgba(var(--mh-text-rgb), 0.08)",
+                    color: serviceFilter === category ? "var(--mh-surface)" : "rgba(var(--mh-text-rgb), 0.68)",
+                  }}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -437,13 +442,17 @@ export default function Services() {
           </p>
         </div>
 
-        <div className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
-          {PRICE_FILTERS.map((filter) => (
-            <button
+        <div className="mobile-tab-shell mb-8">
+          <div className="mobile-tab-row flex gap-3 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 lg:grid-cols-6">
+            {PRICE_FILTERS.map((filter) => (
+              <button
               key={filter.id}
               type="button"
-              onClick={() => setPriceFilter(filter.id)}
-              className="rounded-[18px] border p-4 text-left transition-all hover:-translate-y-0.5"
+              onClick={(event) => {
+                setPriceFilter(filter.id);
+                event.currentTarget.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+              }}
+              className="min-h-16 w-[190px] shrink-0 rounded-[18px] border p-4 text-left transition-all hover:-translate-y-0.5 sm:w-auto"
               style={{
                 backgroundColor: priceFilter === filter.id ? "var(--mh-text)" : "var(--mh-surface)",
                 borderColor: priceFilter === filter.id ? "var(--mh-text)" : "rgba(var(--mh-text-rgb), 0.08)",
@@ -452,8 +461,9 @@ export default function Services() {
             >
               <span className="block text-[13px] font-[800]">{filter.label}</span>
               <span className="mt-1 block text-[11.5px] font-[500] opacity-65">{filter.description}</span>
-            </button>
-          ))}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-[20px] lg:gap-[24px]">

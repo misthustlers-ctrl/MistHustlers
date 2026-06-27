@@ -49,7 +49,7 @@ export default function StarRating({
       </div>
       <span className="text-sm text-abyssal-ink/55 font-body">{display}/5</span>
       <details className="group relative">
-        <summary className="cursor-pointer list-none rounded-full border border-abyssal-ink/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-abyssal-ink/55 outline-none transition-colors hover:bg-abyssal-ink hover:text-white focus-visible:ring-2 focus-visible:ring-digital-orange font-body">
+        <summary className="flex min-h-11 cursor-pointer list-none items-center rounded-full border border-abyssal-ink/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-abyssal-ink/55 outline-none transition-colors hover:bg-abyssal-ink hover:text-white focus-visible:ring-2 focus-visible:ring-digital-orange font-body">
           {label}
         </summary>
         <div className="absolute bottom-full left-0 z-20 mb-2 w-64 rounded-2xl bg-abyssal-ink p-3 text-xs leading-relaxed text-white shadow-xl font-body">

@@ -1,5 +1,21 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("/fonts/cormorant-garamond-latin-700.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: optional;
+}
+
+@font-face {
+  font-family: "Libre Baskerville";
+  src: url("/fonts/libre-baskerville-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: optional;
+}
+
 @theme {
   --color-basalt-canvas: #e2e2df;
   --color-ash-white: #f7f6f2;
@@ -8,8 +24,8 @@
   --color-cyber-violet: #524ae9;
   --color-pixel-glare: #f5f28e;
 
-  --font-display: 'Cormorant Garamond', 'Bebas Neue', serif;
-  --font-body: 'Libre Baskerville', 'DM Sans', serif;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Libre Baskerville', Georgia, serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   --radius-card: 40px;
@@ -25,8 +41,8 @@
   --mh-cta: #fc5000;
   --mh-accent: #524ae9;
   --mh-secondary: #524ae9;
-  --font-body: "Libre Baskerville", "DM Sans", serif;
-  --font-heading: "Libre Baskerville", "PP Neue Corp Compact Ultrabold", serif;
+  --font-body: "Libre Baskerville", Georgia, serif;
+  --font-heading: "Libre Baskerville", Georgia, serif;
 }
 
 /* RGB channel vars for rgba() usage in inline styles */
@@ -76,7 +92,7 @@ html {
 }
 
 body {
-  font-family: 'Libre Baskerville', 'DM Sans', serif;
+  font-family: 'Libre Baskerville', Georgia, serif;
   color: #070607;
   background-color: #e2e2df;
   -webkit-font-smoothing: antialiased;
@@ -84,6 +100,7 @@ body {
   margin: 0;
   min-width: 320px;
   overflow-x: hidden;
+  font-synthesis: none;
 }
 
 * {
@@ -114,8 +131,41 @@ p, h1, h2, h3, h4, h5, h6, a, button, span, label {
   }
 }
 
-button, input, textarea {
+button, input, select, textarea {
   font: inherit;
+}
+
+input, select, textarea {
+  font-size: 16px;
+}
+
+button, a, input, select, textarea, summary {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible, a:focus-visible, summary:focus-visible {
+  outline: 2px solid #fc5000;
+  outline-offset: 3px;
+}
+
+.mobile-tab-shell {
+  position: relative;
+  min-width: 0;
+}
+
+.mobile-tab-row {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: inline proximity;
+}
+
+.mobile-tab-row::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-tab-row > * {
+  scroll-snap-align: start;
 }
 
 #root {
@@ -506,6 +556,14 @@ button, input, textarea {
 .demo-preview-frame {
   display: block;
   background: #09090b;
+  height: calc(100dvh - 64px);
+}
+
+@media (min-width: 768px) {
+  .demo-preview-frame {
+    height: calc(100dvh - 116px);
+    min-height: 560px;
+  }
 }
 
 .hero-cinematic {
@@ -1091,7 +1149,27 @@ button, input, textarea {
 
 @media (max-width: 767px) {
   body {
-    padding-bottom: 68px;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  }
+
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+
+  .mobile-tab-shell::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 4px;
+    width: 28px;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, var(--mh-canvas));
+  }
+
+  .mobile-tab-row {
+    margin-inline: -16px;
+    padding-inline: 16px 36px;
   }
 
   .hero-product-visual {
@@ -1104,6 +1182,26 @@ button, input, textarea {
 
   .hero-product-chip {
     display: none;
+  }
+
+  .career-atmosphere {
+    display: none;
+  }
+
+  .services-cinematic-hero::before,
+  .services-cinematic-copy,
+  .services-cinematic-badge,
+  .services-title-line,
+  .services-cinematic-subcopy,
+  .services-cinematic-actions,
+  .services-cinematic-visual,
+  .services-primary-cta::after,
+  .services-secondary-cta {
+    animation: none;
+  }
+
+  .service-orbit-label-card {
+    backdrop-filter: none;
   }
 }
 
@@ -1175,6 +1273,11 @@ button, input, textarea {
   .mh-card:hover,
   .footer-link:hover {
     transform: none;
+  }
+
+  .magnetic-btn:hover {
+    transform: none;
+    box-shadow: none;
   }
 }
 

@@ -80,12 +80,12 @@ export default function Contact() {
                 </a>
               </div>
 
-              <div className="rounded-[28px] sm:rounded-[40px] overflow-hidden border border-abyssal-ink/5 h-full min-h-[300px]">
+              <div className="h-full min-h-[240px] overflow-hidden rounded-[28px] border border-abyssal-ink/5 sm:min-h-[300px] sm:rounded-[40px]">
                 <iframe
                   src={c.mapEmbedUrl}
                   width="100%"
                   height="100%"
-                  style={{ border: 0, minHeight: "300px" }}
+                  style={{ border: 0, minHeight: "inherit" }}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"

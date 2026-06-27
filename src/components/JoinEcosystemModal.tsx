@@ -1,8 +1,23 @@
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect } from "react";
 
 export default function JoinEcosystemModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [isOpen, onClose]);
 
   const handleHire = () => {
     onClose();
@@ -19,6 +34,9 @@ export default function JoinEcosystemModal({ isOpen, onClose }: { isOpen: boolea
       {isOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="ecosystem-dialog-title"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -30,17 +48,20 @@ export default function JoinEcosystemModal({ isOpen, onClose }: { isOpen: boolea
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
-            className="relative max-h-[calc(100vh-32px)] w-full max-w-lg overflow-y-auto rounded-[28px] border border-abyssal-ink/5 bg-ash-white p-6 text-center shadow-2xl sm:rounded-[40px] sm:p-8 md:p-12"
+            className="relative max-h-[calc(100dvh-24px)] w-full max-w-lg overflow-y-auto overscroll-contain rounded-[28px] border border-abyssal-ink/5 bg-ash-white p-5 text-center shadow-2xl sm:rounded-[40px] sm:p-8 md:p-12"
           >
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 flex h-9 w-9 items-center justify-center rounded-full text-abyssal-ink/40 hover:text-abyssal-ink hover:bg-abyssal-ink/5 transition-colors cursor-pointer"
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <line x1="2" y1="2" x2="14" y2="14" />
-                <line x1="14" y1="2" x2="2" y2="14" />
-              </svg>
-            </button>
+            <div className="sticky top-0 z-10 -mb-11 flex justify-end">
+              <button
+                onClick={onClose}
+                aria-label="Close dialog"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-ash-white text-abyssal-ink/55 shadow-sm transition-colors hover:bg-abyssal-ink hover:text-white cursor-pointer"
+              >
+                <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                  <line x1="2" y1="2" x2="14" y2="14" />
+                  <line x1="14" y1="2" x2="2" y2="14" />
+                </svg>
+              </button>
+            </div>
 
             <div className="mb-6">
               <span className="font-display text-3xl sm:text-4xl tracking-[0.02em] text-abyssal-ink">
@@ -48,7 +69,7 @@ export default function JoinEcosystemModal({ isOpen, onClose }: { isOpen: boolea
               </span>
             </div>
 
-            <h2 className="font-body font-bold text-2xl sm:text-3xl tracking-[0.02em] text-abyssal-ink mb-3">
+            <h2 id="ecosystem-dialog-title" className="font-body font-bold text-2xl sm:text-3xl tracking-[0.02em] text-abyssal-ink mb-3">
               What brings you here?
             </h2>
             <p className="text-abyssal-ink/60 mb-8 font-body text-sm">

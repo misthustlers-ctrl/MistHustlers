@@ -348,6 +348,13 @@ select.form-control {
   transform: translateX(40px);
 }
 
+@media (max-width: 899px) {
+  .reveal-left,
+  .reveal-right {
+    transform: translateY(24px);
+  }
+}
+
 .reveal-scale {
   transform: scale(0.96);
 }
