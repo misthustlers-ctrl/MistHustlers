@@ -2316,17 +2316,21 @@ const App: React.FC = () => {
         <div className="bg-[#111] border border-white/10 rounded-2xl p-6">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="text-sm font-semibold">Team Members</h3>
-            <button onClick={() => upd(['members'], [...(c.members || []), { name: 'New Member', role: 'Role', initials: 'NM', bio: '' }])} className="rounded-lg border border-white/15 px-3 py-1.5 text-xs hover:bg-white hover:text-black">Add Member</button>
+            <button onClick={() => upd(['members'], [...(c.members || []), { name: 'New Member', role: 'Role', initials: 'NM', imageUrl: '', bio: '' }])} className="rounded-lg border border-white/15 px-3 py-1.5 text-xs hover:bg-white hover:text-black">Add Member</button>
           </div>
           <div className="mb-3"><label className="block text-[11px] text-white/50 mb-1">Section Title</label><input className="field text-sm" value={c.membersTitle || ''} onChange={e => upd(['membersTitle'], e.target.value)} /></div>
           <div className="space-y-3">
             {(c.members || []).map((member: any, idx: number) => (
               <div key={idx} className="rounded-xl bg-white/5 p-4">
-                <div className="mb-3 grid grid-cols-[1fr_1fr_80px_auto] gap-2">
+                <div className="mb-3 grid gap-2 md:grid-cols-[1fr_1fr_80px_auto]">
                   <input className="field text-sm" placeholder="Name" value={member.name || ''} onChange={e => upd(['members', String(idx), 'name'], e.target.value)} />
                   <input className="field text-sm" placeholder="Role" value={member.role || ''} onChange={e => upd(['members', String(idx), 'role'], e.target.value)} />
                   <input className="field text-sm" placeholder="Initials" value={member.initials || ''} onChange={e => upd(['members', String(idx), 'initials'], e.target.value)} />
                   <button onClick={() => upd(['members'], (c.members || []).filter((_: any, i: number) => i !== idx))} className="rounded-lg border border-red-400/30 px-2 text-xs text-red-300 hover:bg-red-500 hover:text-white">Remove</button>
+                </div>
+                <div className="mb-3">
+                  <label className="block text-[11px] text-white/50 mb-1">Member Photo</label>
+                  <ImageUpload currentUrl={member.imageUrl || ''} onUploaded={(url) => upd(['members', String(idx), 'imageUrl'], url)} />
                 </div>
                 <textarea className="field h-20 resize-y text-sm" placeholder="Bio" value={member.bio || ''} onChange={e => upd(['members', String(idx), 'bio'], e.target.value)} />
               </div>

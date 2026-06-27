@@ -15,6 +15,7 @@ const ABOUT_DEFAULTS = {
       name: "Naveen Salve",
       role: "Founder, MistHustlers",
       initials: "NS",
+      imageUrl: "",
       bio: "Naveen is a developer and entrepreneur based in Indore. He founded MistHustlers to bridge the gap between ambitious builders and real-world execution.",
     },
   ],
@@ -75,8 +76,19 @@ export default function About() {
                   <div className="grid sm:grid-cols-2 gap-4">
                     {(c.members || []).map((member) => (
                       <div key={member.name} className="bg-ash-white rounded-[28px] p-6 border border-abyssal-ink/5 h-full">
-                        <div className="w-16 h-16 rounded-full bg-abyssal-ink flex items-center justify-center mb-5">
-                          <span className="font-display text-2xl text-white">{member.initials || member.name?.slice(0, 2)}</span>
+                        <div className="w-20 h-20 rounded-full bg-abyssal-ink flex items-center justify-center mb-5 overflow-hidden ring-4 ring-white shadow-sm">
+                          {member.imageUrl ? (
+                            <img
+                              src={member.imageUrl}
+                              alt={`${member.name || "Team member"} portrait`}
+                              width="80"
+                              height="80"
+                              loading="lazy"
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <span className="font-display text-2xl text-white">{member.initials || member.name?.slice(0, 2)}</span>
+                          )}
                         </div>
                         <h3 className="font-body font-bold text-xl tracking-[0.02em] text-abyssal-ink mb-1">{member.name}</h3>
                         <p className="text-sm text-abyssal-ink/50 font-semibold mb-4">{member.role}</p>
