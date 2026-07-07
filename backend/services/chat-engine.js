@@ -301,6 +301,40 @@ function createStateData(existing = {}) {
   };
 }
 
+function absorbStructuredDetails(stateData, text) {
+  const value = String(text || "").trim();
+  const lower = value.toLowerCase();
+  const service = detectServiceChoice(value);
+  if (service) {
+    stateData.serviceInterest ||= service;
+    stateData.selectedService ||= service;
+  }
+  const budget = value.match(/(?:budget|₹|rs\.?|inr)\s*(?:is|hai|around|approx(?:imately)?)?\s*([₹\s\d,.]+(?:k|lakh|lac)?)/i)
+    || value.match(/([₹]?\s*\d[\d,.]*\s*(?:k|lakh|lac))\s*(?:budget|tak|around)?/i);
+  if (budget) stateData.budget ||= budget[0].trim();
+  const timeline = value.match(/(?:within|in|timeline|delivery|complete|ready)\s*(?:is|hai|chahiye)?\s*(\d+\s*(?:day|days|week|weeks|month|months|din|hafte|mahine))/i)
+    || value.match(/\b\d+\s*(?:day|days|week|weeks|month|months|din|hafte|mahine)\b/i)
+    || value.match(/\b(asap|urgent|jaldi|immediately)\b/i);
+  if (timeline) stateData.timeline ||= timeline[0].trim();
+  if (/\b(no website|website nahi|site nahi|only instagram|sirf instagram|only social)\b/i.test(lower)) stateData.hasWebsite ||= lower.includes("instagram") || lower.includes("social") ? "social" : "no";
+  else if (/\b(outdated|old website|purani website|redesign)\b/i.test(lower)) stateData.hasWebsite ||= "outdated";
+  else if (/\b(have a website|website hai|existing website|current website)\b/i.test(lower)) stateData.hasWebsite ||= "yes";
+  const featurePatterns = [
+    ["booking", /\b(booking|appointment|reservation)\b/i], ["payment gateway", /\b(payment|checkout|pay online)\b/i],
+    ["admin dashboard", /\b(admin|dashboard|crm)\b/i], ["user login", /\b(login|signup|account|member)\b/i],
+    ["WhatsApp", /\bwhatsapp\b/i], ["gallery", /\b(gallery|portfolio)\b/i], ["automation", /\b(automation|automate|workflow)\b/i],
+  ];
+  const found = featurePatterns.filter(([, pattern]) => pattern.test(value)).map(([name]) => name);
+  if (found.length) {
+    const existing = String(stateData.features || "").split(",").map((item) => item.trim()).filter(Boolean);
+    stateData.features = [...new Set([...existing, ...found])].join(", ");
+  }
+  if (/\b(booking|appointment|reservation)\b/i.test(value)) stateData.needsBooking ||= "yes";
+  if (/\b(payment|checkout|pay online)\b/i.test(value)) stateData.needsPayment ||= "yes";
+  if (/\b(i am the owner|main owner|decision maker|final decision)\b/i.test(value)) stateData.decisionMaker ||= "yes";
+  return stateData;
+}
+
 const QUICK_ACTIONS = [
   { id: "website", label: "Website", labelHi: "वेबसाइट", labelHiEn: "Website" },
   { id: "automation", label: "Automation", labelHi: "ऑटोमेशन", labelHiEn: "Automation" },
@@ -612,6 +646,7 @@ async function handleMessage(session, message, config) {
   const state = session.state || STATES.GREETING;
   const stateData = createStateData(session.stateData || {});
   const text = safeText(message);
+  absorbStructuredDetails(stateData, text);
 
   let detectedLanguage = detectLanguage(text);
   if (session.languageSource === "explicit") detectedLanguage = session.language;
@@ -1195,5 +1230,5 @@ async function handleContactInput(session, stateData, text, lang) {
 export {
   handleMessage, detectLanguage, generateToken, calculateLeadScore, buildWhatsAppSummary,
   getGreeting, getQuickActions, getServicePlans, getFAQs, getContactInfo, getKnowledgeByCategory,
-  STATES, createStateData, buildResponse,
+  STATES, createStateData, absorbStructuredDetails, buildResponse,
 };

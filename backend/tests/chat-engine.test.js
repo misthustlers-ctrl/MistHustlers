@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildWhatsAppSummary, calculateLeadScore, detectLanguage } from "../services/chat-engine.js";
+import { absorbStructuredDetails, buildWhatsAppSummary, calculateLeadScore, createStateData, detectLanguage } from "../services/chat-engine.js";
 import { decryptApiKey, encryptApiKey, extractOutputText, generateGroundedConversation, redactPersonalData } from "../services/generative-chat.js";
 import { extractKnowledgeFromContent } from "../services/knowledge-sync.js";
 
@@ -8,6 +8,16 @@ test("detects English, Hinglish, and Hindi", () => {
   assert.equal(detectLanguage("I need a website for my clinic"), "en");
   assert.equal(detectLanguage("Meko website banana hai"), "hiEn");
   assert.equal(detectLanguage("मुझे वेबसाइट बनानी है"), "hi");
+});
+
+test("captures multiple requirements from one client message", () => {
+  const state = absorbStructuredDetails(createStateData(), "Mujhe clinic website chahiye with booking, payment and admin dashboard. Budget ₹40,000 hai and 4 weeks me ready chahiye.");
+  assert.equal(state.serviceInterest, "website");
+  assert.match(state.features, /booking/);
+  assert.match(state.features, /payment gateway/);
+  assert.match(state.features, /admin dashboard/);
+  assert.match(state.budget, /40,000/);
+  assert.match(state.timeline, /4 weeks/);
 });
 
 test("lead score remains within public scoring bounds", () => {
@@ -70,6 +80,8 @@ test("OpenCode request uses selected model and conversation-only instructions", 
     assert.match(requestBody.instructions, /Active role: sales_consultant/);
     assert.match(requestBody.instructions, /LISTENING PRIORITY/);
     assert.match(requestBody.instructions, /answer it directly first/i);
+    assert.match(requestBody.instructions, /Indicative India market range/i);
+    assert.match(requestBody.instructions, /Never ask again/i);
     assert.match(requestBody.instructions, /Optional workflow suggestion/);
   } finally {
     global.fetch = originalFetch;
