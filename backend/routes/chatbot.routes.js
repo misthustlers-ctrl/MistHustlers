@@ -15,6 +15,7 @@ import { requireAdmin } from "../middleware/admin-auth.middleware.js";
 import { auditLog } from "../middleware/audit.middleware.js";
 import prisma from "../prisma/client.js";
 import { encryptApiKey, isOpenCodeConfigured, OPENCODE_MODELS, testOpenCodeConnection } from "../services/generative-chat.js";
+import { publicAiSettings, readAiSettings, saveAiSettings } from "../services/chatbot-ai-settings.js";
 
 const router = Router();
 
@@ -85,6 +86,18 @@ router.delete("/session/:token", deleteSession);
 
 router.post("/admin/sync", requireAdmin, auditLog, triggerKnowledgeSync);
 
+router.get("/admin/ai-settings", requireAdmin, async (_req, res, next) => {
+  try { res.json({ success: true, settings: publicAiSettings(await readAiSettings()) }); }
+  catch (err) { next(err); }
+});
+
+router.put("/admin/ai-settings", requireAdmin, auditLog, async (req, res, next) => {
+  try {
+    const settings = await saveAiSettings(req.body || {});
+    res.json({ success: true, settings: publicAiSettings(settings) });
+  } catch (err) { next(err); }
+});
+
 router.get("/admin/config", requireAdmin, async (req, res, next) => {
   try {
     let config = await prisma.chatbotConfig.findFirst();
@@ -109,7 +122,7 @@ router.get("/admin/overview", requireAdmin, async (_req, res, next) => {
 
 router.post("/admin/test-connection", requireAdmin, async (req, res, next) => {
   try {
-    const config = await prisma.chatbotConfig.findFirst() || {};
+    const config = await readAiSettings();
     const model = OPENCODE_MODELS.includes(req.body?.opencodeModel) ? req.body.opencodeModel : config.opencodeModel;
     const result = await testOpenCodeConnection({ ...config, opencodeModel: model }, req.body?.opencodeApiKey);
     res.json({ success: true, model: result.model, message: "AI API connection successful" });

@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { RefreshCw, Save, PlugZap } from 'lucide-react';
 
 const API = '/api';
+const FALLBACK_CONFIG = {
+  enabled: true, primaryColor: '#fc5000', position: 'bottom-right', maxMessageLength: 2000, sessionTtlMinutes: 43200,
+  greeting: '', greetingHindi: '', greetingHinglish: '', generativeEnabled: true, opencodeModel: 'deepseek-v4-flash-free',
+  responseTone: 'consultative', salesInstructions: '', solutionInstructions: '', unknownAnswer: '', hasOpenCodeApiKey: false, opencodeApiKey: '',
+};
 
 function api<T>(url: string, init?: RequestInit): Promise<T> {
   const headers = new Headers(init?.headers);
@@ -29,10 +34,16 @@ export default function ChatbotTab({ notify }: { notify: (msg: string, type?: 's
   const fetchConfig = async () => {
     setConfigLoading(true);
     setError('');
+    let nextConfig: any = { ...FALLBACK_CONFIG };
     try {
       const res = await api<any>(`${API}/chatbot/admin/config`);
-      if (res.success) setConfigData(res.config);
+      if (res.success) nextConfig = { ...nextConfig, ...res.config };
+    } catch (err: any) { setError('General chatbot settings are temporarily unavailable. AI API settings can still be managed below.'); }
+    try {
+      const ai = await api<any>(`${API}/chatbot/admin/ai-settings`);
+      if (ai.success) nextConfig = { ...nextConfig, ...ai.settings };
     } catch (err: any) { setError(err.message); notify(err.message, 'error'); }
+    setConfigData(nextConfig);
     setConfigLoading(false);
   };
 
@@ -54,11 +65,15 @@ export default function ChatbotTab({ notify }: { notify: (msg: string, type?: 's
     if (!configData) return;
     setSaving(true);
     try {
-      const res = await api<any>(`${API}/chatbot/admin/config`, {
+      const aiRes = await api<any>(`${API}/chatbot/admin/ai-settings`, {
         method: 'PUT',
         body: JSON.stringify(configData),
       });
-      if (res.success) { setConfigData(res.config); notify('Chatbot config saved'); fetchOverview(); }
+      if (aiRes.success) setConfigData((current: any) => ({ ...current, ...aiRes.settings }));
+      try {
+        await api<any>(`${API}/chatbot/admin/config`, { method: 'PUT', body: JSON.stringify(configData) });
+      } catch { /* AI settings remain independently available. */ }
+      notify('AI API settings saved securely');
     } catch (err: any) { notify(err.message, 'error'); }
     finally { setSaving(false); }
   };

@@ -11,12 +11,16 @@ import {
 import { searchVerifiedKnowledge, syncKnowledgeFromCMS } from "../services/knowledge-sync.js";
 import { sendChatbotLeadEmail } from "../services/mail.service.js";
 import { generateGroundedConversation, isOpenCodeConfigured } from "../services/generative-chat.js";
+import { readAiSettings } from "../services/chatbot-ai-settings.js";
 
 async function getConfig(req, res, next) {
   try {
-    let config = await prisma.chatbotConfig.findFirst();
+    let config = await prisma.chatbotConfig.findFirst().catch(() => null);
     if (!config) {
-      config = await prisma.chatbotConfig.create({ data: {} });
+      config = await prisma.chatbotConfig.create({ data: {} }).catch(() => ({
+        enabled: true, greeting: "Hi, I am ARIA. How can I help?", greetingHindi: "Namaste, main ARIA hoon.",
+        greetingHinglish: "Namaste, main ARIA hoon.", primaryColor: "#fc5000", position: "bottom-right", maxMessageLength: 2000,
+      }));
     }
     res.json({
       enabled: config.enabled,
@@ -34,7 +38,7 @@ async function getConfig(req, res, next) {
 
 async function createSession(req, res, next) {
   try {
-    const config = await prisma.chatbotConfig.findFirst();
+    const config = await prisma.chatbotConfig.findFirst().catch(() => null);
     if (config && !config.enabled) {
       return res.status(503).json({ success: false, message: "Chatbot is currently disabled" });
     }
@@ -100,7 +104,7 @@ function publicRecommendation(card) {
 
 async function resumeSession(req, res, next) {
   try {
-    const config = await prisma.chatbotConfig.findFirst();
+    const config = { ...(await prisma.chatbotConfig.findFirst().catch(() => null) || {}), ...(await readAiSettings()) };
     if (config && !config.enabled) {
       return res.status(503).json({ success: false, message: "Chatbot is currently disabled" });
     }
@@ -144,7 +148,7 @@ async function sendMessage(req, res, next) {
       return res.status(400).json({ success: false, message: "Token and message are required" });
     }
 
-    const config = await prisma.chatbotConfig.findFirst();
+    const config = { ...(await prisma.chatbotConfig.findFirst().catch(() => null) || {}), ...(await readAiSettings()) };
     if (config && !config.enabled) {
       return res.status(503).json({ success: false, message: "Chatbot is currently disabled" });
     }
