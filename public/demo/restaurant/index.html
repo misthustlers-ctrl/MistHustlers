@@ -1,318 +1,383 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Restaurant / Cafe Website Demo - MistHustlers Indore</title>
-  <meta name="description" content="Premium restaurant and cafe landing page demo for Indore. Appetizing menu, reservations, chef specials, and gallery. Built by MistHustlers.">
-  <link rel="canonical" href="https://www.misthustlers.in/demo/restaurant/">
-  <meta name="robots" content="noindex, follow">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%237C3AED'/%3E%3Ctext x='50' y='65' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3EM%3C/text%3E%3C/svg%3E">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&family=Satisfy&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/shared.css">
-  <style>
-    :root {
-      --rest-amber: #F5A623;
-      --rest-amber-light: #FBC668;
-      --rest-espresso: #1A0F00;
-      --rest-cream: #FFF8F0;
-      --rest-brown: #3D2B00;
-    }
-    body { background: var(--rest-espresso); color: var(--rest-cream); font-family: 'Lato', sans-serif; }
-    h1, h2, h3 { font-family: 'Playfair Display', serif; }
-    .script { font-family: 'Satisfy', cursive; }
-    
-.hero {
-      min-height: 92vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; padding: 140px 0 80px; overflow: hidden;
-    }
-    .hero::before { content: ''; position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&q=80') center/cover; opacity: 0.35; z-index: 0; }
-    .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(26,15,0,0.6), rgba(26,15,0,0.95)); z-index: 0; }
-    .hero .container { position: relative; z-index: 1; }
-    .hero h1 { font-size: clamp(2.8rem, 7vw, 5.5rem); line-height: 1; margin-bottom: 12px; }
-    .hero .cuisine { font-family: 'Satisfy', cursive; font-size: 1.6rem; color: var(--rest-amber); margin-bottom: 32px; display: block; }
-    .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-    .btn-amber { background: var(--rest-amber); color: var(--rest-espresso); font-weight: 700; }
-    .btn-amber:hover { background: var(--rest-amber-light); box-shadow: 0 12px 32px rgba(245,166,35,0.3); }
-    .btn-outline { background: transparent; color: var(--rest-cream); border: 1px solid rgba(255,248,240,0.4); font-weight: 700; }
-    .btn-outline:hover { border-color: var(--rest-cream); background: rgba(255,255,255,0.08); }
 
-    .featured-section { background: var(--rest-brown); padding: 96px 0; }
-    .section-title { color: var(--rest-cream); }
-    .section-subtitle { color: rgba(255,248,240,0.7); }
-    .dishes-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
-    @media (min-width: 768px) { .dishes-grid { grid-template-columns: repeat(3, 1fr); } }
-    .dish-card { background: var(--rest-espresso); border-radius: 16px; overflow: hidden; border: 1px solid rgba(245,166,35,0.2); transition: transform 0.3s var(--ease-out), box-shadow 0.3s; }
-    .dish-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(245,166,35,0.15); }
-    .dish-image { aspect-ratio: 4 / 3; overflow: hidden; }
-    .dish-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-    .dish-card:hover .dish-image img { transform: scale(1.08); }
-    .dish-info { padding: 24px; }
-    .dish-info h3 { font-size: 1.4rem; margin-bottom: 6px; }
-    .dish-info p { font-size: 0.95rem; color: rgba(255,248,240,0.7); margin-bottom: 14px; max-width: 100%; }
-    .dish-info .price { font-size: 1.3rem; color: var(--rest-amber); font-weight: 700; margin-bottom: 14px; }
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ember &amp; Oak | Slow Food &amp; Warm Light</title>
+<script src="/demo/tailwindcss.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-dim": "#16130c",
+                    "secondary-container": "#853a00",
+                    "surface": "#16130c",
+                    "primary-fixed": "#ece0d8",
+                    "inverse-surface": "#eae1d5",
+                    "secondary-fixed": "#ffdbc9",
+                    "inverse-on-surface": "#343027",
+                    "on-primary": "#352f2a",
+                    "on-tertiary-container": "#a07b38",
+                    "error-container": "#93000a",
+                    "on-tertiary-fixed": "#271900",
+                    "on-secondary": "#532200",
+                    "tertiary-fixed-dim": "#ebc076",
+                    "on-surface": "#eae1d5",
+                    "on-secondary-container": "#ffb184",
+                    "surface-container-high": "#2e2921",
+                    "on-error-container": "#ffdad6",
+                    "tertiary-container": "#231600",
+                    "on-primary-container": "#888078",
+                    "secondary-fixed-dim": "#ffb68e",
+                    "secondary": "#ffb68e",
+                    "tertiary-fixed": "#ffdea9",
+                    "on-secondary-fixed": "#331200",
+                    "primary-container": "#1c1712",
+                    "surface-variant": "#39342c",
+                    "on-primary-fixed": "#201b16",
+                    "on-secondary-fixed-variant": "#763300",
+                    "tertiary": "#ebc076",
+                    "surface-tint": "#cfc5bc",
+                    "surface-container-lowest": "#110e07",
+                    "on-tertiary-fixed-variant": "#5e4100",
+                    "on-background": "#eae1d5",
+                    "outline-variant": "#4c463f",
+                    "error": "#ffb4ab",
+                    "background": "#16130c",
+                    "surface-container-highest": "#39342c",
+                    "primary": "#cfc5bc",
+                    "on-surface-variant": "#cfc5bc",
+                    "surface-bright": "#3d3930",
+                    "primary-fixed-dim": "#cfc5bc",
+                    "on-error": "#690005",
+                    "surface-container-low": "#1f1b13",
+                    "outline": "#988f88",
+                    "on-tertiary": "#422d00",
+                    "inverse-primary": "#655d56",
+                    "surface-container": "#231f17",
+                    "on-primary-fixed-variant": "#4c463f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "64px",
+                    "gutter": "24px",
+                    "margin-mobile": "20px",
+                    "unit": "8px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Fraunces"],
+                    "accent-italic": ["Fraunces"],
+                    "display-lg": ["Fraunces"],
+                    "headline-lg": ["Fraunces"],
+                    "body-lg": ["Manrope"],
+                    "display-lg-mobile": ["Fraunces"],
+                    "label-md": ["Manrope"],
+                    "body-md": ["Manrope"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                    "accent-italic": ["20px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                    "display-lg": ["56px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "display-lg-mobile": ["40px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            background-color: #0f0b08; /* Dark espresso base */
+            color: #eae1d5;
+            overflow-x: hidden;
+        }
 
-    .menu-section { background: var(--rest-espresso); padding: 96px 0; }
-    .accordion { display: flex; flex-direction: column; gap: 12px; max-width: 800px; margin: 0 auto; }
-    .accordion-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(245,166,35,0.15); border-radius: 16px; overflow: hidden; }
-    .accordion-header { padding: 18px 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-family: 'Playfair Display', serif; font-size: 1.3rem; transition: background 0.2s; }
-    .accordion-header:hover { background: rgba(245,166,35,0.08); }
-    .accordion-icon { font-size: 1.2rem; transition: transform 0.3s; }
-    .accordion-item.open .accordion-icon { transform: rotate(180deg); }
-    .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
-    .accordion-item.open .accordion-body { max-height: 500px; }
-    .accordion-content { padding: 0 24px 20px; }
-    .menu-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .menu-item:last-child { border-bottom: none; }
-    .menu-item .name { font-weight: 600; }
-    .menu-item small { color: rgba(255,248,240,0.6); display: block; }
-    .menu-item .price { color: var(--rest-amber); font-weight: 700; }
+        .warm-glass {
+            background: rgba(255, 244, 230, 0.06);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(201, 161, 90, 0.2);
+        }
 
-    .offer-strip { background: var(--rest-amber); color: var(--rest-espresso); padding: 20px 0; text-align: center; font-weight: 700; font-size: 1.1rem; }
+        .warm-glass-strong {
+            background: rgba(255, 244, 230, 0.09);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(201, 161, 90, 0.4);
+            box-shadow: 0 40px 40px -10px rgba(22, 19, 12, 0.5);
+        }
 
-    .chef-section { background: var(--rest-brown); padding: 96px 0; }
-    .chef-grid { display: grid; gap: 40px; align-items: center; }
-    @media (min-width: 900px) { .chef-grid { grid-template-columns: 1fr 1fr; } }
-    .chef-image { border-radius: 24px; overflow: hidden; aspect-ratio: 4 / 3; box-shadow: 0 24px 60px rgba(0,0,0,0.3); }
-    .chef-image img { width: 100%; height: 100%; object-fit: cover; }
-    .chef-content h2 { margin-bottom: 16px; }
-    .chef-content p { opacity: 0.8; margin-bottom: 16px; }
-    .chef-signature { font-family: 'Satisfy', cursive; font-size: 1.8rem; color: var(--rest-amber); margin-top: 16px; }
+        .brass-border {
+            border: 1px solid;
+            border-image-source: linear-gradient(to bottom right, #c9a15a, transparent);
+            border-image-slice: 1;
+        }
 
-    .reservation-section { background: var(--rest-espresso); padding: 96px 0; }
-    .reservation-form { max-width: 720px; margin: 0 auto; background: rgba(255,255,255,0.04); border-radius: 24px; padding: 40px; border: 1px solid rgba(245,166,35,0.25); }
-    .submit-btn { width: 100%; background: var(--rest-amber); color: var(--rest-espresso); font-weight: 700; padding: 16px; border-radius: 16px; cursor: pointer; }
-    .submit-btn:hover { opacity: 0.9; }
-    .form-success { background: rgba(245,166,35,0.15); color: var(--rest-amber); border: 1px solid rgba(245,166,35,0.3); }
-    .form-note a { color: var(--rest-amber); }
-    .order-links { display: flex; gap: 12px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
-    .order-link { padding: 10px 20px; border-radius: 999px; background: rgba(255,255,255,0.1); font-weight: 600; transition: background 0.2s; }
-    .order-link:hover { background: rgba(255,255,255,0.2); }
+        .fading-image-container img {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
 
-    .gallery-section { background: var(--rest-brown); padding: 96px 0; }
-    .gallery-grid { display: grid; gap: 16px; grid-template-columns: repeat(2, 1fr); }
-    @media (min-width: 900px) { .gallery-grid { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 200px; } }
-    .gallery-item { border-radius: 16px; overflow: hidden; aspect-ratio: 1 / 1; }
-    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-    .gallery-item:hover img { transform: scale(1.08); }
-    .gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
-    @media (max-width: 899px) { .gallery-item:nth-child(1) { grid-column: span 1; grid-row: span 1; } }
+        .fading-image-container img.active {
+            opacity: 1;
+        }
 
-    .social-proof { background: rgba(255,255,255,0.04); padding: 40px 0; border-top: 1px solid rgba(245,166,35,0.15); border-bottom: 1px solid rgba(245,166,35,0.15); }
-    .social-grid { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; }
-    .social-item { text-align: center; }
-    .social-item h4 { font-size: 2rem; color: var(--rest-amber); margin-bottom: 4px; }
-    .social-item p { font-size: 0.9rem; opacity: 0.8; max-width: 100%; }
+        .scroll-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scroll-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
 
-    .location-section { background: var(--rest-espresso); padding: 96px 0; }
-    .location-grid { display: grid; gap: 32px; align-items: center; }
-    @media (min-width: 900px) { .location-grid { grid-template-columns: 1fr 1fr; } }
-    .map-box { border-radius: 24px; overflow: hidden; aspect-ratio: 4 / 3; box-shadow: var(--shadow-md); }
-    .map-box img { width: 100%; height: 100%; object-fit: cover; }
-    .timing-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-    .timing-table td { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
-    .timing-table td:last-child { text-align: right; }
-
-    .footer-note { text-align: center; padding: 40px 0; background: #120a00; color: rgba(255,248,240,0.4); font-size: 0.9rem; }
-.sticky-footer { background: rgba(18,10,0,0.95); border-top: 1px solid rgba(245,166,35,0.25); }
-    .sticky-footer .btn-primary { background: var(--rest-amber); color: var(--rest-espresso); }
-    .sticky-footer .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
-  </style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
 </head>
-<body>
-<section class="hero">
-    <div class="container">
-      <h1 class="reveal">The Copper Spoon</h1>
-      <span class="cuisine reveal">Fine Indian & Continental Cuisine</span>
-      <div class="hero-ctas reveal">
-        <a href="#menu" class="btn btn-lg btn-amber no-arrow" data-track="restaurant_hero_menu">View Menu</a>
-        <a href="#reservation" class="btn btn-lg btn-outline no-arrow" data-track="restaurant_hero_reserve">Reserve a Table</a>
-      </div>
-    </div>
-  </section>
+<body class="font-body-md text-body-md selection:bg-tertiary/30 selection:text-tertiary">
+<!-- TopNavBar: Execution of Shared Component -->
+<header class="fixed top-4 left-1/2 -translate-x-1/2 w-[90%] max-w-7xl rounded-full z-50 flex justify-between items-center px-8 py-3 bg-surface/10 backdrop-blur-md border border-tertiary/20 shadow-2xl shadow-surface-dim/50">
+<div class="font-headline-lg text-headline-lg font-bold text-tertiary">Ember &amp; Oak</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="font-label-md text-label-md text-tertiary font-bold border-b border-tertiary pb-1" href="#">Home</a>
+<a class="font-label-md text-label-md text-on-surface/80 hover:text-tertiary transition-colors" href="menu_ember_oak/code.html">Menu</a>
+<a class="font-label-md text-label-md text-on-surface/80 hover:text-tertiary transition-colors" href="our_story_ember_oak/code.html">Our Story</a>
+<a class="font-label-md text-label-md text-on-surface/80 hover:text-tertiary transition-colors" href="gallery_ember_oak/code.html">Gallery</a>
+</nav>
+<a href="reservations_ember_oak/code.html"><button class="bg-secondary-container text-on-secondary px-6 py-2 rounded-full font-label-md text-label-md hover:bg-secondary-container/80 transition-all scale-95 active:scale-90">
+            Book Table
+        </button></a>
+</header>
+<!-- Hero Section -->
+<section class="relative h-screen w-full flex items-center justify-center overflow-hidden">
+<div class="fading-image-container absolute inset-0 z-0 after:content-[''] after:absolute after:inset-0 after:bg-black/40">
+<img alt="" class="active" src="https://lh3.googleusercontent.com/aida/AP1WRLt-3eaqXJytCpWC5Ppr2o1S29eY5wia0J1tJStlXJjvtq5AWW50OpyEVcGCiAki0-VkOLn5m0QkN-4xN0qcGkHsCSGjA_oxZ0ApbiYXo6IFJroZ_IR7l8I5gfi_2ZZz82qODTHkW3rRLSTx4uEyBtud1DK_QEvV6k0t597R-hxfEfF1j1OJsrS0Tw3jHxMzSe7v2fttbSMOKb42s5f8wfQeqGgmX54gqDLMEXhi7rL284b2_zeoXFFm"/>
+<img alt="" src="https://lh3.googleusercontent.com/aida/AP1WRLu0jCEHnLuo6ZmZ4dZsuEen9If5TekXyuiRccHG75jVz6EHdG0JHnoHo2FSSckX-TT1fzvtiTLxjHyxtUNXOC2k1vIMbB6IVqAfmVb3rQy4zFJQPvKdpIvN_3lL6ZOgF6GONdsqdce9XDUOp5OSQj_lnWG6HbdS3q4TgUR4eyAXXcK48dkD5cDj56k90leelAv_msEDIiS64aTJf_Ltuf1FblvaBmphfOOspqS7IARrZ72JPem3Px0d"/>
+<img alt="" src="https://lh3.googleusercontent.com/aida/AP1WRLtz8twAu62AO2V1g58nBroB0uJeHUaLDMGlE9V2O2_bJgLVUGk9PRM7Xc9qmULOP41NjBc28XbGBRndF1qQ8kSRN0AMxhIUNYBZcziOx3rSvLurcBrX45dtIYLmj_gFzU1FWjTpbJ5l7qlB5yoWnE9ubSzl6IVC8mhT2g1hQTJ4MfnKmMKIqZnpMt1Nmnp0om4myrLSQHNVM2MY8Xl7H4WWMbSM0iI8Ci03FZz_BEVtsXihjTRrLh0"/>
+</div>
+<div class="relative z-10 text-center px-margin-mobile md:px-margin-desktop max-w-4xl">
+<span class="font-label-md text-label-md uppercase tracking-[0.3em] text-tertiary mb-4 block">Artisan Kitchen &amp; Hearth</span>
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-8 italic">
+                Slow Food, Warm Light, <br class="hidden md:block"/> Good Company
+            </h1>
+<div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+<a href="menu_ember_oak/code.html"><button class="bg-[#d97a3f] text-[#ece0d8] px-10 py-4 rounded-full font-label-md text-label-md hover:opacity-90 transition-all">
+                    Explore Our Menu
+                </button></a>
+<a href="reservations_ember_oak/code.html"><button class="warm-glass px-10 py-4 rounded-full font-label-md text-label-md border border-tertiary/40 hover:bg-tertiary/10 transition-all">
+                    Private Dining
+                </button></a>
+</div>
+</div>
+<!-- Scroll Indicator -->
+<div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50 animate-bounce">
+<span class="font-label-md text-[10px] uppercase tracking-widest">Scroll</span>
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</section>
+<!-- Signature Dishes Strip -->
+<section class="py-24 bg-surface-container-lowest overflow-hidden">
+<div class="px-margin-desktop mb-12 flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-tertiary mb-2">Our Signature Palette</h2>
+<p class="font-body-md text-on-surface-variant max-w-md">Each plate is a composition of seasonal harvest and fire-licked mastery.</p>
+</div>
+<div class="flex gap-4">
+<button class="p-3 rounded-full border border-outline-variant hover:border-tertiary transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-3 rounded-full border border-outline-variant hover:border-tertiary transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="flex gap-gutter px-margin-desktop overflow-x-auto scroll-hide snap-x snap-mandatory">
+<!-- Repeated Flat Lay Imagery -->
+<div class="flex-shrink-0 w-80 snap-start">
+<div class="aspect-square rounded-xl overflow-hidden mb-4 warm-glass p-1">
+<div class="w-full h-full rounded-lg overflow-hidden bg-surface-container">
+<img alt="" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLudgNM7JI_3WwRVP2661V2RnZHksIsSKtlDYFY5kVfptXXVxsn-sVovGuOv2giweA2V3KBTSw44C0OVlFXPKF-q8r5QAIVXjjg-2sIgip8xnUyXcxh_5KjxMl3EggeQCPA9ANjDSCM8YXA0xCwtgTaCRkRsj-tr6oRaWyNJtLJ_Wjj0pL3RyM1CYIpeWfZ9dUwPmJD8d-L07qCBTrmZ-k4ioUZ4JCpdH5Opif5eFJ8UUq9Duh4FpOtG"/>
+</div>
+</div>
+<h3 class="font-headline-md text-headline-md mb-1">Morning Harvest</h3>
+<p class="font-label-md text-label-md text-on-surface-variant">Sourdough &amp; Seasonal Greens</p>
+</div>
+<div class="flex-shrink-0 w-80 snap-start">
+<div class="aspect-square rounded-xl overflow-hidden mb-4 warm-glass p-1">
+<div class="w-full h-full rounded-lg overflow-hidden bg-surface-container">
+<div class="w-full h-full bg-cover bg-center" data-alt="A overhead flat-lay shot of a rustic artisan pizza with bubbling mozzarella, fresh basil leaves, and a perfectly charred, bubbly sourdough crust. The lighting is warm and golden, casting soft shadows on a reclaimed wood table. Fine artisan ceramic plates and a small bowl of olive oil sit nearby in a dark, moody restaurant setting." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCQ346tkHIanw0nYBOEU7YAIN-092YFJ0ppU3LmBpY81qyHCRSASmvsBHX6W1uRsbjviarLJ-PZ8ArnRTz3hY1cvbr7-J9-w_cfhJZMuwZaU0HPiOU5fJugdR_lhX_ETd8Nedu7jFv7MMH_iIWNPYrJlZ9qnNfDvwVwU1ReusPZQudCblJIiQFiKgjubSJiMKCROzPvbUuLKi5oC6cIfhJDwCLggniWVM3uP61vJJ_gFbG6bhqZzg')"></div>
+</div>
+</div>
+<h3 class="font-headline-md text-headline-md mb-1">Fire-Charred Hearth</h3>
+<p class="font-label-md text-label-md text-on-surface-variant">Wild Yeast Crust &amp; Basil</p>
+</div>
+<div class="flex-shrink-0 w-80 snap-start">
+<div class="aspect-square rounded-xl overflow-hidden mb-4 warm-glass p-1">
+<div class="w-full h-full rounded-lg overflow-hidden bg-surface-container">
+<div class="w-full h-full bg-cover bg-center" data-alt="A top-down view of a thick, perfectly seared grass-fed ribeye steak topped with a melting herb butter disk. Beside it are roasted garden carrots with charred tops and a vibrant seasonal salad. The scene is illuminated by warm, directional candlelight, highlighting the texture of the wooden table and the matte finish of the ceramic plate." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuADOwBzo35Rz7-mSC6JM4T8KX49YtVbnzwwl1muaRxfGgPuJAdMGwwDoNNfIGIU8JRzlqODDwIGHjcMxW2Fe3Gg0eVlxTBiE1kACUEvJeMcUMY-b31PGFiEnTChrEJSbxqITfb6sWpMFhltTBtT1h905F5YtUMqZsZjy0fx0uDk3cAx3Lq0xOdzezbK8kC8D-6WYN0AdB6U_Hk7bfhh3vh8QuxGSJsXgLvBO2Ep6aWJuIS8ztFz2w')"></div>
+</div>
+</div>
+<h3 class="font-headline-md text-headline-md mb-1">The Butcher's Cut</h3>
+<p class="font-label-md text-label-md text-on-surface-variant">Hearth-Roasted Prime Ribeye</p>
+</div>
+<div class="flex-shrink-0 w-80 snap-start">
+<div class="aspect-square rounded-xl overflow-hidden mb-4 warm-glass p-1">
+<div class="w-full h-full rounded-lg overflow-hidden bg-surface-container">
+<div class="w-full h-full bg-cover bg-center" data-alt="A beautiful chocolate ganache tart decorated with gold leaf and fresh forest berries, presented on a minimalist ceramic plate. The background features a dark wood tabletop in a cozy, upscale restaurant atmosphere at golden hour. Soft bokeh of warm interior lights creates a luxurious, intimate feel." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAQx_WuWE4Sqo-1xYvG4qj7qDa71s5yGeTEuE088JcM60zG0zW0KzVPwNtRek-PC2OZkw10eYw-8MH_s8t1Tu25onpyyXWbLAYELhOMHdHoyWm5CBOo01gOFvfjQ7EW1yiZaI7pZcZMN7JpI2wA4VMWMyesS6x9ZOsL0F2py2IcsWbWR3mw49iJXtO05mikwvPrCdAZ5Z-UlJoRM8pwsxstx8wqNA376FuOyvgKodDkcVLJRsDhBQ')"></div>
+</div>
+</div>
+<h3 class="font-headline-md text-headline-md mb-1">Bitter Gold</h3>
+<p class="font-label-md text-label-md text-on-surface-variant">Dark Cacao &amp; Forest Berries</p>
+</div>
+</div>
+</section>
+<!-- Story Teaser Section -->
+<section class="py-32 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
+<div class="lg:col-span-5 mb-12 lg:mb-0">
+<span class="font-label-md text-label-md text-tertiary uppercase tracking-widest mb-6 block">Our Craft</span>
+<h2 class="font-display-lg-mobile md:font-headline-lg text-display-lg-mobile md:text-headline-lg mb-8 italic">Patience is the Secret Ingredient</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed">
+                    At Ember &amp; Oak, we believe food should be a slow, rhythmic celebration. Our sourdough starter has been nurtured for seven years, and our hearth never truly goes cold. We source directly from the valley’s artisans, ensuring every bite tells a story of the land.
+                </p>
+<div class="grid grid-cols-2 gap-8 border-l border-tertiary/30 pl-8">
+<div>
+<div class="font-headline-md text-headline-md text-tertiary mb-2">48h</div>
+<p class="font-label-md text-label-md uppercase opacity-60">Slow Ferment</p>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-tertiary mb-2">100%</div>
+<p class="font-label-md text-label-md uppercase opacity-60">Wood Fired</p>
+</div>
+</div>
+</div>
+<div class="lg:col-span-7">
+<div class="relative aspect-[4/3] rounded-2xl overflow-hidden warm-glass-strong p-2">
+<img class="w-full h-full object-cover rounded-xl" data-alt="Close-up of a baker's hands kneading rustic sourdough bread on a flour-dusted wooden table. Sunlight streams through a window, illuminating clouds of flour in the air. The scene is warm, tactile, and professional, conveying a sense of artisan craft and slow-food philosophy. Warm espresso and brass tones anchor the image's aesthetic." src="https://lh3.googleusercontent.com/aida/AP1WRLv25giAubvHohmYkb1Swew5vn3nFyxafD4eyhXK6nb6x1SnMHlGq3MVY8ked8k645zevmRsug4UX6BjC2kUo64JfQzmsU2MrHhzyyqgAy8NZtnVKWoc3-8TCiRARIzM7SxP6Yk4ipblThI1vEUagk177xdVmdJPuZA2xcUkvf9M_0kI9voc57u7mta6nDGIRG5e-7iSXJD1nezp4SBSXE_syERwg5XiP06xjQH-ate8WavUo6CQgUT0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento-ish Details -->
+<section class="py-24 bg-surface-container">
+<div class="px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="md:col-span-2 warm-glass rounded-2xl p-12 flex flex-col justify-end min-h-[400px] relative overflow-hidden group">
+<div class="absolute inset-0 z-0 opacity-40 group-hover:scale-110 transition-transform duration-700">
+<div class="w-full h-full bg-cover bg-center" data-alt="Wide shot of a bustling high-end open kitchen at night. Chefs in clean white aprons are working over wood-fired ovens. Warm brass pendant lights hang from high ceilings, reflecting on polished copper pans. The mood is energetic yet refined, with warm golden light spilling out into a candlelit dining room. Luxurious artisan atmosphere with high-end wood and stone textures." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDlD3CU1iLF6OAYJrXahWYVq7WYNDTVBraGHuwkQHAWP62OfxlxAXd9iltDHObZsZA_qIGAxYYFAoAkWX55SydpHmZJQgKfERcSw5rePrIVsppwZ32B5018i4ekoM00_z3o5Z9dWdrAjNqkwJXWmJxj1O_BYu-Vqwx84r0WjEw0QU37o9wzQj2euDOdCMLc_28vuRAFtqT2tDIT1e9VmUb7qndtQd8xu0XmFeHmQFmMHxX3XhFtXA')"></div>
+</div>
+<div class="relative z-10 max-w-md">
+<h3 class="font-headline-lg text-headline-lg mb-4">The Open Hearth</h3>
+<p class="font-body-md text-on-surface-variant mb-6">Watch our team master the flame in our open-concept kitchen. A dance of precision and primal heat.</p>
+<a class="inline-flex items-center gap-2 text-tertiary font-label-md text-label-md hover:underline" href="gallery_ember_oak/code.html">
+                        Kitchen Perspective <span class="material-symbols-outlined">arrow_right_alt</span>
+</a>
+</div>
+</div>
+<div class="warm-glass-strong rounded-2xl p-12 flex flex-col justify-center items-center text-center">
+<div class="w-16 h-16 rounded-full border border-tertiary flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-tertiary text-3xl">wine_bar</span>
+</div>
+<h3 class="font-headline-md text-headline-md mb-2">Curated Cellar</h3>
+<p class="font-body-md text-on-surface-variant">Low-intervention wines and small-batch spirits selected to pair with smoke and spice.</p>
+</div>
+</div>
+</section>
+<!-- Testimonials -->
+<section class="py-32 px-margin-mobile md:px-margin-desktop">
+<div class="text-center mb-20">
+<h2 class="font-headline-lg text-headline-lg italic text-tertiary mb-4">Notes from the Table</h2>
+<div class="w-24 h-px bg-tertiary mx-auto opacity-30"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<!-- Testimonial 1 -->
+<div class="flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-full overflow-hidden mb-6 border-2 border-tertiary/20 p-1">
+<div class="w-full h-full bg-cover bg-center rounded-full" data-alt="A close-up portrait of a smiling woman in her 30s with warm lighting. She has a natural, understated elegance. The background is a soft-focus blur of a candlelit restaurant interior. The aesthetic is intimate and warm, matching the Ember &amp; Oak luxury brand. High-quality photography with deep shadows and golden highlights." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB3Utf5LmMI3YJDY1JL6IOJSSwKDwL0g-3FemGZwhPAKZyH6qXnTGSdtHq4HBhkHW3MhoaegX-qiJAOURt6vW2FHi3cs1WHdVuud8siBbEIs9MKomukm0lZ4s8AFPNRgnEOwkKcPxeZjUNDCYggiqElokJ7rWgLPe-dnMjggWBRE6Do4daoABOaJMPuCfuvNLxw1UosznWCUOBmP4aDfJjK3Wwcrj40NikdF7EON1px-JT6_ssRLg')"></div>
+</div>
+<p class="italic font-accent-italic text-on-surface-variant mb-6 leading-relaxed">"The sourdough alone is worth the trip. There's a soul in this food that you simply don't find anymore. Truly magical evening."</p>
+<div class="font-label-md text-label-md uppercase tracking-widest text-tertiary">Elena R.</div>
+<div class="text-on-surface-variant text-xs mt-1">Gourmet Critic</div>
+</div>
+<!-- Testimonial 2 -->
+<div class="flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-full overflow-hidden mb-6 border-2 border-tertiary/20 p-1">
+<div class="w-full h-full bg-cover bg-center rounded-full" data-alt="A portrait of a distinguished man in his 50s with a short beard, wearing a high-quality linen shirt. He looks content and relaxed in a warm, low-lit environment. The lighting is soft and flattering, reminiscent of a golden hour atmosphere. The mood is sophisticated and comfortable." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBpIW-VVKRh1fj8JM1_W7Hpp0eU-xnehaAtjhaU0ToT0YsM8_6K57-5rkY6Zbq_M9_uratzcKo4uxcPqTOOxYNJa9VjJLSn0vFUwCis8M97I9WAok7My3AM3Zv1kQFUkeKVeKsz7LDQ3Obhj583kMoidlYgxLlIogX8xN5zZuCfuYo3KKQ1rDmwij8Df6y9IdB9XbAlPs5PTnO6fLIc8DVZ9kiyXUQtLISk315Et-Ua22Amist9aA')"></div>
+</div>
+<p class="italic font-accent-italic text-on-surface-variant mb-6 leading-relaxed">"Walking in feels like coming home to a place you've never been. The fire pit outside is the perfect way to end a night."</p>
+<div class="font-label-md text-label-md uppercase tracking-widest text-tertiary">Marcus Theron</div>
+<div class="text-on-surface-variant text-xs mt-1">Local Regular</div>
+</div>
+<!-- Testimonial 3 -->
+<div class="flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-full overflow-hidden mb-6 border-2 border-tertiary/20 p-1">
+<div class="w-full h-full bg-cover bg-center rounded-full" data-alt="A close-up artistic portrait of a woman with braided hair, softly lit by amber candle light. She is looking slightly away with a serene expression. The setting is a dark, warm, luxurious restaurant with subtle brass and wood textures in the bokeh background. The image evokes a sense of slow-food philosophy and intimate luxury." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAbrjXSKtXWBYTmcGUyuJZ40DtKs1U3AdU5-_tNAHiQYN4J31-g6AoHS2PnJ8ownopLeAh4-S-lA5JRT3ZOOlmwQZfXT-22w6X9eSIt90bmnkfQ04NTRzaGu3tUXlDnVMfr-VIY_Q2My6PyrbixE7QlSVqbCAFMMGDSXUqM82i8pcFDAwmuBdMuUW3Pa0FYDY7wagG1McGDF3S9KVSXpM1O7Z6wex9qLQ71d8fIiAQ-tUsfLM5deg')"></div>
+</div>
+<p class="italic font-accent-italic text-on-surface-variant mb-6 leading-relaxed">"Sophisticated, yet unpretentious. Every detail from the brass cutlery to the linen napkins feels intentional and warm."</p>
+<div class="font-label-md text-label-md uppercase tracking-widest text-tertiary">Sarah Jenkins</div>
+<div class="text-on-surface-variant text-xs mt-1">Food Stylist</div>
+</div>
+</div>
+</section>
+<!-- Footer: Execution of Shared Component -->
+<footer class="w-full px-margin-desktop py-12 flex flex-col md:flex-row justify-between items-center gap-gutter bg-surface-container-lowest border-t border-tertiary/10">
+<div class="flex flex-col items-center md:items-start gap-2">
+<div class="font-headline-md text-headline-md text-tertiary">Ember &amp; Oak</div>
+<p class="font-body-md text-body-md text-on-surface/60 text-center md:text-left">© 2024 Ember &amp; Oak. Crafted for the slow-food philosophy.</p>
+</div>
+<div class="flex gap-8 flex-wrap justify-center">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-tertiary transition-colors duration-200" href="#">Privacy Policy</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-tertiary transition-colors duration-200" href="#">Contact Us</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-tertiary transition-colors duration-200" href="#">Careers</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-tertiary transition-colors duration-200" href="#">Press Kit</a>
+</div>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full warm-glass flex items-center justify-center text-on-surface-variant hover:text-tertiary transition-all" href="#">
+<span class="material-symbols-outlined text-sm">nest_eco_leaf</span>
+</a>
+<a class="w-10 h-10 rounded-full warm-glass flex items-center justify-center text-on-surface-variant hover:text-tertiary transition-all" href="#">
+<span class="material-symbols-outlined text-sm">local_fire_department</span>
+</a>
+</div>
+</footer>
+<script>
+        // Hero Image Cycle
+        const images = document.querySelectorAll('.fading-image-container img');
+        let currentImg = 0;
 
-  <section class="featured-section">
-    <div class="container">
-      <h2 class="section-title reveal">Chef's Specials</h2>
-      <p class="section-subtitle reveal">Most loved dishes by our guests.</p>
-      <div class="dishes-grid reveal-stagger">
-        <div class="dish-card reveal">
-          <div class="dish-image"><img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=800&q=80" alt="Butter chicken dish" width="800" height="600" loading="lazy" decoding="async"></div>
-          <div class="dish-info">
-            <h3>Butter Chicken</h3>
-            <p>Creamy tomato gravy with tender chicken pieces.</p>
-            <div class="price">₹399</div>
-            <a href="#" class="btn btn-amber btn-sm no-arrow" data-track="restaurant_dish_1">Order Now</a>
-          </div>
-        </div>
-        <div class="dish-card reveal">
-          <div class="dish-image"><img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&q=80" alt="Wood-fired pizza" width="800" height="600" loading="lazy" decoding="async"></div>
-          <div class="dish-info">
-            <h3>Wood-Fired Pizza</h3>
-            <p>Crispy thin crust with fresh mozzarella.</p>
-            <div class="price">₹449</div>
-            <a href="#" class="btn btn-amber btn-sm no-arrow" data-track="restaurant_dish_2">Order Now</a>
-          </div>
-        </div>
-        <div class="dish-card reveal">
-          <div class="dish-image"><img src="https://images.unsplash.com/photo-1624353365286-3f8fa6df5f55?w=800&q=80" alt="Chocolate fondant dessert" width="800" height="600" loading="lazy" decoding="async"></div>
-          <div class="dish-info">
-            <h3>Chocolate Fondant</h3>
-            <p>Warm molten cake with vanilla ice cream.</p>
-            <div class="price">₹299</div>
-            <a href="#" class="btn btn-amber btn-sm no-arrow" data-track="restaurant_dish_3">Order Now</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+        setInterval(() => {
+            images[currentImg].classList.remove('active');
+            currentImg = (currentImg + 1) % images.length;
+            images[currentImg].classList.add('active');
+        }, 5000);
 
-  <section id="menu" class="menu-section">
-    <div class="container">
-      <h2 class="section-title text-center reveal">Full Menu</h2>
-      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">Explore our complete range of flavors.</p>
-      <div class="accordion reveal">
-        <div class="accordion-item open">
-          <div class="accordion-header" onclick="toggleAccordion(this)">Starters <span class="accordion-icon">▼</span></div>
-          <div class="accordion-body"><div class="accordion-content">
-            <div class="menu-item"><div><span class="name">Paneer Tikka</span><small>Grilled cottage cheese with spices</small></div><div class="price">₹249</div></div>
-            <div class="menu-item"><div><span class="name">Chicken Wings</span><small>Spicy buffalo wings</small></div><div class="price">₹329</div></div>
-            <div class="menu-item"><div><span class="name">Spring Rolls</span><small>Crispy veggie rolls</small></div><div class="price">₹199</div></div>
-          </div></div>
-        </div>
-        <div class="accordion-item">
-          <div class="accordion-header" onclick="toggleAccordion(this)">Mains <span class="accordion-icon">▼</span></div>
-          <div class="accordion-body"><div class="accordion-content">
-            <div class="menu-item"><div><span class="name">Dal Makhani</span><small>Creamy black lentils</small></div><div class="price">₹299</div></div>
-            <div class="menu-item"><div><span class="name">Rogan Josh</span><small>Aromatic lamb curry</small></div><div class="price">₹499</div></div>
-            <div class="menu-item"><div><span class="name">Grilled Fish</span><small>Lemon herb marinated</small></div><div class="price">₹549</div></div>
-          </div></div>
-        </div>
-        <div class="accordion-item">
-          <div class="accordion-header" onclick="toggleAccordion(this)">Desserts <span class="accordion-icon">▼</span></div>
-          <div class="accordion-body"><div class="accordion-content">
-            <div class="menu-item"><div><span class="name">Gulab Jamun</span><small>Warm sweet dumplings</small></div><div class="price">₹149</div></div>
-            <div class="menu-item"><div><span class="name">Tiramisu</span><small>Classic Italian coffee dessert</small></div><div class="price">₹349</div></div>
-          </div></div>
-        </div>
-        <div class="accordion-item">
-          <div class="accordion-header" onclick="toggleAccordion(this)">Beverages <span class="accordion-icon">▼</span></div>
-          <div class="accordion-body"><div class="accordion-content">
-            <div class="menu-item"><div><span class="name">Masala Chai</span><small>Indian spiced tea</small></div><div class="price">₹79</div></div>
-            <div class="menu-item"><div><span class="name">Fresh Lime Soda</span><small>Refreshing citrus cooler</small></div><div class="price">₹129</div></div>
-            <div class="menu-item"><div><span class="name">Cold Coffee</span><small>Creamy blended coffee</small></div><div class="price">₹179</div></div>
-          </div></div>
-        </div>
-      </div>
-    </div>
-  </section>
+        // Simple parallax effect for glass cards
+        window.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.warm-glass-strong');
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
 
-  <div class="offer-strip">
-    <div class="container">Weekend Special — Buy 2 Get 1 Free on Starters</div>
-  </div>
-
-  <section class="chef-section">
-    <div class="container">
-      <div class="chef-grid">
-        <div class="chef-image reveal">
-          <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=800&q=80" alt="Chef preparing signature dish" width="800" height="600" loading="lazy" decoding="async">
-        </div>
-        <div class="chef-content reveal">
-          <h2>Chef's Special Today</h2>
-          <p>Every day our chef curates a special dish using seasonal ingredients and classic techniques. Ask your server for today's creation.</p>
-          <p>From slow-cooked curries to wood-fired grills, every plate tells a story of flavor and craftsmanship.</p>
-          <div class="chef-signature">— Chef Arjun Rathore</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="reservation" class="reservation-section">
-    <div class="container">
-      <h2 class="section-title text-center reveal">Reserve a Table</h2>
-      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">Book your dining experience or order online.</p>
-      <form class="reservation-form reveal" data-demo="restaurant">
-        <div class="grid-2">
-          <div class="form-group"><label for="rest-name">Name</label><input id="rest-name" type="text" class="form-control" placeholder="Your name" required></div>
-          <div class="form-group"><label for="rest-phone">Phone</label><input id="rest-phone" type="tel" class="form-control" placeholder="Your phone" pattern="[0-9]{10}" required></div>
-          <div class="form-group"><label for="rest-date">Date</label><input id="rest-date" type="date" class="form-control" required></div>
-          <div class="form-group"><label for="rest-time">Time</label><input id="rest-time" type="time" class="form-control" required></div>
-          <div class="form-group"><label for="rest-party">Party Size</label><select id="rest-party" class="form-control"><option>2 People</option><option>4 People</option><option>6 People</option><option>8+ People</option></select></div>
-          <div class="form-group"><label for="rest-requests">Special Requests</label><input id="rest-requests" type="text" class="form-control" placeholder="Any preferences"></div>
-        </div>
-        <button type="submit" class="submit-btn no-arrow" data-track="restaurant_form_submit">Book Table</button>
-        <p class="form-note">Prefer WhatsApp? <a href="#" data-whatsapp="I saw your restaurant demo, interested!" data-demo="restaurant">Chat directly</a></p>
-        <div class="order-links">
-          <a href="https://www.zomato.com" target="_blank" class="order-link" data-track="restaurant_zomato">Order on Zomato</a>
-          <a href="https://www.swiggy.com" target="_blank" class="order-link" data-track="restaurant_swiggy">Order on Swiggy</a>
-        </div>
-      </form>
-    </div>
-  </section>
-
-  <section class="gallery-section">
-    <div class="container">
-      <h2 class="section-title reveal">Gallery</h2>
-      <p class="section-subtitle reveal">A peek into our ambience and food.</p>
-      <div class="gallery-grid reveal-stagger">
-        <div class="gallery-item reveal"><img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800&q=80" alt="Restaurant interior ambience" width="800" height="800" loading="lazy" decoding="async"></div>
-        <div class="gallery-item reveal"><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80" alt="Gourmet food platter" width="800" height="800" loading="lazy" decoding="async"></div>
-        <div class="gallery-item reveal"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80" alt="Upscale cafe interior" width="800" height="800" loading="lazy" decoding="async"></div>
-        <div class="gallery-item reveal"><img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80" alt="Steak dish close up" width="800" height="800" loading="lazy" decoding="async"></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="social-proof">
-    <div class="container">
-      <div class="social-grid reveal-stagger">
-        <div class="social-item reveal"><h4>4.8<svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2" style="display:inline;vertical-align:middle;margin-left:4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></h4><p>Google Rating</p></div>
-        <div class="social-item reveal"><h4>2000+</h4><p>Happy Diners</p></div>
-        <div class="social-item reveal"><h4>150+</h4><p>Dishes on Menu</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="location-section">
-    <div class="container">
-      <h2 class="section-title reveal">Visit Us</h2>
-      <p class="section-subtitle reveal">We deliver across Vijay Nagar and nearby areas.</p>
-      <div class="location-grid">
-        <div class="map-box reveal">
-          <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&q=80" alt="Restaurant location map" width="800" height="600" loading="lazy" decoding="async">
-        </div>
-        <div class="reveal">
-          <h3 style="font-family:'Playfair Display',serif; margin-bottom:8px; font-size:1.8rem;">The Copper Spoon</h3>
-          <p style="opacity:0.7; margin-bottom:20px;">56, MG Road, Indore, Madhya Pradesh 452001</p>
-          <table class="timing-table">
-            <tr><td>Mon - Thu</td><td>11 AM - 11 PM</td></tr>
-            <tr><td>Fri - Sat</td><td>11 AM - 12 AM</td></tr>
-            <tr><td>Sunday</td><td>12 PM - 10 PM</td></tr>
-          </table>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="footer-note">
-    <div class="container">© 2025 MistHustlers Indore — Restaurant / Cafe Demo</div>
-  </div>
-  <div class="sticky-footer">
-    <div class="container">
-      <span class="text">Want this for your business?</span>
-      <a href="tel:XXXXXXXXXX" class="btn btn-sm btn-secondary no-arrow" data-track="restaurant_footer_call">Call</a>
-      <a href="#" class="btn btn-sm btn-primary no-arrow" data-whatsapp="I saw your restaurant demo, interested!" data-demo="restaurant" data-track="restaurant_footer_whatsapp">WhatsApp</a>
-    </div>
-  </div>
-
-  <script src="../js/shared.js"></script>
-  <script>
-    function toggleAccordion(header) {
-      const item = header.parentElement;
-      item.classList.toggle('open');
-      if (window.MistHustlers) MistHustlers.trackEvent('restaurant_accordion_toggle', { open: item.classList.contains('open') });
-    }
-  </script>
-</body>
-</html>
+            cards.forEach(card => {
+                card.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+    </script>
+</body></html>

@@ -1,297 +1,551 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coaching Institute Website Demo - MistHustlers Indore</title>
-  <meta name="description" content="Premium admission landing page demo for coaching institutes in Indore. Admissions, results, batches, and lead capture. Built by MistHustlers.">
-  <link rel="canonical" href="https://www.misthustlers.in/demo/coaching/">
-  <meta name="robots" content="noindex, follow">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%237C3AED'/%3E%3Ctext x='50' y='65' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3EM%3C/text%3E%3C/svg%3E">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/shared.css">
-  <style>
-    :root {
-      --coaching-navy: #0D1B4B;
-      --coaching-navy-light: #1A237E;
-      --coaching-gold: #F5A623;
-      --coaching-gold-light: #FBC668;
-    }
-    body { background: var(--coaching-navy); color: #fff; font-family: 'Inter', sans-serif; }
-    h1, h2, h3, .display { font-family: 'Playfair Display', serif; }
-    
-.hero {
-      min-height: 92vh; display: flex; align-items: center; padding: 140px 0 80px;
-      background: radial-gradient(circle at 90% 10%, rgba(245, 166, 35, 0.12), transparent 40%),
-                  radial-gradient(circle at 10% 90%, rgba(26, 35, 126, 0.6), transparent 50%),
-                  var(--coaching-navy);
-    }
-    .hero-grid { display: grid; gap: 48px; align-items: center; }
-    @media (min-width: 900px) { .hero-grid { grid-template-columns: 1fr 1fr; } }
-    .hero h1 { font-size: clamp(2.4rem, 5vw, 4.2rem); line-height: 1.05; margin-bottom: 20px; }
-    .hero h1 .animated-underline::after { background: var(--coaching-gold); height: 6px; }
-    .hero p { font-size: 1.15rem; opacity: 0.9; max-width: 560px; margin-bottom: 28px; }
-    .btn-gold { background: var(--coaching-gold); color: #0D1B4B; font-weight: 700; }
-    .btn-gold:hover { background: var(--coaching-gold-light); box-shadow: 0 12px 32px rgba(245, 166, 35, 0.3); }
-    .btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.3); font-weight: 600; }
-    .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
-    .trust-badges .badge-pill { background: rgba(245, 166, 35, 0.12); color: var(--coaching-gold-light); border: 1px solid rgba(245,166,35,0.2); }
 
-    .hero-visual {
-      background: linear-gradient(145deg, rgba(26,35,126,0.8), rgba(13,27,75,0.95));
-      border: 1px solid rgba(245,166,35,0.25);
-      border-radius: 24px;
-      padding: 32px;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.35);
-    }
-    .dashboard-card {
-      background: rgba(255,255,255,0.06);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 16px;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-    .dashboard-card:last-child { margin-bottom: 0; }
-    .dashboard-card .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.7; margin-bottom: 8px; }
-    .dashboard-card .value { font-size: 1.5rem; font-weight: 700; color: var(--coaching-gold); }
-    .dashboard-card .sub { font-size: 0.85rem; opacity: 0.7; margin-top: 4px; }
-    .progress-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 12px; overflow: hidden; }
-    .progress-bar span { display: block; height: 100%; background: var(--coaching-gold); border-radius: 3px; }
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zenith Academy | Rank Higher. Study Smarter.</title>
+<script src="/demo/tailwindcss.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed-variant": "#3a4761",
+                      "surface-container-highest": "#333535",
+                      "inverse-on-surface": "#2f3131",
+                      "on-tertiary": "#233049",
+                      "inverse-primary": "#4a5f84",
+                      "surface": "#121414",
+                      "surface-variant": "#333535",
+                      "on-secondary-fixed-variant": "#5e4200",
+                      "on-surface-variant": "#c4c6cf",
+                      "primary-container": "#12294b",
+                      "on-tertiary-container": "#8390ae",
+                      "on-primary-fixed-variant": "#32476b",
+                      "on-primary-fixed": "#011b3d",
+                      "tertiary-container": "#1c2942",
+                      "tertiary-fixed-dim": "#b9c6e6",
+                      "surface-container-high": "#282a2b",
+                      "primary": "#b2c7f1",
+                      "surface-container-low": "#1a1c1c",
+                      "secondary-container": "#bc8708",
+                      "on-primary-container": "#7c91b9",
+                      "inverse-surface": "#e2e2e2",
+                      "tertiary": "#b9c6e6",
+                      "on-surface": "#e2e2e2",
+                      "secondary": "#f9bc45",
+                      "on-tertiary-fixed": "#0d1b33",
+                      "surface-dim": "#121414",
+                      "on-secondary-container": "#392600",
+                      "on-secondary": "#422d00",
+                      "background": "#121414",
+                      "outline": "#8e9099",
+                      "error": "#ffb4ab",
+                      "outline-variant": "#44474e",
+                      "surface-container-lowest": "#0c0f0f",
+                      "primary-fixed-dim": "#b2c7f1",
+                      "on-primary": "#1a3053",
+                      "on-error-container": "#ffdad6",
+                      "on-background": "#e2e2e2",
+                      "tertiary-fixed": "#d7e2ff",
+                      "on-error": "#690005",
+                      "surface-tint": "#b2c7f1",
+                      "error-container": "#93000a",
+                      "surface-container": "#1e2020",
+                      "primary-fixed": "#d6e3ff",
+                      "secondary-fixed-dim": "#f9bc45",
+                      "secondary-fixed": "#ffdea8",
+                      "on-secondary-fixed": "#271900",
+                      "surface-bright": "#38393a",
+                      "zenith-navy": "#12294B",
+                      "zenith-amber": "#F5B942"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px",
+                      "2xl": "1.5rem"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "unit-2xl": "80px",
+                      "margin-desktop": "64px",
+                      "unit-md": "16px",
+                      "unit-lg": "24px",
+                      "unit-xs": "4px",
+                      "unit-sm": "8px",
+                      "unit-xl": "48px",
+                      "margin-mobile": "20px",
+                      "max-width": "1440px"
+              },
+              "fontFamily": {
+                      "headline-xl": ["Manrope"],
+                      "body-lg": ["Manrope"],
+                      "label-md": ["Manrope"],
+                      "body-md": ["Manrope"],
+                      "headline-md": ["Manrope"],
+                      "body-sm": ["Manrope"],
+                      "headline-sm": ["Manrope"],
+                      "headline-lg": ["Manrope"],
+                      "headline-xl-mobile": ["Manrope"],
+                      "headline-lg-mobile": ["Manrope"]
+              },
+              "fontSize": {
+                      "headline-xl": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "headline-md": ["28px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                      "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                      "headline-lg": ["36px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "headline-xl-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .text-roll {
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            height: 1.5em;
+        }
+        .text-roll span {
+            transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-roll-hover:hover .text-roll span:first-child {
+            transform: translateY(-100%);
+        }
+        .btn-roll-hover:hover .text-roll span:last-child {
+            transform: translateY(-100%);
+        }
 
-    .section-title { color: #fff; font-family: 'Playfair Display', serif; }
-    .section-title .animated-underline::after { background: var(--coaching-gold); height: 4px; }
-    .section-subtitle { color: rgba(255,255,255,0.75); }
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-    .courses-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
-    @media (min-width: 640px) { .courses-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 900px) { .courses-grid { grid-template-columns: repeat(4, 1fr); } }
-    .course-card {
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px;
-      padding: 28px; transition: transform 0.3s var(--ease-out), box-shadow 0.3s, border-color 0.3s;
-    }
-    .course-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(245,166,35,0.15); border-color: rgba(245,166,35,0.4); }
-    .course-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(245,166,35,0.12); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: var(--coaching-gold); font-size: 1.3rem; }
-    .course-card h3 { font-family: 'Inter', sans-serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
-    .course-card p { font-size: 0.95rem; opacity: 0.75; margin-bottom: 16px; max-width: 100%; }
-    .course-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
-    .seats { background: rgba(245,166,35,0.12); color: var(--coaching-gold); padding: 4px 10px; border-radius: 999px; font-weight: 600; }
+        .grayscale-to-color {
+            filter: grayscale(100%);
+            transition: filter 0.5s ease;
+        }
+        .grayscale-to-color:hover {
+            filter: grayscale(0%);
+        }
 
-    .results-section { background: linear-gradient(180deg, var(--coaching-navy), rgba(26,35,126,0.6)); }
-    .results-grid { display: grid; gap: 20px; grid-template-columns: 1fr; }
-    @media (min-width: 640px) { .results-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 900px) { .results-grid { grid-template-columns: repeat(4, 1fr); } }
-    .result-card {
-      background: rgba(255,255,255,0.05); border-radius: 16px; padding: 28px; border: 1px solid rgba(255,255,255,0.1);
-      border-left: 4px solid var(--coaching-gold); transition: transform 0.3s;
-    }
-    .result-card:hover { transform: translateY(-4px); }
-    .rank-badge {
-      background: var(--coaching-gold); color: #0D1B4B; padding: 4px 12px; border-radius: 999px;
-      font-size: 0.75rem; font-weight: 700; margin-bottom: 14px; display: inline-block;
-    }
-    .result-card h4 { font-size: 1.2rem; margin-bottom: 4px; font-family: 'Inter', sans-serif; }
-    .result-card p { font-size: 0.9rem; opacity: 0.75; max-width: 100%; }
-
-    .why-section { background: rgba(26,35,126,0.25); }
-    .why-grid { display: grid; gap: 24px; grid-template-columns: repeat(2, 1fr); }
-    @media (min-width: 640px) { .why-grid { grid-template-columns: repeat(4, 1fr); } }
-    .why-block {
-      background: rgba(255,255,255,0.05); border-radius: 16px; padding: 32px; text-align: center;
-      border: 1px solid rgba(255,255,255,0.08); transition: border-color 0.3s;
-    }
-    .why-block:hover { border-color: rgba(245,166,35,0.3); }
-    .why-block h4 { font-size: 2.4rem; color: var(--coaching-gold); font-family: 'Inter', sans-serif; font-weight: 700; margin-bottom: 8px; }
-    .why-block p { font-size: 0.95rem; opacity: 0.85; max-width: 100%; }
-
-    .form-section { background: linear-gradient(135deg, rgba(26,35,126,0.5), rgba(13,27,75,0.95)); }
-    .lead-form { max-width: 720px; margin: 0 auto; background: rgba(0,0,0,0.25); border-radius: 24px; padding: 40px; border: 1px solid rgba(245,166,35,0.25); }
-    .submit-btn { background: var(--coaching-gold); color: #0D1B4B; font-weight: 700; width: 100%; padding: 16px; border-radius: 16px; cursor: pointer; transition: opacity 0.2s; }
-    .submit-btn:hover { opacity: 0.9; }
-    .form-success { background: rgba(245,166,35,0.15); color: var(--coaching-gold); border: 1px solid rgba(245,166,35,0.3); }
-    .form-note a { color: var(--coaching-gold); }
-
-    .footer-note { text-align: center; padding: 40px 0; font-size: 0.9rem; opacity: 0.6; }
-.sticky-footer { background: rgba(13,27,75,0.95); border-top: 1px solid rgba(245,166,35,0.25); }
-    .sticky-footer .btn-primary { background: var(--coaching-gold); color: #0D1B4B; }
-    .sticky-footer .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
-  </style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
 </head>
-<body>
-<section class="hero">
-    <div class="container">
-      <div class="hero-grid">
-        <div class="reveal">
-          <h1><span class="animated-underline">Admissions Open 2025</span></h1>
-          <p>Join Indore's most result-focused coaching institute for JEE, NEET, and Board preparation. Next batch starts soon with limited seats.</p>
-          <div class="hero-ctas">
-            <a href="#lead-form" class="btn btn-lg btn-gold no-arrow" data-track="coaching_hero_demo">Book Free Demo Class</a>
-            <a href="#results" class="btn btn-lg btn-outline no-arrow" data-track="coaching_hero_results">View Results</a>
-          </div>
-          <div class="trust-badges">
-            <span class="badge-pill">12+ Years Experience</span>
-            <span class="badge-pill">5000+ Students</span>
-            <span class="badge-pill">90% Selection Rate</span>
-          </div>
-        </div>
-        <div class="hero-visual reveal reveal-right">
-          <div class="dashboard-card">
-            <div class="label">Students Taught</div>
-            <div class="value">5,000+</div>
-            <div class="sub">Across 12 years</div>
-            <div class="progress-bar"><span style="width:92%"></span></div>
-          </div>
-          <div class="dashboard-card">
-            <div class="label">Selection Rate</div>
-            <div class="value">90%</div>
-            <div class="sub">JEE / NEET / Boards</div>
-            <div class="progress-bar"><span style="width:90%"></span></div>
-          </div>
-          <div class="dashboard-card">
-            <div class="label">Average Rank</div>
-            <div class="value">AIR 500</div>
-            <div class="sub">Top 100 every year</div>
-            <div class="progress-bar"><span style="width:85%"></span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+<body class="bg-background text-on-background font-body-md overflow-x-hidden">
+<!-- Top Navigation -->
+<nav class="fixed top-0 left-0 right-0 z-50 flex items-center justify-center pt-6 px-gutter pointer-events-none">
+<div class="bg-white/90 backdrop-blur-xl rounded-full px-8 py-3 flex items-center justify-between gap-12 shadow-xl border border-white/20 max-w-fit pointer-events-auto">
+<div class="flex items-center gap-3">
+<img alt="Zenith Academy Logo" class="h-8 w-8 object-contain" src="https://lh3.googleusercontent.com/aida/AP1WRLsP1PMSTXzmeiuHL33CWWrIwv384SPQ_5Tte3XH2MENv2PQSADJ0SPClRjb3gAS23-UJ6rwrSuaZD5-79BlIpaUmF5xdY4Tdipdh1hFCo_PbwkOuYbuHd1lAXIBuK-q-0yphmzR9nvfeXoS2nSi_cnOvQkFMrSlhPCUHJPchJk2Infft9w6HRvUlCA290WpQo5nJXnIS4LaWOZNCZXfVvT7Avl-5ntHedgSygx-XS3r_0pRG49N93IVfA"/>
+<span class="font-headline-sm text-headline-sm font-extrabold text-zenith-navy tracking-tighter">ZENITH</span>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="font-label-md text-label-md text-zenith-navy/80 hover:text-zenith-navy transition-colors" href="#courses">Courses</a>
+<a class="font-label-md text-label-md text-zenith-navy/80 hover:text-zenith-navy transition-colors" href="#results">Results</a>
+<a class="font-label-md text-label-md text-zenith-navy/80 hover:text-zenith-navy transition-colors" href="#faculty">Faculty</a>
+<a class="font-label-md text-label-md text-zenith-navy/80 hover:text-zenith-navy transition-colors" href="#enroll">Enroll</a>
+</div>
+<button class="btn-roll-hover bg-zenith-navy text-white px-6 py-2 rounded-full flex items-center gap-3 group transition-transform hover:scale-105 active:scale-95 duration-500 cubic-bezier(0.4, 0, 0.2, 1)">
+<div class="text-roll flex flex-col">
+<span class="font-label-md text-label-md">Join Now</span>
+<span class="font-label-md text-label-md absolute top-full">Join Now</span>
+</div>
+<div class="w-6 h-6 rounded-full bg-zenith-amber flex items-center justify-center">
+<span class="material-symbols-outlined text-zenith-navy text-[16px] font-bold">arrow_forward</span>
+</div>
+</button>
+</div>
+</nav>
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden px-gutter pt-24 pb- unit-2xl">
 
-  <section class="section">
-    <div class="container">
-      <h2 class="section-title reveal"><span class="animated-underline">Our Courses</span></h2>
-      <p class="section-subtitle reveal">Structured batches with limited seats for personal attention and better results.</p>
-      <div class="courses-grid reveal-stagger">
-        <div class="course-card reveal">
-          <div class="course-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"></line><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"></line><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"></line><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"></line></svg></div>
-          <h3>JEE Preparation</h3>
-          <p>Complete PCM syllabus with daily practice sheets and test series.</p>
-          <div class="course-meta"><span>7 AM - 1 PM</span><span class="seats">6 left</span></div>
-        </div>
-        <div class="course-card reveal">
-          <div class="course-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20"></path><path d="M2 12c0 5.523 4.477 10 10 10s10-4.477 10-10"></path><path d="M12 2c-1.5 2-1.5 8 0 10"></path><path d="M12 2c1.5 2 1.5 8 0 10"></path></svg></div>
-          <h3>NEET Preparation</h3>
-          <p>PCB focused coaching with biology diagrams and NCERT mastery.</p>
-          <div class="course-meta"><span>8 AM - 2 PM</span><span class="seats">4 left</span></div>
-        </div>
-        <div class="course-card reveal">
-          <div class="course-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div>
-          <h3>Board Prep</h3>
-          <p>Class 10 & 12 board exam preparation with sample paper practice.</p>
-          <div class="course-meta"><span>4 PM - 7 PM</span><span class="seats">12 left</span></div>
-        </div>
-        <div class="course-card reveal">
-          <div class="course-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg></div>
-          <h3>Foundation Course</h3>
-          <p>Early concept building for classes 8-9 to create strong basics.</p>
-          <div class="course-meta"><span>5 PM - 7 PM</span><span class="seats">8 left</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
+<div class="relative z-20 max-w-4xl text-center">
+<div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-zenith-amber/10 border border-zenith-amber/20 mb-8 animate-fade-in">
+<span class="w-2 h-2 rounded-full bg-zenith-amber animate-pulse"></span>
+<span class="text-zenith-amber font-label-md text-label-md uppercase tracking-widest">Admission 2026 Now Open</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl md:text-[64px] mb-6 leading-tight">
+                Rank higher. <span class="text-zenith-amber">Study smarter.</span><br/>
+                Get into the college you want.
+            </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-10">
+                Zenith Academy provides elite coaching for JEE, NEET, and Foundation programs. Our data-driven methodology ensures consistent success for every student.
+            </p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+<button class="bg-zenith-amber text-zenith-navy font-label-md text-label-md px-10 py-4 rounded-full font-bold hover:scale-105 transition-all duration-500 shadow-lg shadow-zenith-amber/20">
+                    Explore Programs
+                </button>
+<button class="liquid-glass text-white font-label-md text-label-md px-10 py-4 rounded-full border border-white/10 hover:bg-white/10 transition-all duration-500">
+                    Book Free Counseling
+                </button>
+</div>
+</div>
+</section>
+<!-- Live Stat Strip -->
+<div class="bg-zenith-navy/80 backdrop-blur-md border-y border-white/5 py-8 relative z-30">
+<div class="max-w-max-width mx-auto px-gutter grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+<div class="flex flex-col gap-1">
+<span class="text-zenith-amber font-headline-lg text-headline-lg">98.2%</span>
+<span class="text-on-surface-variant font-label-md text-label-md uppercase">Selection Rate</span>
+</div>
+<div class="flex flex-col gap-1 border-y md:border-y-0 md:border-x border-white/10 py-4 md:py-0">
+<span class="text-zenith-amber font-headline-lg text-headline-lg">340+ AIR</span>
+<span class="text-on-surface-variant font-label-md text-label-md uppercase">Ranked Under 1000</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-zenith-amber font-headline-lg text-headline-lg">15+ Yrs</span>
+<span class="text-on-surface-variant font-label-md text-label-md uppercase">Teaching Excellence</span>
+</div>
+</div>
+</div>
+<!-- Why Zenith (Asymmetric Layout) -->
+<section class="bg-white py-unit-2xl px-gutter overflow-hidden" id="faculty">
+<div class="max-w-max-width mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-unit-xl items-center">
+<div class="lg:col-span-5 text-zenith-navy">
+<h2 class="font-headline-lg text-headline-lg mb-6">Built for Excellence. Designed for Focus.</h2>
+<p class="font-body-md text-body-md text-slate-600 mb-8">
+                        Zenith Academy isn't just a coaching center; it's a high-performance environment where every detail—from adaptive learning software to distraction-free classrooms—is engineered for academic dominance.
+                    </p>
+<ul class="space-y-4 mb-10">
+<li class="flex items-center gap-4">
+<span class="material-symbols-outlined text-zenith-amber bg-zenith-navy rounded-full p-1">check</span>
+<span class="font-body-md text-body-md">IITian &amp; Doctor Led Faculty</span>
+</li>
+<li class="flex items-center gap-4">
+<span class="material-symbols-outlined text-zenith-amber bg-zenith-navy rounded-full p-1">check</span>
+<span class="font-body-md text-body-md">AI-Powered Performance Analytics</span>
+</li>
+<li class="flex items-center gap-4">
+<span class="material-symbols-outlined text-zenith-amber bg-zenith-navy rounded-full p-1">check</span>
+<span class="font-body-md text-body-md">24/7 Doubt Resolution Support</span>
+</li>
+</ul>
+<button class="border-2 border-zenith-navy text-zenith-navy px-8 py-3 rounded-full font-bold hover:bg-zenith-navy hover:text-white transition-all">
+                        Tour our Campus
+                    </button>
+</div>
+<div class="lg:col-span-7 grid grid-cols-2 gap-4 h-[500px]">
+<div class="rounded-2xl overflow-hidden shadow-2xl relative translate-y-12 transition-transform duration-700 hover:translate-y-6">
+<img class="w-full h-full object-cover" data-alt="A brightly lit, modern classroom at Zenith Academy where an instructor is teaching physics using a high-tech digital whiteboard. Students sit at clean wooden desks with laptops, engaged in learning. The style is professional and institutional yet modern and airy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNBLktuuK85Vymfz8f3-SvY0NxMcSL4In75JLmF2zsKNBWR-eUyonD69yT4iiKlMPBv9EhRhU_JNUzjWcbgf52kdeTeVYBJylQKZuWZwTh-ftlnDN8BjG35L-Jio_fVsU_UCoDClHTcbmvXggmeXDo-5OonHXqjQ0P5x49nVf_vKg7Xjc6xfIBPmbaHeAkm-NLJmFrI0spgJfC7plhv5-D37AQaQMJDxGl_I5B6SFnAU2YRetlDxan"/>
+</div>
+<div class="rounded-2xl overflow-hidden shadow-2xl relative transition-transform duration-700 hover:-translate-y-6">
+<img class="w-full h-full object-cover" data-alt="A massive, high-ceilinged examination hall at Zenith Academy with hundreds of students in suits taking a mock test. The atmosphere is quiet and focused, with clean white walls and large windows. The lighting is bright and even, highlighting the scholarly rigor of the institution." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAC4NCESlD8tDqtRhzYNslyXLTuRDut5Rgg3NuDeceCUOtAVUH5AgYcXwYP1OoXeMbRNukTjzfdDRSUQfewUPgvdInhDnhri2RZ4DdqHcRdDW05s0JCxtU3UyYk2Rqas63tiDnPP-vnqI_7a1peolopTG6dn8Azo1qd6cmLXJ1lPOtLs6jfsVKM_ljqJwZuLHTvz10rCExTIIB8GTsfRF2O3WxeJ-tQIYxYb4FuDpi6x_4nzMNNlS6T"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Courses (Bento Cards) -->
+<section class="bg-surface-container-low py-unit-2xl px-gutter" id="courses">
+<div class="max-w-max-width mx-auto">
+<div class="text-center mb-unit-xl">
+<h2 class="font-headline-lg text-headline-lg mb-4">Elite Coaching Programs</h2>
+<p class="text-on-surface-variant font-body-md text-body-md">Tailored paths for the world's toughest competitive exams.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- JEE Card -->
+<div class="bg-surface border border-white/5 p-8 rounded-2xl group hover:border-zenith-amber/30 transition-all duration-500">
+<div class="w-16 h-16 bg-zenith-amber/10 rounded-2xl flex items-center justify-center mb-6 text-zenith-amber group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[32px]">science</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-3">JEE (Main &amp; Adv)</h3>
+<p class="text-on-surface-variant font-body-sm text-body-sm mb-8">
+                        Comprehensive physics, chemistry, and mathematics training focusing on conceptual clarity and speed.
+                    </p>
+<div class="flex items-center justify-between">
+<span class="text-zenith-amber font-label-md text-label-md">Starts July 15</span>
+<a class="text-white hover:text-zenith-amber transition-colors flex items-center gap-2" href="#">
+                            Details <span class="material-symbols-outlined text-[18px]">north_east</span>
+</a>
+</div>
+</div>
+<!-- NEET Card -->
+<div class="bg-surface border border-white/5 p-8 rounded-2xl group hover:border-zenith-amber/30 transition-all duration-500">
+<div class="w-16 h-16 bg-zenith-amber/10 rounded-2xl flex items-center justify-center mb-6 text-zenith-amber group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[32px]">favorite</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-3">NEET Medical</h3>
+<p class="text-on-surface-variant font-body-sm text-body-sm mb-8">
+                        Intensive biology and chemistry focus with expert mentorship for medical aspirants aiming for top AIIMS seats.
+                    </p>
+<div class="flex items-center justify-between">
+<span class="text-zenith-amber font-label-md text-label-md">Starts July 20</span>
+<a class="text-white hover:text-zenith-amber transition-colors flex items-center gap-2" href="#">
+                            Details <span class="material-symbols-outlined text-[18px]">north_east</span>
+</a>
+</div>
+</div>
+<!-- Foundation Card -->
+<div class="bg-surface border border-white/5 p-8 rounded-2xl group hover:border-zenith-amber/30 transition-all duration-500">
+<div class="w-16 h-16 bg-zenith-amber/10 rounded-2xl flex items-center justify-center mb-6 text-zenith-amber group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[32px]">book_2</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-3">Foundation (8-10)</h3>
+<p class="text-on-surface-variant font-body-sm text-body-sm mb-8">
+                        Building the pillars of critical thinking and logic for Olympiads, NTSE, and early competitive advantage.
+                    </p>
+<div class="flex items-center justify-between">
+<span class="text-zenith-amber font-label-md text-label-md">Year-long</span>
+<a class="text-white hover:text-zenith-amber transition-colors flex items-center gap-2" href="#">
+                            Details <span class="material-symbols-outlined text-[18px]">north_east</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Results (Topper Grid) -->
+<section class="bg-zenith-navy py-unit-2xl px-gutter relative overflow-hidden" id="results">
+<div class="absolute top-0 right-0 w-96 h-96 bg-zenith-amber/5 blur-[120px] rounded-full -mr-48 -mt-48"></div>
+<div class="max-w-max-width mx-auto relative z-10">
+<div class="flex flex-col md:flex-row justify-between items-end gap-6 mb-unit-xl">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-white mb-2">Our Wall of Champions</h2>
+<p class="text-on-primary-container font-body-md text-body-md">Celebrating those who reached the Zenith of success.</p>
+</div>
+<button class="bg-white/10 hover:bg-white/20 text-white px-6 py-2 rounded-full border border-white/10 transition-all">
+                    View All Results
+                </button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 mb-unit-xl">
+<!-- Topper Card (Loop concept) -->
+<div class="group cursor-pointer">
+<div class="relative rounded-2xl overflow-hidden aspect-square mb-4 border border-white/5">
+<img class="w-full h-full object-cover grayscale-to-color" data-alt="Grid of student portraits. A black and white photo of a smiling diverse group of students in dark blazers with a small amber Zenith Academy pin. The style is classic yearbook, projecting trust and achievement." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBA0Mv3gb9LwN_KiVoP2dev1qadvIPzOiTupF2wN3yf_vW5ci95ot0izyKrXG3HoDpLAgW9C6ANUR1w54Ra2NbBaatwebwGo9zHxPzrHxYx686zSc4jBE7nxYh6fOxhRvToBLFwoxqk2MY4t41rYo9T1cnc-O8FCSjmKkEgwA847GIYgABKbwsjZVFmNHCw7_kmJkWv9LYCXtmTqsBal3h-E_vNcs-ARbcUvjc2pgU4_uyislyyehg2"/>
+<div class="absolute bottom-2 left-2 bg-zenith-amber text-zenith-navy font-extrabold px-3 py-1 rounded-lg text-sm shadow-lg">
+                            AIR 12
+                        </div>
+</div>
+<h4 class="text-white font-headline-sm text-headline-sm text-center group-hover:text-zenith-amber transition-colors">Aryan S.</h4>
+<p class="text-white/60 text-center font-label-md text-label-md">JEE Advanced</p>
+</div>
+<!-- Repeat Toppers -->
+<div class="group cursor-pointer">
+<div class="relative rounded-2xl overflow-hidden aspect-square mb-4 border border-white/5">
+<img class="w-full h-full object-cover grayscale-to-color" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBA0Mv3gb9LwN_KiVoP2dev1qadvIPzOiTupF2wN3yf_vW5ci95ot0izyKrXG3HoDpLAgW9C6ANUR1w54Ra2NbBaatwebwGo9zHxPzrHxYx686zSc4jBE7nxYh6fOxhRvToBLFwoxqk2MY4t41rYo9T1cnc-O8FCSjmKkEgwA847GIYgABKbwsjZVFmNHCw7_kmJkWv9LYCXtmTqsBal3h-E_vNcs-ARbcUvjc2pgU4_uyislyyehg2"/>
+<div class="absolute bottom-2 left-2 bg-zenith-amber text-zenith-navy font-extrabold px-3 py-1 rounded-lg text-sm shadow-lg">
+                            AIR 45
+                        </div>
+</div>
+<h4 class="text-white font-headline-sm text-headline-sm text-center group-hover:text-zenith-amber transition-colors">Meera K.</h4>
+<p class="text-white/60 text-center font-label-md text-label-md">NEET UG</p>
+</div>
+<div class="group cursor-pointer">
+<div class="relative rounded-2xl overflow-hidden aspect-square mb-4 border border-white/5">
+<img class="w-full h-full object-cover grayscale-to-color" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBA0Mv3gb9LwN_KiVoP2dev1qadvIPzOiTupF2wN3yf_vW5ci95ot0izyKrXG3HoDpLAgW9C6ANUR1w54Ra2NbBaatwebwGo9zHxPzrHxYx686zSc4jBE7nxYh6fOxhRvToBLFwoxqk2MY4t41rYo9T1cnc-O8FCSjmKkEgwA847GIYgABKbwsjZVFmNHCw7_kmJkWv9LYCXtmTqsBal3h-E_vNcs-ARbcUvjc2pgU4_uyislyyehg2"/>
+<div class="absolute bottom-2 left-2 bg-zenith-amber text-zenith-navy font-extrabold px-3 py-1 rounded-lg text-sm shadow-lg">
+                            AIR 89
+                        </div>
+</div>
+<h4 class="text-white font-headline-sm text-headline-sm text-center group-hover:text-zenith-amber transition-colors">Rohan D.</h4>
+<p class="text-white/60 text-center font-label-md text-label-md">JEE Main</p>
+</div>
+<div class="group cursor-pointer">
+<div class="relative rounded-2xl overflow-hidden aspect-square mb-4 border border-white/5">
+<img class="w-full h-full object-cover grayscale-to-color" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBA0Mv3gb9LwN_KiVoP2dev1qadvIPzOiTupF2wN3yf_vW5ci95ot0izyKrXG3HoDpLAgW9C6ANUR1w54Ra2NbBaatwebwGo9zHxPzrHxYx686zSc4jBE7nxYh6fOxhRvToBLFwoxqk2MY4t41rYo9T1cnc-O8FCSjmKkEgwA847GIYgABKbwsjZVFmNHCw7_kmJkWv9LYCXtmTqsBal3h-E_vNcs-ARbcUvjc2pgU4_uyislyyehg2"/>
+<div class="absolute bottom-2 left-2 bg-zenith-amber text-zenith-navy font-extrabold px-3 py-1 rounded-lg text-sm shadow-lg">
+                            AIR 112
+                        </div>
+</div>
+<h4 class="text-white font-headline-sm text-headline-sm text-center group-hover:text-zenith-amber transition-colors">Sanya M.</h4>
+<p class="text-white/60 text-center font-label-md text-label-md">NEET UG</p>
+</div>
+<div class="group cursor-pointer">
+<div class="relative rounded-2xl overflow-hidden aspect-square mb-4 border border-white/5">
+<img class="w-full h-full object-cover grayscale-to-color" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBA0Mv3gb9LwN_KiVoP2dev1qadvIPzOiTupF2wN3yf_vW5ci95ot0izyKrXG3HoDpLAgW9C6ANUR1w54Ra2NbBaatwebwGo9zHxPzrHxYx686zSc4jBE7nxYh6fOxhRvToBLFwoxqk2MY4t41rYo9T1cnc-O8FCSjmKkEgwA847GIYgABKbwsjZVFmNHCw7_kmJkWv9LYCXtmTqsBal3h-E_vNcs-ARbcUvjc2pgU4_uyislyyehg2"/>
+<div class="absolute bottom-2 left-2 bg-zenith-amber text-zenith-navy font-extrabold px-3 py-1 rounded-lg text-sm shadow-lg">
+                            AIR 156
+                        </div>
+</div>
+<h4 class="text-white font-headline-sm text-headline-sm text-center group-hover:text-zenith-amber transition-colors">Kabir T.</h4>
+<p class="text-white/60 text-center font-label-md text-label-md">JEE Adv</p>
+</div>
+<div class="group cursor-pointer">
+<div class="relative rounded-2xl overflow-hidden aspect-square mb-4 border border-white/5">
+<img class="w-full h-full object-cover grayscale-to-color" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBA0Mv3gb9LwN_KiVoP2dev1qadvIPzOiTupF2wN3yf_vW5ci95ot0izyKrXG3HoDpLAgW9C6ANUR1w54Ra2NbBaatwebwGo9zHxPzrHxYx686zSc4jBE7nxYh6fOxhRvToBLFwoxqk2MY4t41rYo9T1cnc-O8FCSjmKkEgwA847GIYgABKbwsjZVFmNHCw7_kmJkWv9LYCXtmTqsBal3h-E_vNcs-ARbcUvjc2pgU4_uyislyyehg2"/>
+<div class="absolute bottom-2 left-2 bg-zenith-amber text-zenith-navy font-extrabold px-3 py-1 rounded-lg text-sm shadow-lg">
+                            AIR 204
+                        </div>
+</div>
+<h4 class="text-white font-headline-sm text-headline-sm text-center group-hover:text-zenith-amber transition-colors">Zoya A.</h4>
+<p class="text-white/60 text-center font-label-md text-label-md">BITSAT</p>
+</div>
+</div>
+<!-- Video Testimonial Card -->
+<div class="bg-surface-container-low rounded-3xl p-8 md:p-12 border border-white/5 flex flex-col md:flex-row gap-12 items-center">
+<div class="w-full md:w-1/2 aspect-video rounded-2xl relative overflow-hidden bg-black group cursor-pointer">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-20 h-20 bg-zenith-amber rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-2xl">
+<span class="material-symbols-outlined text-zenith-navy text-4xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<img class="w-full h-full object-cover opacity-70" data-alt="Cinematic still of a student testimonial video. A smiling female student is sitting in a modern study space with warm lighting and bookshelves in the background. High production quality with a soft depth of field, projecting institutional prestige and personal success." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCXSxu5BWsYlEyWbbH5ckwqACayAZleG6lUVSrR72afhSj2ubyo-zNiBAf1JDPUl9MzGxsjkX8ju63czArbAAe1yqkfeh5eEJCZHp6eAsfUTn1wFiqFt74eiSjkCEBKG8cqZ_14UFbWuKBOmZv6UVRWnY1JLD1dGh32h4WnIliB5yNuq5JNYaFY84ViU1-36Aoi4aLm575nAd-XUmILps81HJ8FnLW7m4FRAP4DjBPaH0iSy-S0zU2-')"/>
+</div>
+<div class="w-full md:w-1/2">
+<span class="text-zenith-amber font-label-md text-label-md tracking-widest uppercase mb-4 block">Student Spotlight</span>
+<h3 class="font-headline-lg text-headline-lg text-white mb-6">"The methodology changed how I view problems."</h3>
+<p class="text-on-surface-variant font-body-lg text-body-lg italic mb-8">
+                        "I struggled with physics for years. At Zenith, the focus on foundational concepts and the adaptive mock tests finally clicked everything into place."
+                    </p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full border-2 border-zenith-amber overflow-hidden">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBA0Mv3gb9LwN_KiVoP2dev1qadvIPzOiTupF2wN3yf_vW5ci95ot0izyKrXG3HoDpLAgW9C6ANUR1w54Ra2NbBaatwebwGo9zHxPzrHxYx686zSc4jBE7nxYh6fOxhRvToBLFwoxqk2MY4t41rYo9T1cnc-O8FCSjmKkEgwA847GIYgABKbwsjZVFmNHCw7_kmJkWv9LYCXtmTqsBal3h-E_vNcs-ARbcUvjc2pgU4_uyislyyehg2"/>
+</div>
+<div>
+<p class="text-white font-bold">Meera Kapur</p>
+<p class="text-white/50 text-sm">MBBS, AIIMS New Delhi</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Enroll (Glassmorphism Band) -->
+<section class="py-unit-2xl px-gutter relative overflow-hidden" id="enroll">
 
-  <section id="results" class="section results-section">
-    <div class="container">
-      <h2 class="section-title reveal"><span class="animated-underline">Proven Results</span></h2>
-      <p class="section-subtitle reveal">Our students consistently rank among the top in competitive exams.</p>
-      <div class="results-grid reveal-stagger">
-        <div class="result-card reveal">
-          <span class="rank-badge">AIR 342</span>
-          <h4>Rohit Sharma</h4>
-          <p>JEE Mains 2024 — 98.2 percentile</p>
-        </div>
-        <div class="result-card reveal">
-          <span class="rank-badge">AIR 518</span>
-          <h4>Priya Verma</h4>
-          <p>NEET 2024 — 695 marks</p>
-        </div>
-        <div class="result-card reveal">
-          <span class="rank-badge">State Rank 12</span>
-          <h4>Aman Joshi</h4>
-          <p>Class 12 CBSE — 97.4%</p>
-        </div>
-        <div class="result-card reveal">
-          <span class="rank-badge">AIR 892</span>
-          <h4>Sneha Patil</h4>
-          <p>JEE Advanced 2024 — Qualified</p>
-        </div>
-      </div>
-    </div>
-  </section>
+<div class="max-w-max-width mx-auto relative z-10">
+<div class="bg-zenith-navy rounded-[40px] p-8 md:p-16 border border-white/10 shadow-2xl overflow-hidden relative">
+<div class="grid lg:grid-cols-2 gap-16 items-center">
+<div>
+<h2 class="font-headline-xl text-headline-xl text-white mb-6 leading-tight">Start your journey to the top.</h2>
+<p class="text-on-primary-container font-body-lg text-body-lg mb-8">
+                            Join the next batch of Zenith Academy. Limited seats available for the upcoming academic session.
+                        </p>
+<div class="flex flex-wrap gap-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-zenith-amber">event_available</span>
+<span class="text-white/80 font-label-md text-label-md uppercase">Batches: July &amp; Sept</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-zenith-amber">verified</span>
+<span class="text-white/80 font-label-md text-label-md uppercase">Entrance Test Based Admission</span>
+</div>
+</div>
+</div>
+<div class="liquid-glass p-8 rounded-3xl">
+<h4 class="text-white font-headline-sm text-headline-sm mb-6">Request Callback</h4>
+<form class="space-y-4">
+<div class="grid grid-cols-2 gap-4">
+<input class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:border-zenith-amber focus:ring-0 focus:outline-none transition-all" placeholder="First Name" type="text"/>
+<input class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:border-zenith-amber focus:ring-0 focus:outline-none transition-all" placeholder="Last Name" type="text"/>
+</div>
+<input class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:border-zenith-amber focus:ring-0 focus:outline-none transition-all" placeholder="Email Address" type="email"/>
+<select class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-zenith-amber focus:ring-0 focus:outline-none transition-all appearance-none">
+<option class="bg-zenith-navy">Select Course</option>
+<option class="bg-zenith-navy">JEE Advanced</option>
+<option class="bg-zenith-navy">NEET Medical</option>
+<option class="bg-zenith-navy">Foundation (8-10)</option>
+</select>
+<button class="w-full bg-zenith-amber text-zenith-navy font-bold py-4 rounded-xl hover:scale-105 transition-transform">
+                                Submit Interest
+                            </button>
+</form>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest py-20 px-gutter border-t border-white/5">
+<div class="max-w-max-width mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-3 mb-6">
+<img alt="Zenith Academy Logo Mark" class="h-10 w-10" src="https://lh3.googleusercontent.com/aida/AP1WRLshDtIqtLhB89Er9ZjGThy61h3lHRL8dDbelfHrNrp4ZfwD_-auLmT74J44I_lYOU2DRBKAT-fg2vZq7WbVPJrMKpgJWZGYFwR9UEcJNvnFEJNIMPpV8afvfAicbQAe0FhIh4Qxh6vKze8Xn5LT-pr4XLbISnqDD0dmuJSpYMyrQMYv5WQkM_QSgMyKFuArRfxMLNDgVmBaIh14FR9fIvimZ-luBtEomcxXp_U_W7WThubJ4M2VUlEBtwE"/>
+<span class="font-headline-sm text-headline-sm font-extrabold text-white tracking-tighter">ZENITH</span>
+</div>
+<p class="text-on-surface-variant text-sm mb-6 max-w-xs">
+                    Leading the future of education with data-driven coaching and elite faculty.
+                </p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-zenith-amber hover:border-zenith-amber transition-all" href="#">
+<span class="material-symbols-outlined text-sm">public</span>
+</a>
+<a class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-zenith-amber hover:border-zenith-amber transition-all" href="#">
+<span class="material-symbols-outlined text-sm">videocam</span>
+</a>
+<a class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-zenith-amber hover:border-zenith-amber transition-all" href="#">
+<span class="material-symbols-outlined text-sm">alternate_email</span>
+</a>
+</div>
+</div>
+<div>
+<h5 class="text-white font-bold mb-6">Quick Links</h5>
+<ul class="space-y-4 text-on-surface-variant text-sm">
+<li><a class="hover:text-zenith-amber transition-colors" href="#">Courses &amp; Fee</a></li>
+<li><a class="hover:text-zenith-amber transition-colors" href="#">Admission Test</a></li>
+<li><a class="hover:text-zenith-amber transition-colors" href="#">Success Stories</a></li>
+<li><a class="hover:text-zenith-amber transition-colors" href="#">Scholarships</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-white font-bold mb-6">Support</h5>
+<ul class="space-y-4 text-on-surface-variant text-sm">
+<li><a class="hover:text-zenith-amber transition-colors" href="#">Help Center</a></li>
+<li><a class="hover:text-zenith-amber transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-zenith-amber transition-colors" href="#">Terms of Service</a></li>
+<li><a class="hover:text-zenith-amber transition-colors" href="#">Contact Us</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-white font-bold mb-6">Headquarters</h5>
+<p class="text-on-surface-variant text-sm mb-4 leading-relaxed">
+                    124 Education Hub, Elite District<br/>
+                    Knowledge Center, 560001
+                </p>
+<p class="text-on-surface-variant text-sm">
+<span class="font-bold text-white">Call:</span> +1 (800) ZENITH-00<br/>
+<span class="font-bold text-white">Mail:</span> hello@zenithacademy.edu
+                </p>
+</div>
+</div>
+<div class="max-w-max-width mx-auto border-t border-white/5 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-on-surface-variant/50 text-xs">© 2026 Zenith Academy. Pursuing Excellence.</p>
+<div class="flex gap-8 text-on-surface-variant/50 text-xs">
+<span>Alumni Network</span>
+<span>Instructor Portal</span>
+<span>Student LMS</span>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interactions and scroll effects
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav div');
+            if (window.scrollY > 50) {
+                nav.classList.add('py-2');
+                nav.classList.remove('py-3');
+            } else {
+                nav.classList.add('py-3');
+                nav.classList.remove('py-2');
+            }
+        });
 
-  <section class="section why-section">
-    <div class="container">
-      <h2 class="section-title reveal"><span class="animated-underline">Why Students Choose Us</span></h2>
-      <p class="section-subtitle reveal">Numbers that speak louder than promises.</p>
-      <div class="why-grid reveal-stagger">
-        <div class="why-block reveal">
-          <h4 class="counter" data-counter="12">0</h4>
-          <p>Years Experience</p>
-        </div>
-        <div class="why-block reveal">
-          <h4 class="counter" data-counter="5000" data-suffix="+">0</h4>
-          <p>Students Taught</p>
-        </div>
-        <div class="why-block reveal">
-          <h4 class="counter" data-counter="90" data-suffix="%">0</h4>
-          <p>Selection Rate</p>
-        </div>
-        <div class="why-block reveal">
-          <h4 class="counter" data-counter="5">0</h4>
-          <p>Doubt Sessions / Week</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="lead-form" class="section form-section">
-    <div class="container">
-      <h2 class="section-title text-center reveal"><span class="animated-underline">Get Free Counselling</span></h2>
-      <p class="section-subtitle text-center reveal" style="margin-left:auto;margin-right:auto;">Fill the form and our counsellor will call you within 30 minutes.</p>
-      <form class="lead-form reveal" data-demo="coaching">
-        <div class="grid-2">
-          <div class="form-group">
-            <label for="coaching-name">Student Name</label>
-            <input id="coaching-name" type="text" class="form-control" placeholder="Enter name" required>
-          </div>
-          <div class="form-group">
-            <label for="coaching-phone">Phone Number</label>
-            <input id="coaching-phone" type="tel" class="form-control" placeholder="Enter phone" pattern="[0-9]{10}" required>
-          </div>
-          <div class="form-group">
-            <label for="coaching-class">Class</label>
-            <input id="coaching-class" type="text" class="form-control" placeholder="e.g. 11th, 12th" required>
-          </div>
-          <div class="form-group">
-            <label for="coaching-course">Course</label>
-            <select id="coaching-course" class="form-control" required>
-              <option value="">Select Course</option>
-              <option>JEE</option>
-              <option>NEET</option>
-              <option>Board Prep</option>
-              <option>Foundation</option>
-            </select>
-          </div>
-        </div>
-        <button type="submit" class="submit-btn no-arrow" data-track="coaching_form_submit">Get Free Counselling</button>
-        <p class="form-note">Prefer WhatsApp? <a href="#" data-whatsapp="I saw your coaching demo, interested!" data-demo="coaching">Chat directly</a></p>
-      </form>
-    </div>
-  </section>
-
-  <div class="footer-note">
-    <div class="container">© 2025 MistHustlers Indore — Coaching Institute Demo</div>
-  </div>
-  <div class="sticky-footer">
-    <div class="container">
-      <span class="text">Want this for your business?</span>
-      <a href="tel:XXXXXXXXXX" class="btn btn-sm btn-secondary no-arrow" data-track="coaching_footer_call">Call</a>
-      <a href="#" class="btn btn-sm btn-primary no-arrow" data-whatsapp="I saw your coaching demo, interested!" data-demo="coaching" data-track="coaching_footer_whatsapp">WhatsApp</a>
-    </div>
-  </div>
-
-  <script src="../js/shared.js"></script>
-</body>
-</html>
+        // Simple smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+<script src="/demo/coaching/navigation.js"></script></body></html>

@@ -1,280 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Salon / Spa Website Demo - MistHustlers Indore</title>
-  <meta name="description" content="Premium luxury salon and spa booking website demo for Indore. Service menu, offers, gallery, and appointments. Built by MistHustlers.">
-  <link rel="canonical" href="https://www.misthustlers.in/demo/salon/">
-  <meta name="robots" content="noindex, follow">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%237C3AED'/%3E%3Ctext x='50' y='65' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3EM%3C/text%3E%3C/svg%3E">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/shared.css">
-  <style>
-    :root {
-      --salon-rose: #C2677B;
-      --salon-rose-light: #D98A9B;
-      --salon-mauve: #2C1A25;
-      --salon-pink: #FFF5F7;
-      --salon-light: #E8C8CF;
-    }
-    body { background: var(--salon-pink); color: var(--salon-mauve); font-family: 'Nunito', sans-serif; }
-    h1, h2, h3 { font-family: 'Libre Baskerville', serif; }
-    
-.hero { padding: 140px 0 80px; background: linear-gradient(135deg, #fff5f7 0%, #fff 100%); position: relative; overflow: hidden; }
-    .hero::before { content: ''; position: absolute; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(194,103,123,0.12), transparent 70%); top: -100px; right: -100px; z-index: 0; }
-    .hero-grid { display: grid; gap: 48px; align-items: center; position: relative; z-index: 1; }
-    @media (min-width: 900px) { .hero-grid { grid-template-columns: 1fr 1fr; } }
-    .hero-left { background: rgba(255,255,255,0.7); border-radius: 24px; padding: 40px; backdrop-filter: blur(10px); }
-    .hero h1 { font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1.1; margin-bottom: 16px; color: var(--salon-mauve); }
-    .hero p { font-size: 1.15rem; color: #6d4c55; margin-bottom: 28px; }
-    .btn-rose { background: var(--salon-rose); color: #fff; font-weight: 700; }
-    .btn-rose:hover { background: var(--salon-rose-light); box-shadow: 0 12px 32px rgba(194,103,123,0.25); }
-    .hero-image { border-radius: 24px; overflow: hidden; aspect-ratio: 3 / 4; box-shadow: 0 24px 60px rgba(194,103,123,0.18); }
-    .hero-image img { width: 100%; height: 100%; object-fit: cover; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Aurelle — Private Salon & Spa | Luxury Spa New York</title>
+<meta name="description" content="Aurelle Private Salon & Spa in New York. Luxury facials, massage, body treatments, and nail care. Book your ritual today.">
+<meta property="og:title" content="Aurelle — Private Salon & Spa">
+<meta property="og:description" content="A ritual, not a routine. Luxury spa treatments in New York.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.misthustlers.in/demo/salon/">
+<meta name="robots" content="noindex, follow">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Aurelle — Private Salon & Spa">
+<meta name="twitter:description" content="A ritual, not a routine. Luxury spa treatments in New York.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --onyx:#050308; --deep-orchid:#1a0a2e; --orchid:#a855f7; --orchid-bright:#c084fc;
+  --blush:#e3c3bd; --ivory:#f6efe6; --stone:#a89e93;
+  --font-heading:'Cormorant Garamond',serif; --font-body:'Jost',sans-serif;
+}
+html{scroll-behavior:smooth;background:var(--onyx);color:var(--ivory);}
+body{background:var(--onyx);font-family:var(--font-body);font-weight:300;letter-spacing:.02em;-webkit-font-smoothing:antialiased}
+.bg-onyx{background-color:#050308}
+.bg-deep-orchid{background-color:#1a0a2e}
+.bg-orchid{background-color:#a855f7}
+.text-orchid{color:#a855f7}
+.text-orchid-bright{color:#c084fc}
+.text-ivory{color:#f6efe6}
+.text-stone{color:#a89e93}
+.text-onyx{color:#050308}
+.border-orchid\/15{border-color:rgba(168,85,247,.15)}
+.border-orchid\/20{border-color:rgba(168,85,247,.2)}
+.border-orchid\/30{border-color:rgba(168,85,247,.3)}
+.border-orchid\/40{border-color:rgba(168,85,247,.4)}
+.border-orchid\/60{border-color:rgba(168,85,247,.6)}
+.hover\:bg-orchid\/10:hover{background-color:rgba(168,85,247,.1)}
+.hover\:text-ivory:hover{color:#f6efe6}
+.gilded-glass{background:rgba(168,85,247,.04);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);border-top:1px solid rgba(168,85,247,.25);border-bottom:1px solid rgba(168,85,247,.1)}
+.gilded-glass-strong{background:rgba(168,85,247,.08);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(168,85,247,.35);box-shadow:0 0 30px rgba(168,85,247,.12)}
+.orchid-hairline{height:1px;background:linear-gradient(90deg,transparent,rgba(168,85,247,.5),transparent);margin:0 auto}
+.font-heading{font-family:var(--font-heading)}.font-body{font-family:var(--font-body)}
+.tracking-wide{letter-spacing:.25em}.tracking-body{letter-spacing:.02em}
+.corner-bracket{position:relative}.corner-bracket::before{content:'';position:absolute;top:0;left:0;width:24px;height:24px;border-top:1px solid rgba(168,85,247,.5);border-left:1px solid rgba(168,85,247,.5)}.corner-bracket::after{content:'';position:absolute;bottom:0;right:0;width:24px;height:24px;border-bottom:1px solid rgba(168,85,247,.5);border-right:1px solid rgba(168,85,247,.5)}
+.scroll-indicator{position:absolute;bottom:32px;left:50%;transform:translateX(-50%)}
+.scroll-line{width:1px;height:60px;background:linear-gradient(to bottom,rgba(168,85,247,.8),transparent);margin:0 auto;position:relative}
+.scroll-dot{position:absolute;top:0;left:50%;width:6px;height:6px;border-radius:50%;background:var(--orchid);transform:translateX(-50%)}
+/* lightbox */
+.lightbox-overlay{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.95);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.lightbox-overlay img{max-height:90vh;max-width:90vw;object-fit:contain}
+.lightbox-close{position:absolute;top:24px;right:24px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--gold);font-size:24px;font-family:var(--font-body);font-weight:200}
+/* before/after divider */
+.ba-pair{display:grid;grid-template-columns:1fr 1px 1fr;gap:0;position:relative}
+.ba-divider{width:1px;background:rgba(168,85,247,.4)}
+/* custom scrollbar */
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--onyx)}::-webkit-scrollbar-thumb{background:rgba(168,85,247,.3);border-radius:3px}
+/* reduced motion */
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 
-    .services-section { background: #fff; padding: 96px 0; }
-    .section-title { color: var(--salon-mauve); }
-    .section-subtitle { color: #6d4c55; }
-    .tabs { display: flex; gap: 12px; justify-content: center; margin-bottom: 32px; flex-wrap: wrap; }
-    .tab { padding: 10px 24px; border-radius: 999px; cursor: pointer; font-weight: 700; background: #fff5f7; color: var(--salon-mauve); border: 1px solid #E8C8CF; transition: all 0.2s; }
-    .tab.active { background: var(--salon-rose); color: #fff; border-color: var(--salon-rose); }
-    .tab-content { display: none; }
-    .tab-content.active { display: grid; }
-    .service-list { display: grid; gap: 16px; grid-template-columns: 1fr; }
-    @media (min-width: 768px) { .service-list { grid-template-columns: repeat(2, 1fr); } }
-    .service-item { display: flex; justify-content: space-between; align-items: center; background: #fff5f7; padding: 18px 20px; border-radius: 16px; border: 1px solid #f0e0e3; transition: transform 0.2s, box-shadow 0.2s; }
-    .service-item:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(194,103,123,0.1); }
-    .service-item h4 { font-family: 'Nunito', sans-serif; font-weight: 700; margin-bottom: 4px; }
-    .service-item small { color: #8a6b74; }
-    .service-item .price { font-weight: 700; color: var(--salon-rose); font-size: 1.1rem; }
-
-    .offer-banner { background: var(--salon-rose); color: #fff; padding: 64px 0; text-align: center; }
-    .offer-banner h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); margin-bottom: 12px; }
-    .offer-banner p { opacity: 0.9; margin-bottom: 24px; margin-left: auto; margin-right: auto; }
-    .btn-white { background: #fff; color: var(--salon-rose); font-weight: 700; }
-
-    .booking-section { background: #fff; padding: 96px 0; }
-    .booking-form { max-width: 640px; margin: 0 auto; background: #fff5f7; border-radius: 24px; padding: 40px; border: 1px solid #E8C8CF; }
-    .booking-form .form-control { background: #fff; border-color: #E8C8CF; color: var(--salon-mauve); }
-    .booking-form .form-control::placeholder { color: #9e8089; }
-    .booking-form .form-control:focus { border-color: var(--salon-rose); }
-    .booking-form label { color: var(--salon-mauve); }
-    .submit-btn { width: 100%; background: var(--salon-rose); color: #fff; font-weight: 700; padding: 16px; border-radius: 16px; cursor: pointer; }
-    .submit-btn:hover { opacity: 0.9; }
-    .form-success { background: rgba(194,103,123,0.15); color: var(--salon-rose); border: 1px solid rgba(194,103,123,0.3); }
-    .form-note a { color: var(--salon-rose); }
-
-    .gallery-section { background: var(--salon-pink); padding: 96px 0; }
-    .gallery-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
-    @media (min-width: 640px) { .gallery-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 900px) { .gallery-grid { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 220px; } }
-    .gallery-item { border-radius: 16px; overflow: hidden; position: relative; aspect-ratio: 1 / 1; }
-    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-    .gallery-item:hover img { transform: scale(1.08); }
-    .gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
-    @media (max-width: 899px) { .gallery-item:nth-child(1) { grid-column: span 1; grid-row: span 1; } }
-
-    .makeover-section { background: #fff; padding: 96px 0; }
-    .makeover-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
-    @media (min-width: 900px) { .makeover-grid { grid-template-columns: repeat(2, 1fr); } }
-    .makeover-card { border-radius: 24px; overflow: hidden; position: relative; aspect-ratio: 4 / 3; }
-    .makeover-card img { width: 100%; height: 100%; object-fit: cover; }
-    .makeover-card .tag { position: absolute; top: 16px; left: 16px; background: var(--salon-rose); color: #fff; padding: 6px 14px; border-radius: 999px; font-weight: 700; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; }
-
-    .testimonials { background: #fff; padding: 96px 0; }
-    .testimonials-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
-    @media (min-width: 768px) { .testimonials-grid { grid-template-columns: repeat(3, 1fr); } }
-    .testimonial-card { background: var(--salon-pink); border-radius: 16px; padding: 28px; }
-    .stars { color: #F5A623; margin-bottom: 12px; }
-    .testimonial-card p { color: #5a454c; font-style: italic; margin-bottom: 16px; max-width: 100%; }
-    .testimonial-card h4 { font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--salon-mauve); }
-    .testimonial-card .service { color: var(--salon-rose); font-size: 0.85rem; }
-
-    .footer-note { text-align: center; padding: 40px 0; background: var(--salon-pink); color: #8a6b74; font-size: 0.9rem; }
-.sticky-footer { background: rgba(255,245,247,0.95); border-top: 1px solid #E8C8CF; color: var(--salon-mauve); }
-    .sticky-footer .text { color: var(--salon-mauve); }
-    .sticky-footer .btn-primary { background: var(--salon-rose); color: #fff; }
-    .sticky-footer .btn-secondary { background: #fff; color: var(--salon-mauve); border: 1px solid #E8C8CF; }
-  </style>
+/* scroll-reveal animations */
+@keyframes scrollBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+  50% { transform: translateX(-50%) translateY(10px); opacity: 0.4; }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
 </head>
 <body>
-<section class="hero">
-    <div class="container">
-      <div class="hero-grid">
-        <div class="hero-left reveal">
-          <h1>Blush & Bloom Salon</h1>
-          <p>Luxury self-care experiences in the heart of Indore. Pamper yourself with our expert stylists and therapists.</p>
-          <a href="#booking" class="btn btn-lg btn-rose no-arrow" data-track="salon_hero_book">Book Now</a>
-        </div>
-        <div class="hero-image reveal reveal-right">
-          <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80" alt="Luxury salon ambience" width="800" height="1067" loading="eager" decoding="async">
-        </div>
-      </div>
-    </div>
-  </section>
+<div id="root"></div>
 
-  <section class="services-section">
-    <div class="container">
-      <h2 class="section-title reveal">Our Services</h2>
-      <p class="section-subtitle reveal">Choose from a curated menu of beauty and wellness.</p>
-      <div class="tabs reveal">
-        <div class="tab active" onclick="switchTab('hair')">Hair</div>
-        <div class="tab" onclick="switchTab('skin')">Skin</div>
-        <div class="tab" onclick="switchTab('nails')">Nails</div>
-        <div class="tab" onclick="switchTab('body')">Body</div>
-      </div>
-      <div id="hair" class="tab-content active reveal">
-        <div class="service-list">
-          <div class="service-item"><div><h4>Haircut & Styling</h4><small>45 min</small></div><div class="price">₹499</div></div>
-          <div class="service-item"><div><h4>Keratin Treatment</h4><small>120 min</small></div><div class="price">₹2,499</div></div>
-          <div class="service-item"><div><h4>Hair Coloring</h4><small>90 min</small></div><div class="price">₹1,499</div></div>
-          <div class="service-item"><div><h4>Spa Hair Wash</h4><small>30 min</small></div><div class="price">₹349</div></div>
-        </div>
-      </div>
-      <div id="skin" class="tab-content reveal">
-        <div class="service-list">
-          <div class="service-item"><div><h4>Facial</h4><small>60 min</small></div><div class="price">₹999</div></div>
-          <div class="service-item"><div><h4>Cleanup</h4><small>45 min</small></div><div class="price">₹599</div></div>
-          <div class="service-item"><div><h4>De-Tan</h4><small>40 min</small></div><div class="price">₹699</div></div>
-          <div class="service-item"><div><h4>Anti-Aging</h4><small>75 min</small></div><div class="price">₹1,299</div></div>
-        </div>
-      </div>
-      <div id="nails" class="tab-content reveal">
-        <div class="service-list">
-          <div class="service-item"><div><h4>Manicure</h4><small>45 min</small></div><div class="price">₹499</div></div>
-          <div class="service-item"><div><h4>Pedicure</h4><small>60 min</small></div><div class="price">₹699</div></div>
-          <div class="service-item"><div><h4>Gel Nail Art</h4><small>90 min</small></div><div class="price">₹1,199</div></div>
-          <div class="service-item"><div><h4>Nail Extension</h4><small>120 min</small></div><div class="price">₹1,999</div></div>
-        </div>
-      </div>
-      <div id="body" class="tab-content reveal">
-        <div class="service-list">
-          <div class="service-item"><div><h4>Full Body Massage</h4><small>90 min</small></div><div class="price">₹1,999</div></div>
-          <div class="service-item"><div><h4>Body Polishing</h4><small>75 min</small></div><div class="price">₹1,499</div></div>
-          <div class="service-item"><div><h4>Waxing</h4><small>60 min</small></div><div class="price">₹799</div></div>
-          <div class="service-item"><div><h4>Threading</h4><small>15 min</small></div><div class="price">₹149</div></div>
-        </div>
-      </div>
-    </div>
-  </section>
+<script src="/demo/tailwindcss.js"></script>
+<script src="/demo/salon/vendor/react.min.js"></script>
+<script src="/demo/salon/vendor/react-dom.min.js"></script>
+<script src="/demo/salon/vendor/three.min.js"></script>
 
-  <section class="offer-banner">
-    <div class="container">
-      <h2 class="reveal">Bridal Package — Rs. 4,999 only</h2>
-      <p class="reveal">Includes makeup, hair, nails, and mehendi styling. Limited bridal slots available.</p>
-      <a href="#" class="btn btn-white no-arrow reveal" data-whatsapp="I saw your salon demo, interested in the bridal package!" data-demo="salon" data-track="salon_offer_whatsapp">Enquire on WhatsApp</a>
-    </div>
-  </section>
 
-  <section id="booking" class="booking-section">
-    <div class="container">
-      <h2 class="section-title text-center reveal">Book Your Appointment</h2>
-      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">Choose your service, date, and preferred stylist.</p>
-      <form class="booking-form reveal" data-demo="salon">
-        <div class="grid-2">
-          <div class="form-group"><label for="salon-name">Name</label><input id="salon-name" type="text" class="form-control" placeholder="Your name" required></div>
-          <div class="form-group"><label for="salon-phone">Phone</label><input id="salon-phone" type="tel" class="form-control" placeholder="Your phone" pattern="[0-9]{10}" required></div>
-          <div class="form-group">
-            <label for="salon-service">Service</label>
-            <select id="salon-service" class="form-control" required>
-              <option value="">Select Service</option>
-              <option>Haircut & Styling</option>
-              <option>Facial</option>
-              <option>Manicure</option>
-              <option>Full Body Massage</option>
-            </select>
-          </div>
-          <div class="form-group"><label for="salon-datetime">Date & Time</label><input id="salon-datetime" type="datetime-local" class="form-control" required></div>
-          <div class="form-group" style="grid-column:1 / -1;">
-            <label for="salon-stylist">Stylist Preference</label>
-            <select id="salon-stylist" class="form-control">
-              <option value="">No Preference</option>
-              <option>Priya</option>
-              <option>Sonia</option>
-              <option>Riya</option>
-            </select>
-          </div>
-        </div>
-        <button type="submit" class="submit-btn no-arrow" data-track="salon_form_submit">Confirm Appointment</button>
-        <p class="form-note">Prefer WhatsApp? <a href="#" data-whatsapp="I saw your salon demo, interested!" data-demo="salon">Chat directly</a></p>
-      </form>
-    </div>
-  </section>
 
-  <section class="gallery-section">
-    <div class="container">
-      <h2 class="section-title reveal">Gallery</h2>
-      <p class="section-subtitle reveal">A glimpse of our salon experience.</p>
-      <div class="gallery-grid reveal-stagger">
-        <div class="gallery-item reveal"><img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=800&q=80" alt="Salon hair styling session" width="800" height="800" loading="lazy" decoding="async"></div>
-        <div class="gallery-item reveal"><img src="https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=800&q=80" alt="Spa treatment room" width="800" height="800" loading="lazy" decoding="async"></div>
-        <div class="gallery-item reveal"><img src="https://images.unsplash.com/photo-1604654894610-df63bc398371?w=800&q=80" alt="Nail art design" width="800" height="800" loading="lazy" decoding="async"></div>
-        <div class="gallery-item reveal"><img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&q=80" alt="Makeup artist at work" width="800" height="800" loading="lazy" decoding="async"></div>
-      </div>
-    </div>
-  </section>
+<script src="/demo/salon/vendor/framer-motion.js"></script>
 
-  <section class="makeover-section">
-    <div class="container">
-      <h2 class="section-title reveal">Makeover</h2>
-      <p class="section-subtitle reveal">Before and after beauty transformations.</p>
-      <div class="makeover-grid reveal-stagger">
-        <div class="makeover-card reveal"><img src="https://images.unsplash.com/photo-1503236823255-94609f598e71?w=800&q=80" alt="Before makeover" width="800" height="600" loading="lazy" decoding="async"><span class="tag">Before</span></div>
-        <div class="makeover-card reveal"><img src="https://images.unsplash.com/photo-1487412912498-0443288f4a25?w=800&q=80" alt="After makeover" width="800" height="600" loading="lazy" decoding="async"><span class="tag">After</span></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="testimonials">
-    <div class="container">
-      <h2 class="section-title reveal">Client Reviews</h2>
-      <p class="section-subtitle reveal">What our clients say about us.</p>
-      <div class="testimonials-grid reveal-stagger">
-        <div class="testimonial-card reveal">
-          <div class="stars"><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></div>
-          <p>"Best bridal makeup in Indore. I felt like a princess on my wedding day."</p>
-          <h4>Neha</h4>
-          <div class="service">Bridal Package</div>
-        </div>
-        <div class="testimonial-card reveal">
-          <div class="stars"><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></div>
-          <p>"The ambience is so calming and the staff is very professional."</p>
-          <h4>Anjali</h4>
-          <div class="service">Full Body Massage</div>
-        </div>
-        <div class="testimonial-card reveal">
-          <div class="stars"><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></div>
-          <p>"My go-to salon for hair color. They always get the shade right."</p>
-          <h4>Pooja</h4>
-          <div class="service">Hair Coloring</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="footer-note">
-    <div class="container">© 2025 MistHustlers Indore — Salon / Spa Demo</div>
-  </div>
-  <div class="sticky-footer">
-    <div class="container">
-      <span class="text">Want this for your business?</span>
-      <a href="tel:XXXXXXXXXX" class="btn btn-sm btn-secondary no-arrow" data-track="salon_footer_call">Call</a>
-      <a href="#" class="btn btn-sm btn-primary no-arrow" data-whatsapp="I saw your salon demo, interested!" data-demo="salon" data-track="salon_footer_whatsapp">WhatsApp</a>
-    </div>
-  </div>
-
-  <script src="../js/shared.js"></script>
-  <script>
-    function switchTab(id) {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      event.target.classList.add('active');
-      document.getElementById(id).classList.add('active');
-      if (window.MistHustlers) MistHustlers.trackEvent('salon_tab_switch', { tab: id });
-    }
-  </script>
+<script src="/demo/salon/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,80 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: production-aws
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  verify-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DEPLOY_HOST: ${{ secrets.AWS_EC2_HOST }}
+      DEPLOY_USER: ${{ secrets.AWS_EC2_USER }}
+      DEPLOY_PATH: ${{ secrets.AWS_APP_PATH }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm run install:all
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify production build
+        run: npm run build:aws
+
+      - name: Validate deployment secrets
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.AWS_KNOWN_HOSTS }}
+        run: |
+          test -n "$DEPLOY_HOST"
+          test -n "$DEPLOY_USER"
+          test -n "$DEPLOY_PATH"
+          test -n "$SSH_PRIVATE_KEY"
+          test -n "$SSH_KNOWN_HOSTS"
+          [[ "$DEPLOY_HOST" =~ ^[A-Za-z0-9.-]+$ ]]
+          [[ "$DEPLOY_USER" =~ ^[A-Za-z0-9._-]+$ ]]
+          [[ "$DEPLOY_PATH" =~ ^/[A-Za-z0-9._/-]+$ ]]
+
+      - name: Configure SSH
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.AWS_KNOWN_HOSTS }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy verified main branch
+        shell: bash
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+            -o BatchMode=yes \
+            -o StrictHostKeyChecking=yes \
+            "$DEPLOY_USER@$DEPLOY_HOST" \
+            "cd '$DEPLOY_PATH' && git pull --ff-only origin main && bash deploy/aws/deploy.sh"
+
+      - name: Verify public health
+        run: curl --fail --retry 5 --retry-delay 5 --max-time 20 https://www.misthustlers.in/api/health

@@ -12,3 +12,5 @@ backend/data/applicants.json
 backend/data/inquiries.json
 backend/data/opportunities.json
 backend/data/projects.json
+backups/
+.aws-deploy/

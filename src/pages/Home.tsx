@@ -337,6 +337,7 @@ export default function Home() {
   const heroLines = Array.isArray(c.hero?.title) ? c.hero.title : String(c.hero?.title || "").split("\n").filter(Boolean);
   const faqTitleLines = Array.isArray(c.faq?.title) ? c.faq.title : String(c.faq?.title || "").split("\n").filter(Boolean);
   const finalCtaLines = Array.isArray(c.finalCta?.title) ? c.finalCta.title : String(c.finalCta?.title || "").split("\n").filter(Boolean);
+  const brandItems = c.brands?.length ? c.brands : HOME_DEFAULTS.brands;
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.3]);
@@ -419,7 +420,7 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.2, ease: [0.33, 1, 0.68, 1] }}
-              className="mt-2 lg:mt-0"
+              className="mt-2 hidden sm:block lg:mt-0"
             >
               <HeroBrowserVisual />
             </motion.div>
@@ -427,11 +428,25 @@ export default function Home() {
         </motion.div>
       </section>
 
-      <section className="border-y border-abyssal-ink/5 py-8 md:py-10">
+      <section className="border-y border-abyssal-ink/5 py-5 sm:py-8 md:py-10">
+        <div className="mobile-brand-marquee overflow-hidden sm:hidden" aria-label="Technology brands">
+          <div className="mobile-brand-marquee__track">
+            {[false, true].map((duplicate) => (
+              <div key={duplicate ? "brands-copy" : "brands-primary"} className="mobile-brand-marquee__group" aria-hidden={duplicate || undefined}>
+                {brandItems.map((item, index) => (
+                  <div key={`${item}-${index}`} className="mobile-brand-marquee__item">
+                    <span>{item}</span>
+                    <strong>0{index + 1}</strong>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
-          <ScrollReveal>
+          <ScrollReveal className="hidden sm:block">
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-              {(c.brands?.length ? c.brands : HOME_DEFAULTS.brands).map((item, index) => (
+              {brandItems.map((item, index) => (
                 <div key={item} className="card-lift rounded-2xl border border-abyssal-ink/10 bg-ash-white px-5 py-5">
                   <div className="flex items-end justify-between gap-3">
                     <p className="text-sm font-bold uppercase tracking-[0.18em] text-abyssal-ink/72 font-body">{item}</p>

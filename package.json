@@ -5,7 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite --configLoader native",
-    "build": "cd backend && npm install && npx prisma generate && cd admin-ui && npm install && npm run build && cd ../.. && npx vite build --configLoader native && npx playwright install --with-deps chromium && node scripts/prerender.mjs && node scripts/verify-seo.mjs",
+    "install:all": "npm ci && npm --prefix backend ci && npm --prefix backend/admin-ui ci",
+    "build:apps": "npm --prefix backend exec -- prisma generate --schema backend/prisma/schema.prisma && npm --prefix backend/admin-ui run build && vite build --configLoader native",
+    "build:aws": "npm run build:apps && npm run prerender && npm run verify-seo",
+    "build": "npm run install:all && npx playwright install --with-deps chromium && npm run build:aws",
+    "db:deploy": "npm --prefix backend exec -- prisma migrate deploy --schema backend/prisma/schema.prisma",
+    "db:status": "npm --prefix backend exec -- prisma migrate status --schema backend/prisma/schema.prisma",
     "start": "cd backend && node scripts/resolve-service-packages-migration.js && npx prisma migrate deploy && node scripts/sync-service-packages.js && node scripts/sync-home-hero.js && node server.js",
     "server": "node backend/server.js",
     "prerender": "node scripts/prerender.mjs",

@@ -1,11 +1,18 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 import {
-  Archive, Bell, Briefcase, Check, Copy, ExternalLink, Mail, Phone, Plus,
+  Archive, Bell, Briefcase, Check, Copy, Download, ExternalLink, Mail, Phone, Plus,
   RefreshCw, Trash2, UserCircle, Users, X, LayoutDashboard, FolderKanban,
   BriefcaseBusiness, FileText, Image, Trash, Upload, Save, Settings, ChevronDown,
-  UserPlus, Shield, Handshake, IndianRupee
+  UserPlus, Shield, Handshake, IndianRupee, MessageCircle, BrainCircuit, MessageSquareText, Target
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+
+const ChatbotTab = React.lazy(() => import('./ChatbotTab'));
+const KnowledgeTab = React.lazy(() => import('./KnowledgeTab'));
+const ConversationsTab = React.lazy(() => import('./ConversationsTab'));
+const ChatbotLeadsTab = React.lazy(() => import('./ChatbotLeadsTab'));
+
+const chatbotTabFallback = <div className="py-12 text-center text-sm text-white/40">Loading workspace...</div>;
 
 interface Inquiry {
   id: number; name?: string; email?: string; phone?: string; service: string; budget: string;
@@ -80,7 +87,7 @@ interface ToastState {
   type: 'success' | 'error';
 }
 
-type TabType = 'dashboard' | 'work' | 'leads' | 'workers' | 'career' | 'projects' | 'content' | 'media' | 'logo' | 'accounts' | 'bin';
+type TabType = 'dashboard' | 'work' | 'leads' | 'workers' | 'career' | 'projects' | 'content' | 'media' | 'logo' | 'accounts' | 'bin' | 'chatbot' | 'knowledge' | 'conversations' | 'chatbot-leads';
 type ModalType = 'job' | 'event' | 'program' | 'applicant' | 'project' | null;
 
 const API = '/api/admin';
@@ -137,6 +144,10 @@ const tabs: { id: TabType; label: string; icon: React.ElementType }[] = [
   { id: 'content', label: 'CMS Content', icon: FileText },
   { id: 'media', label: 'Media', icon: Image },
   { id: 'logo', label: 'Logo', icon: Settings },
+  { id: 'chatbot', label: 'Chatbot', icon: MessageCircle },
+  { id: 'knowledge', label: 'Knowledge', icon: BrainCircuit },
+  { id: 'conversations', label: 'Chats', icon: MessageSquareText },
+  { id: 'chatbot-leads', label: 'Bot Leads', icon: Target },
   { id: 'accounts', label: 'Accounts', icon: UserPlus },
   { id: 'bin', label: 'Bin', icon: Trash },
 ];
@@ -163,7 +174,7 @@ function accountName(account?: WorkAccount | null) {
 }
 
 const roleTabs: Record<AdminRole, TabType[]> = {
-  admin: ['dashboard', 'work', 'leads', 'workers', 'career', 'projects', 'content', 'media', 'logo', 'accounts', 'bin'],
+  admin: ['dashboard', 'work', 'leads', 'workers', 'career', 'projects', 'content', 'media', 'logo', 'chatbot', 'knowledge', 'conversations', 'chatbot-leads', 'accounts', 'bin'],
   agent: ['dashboard', 'work', 'leads'],
   partner: ['dashboard', 'work', 'projects'],
   delivery_partner: ['dashboard', 'work', 'projects'],
@@ -2936,6 +2947,10 @@ const App: React.FC = () => {
       case 'content': return renderContentEditor();
       case 'media': return renderMedia();
       case 'logo': return renderLogoEditor();
+      case 'chatbot': return <React.Suspense fallback={chatbotTabFallback}><ChatbotTab notify={notify} /></React.Suspense>;
+      case 'knowledge': return <React.Suspense fallback={chatbotTabFallback}><KnowledgeTab notify={notify} /></React.Suspense>;
+      case 'conversations': return <React.Suspense fallback={chatbotTabFallback}><ConversationsTab notify={notify} /></React.Suspense>;
+      case 'chatbot-leads': return <React.Suspense fallback={chatbotTabFallback}><ChatbotLeadsTab notify={notify} /></React.Suspense>;
       case 'accounts': return renderAccounts();
       case 'bin': return renderBin();
       default: return renderDashboard();
@@ -3019,7 +3034,7 @@ const App: React.FC = () => {
                 <div><label className="block text-[11px] text-white/50 mb-1">Service</label><input disabled={!isAdmin} className="field text-sm disabled:opacity-55" value={formData.service || ''} onChange={(event) => setField('service', event.target.value)} /></div>
                 <div><label className="block text-[11px] text-white/50 mb-1">Status</label>
                   <select className="field text-sm" value={formData.status || 'lead'} onChange={(event) => setField('status', event.target.value)}>
-                    {[...new Set([formData.status || selectedWork.status, ...editableStatuses])].map((status) => <option key={status} value={status}>{status}</option>)}
+                    {[...new Set([formData.status || selectedWork.status, ...(currentRole === 'delivery_partner' ? ['assigned', 'in-progress', 'review', 'completed'] : ['lead', 'quoted', 'assigned', 'in-progress', 'review', 'completed', 'paid', 'lost'])])].map((status) => <option key={status} value={status}>{status}</option>)}
                   </select>
                 </div>
               </div>

@@ -12,6 +12,7 @@ import inquiryRoutes from "./routes/inquiry.routes.js";
 import contentRoutes from "./routes/content.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import publicRoutes from "./routes/public.routes.js";
+import chatbotRoutes from "./routes/chatbot.routes.js";
 import { adminAuth } from "./middleware/admin-auth.middleware.js";
 import { seed } from "./prisma/seed.js";
 import prisma from "./prisma/client.js";
@@ -21,8 +22,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 const PORT = process.env.PORT || 9000;
+const HOST = process.env.HOST || "0.0.0.0";
 
-app.set("trust proxy", 1);
+const configuredTrustProxy = process.env.TRUST_PROXY || "1";
+app.set("trust proxy", /^\d+$/.test(configuredTrustProxy) ? Number(configuredTrustProxy) : configuredTrustProxy);
 
 const PRIMARY_PUBLIC_ORIGIN = "https://www.misthustlers.in";
 const PRIMARY_PUBLIC_HOST = "www.misthustlers.in";
@@ -52,6 +55,7 @@ const DEMO_SLUGS = new Set([
   "gym",
   "coaching",
   "interior",
+  "ferra-interiors",
   "manufacturer",
   "ca-lawyer",
 ]);
@@ -112,7 +116,7 @@ function isPublicBrowserPageRequest(req) {
   return accept.includes("text/html") || accept.includes("*/*");
 }
 
-const uploadsDir = join(__dirname, "uploads");
+const uploadsDir = join(__dirname, process.env.UPLOAD_DIR || "uploads");
 if (!existsSync(uploadsDir)) mkdirSync(uploadsDir, { recursive: true });
 
 const dataDir = join(__dirname, "data");
@@ -183,7 +187,7 @@ const staticOptions = {
 };
 
 app.use(express.json({ limit: "10mb" }));
-app.use("/uploads", express.static(join(__dirname, "uploads"), staticOptions));
+app.use("/uploads", express.static(uploadsDir, staticOptions));
 app.disable("x-powered-by");
 
 app.use((req, res, next) => {
@@ -233,20 +237,53 @@ const adminLimiter = rateLimit({
   message: { success: false, message: "Too many requests. Try again later." },
 });
 
+const submissionLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: "Too many submissions. Try again later." },
+});
+
+const chatbotLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 40,
+  message: { success: false, message: "Too many requests. Please wait a moment." },
+});
+
+const referralLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 120,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: "Too many requests. Try again later." },
+});
+
 app.use("/api", generalLimiter);
+
+app.use(["/api/inquiry", "/api/applicants"], submissionLimiter);
+app.use("/api/referral-click", referralLimiter);
 
 app.use("/api/content", contentLimiter, contentRoutes);
 
 app.use("/api/admin", adminLimiter, adminAuth);
 app.use("/api/admin", adminRoutes);
 
-app.get("/api/health", (_, res) => {
-  res.json({ status: "ok", timestamp: new Date().toISOString() });
+app.get("/api/health", async (_, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.json({ status: "ok", database: "connected", timestamp: new Date().toISOString() });
+  } catch {
+    res.status(503).json({ status: "degraded", database: "unavailable", timestamp: new Date().toISOString() });
+  }
 });
 
 app.use("/api", publicRoutes);
 
 app.use("/api", inquiryRoutes);
+
+app.use("/api/chatbot/admin", adminLimiter, adminAuth);
+app.use("/api/chatbot", chatbotLimiter, chatbotRoutes);
 
 const adminDist = join(__dirname, "admin-ui", "dist");
 
@@ -368,10 +405,43 @@ try {
   console.log("[BOOT] Seed completed");
 } catch (e) {
   console.error("[BOOT] Seed failed:", e.message);
+  if (process.env.NODE_ENV === "production") process.exit(1);
 }
 
-app.listen(PORT, () => {
-  console.log(`[MistHustlers Backend] Running on http://localhost:${PORT}`);
+async function cleanupExpiredChatSessions() {
+  const retentionCutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+  const result = await prisma.chatSession.deleteMany({
+    where: { OR: [{ createdAt: { lt: retentionCutoff } }, { expiresAt: { lt: new Date() } }] },
+  });
+  if (result.count) console.log(`[CHATBOT] Removed ${result.count} expired conversation(s)`);
+}
+
+cleanupExpiredChatSessions().catch((err) => console.error("[CHATBOT] Retention cleanup failed:", err.message));
+const chatCleanupTimer = setInterval(() => {
+  cleanupExpiredChatSessions().catch((err) => console.error("[CHATBOT] Retention cleanup failed:", err.message));
+}, 6 * 60 * 60 * 1000);
+chatCleanupTimer.unref();
+
+async function cleanupOldSessions() {
+  try {
+    const cutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const result = await prisma.chatSession.updateMany({
+      where: { createdAt: { lt: cutoff }, isActive: true },
+      data: { isActive: false },
+    });
+    if (result.count > 0) {
+      console.log(`[CLEANUP] Deactivated ${result.count} expired chat sessions`);
+    }
+  } catch (err) {
+    console.error("[CLEANUP] Session cleanup error:", err.message);
+  }
+}
+
+cleanupOldSessions();
+setInterval(cleanupOldSessions, 6 * 60 * 60 * 1000);
+
+app.listen(PORT, HOST, () => {
+  console.log(`[MistHustlers Backend] Running on http://${HOST}:${PORT}`);
   console.log(`[Admin Dashboard]    http://localhost:${PORT}/admin`);
   console.log(`[Content API]        http://localhost:${PORT}/api/content/home`);
 });

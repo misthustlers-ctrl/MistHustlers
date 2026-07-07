@@ -322,3 +322,133 @@ model WorkPayment {
   @@index([workId])
   @@map("work_payments")
 }
+
+model KnowledgeItem {
+  id              Int      @id @default(autoincrement())
+  source          String
+  sourceId        String?  @map("source_id")
+  category        String
+  subcategory     String?
+  key             String
+  value           String
+  version         Int      @default(1)
+  hash            String
+  verificationStatus String @default("verified") @map("verification_status")
+  riskLevel       String   @default("low") @map("risk_level")
+  requiresApproval Boolean @default(false) @map("requires_approval")
+  approvalStatus  String   @default("approved") @map("approval_status")
+  publishedAt     DateTime? @map("published_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@unique([source, sourceId, key])
+  @@index([category])
+  @@index([approvalStatus])
+  @@map("knowledge_items")
+}
+
+model ChatbotConfig {
+  id                  Int      @id @default(autoincrement())
+  enabled             Boolean  @default(true)
+  greeting            String   @default("Hi, I'm ARIA — MistHustlers' Senior Sales Consultant. I'm here to understand your business and help you find the right digital solution. Before I recommend anything, I'd like to understand your current situation. What does your business do?")
+  greetingHindi       String   @default("नमस्ते, मैं ARIA हूँ — MistHustlers की Senior Sales Consultant। मैं आपके व्यवसाय को समझने और सही डिजिटल समाधान ढूंढने में आपकी मदद करने के लिए यहाँ हूँ। कुछ भी सुझाने से पहले, मैं आपकी मौजूदा स्थिति समझना चाहूँगी। आपका व्यवसाय क्या करता है?")
+  greetingHinglish    String   @default("Namaste, main ARIA hoon — MistHustlers ki Senior Sales Consultant. Main aapke business ko samajhne aur sahi digital solution dhundhne mein aapki madad karne ke liye yahan hoon. Kuch bhi suggest karne se pehle, main aapki current situation samajhna chahungi. Aapka business kya karta hai?")
+  primaryColor        String   @default("#fc5000")
+  position            String   @default("bottom-right")
+  maxMessageLength    Int      @default(2000) @map("max_message_length")
+  sessionTtlMinutes   Int      @default(43200) @map("session_ttl_minutes")
+  responseTone        String   @default("consultative") @map("response_tone")
+  salesInstructions   String   @default("Ask one useful question at a time. Recommend only verified services and prices. Never invent guarantees, discounts or delivery dates.") @map("sales_instructions")
+  solutionInstructions String  @default("After a service is selected, understand the business and recommend a tailored blueprint with priorities, integrations, automation opportunities, phased scope, and clear reasoning.") @map("solution_instructions")
+  unknownAnswer       String   @default("I do not have a verified answer for that yet. Please use the visible green WhatsApp button to send your inquiry to the MistHustlers team.") @map("unknown_answer")
+  generativeEnabled   Boolean  @default(true) @map("generative_enabled")
+  opencodeModel       String   @default("deepseek-v4-flash-free") @map("opencode_model")
+  opencodeApiKeyEncrypted String? @map("opencode_api_key_encrypted")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  @@map("chatbot_config")
+}
+
+model ChatSession {
+  id             Int      @id @default(autoincrement())
+  token          String   @unique
+  language       String   @default("en")
+  languageSource String   @default("auto") @map("language_source")
+  state          String   @default("greeting")
+  stateData      Json     @default("{}") @map("state_data")
+  leadId         Int?     @map("lead_id")
+  isActive       Boolean  @default(true) @map("is_active")
+  messageCount   Int      @default(0) @map("message_count")
+  expiresAt      DateTime @map("expires_at")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  messages   ChatMessage[]
+  qualifiedLead QualifiedLead? @relation("QualifiedLeadSession")
+
+  @@index([token])
+  @@index([expiresAt])
+  @@index([createdAt])
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id         Int      @id @default(autoincrement())
+  sessionId  Int      @map("session_id")
+  role       String
+  content    String
+  detectedLanguage String? @map("detected_language")
+  metadata   Json?    @default("{}")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  session    ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, createdAt])
+  @@map("chat_messages")
+}
+
+model QualifiedLead {
+  id                Int      @id @default(autoincrement())
+  sessionId         Int?     @unique @map("session_id")
+  name              String?
+  email             String?
+  phone             String?
+  company           String?
+  businessType      String?  @map("business_type")
+  industry          String?
+  goal              String?
+  budget            String?
+  timeline          String?
+  serviceInterest   String?  @map("service_interest")
+  features          String?
+  leadScore         Int      @default(0) @map("lead_score")
+  leadCategory      String   @default("nurture") @map("lead_category")
+  consentGiven      Boolean  @default(false) @map("consent_given")
+  consentAt         DateTime? @map("consent_at")
+  status            String   @default("new")
+  notes             String?
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  session ChatSession? @relation("QualifiedLeadSession", fields: [sessionId], references: [id], onDelete: SetNull)
+
+  @@index([leadCategory])
+  @@index([status])
+  @@map("qualified_leads")
+}
+
+model KnowledgeSyncRun {
+  id          Int      @id @default(autoincrement())
+  status      String   @default("running")
+  source      String?
+  itemsTotal  Int      @default(0) @map("items_total")
+  itemsAdded  Int      @default(0) @map("items_added")
+  itemsUpdated Int     @default(0) @map("items_updated")
+  itemsFailed Int      @default(0) @map("items_failed")
+  errorLog    Json?    @default("[]") @map("error_log")
+  startedAt   DateTime @default(now()) @map("started_at")
+  completedAt DateTime? @map("completed_at")
+
+  @@map("knowledge_sync_runs")
+}

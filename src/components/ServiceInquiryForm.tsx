@@ -1,6 +1,7 @@
 import { useState, useRef, useMemo } from "react";
 import { useContent } from "@/utils/useContent";
 import { getStoredReferralCode } from "@/utils/referral";
+import { usePersistentForm } from "@/utils/usePersistentForm";
 
 const FORM_SERVICE_DEFAULTS = { pricing: { tiers: [] } };
 
@@ -9,6 +10,16 @@ const FALLBACK_TIERS = [
   { id: "growth", name: "GROWTH", price: "", description: "", features: [], popular: true, accent: "var(--mh-cta)" as const, imageUrl: "" },
   { id: "premium", name: "PREMIUM", price: "", description: "", features: [], popular: false, accent: "#524ae9" as const, imageUrl: "" },
 ];
+
+const EMPTY_INQUIRY = {
+  name: "",
+  email: "",
+  phone: "",
+  company: "",
+  service: "starter",
+  budget: "",
+  message: "",
+};
 
 export default function ServiceInquiryForm() {
   const servicesData = useContent("services", FORM_SERVICE_DEFAULTS);
@@ -22,15 +33,7 @@ export default function ServiceInquiryForm() {
     return apiTiers?.length ? apiTiers : FALLBACK_TIERS;
   }, [servicesData]);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    company: "",
-    service: "starter",
-    budget: "",
-    message: "",
-  });
+  const [formData, setFormData, clearDraft] = usePersistentForm("mh:draft:project-inquiry:v1", EMPTY_INQUIRY);
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,7 +53,7 @@ export default function ServiceInquiryForm() {
       const json = await res.json().catch(() => ({}));
       if (json.success === false) throw new Error(json.message || "Inquiry could not be submitted");
       setSubmitted(true);
-      setFormData({ name: "", email: "", phone: "", company: "", service: "starter", budget: "", message: "" });
+      clearDraft();
       setTimeout(() => setSubmitted(false), 5000);
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : "Submission failed. Please try again.");
@@ -164,6 +167,8 @@ export default function ServiceInquiryForm() {
                         <label className="block text-[12.5px] font-[650] mb-[9px] tracking-[-0.01em]" style={{ color: "var(--mh-text)" }}>Your name</label>
                         <input
                           required type="text"
+                          name="name"
+                          autoComplete="name"
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                           className="w-full h-[48px] px-[16px] rounded-[16px] text-[15px] font-[500] outline-none transition-all focus:ring-[2.5px] md:h-[48px] max-md:h-[44px] max-md:px-[14px] max-md:text-[15px] max-md:rounded-[14px]"
@@ -175,6 +180,8 @@ export default function ServiceInquiryForm() {
                         <label className="block text-[12.5px] font-[650] mb-[9px] tracking-[-0.01em]" style={{ color: "var(--mh-text)" }}>Work email</label>
                         <input
                           required type="email"
+                          name="email"
+                          autoComplete="email"
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                           className="w-full h-[48px] px-[16px] rounded-[16px] text-[15px] font-[500] outline-none transition-all focus:ring-[2.5px] md:h-[48px] max-md:h-[44px] max-md:px-[14px] max-md:text-[15px] max-md:rounded-[14px]"
@@ -189,6 +196,8 @@ export default function ServiceInquiryForm() {
                         <label className="block text-[12.5px] font-[650] mb-[9px] tracking-[-0.01em]" style={{ color: "var(--mh-text)" }}>Phone / WhatsApp</label>
                         <input
                           required type="tel"
+                          name="phone"
+                          autoComplete="tel"
                           value={formData.phone}
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                           className="w-full h-[48px] px-[16px] rounded-[16px] text-[15px] font-[500] outline-none transition-all focus:ring-[2.5px] md:h-[48px] max-md:h-[44px] max-md:px-[14px] max-md:text-[15px] max-md:rounded-[14px]"
@@ -200,6 +209,8 @@ export default function ServiceInquiryForm() {
                         <label className="block text-[12.5px] font-[650] mb-[9px] tracking-[-0.01em]" style={{ color: "var(--mh-text)" }}>Company / Project</label>
                         <input
                           type="text"
+                          name="organization"
+                          autoComplete="organization"
                           value={formData.company}
                           onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                           className="w-full h-[48px] px-[16px] rounded-[16px] text-[15px] font-[500] outline-none transition-all focus:ring-[2.5px] md:h-[48px] max-md:h-[44px] max-md:px-[14px] max-md:text-[15px] max-md:rounded-[14px]"
@@ -237,6 +248,7 @@ export default function ServiceInquiryForm() {
                       </label>
                       <select
                         required
+                        name="budget"
                         value={formData.budget}
                         onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
                         className="w-full h-[48px] px-[16px] rounded-[16px] text-[15px] font-[500] outline-none transition-all focus:ring-[2.5px] appearance-none cursor-pointer max-md:h-[44px] max-md:px-[14px] max-md:text-[15px] max-md:rounded-[14px]"
@@ -259,6 +271,7 @@ export default function ServiceInquiryForm() {
                       <label className="block text-[12.5px] font-[650] mb-[9px] tracking-[-0.01em]" style={{ color: "var(--mh-text)" }}>Project details</label>
                       <textarea
                         required
+                        name="project-details"
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         rows={4}

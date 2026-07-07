@@ -17,6 +17,11 @@ export const validateInquiry = [
     .notEmpty().withMessage("Phone is required")
     .isMobilePhone().withMessage("Invalid phone number"),
 
+  body("company")
+    .optional({ nullable: true, checkFalsy: true })
+    .trim()
+    .isLength({ max: 200 }).withMessage("Company name too long"),
+
   body("service")
     .trim()
     .notEmpty().withMessage("Service tier is required")

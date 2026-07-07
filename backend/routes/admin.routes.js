@@ -10,6 +10,7 @@ import { allowRoles, createSessionToken, hashPassword, requireAdmin } from "../m
 import { getMailIntegrationStatus } from "../services/mail.service.js";
 import { getSheetIntegrationStatus } from "../services/sheet.service.js";
 import { ACCOUNT_ROLES, ROLES } from "../config/roles.js";
+import { syncKnowledgeFromCMS } from "../services/knowledge-sync.js";
 import {
   adminId,
   applicantWhereFor,
@@ -967,6 +968,7 @@ router.post("/content/:page/publish", requireAdmin, async (req, res, next) => {
     });
     await prisma.contentDraft.upsert({ where: { page }, update: { data }, create: { page, data } });
     await prisma.contentRevision.create({ data: { page, data, action: "publish", createdBy: req.admin.username } });
+    await syncKnowledgeFromCMS(page, data);
     await logActivity(req, "publish-content", `content:${page}`);
     res.json({ success: true, data: entry.data });
   } catch (err) { next(err); }
@@ -993,6 +995,7 @@ router.delete("/content/:page", requireAdmin, async (req, res, next) => {
     }
     await prisma.contentDraft.delete({ where: { page } }).catch(() => null);
     await prisma.content.delete({ where: { page } }).catch(() => null);
+    await syncKnowledgeFromCMS(page, {});
     await logActivity(req, "delete-content", `content:${page}`);
     res.json({ success: true, data: {} });
   } catch (err) { next(err); }

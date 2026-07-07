@@ -1,272 +1,370 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SaaS Startup MVP Website Demo - MistHustlers Indore</title>
-  <meta name="description" content="Premium high-converting SaaS MVP landing page demo for Indore startups. Waitlist, features, pricing, early access CTA. Built by MistHustlers.">
-  <link rel="canonical" href="https://www.misthustlers.in/demo/startup/">
-  <meta name="robots" content="noindex, follow">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%237C3AED'/%3E%3Ctext x='50' y='65' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3EM%3C/text%3E%3C/svg%3E">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/shared.css">
-  <style>
-    :root {
-      --startup-purple: #7C3AED;
-      --startup-purple-light: #A78BFA;
-      --startup-purple-dark: #5B21B6;
-      --startup-obsidian: #09090B;
-      --startup-light: #FAFAFA;
-      --startup-dark: #18181B;
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Nimbus - Automate the Busywork. Ship the Big Work." name="description"/>
+<link rel="icon" href="logo.svg" type="image/svg+xml"/>
+<title>Nimbus - Automate the Busywork. Ship the Big Work.</title>
+<script src="/demo/tailwindcss.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        surface: '#0f1117', surface_dim: '#06070a',
+        on_surface: '#eef0f6', on_surface_variant: '#8b8fa3',
+        primary: '#6d5efc', primary_container: '#6d5efc',
+        secondary: '#3ee8c4', on_secondary: '#00382d',
+        outline: '#918ea1', outline_variant: '#474555',
+        background: '#06070a', on_background: '#eef0f6',
+      },
+      fontFamily: { heading: ['Space Grotesk', 'sans-serif'], body: ['Inter', 'sans-serif'] },
+      borderRadius: { DEFAULT: '0.75rem', full: '9999px' },
+      spacing: { gutter: '24px', md: '24px', lg: '48px', xl: '80px' },
     }
-    body { background: var(--startup-obsidian); color: #fff; font-family: 'Inter', sans-serif; }
-    h1, h2, h3, .display { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
-    .code { font-family: 'Fira Code', monospace; }
-    
-.hero {
-      min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center;
-      background: radial-gradient(circle at 50% 30%, rgba(124,58,237,0.15), transparent 50%), var(--startup-obsidian);
-      position: relative; padding: 140px 0; overflow: hidden;
-    }
-    .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(124,58,237,0.08) 0%, transparent 60%), url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%237C3AED' fill-opacity='0.15' fill-rule='evenodd'%3E%3Ccircle cx='2' cy='2' r='1'/%3E%3C/g%3E%3C/svg%3E"); z-index: 0; }
-    .hero .container { position: relative; z-index: 1; }
-    .hero h1 { font-size: clamp(2.6rem, 7vw, 5.5rem); line-height: 1.05; margin-bottom: 20px; }
-    .hero p { font-size: 1.2rem; opacity: 0.8; max-width: 620px; margin: 0 auto 32px; }
-    .waitlist-form { display: flex; gap: 12px; justify-content: center; max-width: 520px; margin: 0 auto; flex-wrap: wrap; }
-    .waitlist-form input { flex: 1; min-width: 260px; padding: 16px 18px; border-radius: 16px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; }
-    .waitlist-form input::placeholder { color: rgba(255,255,255,0.45); }
-    .waitlist-form input:focus { border-color: var(--startup-purple); box-shadow: 0 0 0 3px rgba(124,58,237,0.2); }
-    .btn-purple { background: var(--startup-purple); color: #fff; font-weight: 700; }
-    .btn-purple:hover { background: var(--startup-purple-dark); box-shadow: 0 12px 32px rgba(124,58,237,0.35); }
-    .social-proof { margin-top: 24px; font-size: 0.9rem; opacity: 0.7; }
-    .social-proof strong { color: var(--startup-purple-light); }
+  }
+}
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#06070a;color:#eef0f6;overflow-x:hidden;font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
+.glow-glass{background:rgba(255,255,255,0.03);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.08);box-shadow:0 0 0 1px rgba(109,94,252,0.06),inset 0 1px 0 rgba(255,255,255,0.06);border-radius:.75rem}
+.glow-glass-strong{background:rgba(109,94,252,0.08);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(109,94,252,0.25);box-shadow:0 0 40px rgba(109,94,252,0.15),inset 0 1px 0 rgba(255,255,255,0.08);border-radius:.75rem}
+.grid-overlay{background-size:40px 40px;background-image:linear-gradient(to right,rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,0.02) 1px,transparent 1px);mask-image:radial-gradient(circle at center,black,transparent 80%)}
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24;vertical-align:middle}
 
-    .metrics-section { background: rgba(255,255,255,0.03); border-top: 1px solid rgba(255,255,255,0.08); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 48px 0; }
-    .metrics-grid { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; }
-    .metric-item { text-align: center; }
-    .metric-item h4 { font-size: 2rem; color: var(--startup-purple-light); font-family: 'Space Grotesk', sans-serif; margin-bottom: 4px; }
-    .metric-item p { font-size: 0.85rem; opacity: 0.7; max-width: 100%; }
+/* Animations */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.float-anim{animation:float 7s ease-in-out infinite}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}.d5{transition-delay:.5s}
 
-    .problem-solution { background: #0c0c0e; padding: 96px 0; }
-    .ps-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
-    @media (min-width: 900px) { .ps-grid { grid-template-columns: 1fr 1fr; } }
-    .ps-card { border-radius: 24px; padding: 32px; }
-    .problem { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); }
-    .solution { background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.2); }
-    .ps-card h3 { font-size: 1.5rem; margin-bottom: 20px; }
-    .ps-list li { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: flex-start; gap: 10px; }
-    .ps-list li:last-child { border-bottom: none; }
-    .problem .ps-list li::before { content: '✗'; color: #EF4444; font-weight: 700; }
-    .solution .ps-list li::before { content: '✓'; color: var(--startup-purple-light); font-weight: 700; }
-
-    .section-title { color: #fff; }
-    .section-subtitle { color: rgba(255,255,255,0.65); }
-    .features-section { padding: 96px 0; }
-    .feature-block { display: grid; gap: 40px; align-items: center; margin-bottom: 80px; }
-    @media (min-width: 900px) { .feature-block { grid-template-columns: 1fr 1fr; } }
-    .feature-block.reverse { direction: rtl; }
-    .feature-block.reverse > * { direction: ltr; }
-    .feature-visual { border-radius: 24px; overflow: hidden; aspect-ratio: 4 / 3; background: linear-gradient(135deg, #18181B, #2d2d33); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 24px 60px rgba(0,0,0,0.4); }
-    .feature-visual img { width: 100%; height: 100%; object-fit: cover; }
-    .feature-content h3 { font-size: 1.8rem; margin-bottom: 14px; }
-    .feature-content p { opacity: 0.75; margin-bottom: 16px; }
-    .feature-content li { padding: 8px 0; opacity: 0.85; }
-    .feature-content li::before { content: '✦'; color: var(--startup-purple-light); margin-right: 8px; }
-
-    .how-section { background: #0c0c0e; padding: 96px 0; }
-    .steps { display: flex; justify-content: space-between; gap: 24px; max-width: 900px; margin: 0 auto; position: relative; flex-wrap: wrap; }
-    .steps::before { content: ''; position: absolute; top: 28px; left: 15%; right: 15%; height: 2px; background: linear-gradient(90deg, var(--startup-purple), rgba(124,58,237,0.2)); z-index: 0; }
-    .step { position: relative; z-index: 1; text-align: center; flex: 1; min-width: 160px; }
-    .step-number { width: 56px; height: 56px; border-radius: 50%; background: var(--startup-purple); color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-weight: 700; font-size: 1.2rem; }
-    .step h4 { font-size: 1.1rem; margin-bottom: 6px; }
-    .step p { font-size: 0.9rem; opacity: 0.7; max-width: 100%; }
-
-    .pricing-section { padding: 96px 0; }
-    .pricing-grid { display: grid; gap: 24px; grid-template-columns: 1fr; max-width: 800px; margin: 0 auto; }
-    @media (min-width: 768px) { .pricing-grid { grid-template-columns: repeat(2, 1fr); } }
-    .pricing-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 32px; transition: transform 0.3s, border-color 0.3s; }
-    .pricing-card:hover { transform: translateY(-5px); border-color: var(--startup-purple); }
-    .pricing-card.featured { border: 2px solid var(--startup-purple); transform: scale(1.02); }
-    .pricing-card h3 { font-size: 1.3rem; margin-bottom: 8px; }
-    .pricing-card .price { font-size: 2.5rem; font-weight: 700; margin-bottom: 16px; }
-    .pricing-card .price small { font-size: 0.9rem; opacity: 0.6; font-weight: 400; }
-    .pricing-card ul { margin-bottom: 24px; }
-    .pricing-card li { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.95rem; }
-    .pricing-card li::before { content: '✓'; color: var(--startup-purple-light); margin-right: 8px; font-weight: 700; }
-    .badge { display: inline-block; background: rgba(124,58,237,0.2); color: var(--startup-purple-light); padding: 4px 10px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 12px; }
-
-    .waitlist-section { padding: 120px 0; background: linear-gradient(135deg, rgba(124,58,237,0.25), rgba(9,9,11,0.9)); text-align: center; }
-    .waitlist-section h2 { font-size: clamp(2.2rem, 5vw, 3.5rem); margin-bottom: 12px; }
-    .waitlist-section p { opacity: 0.8; margin-bottom: 32px; margin-left: auto; margin-right: auto; }
-    .final-form { max-width: 520px; margin: 0 auto; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-    .final-form input { flex: 1; min-width: 280px; padding: 16px; border-radius: 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; }
-    .form-success { background: rgba(124,58,237,0.15); color: var(--startup-purple-light); border: 1px solid rgba(124,58,237,0.3); }
-
-    .footer-note { text-align: center; padding: 40px 0; background: #050507; color: rgba(255,255,255,0.4); font-size: 0.9rem; }
-.sticky-footer { background: rgba(5,5,7,0.95); border-top: 1px solid rgba(124,58,237,0.25); }
-    .sticky-footer .btn-primary { background: var(--startup-purple); color: #fff; }
-    .sticky-footer .btn-secondary { background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
-  </style>
+/* SPA */
+.page{display:none}.page.active{display:block;animation:fadeInUp .5s ease-out}
+</style>
 </head>
-<body>
-<section class="hero">
-    <div class="container">
-      <h1 class="reveal">FlowSync</h1>
-      <p class="reveal">The project management tool that keeps your remote team aligned without the endless meetings.</p>
-      <form class="waitlist-form reveal" data-demo="startup">
-        <input type="email" placeholder="Enter your email" required>
-        <button type="submit" class="btn btn-purple no-arrow" data-track="startup_hero_waitlist">Join Waitlist</button>
-      </form>
-      <p class="social-proof reveal"><strong>47 founders</strong> already joined the early access list.</p>
-    </div>
-  </section>
+<body class="min-h-screen flex flex-col bg-[#06070a]">
 
-  <section class="metrics-section">
-    <div class="container">
-      <div class="metrics-grid reveal-stagger">
-        <div class="metric-item reveal"><h4>47+</h4><p>Founders Joined</p></div>
-        <div class="metric-item reveal"><h4>3x</h4><p>Faster Meetings</p></div>
-        <div class="metric-item reveal"><h4>98%</h4><p>Uptime</p></div>
-        <div class="metric-item reveal"><h4>24h</h4><p>Support</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="problem-solution">
-    <div class="container">
-      <h2 class="section-title text-center reveal">Built for Founders, Not Bureaucracy</h2>
-      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">We solve the real problems early teams face.</p>
-      <div class="ps-grid">
-        <div class="ps-card problem reveal">
-          <h3>The Problem</h3>
-          <ul class="ps-list">
-            <li>Scattered tasks across 5 apps</li>
-            <li>Status meetings eat half the day</li>
-            <li>No clarity on who's blocked</li>
-          </ul>
-        </div>
-        <div class="ps-card solution reveal">
-          <h3>Our Solution</h3>
-          <ul class="ps-list">
-            <li>One unified workspace</li>
-            <li>Async updates and auto-sync</li>
-            <li>Real-time blockers dashboard</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="features-section">
-    <div class="container">
-      <h2 class="section-title text-center reveal">Powerful Features</h2>
-      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">Everything you need to ship faster.</p>
-      <div class="feature-block reveal">
-        <div class="feature-visual"><img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=800&q=80" alt="Smart task boards UI" width="800" height="600" loading="lazy" decoding="async"></div>
-        <div class="feature-content">
-          <h3>Smart Task Boards</h3>
-          <p>Kanban and list views that adapt to your workflow. Drag, drop, and done.</p>
-          <ul>
-            <li>Custom columns and filters</li>
-            <li>Subtasks and dependencies</li>
-            <li>Priority scoring</li>
-          </ul>
-        </div>
-      </div>
-      <div class="feature-block reverse reveal">
-        <div class="feature-content">
-          <h3>Async Standups</h3>
-          <p>Replace daily meetings with automated check-ins your team actually fills.</p>
-          <ul>
-            <li>Slack / email integration</li>
-            <li>Blocker highlighting</li>
-            <li>Weekly summaries</li>
-          </ul>
-        </div>
-        <div class="feature-visual"><img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80" alt="Team async updates interface" width="800" height="600" loading="lazy" decoding="async"></div>
-      </div>
-      <div class="feature-block reveal">
-        <div class="feature-visual"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80" alt="Velocity analytics dashboard" width="800" height="600" loading="lazy" decoding="async"></div>
-        <div class="feature-content">
-          <h3>Velocity Insights</h3>
-          <p>Track sprint velocity, cycle time, and team health with one dashboard.</p>
-          <ul>
-            <li>Real-time analytics</li>
-            <li>Team performance trends</li>
-            <li>Exportable reports</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="how-section">
-    <div class="container">
-      <h2 class="section-title text-center reveal">How It Works</h2>
-      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">Get started in three simple steps.</p>
-      <div class="steps reveal">
-        <div class="step reveal"><div class="step-number">1</div><h4>Sign Up</h4><p>Create your workspace in 60 seconds.</p></div>
-        <div class="step reveal"><div class="step-number">2</div><h4>Invite Team</h4><p>Add members via email or Slack.</p></div>
-        <div class="step reveal"><div class="step-number">3</div><h4>Ship Faster</h4><p>Track tasks and ship with clarity.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="pricing-section">
-    <div class="container">
-      <h2 class="section-title text-center reveal">Pricing Preview</h2>
-      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">Simple plans for growing teams.</p>
-      <div class="pricing-grid reveal-stagger">
-        <div class="pricing-card reveal">
-          <h3>Free</h3>
-          <div class="price">$0<small>/month</small></div>
-          <ul>
-            <li>Up to 5 team members</li>
-            <li>3 projects</li>
-            <li>Basic task boards</li>
-            <li>Email support</li>
-          </ul>
-          <span class="badge">Coming Soon</span>
-        </div>
-        <div class="pricing-card featured reveal">
-          <h3>Pro</h3>
-          <div class="price">$12<small>/user/month</small></div>
-          <ul>
-            <li>Unlimited projects</li>
-            <li>Async standups</li>
-            <li>Velocity insights</li>
-            <li>Priority support</li>
-          </ul>
-          <a href="#waitlist" class="btn btn-purple btn-block no-arrow" data-track="startup_pricing_pro">Join Waitlist</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="waitlist" class="waitlist-section">
-    <div class="container">
-      <h2 class="reveal">Be First. Launch is Coming.</h2>
-      <p class="reveal">Reserve your spot and get 50% off for the first year.</p>
-      <form class="final-form reveal" data-demo="startup">
-        <input type="email" placeholder="Enter your email" required>
-        <button type="submit" class="btn btn-purple btn-xl no-arrow" data-track="startup_final_waitlist">Reserve My Spot</button>
-      </form>
-    </div>
-  </section>
-
-  <div class="footer-note">
-    <div class="container">© 2025 MistHustlers Indore — Startup / SaaS Demo</div>
+<!-- Navbar -->
+<nav class="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-50 glow-glass px-6 py-3 flex items-center justify-between">
+  <div class="flex items-center gap-2 cursor-pointer" onclick="navigate('home')">
+    <img src="logo.svg" alt="Nimbus" class="h-8 w-8"/>
+    <span class="font-heading font-semibold text-lg text-white tracking-tight">Nimbus</span>
   </div>
-  <div class="sticky-footer">
-    <div class="container">
-      <span class="text">Want this for your business?</span>
-      <a href="tel:XXXXXXXXXX" class="btn btn-sm btn-secondary no-arrow" data-track="startup_footer_call">Call</a>
-      <a href="#" class="btn btn-sm btn-primary no-arrow" data-whatsapp="I saw your startup demo, interested!" data-demo="startup" data-track="startup_footer_whatsapp">WhatsApp</a>
+  <div class="hidden md:flex items-center gap-8">
+    <a class="nav-link font-body text-sm font-medium text-on_surface_variant hover:text-white transition-colors cursor-pointer" onclick="navigate('home')">Product</a>
+    <a class="nav-link font-body text-sm font-medium text-on_surface_variant hover:text-white transition-colors cursor-pointer" onclick="navigate('features')">Features</a>
+    <a class="nav-link font-body text-sm font-medium text-on_surface_variant hover:text-white transition-colors cursor-pointer" onclick="navigate('pricing')">Pricing</a>
+    <a class="nav-link font-body text-sm font-medium text-on_surface_variant hover:text-white transition-colors cursor-pointer" onclick="navigate('customers')">Customers</a>
+    <a class="nav-link font-body text-sm font-medium text-on_surface_variant hover:text-white transition-colors cursor-pointer" onclick="navigate('contact')">Contact</a>
+  </div>
+  <div class="hidden md:flex items-center gap-3">
+    <button class="font-body text-sm text-on_surface_variant hover:text-white transition-colors px-3">Log in</button>
+    <button onclick="navigate('contact')" class="glow-glass-strong px-5 py-2 rounded-full text-sm font-semibold text-white flex items-center gap-1.5 hover:scale-[1.02] active:scale-[.98] transition-transform">
+      Start Free Trial <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1">north_east</span>
+    </button>
+  </div>
+  <button class="md:hidden text-white p-1" onclick="toggleMenu()">
+    <span id="menu-icon" class="material-symbols-outlined">menu</span>
+  </button>
+</nav>
+<div id="mobile-menu" class="fixed top-20 left-4 right-4 z-50 glow-glass-strong rounded-2xl p-6 flex-col gap-3 hidden md:hidden" style="display:none">
+  <a class="text-left py-2 font-body text-sm text-on_surface_variant cursor-pointer" onclick="navigate('home');toggleMenu()">Product</a>
+  <a class="text-left py-2 font-body text-sm text-on_surface_variant cursor-pointer" onclick="navigate('features');toggleMenu()">Features</a>
+  <a class="text-left py-2 font-body text-sm text-on_surface_variant cursor-pointer" onclick="navigate('pricing');toggleMenu()">Pricing</a>
+  <a class="text-left py-2 font-body text-sm text-on_surface_variant cursor-pointer" onclick="navigate('customers');toggleMenu()">Customers</a>
+  <a class="text-left py-2 font-body text-sm text-on_surface_variant cursor-pointer" onclick="navigate('contact');toggleMenu()">Contact</a>
+  <hr class="border-white/10 my-2"/>
+  <button class="glow-glass-strong py-3 rounded-full text-sm font-semibold text-white text-center">Start Free Trial</button>
+</div>
+
+<main class="flex-1">
+
+<!-- ═══ HOME ═══ -->
+<section class="page active" id="page-home">
+  <div class="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-32 pb-20 overflow-hidden">
+    <div class="fixed inset-0 z-0">
+      <canvas id="orb-canvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+      <div class="absolute inset-0 grid-overlay pointer-events-none"></div>
+    </div>
+    <div class="relative z-10 max-w-5xl mx-auto">
+      <div style="animation:fadeInUp .6s ease-out .2s both">
+        <span class="font-body text-xs font-semibold text-secondary tracking-[.15em] uppercase block mb-6">// Workflow Automation, Reimagined</span>
+      </div>
+      <h1 class="font-heading font-bold text-5xl md:text-6xl lg:text-[4.5rem] text-white leading-[.95] tracking-[-3px] mb-6 px-4">
+        Automate the Busywork.<br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Ship the Big Work.</span>
+      </h1>
+      <p style="animation:fadeInUp .6s ease-out .6s both" class="font-body font-light text-base md:text-lg text-on_surface_variant max-w-xl mx-auto mb-10">
+        Nimbus connects your tools and automates repetitive work, so your team can focus on what actually moves the needle.
+      </p>
+      <div style="animation:fadeInUp .6s ease-out .8s both" class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+        <button onclick="navigate('contact')" class="glow-glass-strong px-8 py-3.5 rounded-full text-sm font-semibold text-white flex items-center gap-2 hover:scale-[1.02] active:scale-[.98] transition-transform">
+          Start Free Trial <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1">north_east</span>
+        </button>
+        <button class="font-body text-sm text-on_surface_variant hover:text-white transition-colors flex items-center gap-2">
+          <span class="material-symbols-outlined text-lg">play_circle</span> Watch Demo
+        </button>
+      </div>
+      <div style="animation:fadeInUp .6s ease-out 1s both" class="flex flex-col sm:flex-row items-center justify-center gap-0 mb-16">
+        <div class="flex flex-col items-center px-8 py-4"><span class="font-heading font-bold text-3xl text-secondary">10,000+</span><span class="font-body text-xs text-on_surface_variant tracking-widest uppercase mt-1">Teams Deployed</span></div>
+        <div class="flex flex-col items-center px-8 py-4 border-t sm:border-t-0 sm:border-l border-white/5"><span class="font-heading font-bold text-3xl text-secondary">40%</span><span class="font-body text-xs text-on_surface_variant tracking-widest uppercase mt-1">Faster Ops</span></div>
+        <div class="flex flex-col items-center px-8 py-4 border-t sm:border-t-0 sm:border-l border-white/5"><span class="font-heading font-bold text-3xl text-secondary">99.9%</span><span class="font-body text-xs text-on_surface_variant tracking-widest uppercase mt-1">Uptime SLA</span></div>
+      </div>
+      <div class="float-anim max-w-5xl mx-auto glow-glass-strong p-3 rounded-2xl -rotate-1 lg:-rotate-2 shadow-[0_0_60px_rgba(109,94,252,0.2)]">
+        <img src="high_fidelity_dashboard_screenshot_of_a_modern_saas_workflow_automation_tool/screen.png" alt="Nimbus Dashboard" class="w-full rounded-xl"/>
+      </div>
     </div>
   </div>
 
-  <script src="../js/shared.js"></script>
-</body>
-</html>
+  <!-- Logo Wall -->
+  <div class="max-w-7xl mx-auto px-6 py-20 text-center">
+    <p class="reveal font-body text-xs text-on_surface_variant tracking-[.15em] uppercase mb-10">Trusted by industry leaders</p>
+    <div class="reveal d1"><img src="a_grid_of_6_professional_company_logos_in_monochrome_grayscale_40_opacity_tech/screen.png" alt="Logos" class="w-full max-w-4xl mx-auto h-16 object-contain opacity-40 hover:opacity-100 transition-opacity grayscale"/></div>
+  </div>
+
+  <!-- Feature Grid -->
+  <div class="max-w-7xl mx-auto px-6 pb-20">
+    <h2 class="reveal font-heading font-bold text-3xl md:text-4xl text-white text-center mb-4 tracking-[-2px]">Precision Engineering Tools</h2>
+    <p class="reveal d1 font-body text-on_surface_variant text-center max-w-xl mx-auto mb-12">Built for teams that demand reliability, speed, and complete control.</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="reveal glow-glass p-6 rounded-xl"><div class="w-10 h-10 rounded-lg glow-glass-strong flex items-center justify-center mb-4"><span class="material-symbols-outlined text-primary text-lg">auto_awesome</span></div><h3 class="font-heading font-semibold text-white mb-2">Visual Workflow Builder</h3><p class="font-body text-sm text-on_surface_variant leading-relaxed">Drag, drop, and connect logic nodes in a high-performance canvas. Construct intricate pipelines without writing glue code.</p></div>
+      <div class="reveal d1 glow-glass p-6 rounded-xl"><div class="w-10 h-10 rounded-lg glow-glass-strong flex items-center justify-center mb-4"><span class="material-symbols-outlined text-primary text-lg">bolt</span></div><h3 class="font-heading font-semibold text-white mb-2">Real-time Execution</h3><p class="font-body text-sm text-on_surface_variant leading-relaxed">Sub-millisecond latency for critical path automations with automatic retry and rollback.</p></div>
+      <div class="reveal d2 glow-glass p-6 rounded-xl"><div class="w-10 h-10 rounded-lg glow-glass-strong flex items-center justify-center mb-4"><span class="material-symbols-outlined text-primary text-lg">shield_lock</span></div><h3 class="font-heading font-semibold text-white mb-2">Enterprise Security</h3><p class="font-body text-sm text-on_surface_variant leading-relaxed">End-to-end encryption with granular RBAC controls. SOC 2 Type II certified.</p></div>
+      <div class="reveal d3 md:col-span-2 glow-glass p-6 rounded-xl"><div class="w-10 h-10 rounded-lg glow-glass-strong flex items-center justify-center mb-4"><span class="material-symbols-outlined text-primary text-lg">layers</span></div><h3 class="font-heading font-semibold text-white mb-2">Deep Integrations</h3><p class="font-body text-sm text-on_surface_variant leading-relaxed">Natively connect to AWS, GCP, Azure, and 500+ SaaS platforms with single-click authentication flows.</p><div class="flex gap-2 mt-4"><span class="px-3 py-1 rounded-full border border-white/10 text-[11px] font-medium text-primary">AWS</span><span class="px-3 py-1 rounded-full border border-white/10 text-[11px] font-medium text-primary">GitHub</span><span class="px-3 py-1 rounded-full border border-white/10 text-[11px] font-medium text-primary">Slack</span></div></div>
+      <div class="reveal d5 glow-glass p-6 rounded-xl"><div class="w-10 h-10 rounded-lg glow-glass-strong flex items-center justify-center mb-4"><span class="material-symbols-outlined text-primary text-lg">monitoring</span></div><h3 class="font-heading font-semibold text-white mb-2">Observability</h3><p class="font-body text-sm text-on_surface_variant leading-relaxed">Granular log streaming, custom dashboards, and D3-powered data visualizations.</p></div>
+    </div>
+  </div>
+
+  <!-- Testimonials -->
+  <div class="max-w-7xl mx-auto px-6 pb-20">
+    <h2 class="reveal font-heading font-bold text-3xl md:text-4xl text-white text-center mb-12 tracking-[-2px]">Trusted by Engineers</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="reveal glow-glass p-6 rounded-xl h-full"><div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-full glow-glass-strong flex items-center justify-center text-xs text-primary font-semibold">ER</div><div><p class="font-body text-sm font-semibold text-white">Elena R.</p><p class="font-body text-xs text-on_surface_variant">VP Engineering, Cypher Labs</p></div></div><p class="font-body text-sm text-on_surface_variant leading-relaxed italic">"Nimbus cut our deployment pipeline from 45 minutes to under 5."</p></div>
+      <div class="reveal d1 glow-glass p-6 rounded-xl h-full"><div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-full glow-glass-strong flex items-center justify-center text-xs text-primary font-semibold">MT</div><div><p class="font-body text-sm font-semibold text-white">Marcus T.</p><p class="font-body text-xs text-on_surface_variant">CTO, Nexus Data</p></div></div><p class="font-body text-sm text-on_surface_variant leading-relaxed italic">"The only platform that could handle our scale without breaking a sweat."</p></div>
+      <div class="reveal d2 glow-glass p-6 rounded-xl h-full"><div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-full glow-glass-strong flex items-center justify-center text-xs text-primary font-semibold">SJ</div><div><p class="font-body text-sm font-semibold text-white">Sarah J.</p><p class="font-body text-xs text-on_surface_variant">Director of Ops, FinStack</p></div></div><p class="font-body text-sm text-on_surface_variant leading-relaxed italic">"The observability features saved us from three major incidents last quarter."</p></div>
+    </div>
+  </div>
+
+  <!-- Pricing Teaser -->
+  <div class="max-w-7xl mx-auto px-6 pb-20">
+    <h2 class="reveal font-heading font-bold text-3xl md:text-4xl text-white text-center mb-4 tracking-[-2px]">Simple, Transparent Pricing</h2>
+    <p class="reveal d1 font-body text-on_surface_variant text-center max-w-xl mx-auto mb-12">Start free. Scale as you grow.</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+      <div class="reveal glow-glass p-6 rounded-xl flex flex-col h-full relative"><h3 class="font-heading font-semibold text-white text-lg mb-1">Starter</h3><p class="font-body text-xs text-on_surface_variant mb-4">For emerging startups</p><div class="mb-6"><span class="font-heading font-bold text-4xl text-white">$49</span><span class="font-body text-sm text-on_surface_variant ml-1">/mo</span></div><ul class="space-y-2.5 mb-8 flex-1"><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> 5,000 executions</li><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> Standard integrations</li><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> 7-day retention</li></ul><button class="w-full py-2.5 rounded-full text-sm font-semibold border border-white/10 text-white hover:bg-white/5 transition-all">Get Started</button></div>
+      <div class="reveal d1 glow-glass-strong scale-105 p-6 rounded-xl flex flex-col h-full relative"><span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-semibold px-3 py-1 rounded-full tracking-widest uppercase shadow-lg">Most Popular</span><h3 class="font-heading font-semibold text-white text-lg mb-1">Growth</h3><p class="font-body text-xs text-on_surface_variant mb-4">For scaling operations</p><div class="mb-6"><span class="font-heading font-bold text-4xl text-white">$199</span><span class="font-body text-sm text-on_surface_variant ml-1">/mo</span></div><ul class="space-y-2.5 mb-8 flex-1"><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> 50,000 executions</li><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> Premium integrations</li><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> 30-day retention</li><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> Priority support</li></ul><button class="w-full py-2.5 rounded-full text-sm font-semibold glow-glass-strong text-white">Get Started</button></div>
+      <div class="reveal d2 glow-glass p-6 rounded-xl flex flex-col h-full relative"><h3 class="font-heading font-semibold text-white text-lg mb-1">Enterprise</h3><p class="font-body text-xs text-on_surface_variant mb-4">For global scale</p><div class="mb-6"><span class="font-heading font-bold text-4xl text-white">Custom</span></div><ul class="space-y-2.5 mb-8 flex-1"><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> Unlimited executions</li><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> Custom integrations</li><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> 1-year retention</li><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> Dedicated success mgr</li></ul><button class="w-full py-2.5 rounded-full text-sm font-semibold border border-white/10 text-white hover:bg-white/5 transition-all">Contact Sales</button></div>
+    </div>
+    <div class="reveal d3 text-center mt-8 cursor-pointer" onclick="navigate('pricing')"><span class="font-body text-sm text-primary hover:text-white transition-colors">See full pricing →</span></div>
+  </div>
+
+  <!-- Final CTA -->
+  <div class="max-w-7xl mx-auto px-6 pb-20">
+    <div class="reveal glow-glass-strong rounded-2xl p-12 md:p-20 text-center relative overflow-hidden">
+      <canvas class="absolute inset-0 opacity-20 pointer-events-none" id="cta-orb"></canvas>
+      <div class="relative z-10">
+        <h2 class="font-heading font-bold text-3xl md:text-5xl text-white mb-6 tracking-[-2px]">Ready to Ship Faster?</h2>
+        <p class="font-body text-on_surface_variant max-w-lg mx-auto mb-8">Join 10,000+ teams already using Nimbus to automate their workflows.</p>
+        <button onclick="navigate('contact')" class="glow-glass-strong px-8 py-3.5 rounded-full text-sm font-semibold text-white inline-flex items-center gap-2 hover:scale-[1.02] active:scale-[.98] transition-transform">
+          Start Your Free Trial <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1">arrow_forward</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FEATURES ═══ -->
+<section class="page" id="page-features">
+  <div class="pt-36 pb-20 px-6 max-w-7xl mx-auto">
+    <h1 class="reveal font-heading font-bold text-4xl md:text-5xl text-white mb-4 tracking-[-2px] text-center">Platform Capabilities</h1>
+    <p class="reveal d1 font-body text-on_surface_variant text-center max-w-2xl mx-auto mb-20">Deep dive into the technical architecture that powers modern operations.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20 items-center">
+      <div><span class="font-body text-xs font-semibold text-secondary tracking-[.15em] uppercase mb-3 block">Orchestration</span><h2 class="font-heading font-bold text-2xl md:text-3xl text-white mb-4 tracking-[-1.5px]">Dynamic Pipeline Routing</h2><p class="font-body text-sm text-on_surface_variant mb-6 leading-relaxed">Conditional logic branching based on real-time payload inspection. Automatic retry with exponential backoff. Visual state machine representation for easy debugging.</p><ul class="space-y-2.5"><li class="flex items-center gap-2.5 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check_circle</span> Conditional logic branching</li><li class="flex items-center gap-2.5 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check_circle</span> Automatic retry with backoff</li><li class="flex items-center gap-2.5 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check_circle</span> Visual state machine</li></ul></div>
+      <div class="glow-glass-strong p-1.5 rounded-xl -rotate-1 hover:rotate-0 transition-transform">
+        <img src="a_set_of_6_custom_geometric_line_icons_for_a_saas_website_technical_and/screen.png" alt="Pipeline" class="w-full rounded-lg"/>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20 items-center">
+      <div class="md:order-2"><span class="font-body text-xs font-semibold text-secondary tracking-[.15em] uppercase mb-3 block">Observability</span><h2 class="font-heading font-bold text-2xl md:text-3xl text-white mb-4 tracking-[-1.5px]">Telemetry & Analytics</h2><p class="font-body text-sm text-on_surface_variant mb-6 leading-relaxed">Granular log streaming directly to your preferred SIEM. Custom dashboarding with D3-powered visualizations. Real-time alerting with PagerDuty and Slack integrations.</p><ul class="space-y-2.5"><li class="flex items-center gap-2.5 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check_circle</span> Granular log streaming</li><li class="flex items-center gap-2.5 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check_circle</span> Custom D3 dashboards</li><li class="flex items-center gap-2.5 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check_circle</span> Real-time alerting</li></ul></div>
+      <div class="md:order-1 glow-glass-strong p-1.5 rounded-xl rotate-1 hover:rotate-0 transition-transform">
+        <img src="a_set_of_6_custom_geometric_line_icons_for_a_saas_website_technical_and/screen.png" alt="Analytics" class="w-full rounded-lg"/>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20 items-center">
+      <div><span class="font-body text-xs font-semibold text-secondary tracking-[.15em] uppercase mb-3 block">Security</span><h2 class="font-heading font-bold text-2xl md:text-3xl text-white mb-4 tracking-[-1.5px]">Role-Based Access Control</h2><p class="font-body text-sm text-on_surface_variant mb-6 leading-relaxed">Fine-grained permission system with SSO/SAML support. Audit logging for every action. SOC 2 Type II and GDPR compliant out of the box.</p><ul class="space-y-2.5"><li class="flex items-center gap-2.5 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check_circle</span> SSO/SAML integration</li><li class="flex items-center gap-2.5 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check_circle</span> Granular RBAC</li><li class="flex items-center gap-2.5 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check_circle</span> Audit trail</li></ul></div>
+      <div class="glow-glass-strong p-1.5 rounded-xl -rotate-1 hover:rotate-0 transition-transform">
+        <img src="a_set_of_6_custom_geometric_line_icons_for_a_saas_website_technical_and/screen.png" alt="Security" class="w-full rounded-lg"/>
+      </div>
+    </div>
+
+    <div class="text-center mt-8"><img src="high_fidelity_dashboard_screenshot_of_a_modern_saas_workflow_automation_tool/screen.png" alt="Full Dashboard" class="w-full max-w-5xl mx-auto rounded-xl glow-glass-strong p-1.5"/></div>
+  </div>
+</section>
+
+<!-- ═══ PRICING ═══ -->
+<section class="page" id="page-pricing">
+  <div class="pt-36 pb-20 px-6 max-w-7xl mx-auto">
+    <h1 class="reveal font-heading font-bold text-4xl md:text-5xl text-white mb-4 tracking-[-2px] text-center">Transparent Licensing</h1>
+    <p class="reveal d1 font-body text-on_surface_variant text-center max-w-xl mx-auto mb-12">Predictable pricing designed to scale with your compute requirements.</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+      <div class="glow-glass p-6 rounded-xl flex flex-col h-full"><h3 class="font-heading font-semibold text-white text-lg mb-1">Starter</h3><p class="font-body text-xs text-on_surface_variant mb-4">For emerging startups</p><div class="mb-6"><span class="font-heading font-bold text-4xl text-white">$49</span><span class="font-body text-sm text-on_surface_variant ml-1">/mo</span></div><ul class="space-y-2.5 mb-8 flex-1"><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> 5,000 executions/mo</li><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> Standard integrations</li><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> 7-day log retention</li><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> Email support</li></ul><button class="w-full py-2.5 rounded-full text-sm font-semibold border border-white/10 text-white hover:bg-white/5 transition-all">Get Started</button></div>
+      <div class="glow-glass-strong scale-105 p-6 rounded-xl flex flex-col h-full relative"><span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-semibold px-3 py-1 rounded-full tracking-widest uppercase">Most Popular</span><h3 class="font-heading font-semibold text-white text-lg mb-1">Growth</h3><p class="font-body text-xs text-on_surface_variant mb-4">For scaling operations</p><div class="mb-6"><span class="font-heading font-bold text-4xl text-white">$199</span><span class="font-body text-sm text-on_surface_variant ml-1">/mo</span></div><ul class="space-y-2.5 mb-8 flex-1"><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> 50,000 executions/mo</li><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> Premium integrations</li><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> 30-day log retention</li><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> Priority support</li><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> SSO/SAML</li></ul><button class="w-full py-2.5 rounded-full text-sm font-semibold glow-glass-strong text-white">Get Started</button></div>
+      <div class="glow-glass p-6 rounded-xl flex flex-col h-full"><h3 class="font-heading font-semibold text-white text-lg mb-1">Enterprise</h3><p class="font-body text-xs text-on_surface_variant mb-4">For global scale</p><div class="mb-6"><span class="font-heading font-bold text-4xl text-white">Custom</span></div><ul class="space-y-2.5 mb-8 flex-1"><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> Unlimited executions</li><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> Custom integrations</li><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> 1-year retention</li><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> Dedicated success mgr</li><li class="flex items-center gap-2 font-body text-sm text-on_surface_variant"><span class="material-symbols-outlined text-secondary text-sm">check</span> Custom SLA</li></ul><button class="w-full py-2.5 rounded-full text-sm font-semibold border border-white/10 text-white hover:bg-white/5 transition-all">Contact Sales</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CUSTOMERS ═══ -->
+<section class="page" id="page-customers">
+  <div class="pt-36 pb-20 px-6 max-w-7xl mx-auto">
+    <h1 class="reveal font-heading font-bold text-4xl md:text-5xl text-white mb-4 tracking-[-2px] text-center">Engineered for the Best</h1>
+    <p class="reveal d1 font-body text-on_surface_variant text-center max-w-2xl mx-auto mb-12">See how top engineering teams leverage Nimbus to ship faster.</p>
+    <div class="reveal">
+      <div class="glow-glass rounded-xl p-6 flex flex-col sm:flex-row justify-around items-center gap-6 mb-16 max-w-4xl mx-auto">
+        <div class="text-center"><div class="font-heading font-bold text-3xl text-secondary">10,000+</div><div class="font-body text-xs text-on_surface_variant tracking-widest uppercase mt-1">Teams</div></div>
+        <div class="text-center"><div class="font-heading font-bold text-3xl text-secondary">99.9%</div><div class="font-body text-xs text-on_surface_variant tracking-widest uppercase mt-1">Uptime</div></div>
+        <div class="text-center"><div class="font-heading font-bold text-3xl text-secondary">40%</div><div class="font-body text-xs text-on_surface_variant tracking-widest uppercase mt-1">Faster Ops</div></div>
+        <div class="text-center"><div class="font-heading font-bold text-3xl text-secondary">500+</div><div class="font-body text-xs text-on_surface_variant tracking-widest uppercase mt-1">Integrations</div></div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-16">
+      <div class="reveal glow-glass rounded-xl overflow-hidden group cursor-pointer hover:border-primary/30 transition-colors">
+        <div class="h-48 bg-surface relative overflow-hidden"><div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent z-10"></div><img src="high_fidelity_dashboard_screenshot_of_a_modern_saas_workflow_automation_tool/screen.png" alt="Fintech" class="w-full h-full object-cover opacity-40 group-hover:opacity-70 transition-opacity"/></div>
+        <div class="p-5 -mt-8 relative z-20"><span class="inline-block glow-glass text-[10px] font-semibold text-secondary px-3 py-1 rounded-full mb-3 tracking-widest uppercase">Fintech</span><h3 class="font-heading font-semibold text-white text-lg mb-2">Reducing Transaction Latency by 60%</h3><p class="font-body text-sm text-on_surface_variant mb-4">How GlobalPay utilized Nimbus orchestration to refactor their legacy monolith into agile microservices.</p><span class="font-body text-sm font-semibold text-primary flex items-center gap-1 group-hover:translate-x-2 transition-transform">Read Case Study <span class="material-symbols-outlined text-sm">arrow_forward</span></span></div>
+      </div>
+      <div class="reveal d1 glow-glass rounded-xl overflow-hidden group cursor-pointer hover:border-primary/30 transition-colors">
+        <div class="h-48 bg-surface relative overflow-hidden"><div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent z-10"></div><img src="high_fidelity_dashboard_screenshot_of_a_modern_saas_workflow_automation_tool/screen.png" alt="Healthcare" class="w-full h-full object-cover opacity-40 group-hover:opacity-70 transition-opacity"/></div>
+        <div class="p-5 -mt-8 relative z-20"><span class="inline-block glow-glass text-[10px] font-semibold text-secondary px-3 py-1 rounded-full mb-3 tracking-widest uppercase">Healthcare</span><h3 class="font-heading font-semibold text-white text-lg mb-2">Securing Patient Data Pipelines</h3><p class="font-body text-sm text-on_surface_variant mb-4">Implementing zero-trust workflow architectures for automated HIPAA compliance reporting.</p><span class="font-body text-sm font-semibold text-primary flex items-center gap-1 group-hover:translate-x-2 transition-transform">Read Case Study <span class="material-symbols-outlined text-sm">arrow_forward</span></span></div>
+      </div>
+      <div class="reveal d2 glow-glass rounded-xl overflow-hidden group cursor-pointer hover:border-primary/30 transition-colors">
+        <div class="h-48 bg-surface relative overflow-hidden"><div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent z-10"></div><img src="a_grid_of_6_professional_company_logos_in_monochrome_grayscale_40_opacity_tech/screen.png" alt="eCommerce" class="w-full h-full object-cover opacity-40 group-hover:opacity-70 transition-opacity"/></div>
+        <div class="p-5 -mt-8 relative z-20"><span class="inline-block glow-glass text-[10px] font-semibold text-secondary px-3 py-1 rounded-full mb-3 tracking-widest uppercase">eCommerce</span><h3 class="font-heading font-semibold text-white text-lg mb-2">Black Friday Without the Burnout</h3><p class="font-body text-sm text-on_surface_variant mb-4">How ShopFlow automated 2.3M order events in 24 hours with zero downtime.</p><span class="font-body text-sm font-semibold text-primary flex items-center gap-1 group-hover:translate-x-2 transition-transform">Read Case Study <span class="material-symbols-outlined text-sm">arrow_forward</span></span></div>
+      </div>
+      <div class="reveal d3 glow-glass rounded-xl overflow-hidden group cursor-pointer hover:border-primary/30 transition-colors">
+        <div class="h-48 bg-surface relative overflow-hidden"><div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent z-10"></div><img src="a_grid_of_6_professional_company_logos_in_monochrome_grayscale_40_opacity_tech/screen.png" alt="Edtech" class="w-full h-full object-cover opacity-40 group-hover:opacity-70 transition-opacity"/></div>
+        <div class="p-5 -mt-8 relative z-20"><span class="inline-block glow-glass text-[10px] font-semibold text-secondary px-3 py-1 rounded-full mb-3 tracking-widest uppercase">Edtech</span><h3 class="font-heading font-semibold text-white text-lg mb-2">Scaling to 10M Daily Active Users</h3><p class="font-body text-sm text-on_surface_variant mb-4">LearnPlatform used Nimbus to orchestrate their content delivery pipeline across 200+ regions.</p><span class="font-body text-sm font-semibold text-primary flex items-center gap-1 group-hover:translate-x-2 transition-transform">Read Case Study <span class="material-symbols-outlined text-sm">arrow_forward</span></span></div>
+      </div>
+    </div>
+    <div class="reveal d4 text-center">
+      <p class="font-body text-xs text-on_surface_variant tracking-[.15em] uppercase mb-8">More trusted by industry leaders</p>
+      <img src="a_grid_of_6_professional_company_logos_in_monochrome_grayscale_40_opacity_tech/screen.png" alt="Logos" class="w-full max-w-4xl mx-auto h-20 object-contain opacity-30 hover:opacity-80 transition-opacity grayscale"/>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ═══ -->
+<section class="page" id="page-contact">
+  <div class="pt-36 pb-20 px-6 max-w-7xl mx-auto">
+    <h1 class="reveal font-heading font-bold text-4xl md:text-5xl text-white mb-4 tracking-[-2px] text-center">Book a Demo</h1>
+    <p class="reveal d1 font-body text-on_surface_variant text-center max-w-xl mx-auto mb-16">See Nimbus in action. Our team will walk you through a personalized demo.</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+      <div class="reveal glow-glass-strong p-8 rounded-xl">
+        <form onsubmit="return false" class="space-y-5">
+          <div><label class="font-body text-xs font-medium text-on_surface_variant tracking-widest uppercase block mb-1.5">Full Name</label><input type="text" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder:text-on_surface_variant/40 focus:outline-none focus:border-primary/50 transition-all"/></div>
+          <div><label class="font-body text-xs font-medium text-on_surface_variant tracking-widest uppercase block mb-1.5">Work Email</label><input type="email" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder:text-on_surface_variant/40 focus:outline-none focus:border-primary/50 transition-all"/></div>
+          <div><label class="font-body text-xs font-medium text-on_surface_variant tracking-widest uppercase block mb-1.5">Company Size</label><select class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-primary/50 transition-all"><option>Select...</option><option>1-10</option><option>11-50</option><option>51-200</option><option>201-1000</option><option>1000+</option></select></div>
+          <div><label class="font-body text-xs font-medium text-on_surface_variant tracking-widest uppercase block mb-1.5">Message</label><textarea rows="4" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder:text-on_surface_variant/40 focus:outline-none focus:border-primary/50 transition-all resize-none"></textarea></div>
+          <button type="submit" class="w-full glow-glass-strong py-3.5 rounded-lg text-sm font-semibold text-white hover:scale-[1.01] active:scale-[.99] transition-transform">Submit Demo Request</button>
+        </form>
+      </div>
+      <div class="reveal d1 flex flex-col gap-6">
+        <div class="glow-glass-strong p-1.5 rounded-xl overflow-hidden min-h-[200px]"><div class="w-full h-full bg-surface_dim/80 rounded-lg flex items-center justify-center border border-white/5"><span class="material-symbols-outlined text-6xl text-primary/30">calendar_month</span></div></div>
+        <div class="glow-glass p-6 rounded-xl"><div class="flex items-center gap-3 mb-4"><span class="material-symbols-outlined text-primary">location_on</span><span class="font-body text-sm text-white">San Francisco, CA</span></div><div class="flex items-center gap-3 mb-4"><span class="material-symbols-outlined text-primary">mail</span><span class="font-body text-sm text-on_surface_variant">hello@nimbus.dev</span></div><div class="flex items-center gap-3"><span class="material-symbols-outlined text-primary">schedule</span><span class="font-body text-sm text-on_surface_variant">Mon–Fri, 9 AM – 6 PM PST</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- Footer -->
+<footer class="w-full border-t border-white/5 bg-surface/80 backdrop-blur-xl z-10 relative">
+  <div class="max-w-7xl mx-auto px-8 py-12 grid grid-cols-1 md:grid-cols-6 gap-8">
+    <div class="md:col-span-2"><div class="flex items-center gap-2 mb-4"><img src="logo.svg" alt="" class="h-7 w-7 grayscale"/><span class="font-heading font-semibold text-lg text-white tracking-tight">Nimbus</span></div><p class="font-body text-sm text-on_surface_variant max-w-xs mb-6">High-performance workflow automation for modern engineering teams.</p><p class="font-body text-xs text-on_surface_variant/50 mt-6">© 2024 Nimbus Technologies</p></div>
+    <div><h4 class="font-body text-sm font-semibold text-white mb-4">Product</h4><ul class="space-y-2.5"><li><a href="#" class="font-body text-sm text-on_surface_variant hover:text-white transition-colors">Features</a></li><li><a href="#" class="font-body text-sm text-on_surface_variant hover:text-white transition-colors">Integrations</a></li><li><a href="#" class="font-body text-sm text-on_surface_variant hover:text-white transition-colors">Pricing</a></li><li><a href="#" class="font-body text-sm text-on_surface_variant hover:text-white transition-colors">Changelog</a></li></ul></div>
+    <div><h4 class="font-body text-sm font-semibold text-white mb-4">Company</h4><ul class="space-y-2.5"><li><a href="#" class="font-body text-sm text-on_surface_variant hover:text-white transition-colors">About</a></li><li><a href="#" class="font-body text-sm text-on_surface_variant hover:text-white transition-colors">Careers</a></li><li><a href="#" class="font-body text-sm text-on_surface_variant hover:text-white transition-colors">Customers</a></li><li><a href="#" class="font-body text-sm text-on_surface_variant hover:text-white transition-colors">Contact</a></li></ul></div>
+    <div><h4 class="font-body text-sm font-semibold text-white mb-4">Resources</h4><ul class="space-y-2.5"><li><a href="#" class="font-body text-sm text-on_surface_variant hover:text-white transition-colors">Docs</a></li><li><a href="#" class="font-body text-sm text-on_surface_variant hover:text-white transition-colors">API Reference</a></li><li><a href="#" class="font-body text-sm text-on_surface_variant hover:text-white transition-colors">Blog</a></li><li><a href="#" class="font-body text-sm text-on_surface_variant hover:text-white transition-colors">Community</a></li></ul></div>
+    <div><h4 class="font-body text-sm font-semibold text-white mb-4">Legal</h4><ul class="space-y-2.5"><li><a href="#" class="font-body text-sm text-on_surface_variant hover:text-white transition-colors">Privacy</a></li><li><a href="#" class="font-body text-sm text-on_surface_variant hover:text-white transition-colors">Terms</a></li><li><a href="#" class="font-body text-sm text-on_surface_variant hover:text-white transition-colors">Security</a></li><li><a href="#" class="font-body text-sm text-on_surface_variant hover:text-white transition-colors">GDPR</a></li></ul></div>
+  </div>
+</footer>
+
+<script>
+// DriftOrbs WebGL
+(function(){
+  const canvas = document.getElementById('orb-canvas');
+  if(!canvas) return;
+  const gl = canvas.getContext('webgl')||canvas.getContext('experimental-webgl');
+  if(!gl) return;
+  function sz(){const w=canvas.clientWidth||1280,h=canvas.clientHeight||720;if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}}
+  if(typeof ResizeObserver!=='undefined') new ResizeObserver(sz).observe(canvas); sz();
+  const vs='attribute vec2 a_position;varying vec2 v_texCoord;void main(){v_texCoord=a_position*0.5+0.5;gl_Position=vec4(a_position,0.0,1.0);}';
+  const fs='precision highp float;uniform float u_time;uniform vec2 u_resolution;void main(){vec2 uv=gl_FragCoord.xy/u_resolution.xy;float aspect=u_resolution.x/u_resolution.y;vec2 p=uv;p.x*=aspect;vec3 bg=vec3(0.0235,0.0275,0.0392);vec3 indigo=vec3(0.427,0.368,0.988);vec3 mint=vec3(0.243,0.910,0.768);vec2 o1=vec2(0.5+0.3*sin(u_time*0.15),0.5+0.2*cos(u_time*0.2));o1.x*=aspect;vec2 o2=vec2(0.8+0.2*cos(u_time*0.1),0.2+0.3*sin(u_time*0.25));o2.x*=aspect;vec2 o3=vec2(0.2+0.4*sin(u_time*0.12),0.8+0.1*cos(u_time*0.3));o3.x*=aspect;float d1=smoothstep(0.8,0.0,distance(p,o1));float d2=smoothstep(0.7,0.0,distance(p,o2));float d3=smoothstep(0.9,0.0,distance(p,o3));vec3 c=bg;c=mix(c,indigo,d1*0.25);c=mix(c,mint,d2*0.15);c=mix(c,indigo,d3*0.2);gl_FragColor=vec4(c,1.0);}';
+  const cs=(t,s)=>{const sh=gl.createShader(t);gl.shaderSource(sh,s);gl.compileShader(sh);return sh;};
+  const prog=gl.createProgram();gl.attachShader(prog,cs(gl.VERTEX_SHADER,vs));gl.attachShader(prog,cs(gl.FRAGMENT_SHADER,fs));gl.linkProgram(prog);gl.useProgram(prog);
+  const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  const pos=gl.getAttribLocation(prog,'a_position');gl.enableVertexAttribArray(pos);gl.vertexAttribPointer(pos,2,gl.FLOAT,false,0,0);
+  const uTime=gl.getUniformLocation(prog,'u_time');const uRes=gl.getUniformLocation(prog,'u_resolution');
+  function render(t){sz();gl.viewport(0,0,canvas.width,canvas.height);if(uTime)gl.uniform1f(uTime,t*0.001);if(uRes)gl.uniform2f(uRes,canvas.width,canvas.height);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(render);}
+  render(0);
+})();
+
+// CTA Orbs (simplified version for CTA section)
+(function(){
+  const c = document.getElementById('cta-orb');
+  if(!c) return;
+  const gl = c.getContext('webgl')||c.getContext('experimental-webgl');
+  if(!gl) return;
+  function sz(){const w=c.clientWidth||1280,h=c.clientHeight||720;if(c.width!==w||c.height!==h){c.width=w;c.height=h;}}
+  if(typeof ResizeObserver!=='undefined') new ResizeObserver(sz).observe(c); sz();
+  const vs='attribute vec2 a_position;varying vec2 v_texCoord;void main(){v_texCoord=a_position*0.5+0.5;gl_Position=vec4(a_position,0.0,1.0);}';
+  const fs='precision highp float;uniform float u_time;uniform vec2 u_resolution;void main(){vec2 uv=gl_FragCoord.xy/u_resolution.xy;float aspect=u_resolution.x/u_resolution.y;vec2 p=uv;p.x*=aspect;vec3 bg=vec3(0.0);vec3 indigo=vec3(0.427,0.368,0.988);vec3 mint=vec3(0.243,0.910,0.768);vec2 o1=vec2(0.3+0.2*sin(u_time*0.1),0.5+0.2*cos(u_time*0.15));o1.x*=aspect;vec2 o2=vec2(0.7+0.15*cos(u_time*0.12),0.5+0.15*sin(u_time*0.18));o2.x*=aspect;float d1=smoothstep(0.6,0.0,distance(p,o1));float d2=smoothstep(0.6,0.0,distance(p,o2));vec3 c=bg;c=mix(c,indigo,d1*0.3);c=mix(c,mint,d2*0.2);gl_FragColor=vec4(c,1.0);}';
+  const cs=(t,s)=>{const sh=gl.createShader(t);gl.shaderSource(sh,s);gl.compileShader(sh);return sh;};
+  const prog=gl.createProgram();gl.attachShader(prog,cs(gl.VERTEX_SHADER,vs));gl.attachShader(prog,cs(gl.FRAGMENT_SHADER,fs));gl.linkProgram(prog);gl.useProgram(prog);
+  const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  const pos=gl.getAttribLocation(prog,'a_position');gl.enableVertexAttribArray(pos);gl.vertexAttribPointer(pos,2,gl.FLOAT,false,0,0);
+  const uTime=gl.getUniformLocation(prog,'u_time');const uRes=gl.getUniformLocation(prog,'u_resolution');
+  function render(t){sz();gl.viewport(0,0,c.width,c.height);if(uTime)gl.uniform1f(uTime,t*0.001);if(uRes)gl.uniform2f(uRes,c.width,c.height);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(render);}
+  render(0);
+})();
+
+// SPA Routing
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('text-primary'));
+  const links = document.querySelectorAll('.nav-link');
+  const idx = ['home','features','pricing','customers','contact'].indexOf(page);
+  if(idx>=0 && links[idx]) links[idx].classList.add('text-primary');
+  window.scrollTo({top:0,behavior:'smooth'});
+  closeM();
+}
+
+// Mobile Menu
+function toggleMenu() {
+  const m = document.getElementById('mobile-menu');
+  const icon = document.getElementById('menu-icon');
+  if(m.style.display==='flex'){closeM();return;}
+  m.style.display='flex'; icon.textContent='close';
+}
+function closeM() {
+  const m = document.getElementById('mobile-menu');
+  const icon = document.getElementById('menu-icon');
+  if(m){m.style.display='none';}
+  if(icon){icon.textContent='menu';}
+}
+
+// Scroll Reveal
+const revealObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+</script>
+</body></html>

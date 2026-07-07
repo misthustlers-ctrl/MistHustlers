@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { usePersistentForm } from "@/utils/usePersistentForm";
 
 type Opportunity = {
   id: number;
@@ -27,7 +28,7 @@ export default function TalentApplicationForm({
   selectedOpportunity: Opportunity | null;
   opportunities: { id: number; title: string; type: string }[];
 }) {
-  const [formState, setFormState] = useState(DEFAULT_FORM_STATE);
+  const [formState, setFormState, clearDraft] = usePersistentForm("mh:draft:talent-application:v1", DEFAULT_FORM_STATE);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -68,7 +69,7 @@ export default function TalentApplicationForm({
       }
 
       setIsSubmitted(true);
-      setFormState(DEFAULT_FORM_STATE);
+      clearDraft();
       setTimeout(() => setIsSubmitted(false), 5000);
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : "Application could not be submitted");
@@ -172,6 +173,8 @@ export default function TalentApplicationForm({
                 <span className="mb-2 block text-sm font-semibold text-[var(--mh-text)]/70">Full Name</span>
                 <input
                   id="applicant-name"
+                  name="name"
+                  autoComplete="name"
                   value={formState.name}
                   onChange={(event) => setFormState((current) => ({ ...current, name: event.target.value }))}
                   placeholder="Your name"
@@ -183,6 +186,8 @@ export default function TalentApplicationForm({
                 <span className="mb-2 block text-sm font-semibold text-[var(--mh-text)]/70">Email</span>
                 <input
                   type="email"
+                  name="email"
+                  autoComplete="email"
                   value={formState.email}
                   onChange={(event) => setFormState((current) => ({ ...current, email: event.target.value }))}
                   placeholder="you@example.com"
@@ -196,6 +201,8 @@ export default function TalentApplicationForm({
               <label className="block">
                 <span className="mb-2 block text-sm font-semibold text-[var(--mh-text)]/70">Interest Area</span>
                 <input
+                  name="interest-area"
+                  autoComplete="off"
                   value={formState.area}
                   onChange={(event) => setFormState((current) => ({ ...current, area: event.target.value }))}
                   placeholder="Job, event, program..."
@@ -206,6 +213,8 @@ export default function TalentApplicationForm({
               <label className="block">
                 <span className="mb-2 block text-sm font-semibold text-[var(--mh-text)]/70">Opportunity</span>
                 <input
+                  name="opportunity"
+                  autoComplete="off"
                   value={formState.opportunity}
                   onChange={(event) => setFormState((current) => ({ ...current, opportunity: event.target.value }))}
                   placeholder="Opportunity title"
@@ -218,6 +227,8 @@ export default function TalentApplicationForm({
             <label className="block">
               <span className="mb-2 block text-sm font-semibold text-[var(--mh-text)]/70">Portfolio / LinkedIn / Relevant Link</span>
               <input
+                name="portfolio"
+                autoComplete="url"
                 value={formState.portfolio}
                 onChange={(event) => setFormState((current) => ({ ...current, portfolio: event.target.value }))}
                 placeholder="https://"
@@ -228,6 +239,7 @@ export default function TalentApplicationForm({
             <label className="block">
               <span className="mb-2 block text-sm font-semibold text-[var(--mh-text)]/70">Why are you a fit?</span>
               <textarea
+                name="application-message"
                 value={formState.message}
                 onChange={(event) => setFormState((current) => ({ ...current, message: event.target.value }))}
                 rows={6}
