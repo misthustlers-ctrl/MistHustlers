@@ -12,7 +12,7 @@
     "build": "npm run install:build-deps && npx playwright install --with-deps chromium && npm run build:aws",
     "db:deploy": "npm --prefix backend exec -- prisma migrate deploy --schema backend/prisma/schema.prisma",
     "db:status": "npm --prefix backend exec -- prisma migrate status --schema backend/prisma/schema.prisma",
-    "start": "cd backend && node scripts/resolve-service-packages-migration.js && npx prisma migrate deploy && node scripts/sync-service-packages.js && node scripts/sync-home-hero.js && node server.js",
+    "start": "cd backend && node scripts/resolve-service-packages-migration.js && npx prisma migrate deploy && node scripts/ensure-chatbot-config.js && node scripts/sync-service-packages.js && node scripts/sync-home-hero.js && node server.js",
     "server": "node backend/server.js",
     "prerender": "node scripts/prerender.mjs",
     "verify-seo": "node scripts/verify-seo.mjs",
