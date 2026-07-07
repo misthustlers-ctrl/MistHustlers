@@ -193,7 +193,7 @@ async function sendMessage(req, res, next) {
         prisma.chatMessage.findMany({
           where: { sessionId: session.id },
           orderBy: { createdAt: "desc" },
-          take: 10,
+          take: 24,
           select: { role: true, content: true },
         }).then((items) => items.reverse()).catch(() => []),
       ]);

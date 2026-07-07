@@ -136,7 +136,7 @@ export async function generateGroundedConversation({ message, history = [], know
     `VERIFIED KNOWLEDGE:\n${verifiedContext || "No matching verified knowledge was found."}`,
   ].join("\n\n");
 
-  const input = history.slice(-10).map((entry) => ({
+  const input = history.slice(-24).map((entry) => ({
     role: entry.role === "bot" || entry.role === "assistant" ? "assistant" : "user",
     content: redactPersonalData(entry.content),
   }));

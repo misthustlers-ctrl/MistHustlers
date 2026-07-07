@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useLocation } from "react-router-dom";
 import { createSession, deleteSession, getConfig, resumeSession, sendMessage, type ChatResponse } from "@/utils/chatbot-api";
 
 interface QuickAction { id: string; label: string }
@@ -34,13 +33,12 @@ function MessageContent({ content }: { content: string }) {
 }
 
 export default function ChatbotWidget() {
-  const location = useLocation();
   const reduceMotion = useReducedMotion();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(() => localStorage.getItem("mh_chat_open") === "true");
   const [config, setConfig] = useState<Config | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMsg[]>([]);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(() => localStorage.getItem("mh_chat_draft") || "");
   const [loading, setLoading] = useState(false);
   const [quickActions, setQuickActions] = useState<QuickAction[]>([]);
   const [recCard, setRecCard] = useState<RecCard | null>(null);
@@ -68,7 +66,11 @@ export default function ChatbotWidget() {
     return () => { document.body.style.overflow = previous; document.body.dataset.ariaChatOpen = "false"; };
   }, [open]);
 
-  useEffect(() => { if (open) setOpen(false); }, [location.pathname]);
+  useEffect(() => { localStorage.setItem("mh_chat_open", String(open)); }, [open]);
+  useEffect(() => {
+    if (input) localStorage.setItem("mh_chat_draft", input);
+    else localStorage.removeItem("mh_chat_draft");
+  }, [input]);
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" }); }, [messages, loading, reduceMotion]);
   useEffect(() => { if (open) setTimeout(() => inputRef.current?.focus(), 120); }, [open]);
 
@@ -111,7 +113,7 @@ export default function ChatbotWidget() {
   const send = useCallback(async (text?: string, retry = false) => {
     const value = (text ?? input).trim();
     if (!value || !token || loading) return;
-    setInput(""); if (!retry) addMessage("user", value); setLoading(true); setError(null); setFailedMessage(""); setQuickActions([]);
+    setInput(""); localStorage.removeItem("mh_chat_draft"); if (!retry) addMessage("user", value); setLoading(true); setError(null); setFailedMessage(""); setQuickActions([]);
     try { applyResponse(await sendMessage(token, value)); }
     catch (err) {
       const status = (err as Error & { status?: number }).status;
