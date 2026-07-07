@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { RefreshCw, Save } from 'lucide-react';
+import { RefreshCw, Save, PlugZap } from 'lucide-react';
 
 const API = '/api';
 
@@ -23,6 +23,8 @@ export default function ChatbotTab({ notify }: { notify: (msg: string, type?: 's
   const [syncRuns, setSyncRuns] = useState<any[]>([]);
   const [overview, setOverview] = useState<any>(null);
   const [error, setError] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [testing, setTesting] = useState(false);
 
   const fetchConfig = async () => {
     setConfigLoading(true);
@@ -50,13 +52,28 @@ export default function ChatbotTab({ notify }: { notify: (msg: string, type?: 's
 
   const saveConfig = async () => {
     if (!configData) return;
+    setSaving(true);
     try {
       const res = await api<any>(`${API}/chatbot/admin/config`, {
         method: 'PUT',
         body: JSON.stringify(configData),
       });
-      if (res.success) { setConfigData(res.config); notify('Chatbot config saved'); }
+      if (res.success) { setConfigData(res.config); notify('Chatbot config saved'); fetchOverview(); }
     } catch (err: any) { notify(err.message, 'error'); }
+    finally { setSaving(false); }
+  };
+
+  const testConnection = async () => {
+    if (!configData) return;
+    setTesting(true);
+    try {
+      const res = await api<any>(`${API}/chatbot/admin/test-connection`, {
+        method: 'POST',
+        body: JSON.stringify({ opencodeApiKey: configData.opencodeApiKey || '', opencodeModel: configData.opencodeModel }),
+      });
+      if (res.success) notify(`${res.message} · ${res.model}`);
+    } catch (err: any) { notify(err.message, 'error'); }
+    finally { setTesting(false); }
   };
 
   const triggerSync = async () => {
@@ -78,7 +95,7 @@ export default function ChatbotTab({ notify }: { notify: (msg: string, type?: 's
         </div>
         <div className="flex gap-2">
           <button onClick={triggerSync} className="rounded-lg border border-white/15 px-3 py-1.5 text-[11px] hover:bg-white hover:text-black"><RefreshCw className="w-3 h-3 inline mr-1" />Sync Knowledge</button>
-          <button onClick={saveConfig} className="rounded-lg border border-white/15 px-3 py-1.5 text-[11px] hover:bg-white hover:text-black"><Save className="w-3 h-3 inline mr-1" />Save</button>
+          <button onClick={saveConfig} disabled={saving} className="rounded-lg border border-white/15 px-3 py-1.5 text-[11px] hover:bg-white hover:text-black disabled:opacity-50"><Save className="w-3 h-3 inline mr-1" />{saving ? 'Saving...' : 'Save'}</button>
         </div>
       </div>
       {overview && <div className="mb-4 grid grid-cols-2 gap-3 xl:grid-cols-4">
@@ -137,7 +154,7 @@ export default function ChatbotTab({ notify }: { notify: (msg: string, type?: 's
             </div>
           </div>
           <div className="bg-[#111] border border-white/10 rounded-2xl p-5 xl:col-span-2">
-            <div className="text-sm font-semibold mb-1">Conversation Guidance</div>
+            <div className="text-sm font-semibold mb-1">AI API Connection & Conversation Guidance</div>
             <p className="mb-4 text-[11px] text-white/45">Controls ARIA's response style and safe fallback. Verified Knowledge remains the source of service and pricing facts.</p>
             <div className="mb-5 grid gap-4 rounded-xl border border-white/10 bg-black/20 p-4 xl:grid-cols-[180px_220px_1fr]">
               <label className="flex items-center gap-2 text-sm">
@@ -168,6 +185,9 @@ export default function ChatbotTab({ notify }: { notify: (msg: string, type?: 's
                   {configData.hasOpenCodeApiKey && <button type="button" onClick={() => setConfigData({ ...configData, opencodeApiKey: '', clearOpenCodeApiKey: true, hasOpenCodeApiKey: false })} className="rounded-lg border border-red-400/20 px-3 text-[11px] text-red-300 hover:bg-red-500/10">Clear</button>}
                 </div>
                 <p className="mt-1 text-[10px] text-white/35">Encrypted server-side. The saved key is never returned to this browser.</p>
+                <button type="button" onClick={testConnection} disabled={testing || (!configData.opencodeApiKey && !configData.hasOpenCodeApiKey)} className="mt-3 inline-flex items-center gap-2 rounded-lg border border-emerald-400/25 px-3 py-2 text-[11px] font-semibold text-emerald-300 hover:bg-emerald-400/10 disabled:cursor-not-allowed disabled:opacity-40">
+                  <PlugZap className="h-3.5 w-3.5" />{testing ? 'Testing...' : 'Test API connection'}
+                </button>
               </div>
             </div>
             <div className="grid gap-4 xl:grid-cols-[180px_1fr_1fr]">

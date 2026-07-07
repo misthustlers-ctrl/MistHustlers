@@ -206,7 +206,7 @@ function LuxuryHero() {
     muted: true,
     loop: true,
     playsInline: true,
-    poster: "./poster.jpg",
+    poster: "/demo/salon/images/web-floral-ritual.jpg",
     preload: "auto",
     className: "w-full h-full object-cover"
   }, React.createElement("source", {
@@ -483,7 +483,7 @@ function Footer() {
 }
 const CATEGORIES = [{
   name: 'Facials',
-  image: '/demo/salon/images/facials.jpg',
+  image: '/demo/salon/images/web-facial-treatment.jpg',
   items: [{
     name: 'The Aurelle Facial',
     desc: 'Customized brightening facial with enzyme peel, LED therapy, and lymphatic drainage.',
@@ -502,7 +502,7 @@ const CATEGORIES = [{
   }]
 }, {
   name: 'Massage',
-  image: '/demo/salon/images/massage.jpg',
+  image: '/demo/salon/images/web-hot-stone-ritual.jpg',
   items: [{
     name: 'Warm Stone Ritual',
     desc: 'Heated basalt stones with slow, deep-tissue release.',
@@ -521,7 +521,7 @@ const CATEGORIES = [{
   }]
 }, {
   name: 'Body',
-  image: '/demo/salon/images/body.jpg',
+  image: '/demo/salon/images/web-body-ritual.jpg',
   items: [{
     name: 'Sakura Salt Scrub',
     desc: 'Cherry-blossom salt exfoliation with warm oil cocoon.',
@@ -535,7 +535,7 @@ const CATEGORIES = [{
   }]
 }, {
   name: 'Nails',
-  image: '/demo/salon/images/nails.jpg',
+  image: '/demo/salon/images/web-floral-ritual.jpg',
   items: [{
     name: 'Signature Manicure',
     desc: 'Sculpted shaping, cuticle work, and gold-foil accent.',
@@ -553,7 +553,7 @@ const CATEGORIES = [{
     price: '$55'
   }]
 }];
-const GALLERY_IMGS = ['/demo/salon/images/gallery0.jpg', '/demo/salon/images/gallery1.jpg', '/demo/salon/images/gallery2.jpg', '/demo/salon/images/gallery3.jpg', '/demo/salon/images/gallery4.jpg', '/demo/salon/images/gallery5.jpg', '/demo/salon/images/gallery6.jpg', '/demo/salon/images/gallery7.jpg', '/demo/salon/images/gallery8.jpg', '/demo/salon/images/gallery9.jpg', '/demo/salon/images/gallery10.jpg', '/demo/salon/images/gallery11.jpg'];
+const GALLERY_IMGS = ['/demo/salon/images/web-floral-ritual.jpg', '/demo/salon/images/web-hot-stone-ritual.jpg', '/demo/salon/images/web-facial-treatment.jpg', '/demo/salon/images/web-body-ritual.jpg', '/demo/salon/images/web-essential-oil.jpg', '/demo/salon/images/web-salon-interior.jpg', '/demo/salon/images/facial1.jpg', '/demo/salon/images/massage1.jpg', '/demo/salon/images/body1.jpg', '/demo/salon/images/treatment-room.jpg', '/demo/salon/images/facials.jpg', '/demo/salon/images/nails.jpg'];
 const TESTIMONIALS = [{
   name: 'Clara M.',
   img: '/demo/salon/images/testimonial0.jpg',
@@ -616,17 +616,17 @@ function HomePage() {
     className: "grid grid-cols-1 md:grid-cols-3 gap-6"
   }, [{
     title: 'The Aurelle Facial',
-    img: '/demo/salon/images/facial1.jpg',
+    img: '/demo/salon/images/web-facial-treatment.jpg',
     price: '$195',
     dur: '75 min'
   }, {
     title: 'Warm Stone Ritual',
-    img: '/demo/salon/images/massage1.jpg',
+    img: '/demo/salon/images/web-hot-stone-ritual.jpg',
     price: '$210',
     dur: '80 min'
   }, {
     title: 'Gold Collagen Lift',
-    img: '/demo/salon/images/body1.jpg',
+    img: '/demo/salon/images/web-essential-oil.jpg',
     price: '$220',
     dur: '60 min'
   }].map((t, i) => React.createElement(motion.div, {
@@ -1222,7 +1222,7 @@ function BookingPage() {
   }, React.createElement("div", {
     className: "gilded-glass overflow-hidden"
   }, React.createElement("img", {
-    src: "/demo/salon/images/treatment-room.jpg",
+    src: "/demo/salon/images/web-body-ritual.jpg",
     alt: "Treatment room",
     className: "w-full aspect-[3/4] object-cover",
     loading: "lazy",

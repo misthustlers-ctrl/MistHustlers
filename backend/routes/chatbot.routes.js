@@ -14,7 +14,7 @@ import {
 import { requireAdmin } from "../middleware/admin-auth.middleware.js";
 import { auditLog } from "../middleware/audit.middleware.js";
 import prisma from "../prisma/client.js";
-import { encryptApiKey, isOpenCodeConfigured, OPENCODE_MODELS } from "../services/generative-chat.js";
+import { encryptApiKey, isOpenCodeConfigured, OPENCODE_MODELS, testOpenCodeConnection } from "../services/generative-chat.js";
 
 const router = Router();
 
@@ -104,6 +104,15 @@ router.get("/admin/overview", requireAdmin, async (_req, res, next) => {
       prisma.qualifiedLead.count({ where: { status: "new" } }),
     ]);
     res.json({ success: true, enabled: Boolean(config?.enabled), generativeEnabled: isOpenCodeConfigured(config || {}), lastSync, activeSessions, newLeads });
+  } catch (err) { next(err); }
+});
+
+router.post("/admin/test-connection", requireAdmin, async (req, res, next) => {
+  try {
+    const config = await prisma.chatbotConfig.findFirst() || {};
+    const model = OPENCODE_MODELS.includes(req.body?.opencodeModel) ? req.body.opencodeModel : config.opencodeModel;
+    const result = await testOpenCodeConnection({ ...config, opencodeModel: model }, req.body?.opencodeApiKey);
+    res.json({ success: true, model: result.model, message: "AI API connection successful" });
   } catch (err) { next(err); }
 });
 

@@ -41,6 +41,31 @@ function resolveApiKey(config = {}) {
   return decryptApiKey(config.opencodeApiKeyEncrypted) || process.env.OPENCODE_API_KEY || null;
 }
 
+export async function testOpenCodeConnection(config = {}, apiKeyOverride = "") {
+  const override = String(apiKeyOverride || "").trim();
+  if (override && (override.length < 12 || override.length > 500)) throw new Error("Invalid OpenCode API key");
+  const apiKey = override || resolveApiKey(config);
+  if (!apiKey) throw new Error("Add an OpenCode API key first");
+  const model = OPENCODE_MODELS.includes(config.opencodeModel) ? config.opencodeModel : "deepseek-v4-flash-free";
+  const usesChatCompletions = CHAT_COMPLETION_MODELS.has(model);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 12000);
+  try {
+    const response = await fetch(usesChatCompletions ? OPENCODE_CHAT_ENDPOINT : OPENCODE_ENDPOINT, {
+      method: "POST",
+      signal: controller.signal,
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify(usesChatCompletions
+        ? { model, messages: [{ role: "user", content: "Reply with OK only." }], max_tokens: 8, temperature: 0 }
+        : { model, instructions: "Reply with OK only.", input: "Connection test", max_output_tokens: 8 }),
+    });
+    if (!response.ok) throw new Error(`OpenCode connection failed (${response.status})`);
+    return { model };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 function redactPersonalData(value) {
   return String(value || "")
     .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "[email removed]")
