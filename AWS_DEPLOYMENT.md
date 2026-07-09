@@ -1,16 +1,25 @@
 # AWS Free Plan Deployment
 
-This deployment runs the public site, admin panel, API and PostgreSQL on one Ubuntu EC2 instance. It is intended for the six-month AWS Free Plan and low traffic.
+This setup runs the MistHustlers public website, admin panel, API, chatbot and CRM/CMS on one private Ubuntu EC2 origin. Public traffic comes through Cloudflare Tunnel. The database stays on Supabase PostgreSQL.
 
-## 1. AWS resources
+Final stack:
+
+```text
+User -> Cloudflare -> Cloudflare Tunnel -> EC2 localhost:3000 -> PM2 Node.js App -> Supabase PostgreSQL
+```
+
+No Nginx, Certbot, Docker, AWS RDS, or public app ports are required.
+
+## 1. AWS Resources
 
 1. Launch Ubuntu 24.04 in `ap-south-1` using an eligible micro instance.
-2. Allocate an Elastic IP for stable SSH/outbound access. The website itself will use an outbound Cloudflare Tunnel.
-3. Security Group inbound rules: SSH `22` from your IP only. Keep `80`, `443`, `9000` and PostgreSQL `5432` closed.
-4. Create an S3 bucket for encrypted backups. Block all public access.
+2. Use an Elastic IP only for stable SSH access if you want one. Website traffic does not use public EC2 ports.
+3. Security Group inbound rules: keep only SSH `22` open, ideally restricted to your own IP.
+4. Keep `80`, `443`, `3000`, `5173` and PostgreSQL `5432` closed.
 5. Create an AWS Budget alert before deployment.
+6. Optional: create a private S3 bucket for encrypted backups. Uploads remain local for now.
 
-## 2. Install and clone
+## 2. Install And Clone
 
 ```bash
 sudo mkdir -p /var/www/misthustlers
@@ -22,18 +31,21 @@ sudo bash deploy/aws/setup-ubuntu.sh
 
 If the repository files are inside a nested folder, run the remaining commands from the folder containing `package.json`.
 
-## 3. Create PostgreSQL database
+The setup script installs Node.js 22, PM2, AWS CLI, PostgreSQL client tools for Supabase backups, Playwright browser dependencies and a 2 GB swap file for safer builds on micro instances.
 
-Replace both passwords with a strong generated value and use the same value in `.env`.
+## 3. Create Supabase Database
 
-```bash
-sudo -u postgres psql
-CREATE USER misthustlers WITH ENCRYPTED PASSWORD 'REPLACE_WITH_STRONG_PASSWORD';
-CREATE DATABASE misthustlers OWNER misthustlers;
-\q
+Do not install or run PostgreSQL on EC2. Create a Supabase project and copy the PostgreSQL connection string.
+
+Use the Supabase pooled or direct PostgreSQL URL as:
+
+```env
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DATABASE?schema=public
 ```
 
-## 4. Configure environment
+Keep the real URL only in `.env` on EC2.
+
+## 4. Configure Environment
 
 ```bash
 cp .env.example .env
@@ -41,100 +53,132 @@ nano .env
 chmod 600 .env
 ```
 
-Set strong values for `DATABASE_URL`, `ADMIN_PASSWORD` and `ADMIN_SESSION_SECRET`. Keep `UPLOAD_DIR=uploads`. SMTP and Google Sheets are optional.
+Required production values:
 
-Use at least 12 random characters for the admin password and at least 32 random characters for the session secret. Quote values containing shell-special characters. The deployment script rejects missing, weak or placeholder production values.
+```env
+NODE_ENV=production
+PORT=3000
+HOST=127.0.0.1
+TRUST_PROXY=loopback
 
-## 5. Build and start the private origin
+DATABASE_URL=
 
-The 2 GB swap created by setup protects a micro instance during Vite/Playwright builds. Before migrations, deployment validates the environment and creates a restricted local database/media backup.
+SITE_URL=https://www.misthustlers.in
+PUBLIC_SITE_URL=https://www.misthustlers.in
+VITE_SITE_URL=https://www.misthustlers.in
+CORS_ORIGIN=https://www.misthustlers.in,http://localhost:5173
+
+UPLOAD_DIR=uploads
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=
+ADMIN_SESSION_SECRET=
+```
+
+Use at least 12 random characters for `ADMIN_PASSWORD` and at least 32 random characters for `ADMIN_SESSION_SECRET`. Never commit `.env`.
+
+## 5. Build And Start With PM2
 
 ```bash
 bash deploy/aws/deploy.sh
 pm2 startup
 ```
 
-Run the command printed by `pm2 startup`, then run `pm2 save` once more.
+Run the command printed by `pm2 startup`, then run:
 
-The application binds only to `127.0.0.1:9000`; it is not directly reachable from the internet.
+```bash
+pm2 save
+```
 
-## 6. Connect the permanent Cloudflare domain
+The application binds only to `127.0.0.1:3000`; it is not directly reachable from the internet.
 
-1. Add `misthustlers.in` to Cloudflare and replace the registrar nameservers with the two nameservers Cloudflare provides.
-2. In Cloudflare Zero Trust, open **Networks > Tunnels**, create a named tunnel such as `misthustlers-aws`, and select the Debian connector.
-3. On EC2 run the command below. Paste only the tunnel token when the hidden prompt appears; do not save it in Git or `.env`.
+## 6. Connect Cloudflare Tunnel
+
+1. Add `misthustlers.in` to Cloudflare and replace registrar nameservers with Cloudflare nameservers.
+2. In Cloudflare Zero Trust, open **Networks > Tunnels**.
+3. Create a named tunnel such as `misthustlers-aws`.
+4. Select the Debian connector.
+5. On EC2 run:
 
 ```bash
 cd /var/www/misthustlers
 sudo bash deploy/aws/setup-cloudflare-tunnel.sh
 ```
 
-4. In the tunnel's **Public Hostnames**, add both entries:
+Paste only the named tunnel token when asked. Do not save the token in Git or `.env`.
+
+In the tunnel's **Public Hostnames**, add:
 
 ```text
-www.misthustlers.in  -> HTTP -> localhost:9000
-misthustlers.in      -> HTTP -> localhost:9000
+www.misthustlers.in  -> HTTP -> localhost:3000
+misthustlers.in      -> HTTP -> localhost:3000
 ```
 
-5. Remove conflicting old `A`, `AAAA`, or `CNAME` records for `@` and `www`. Do not use a temporary `trycloudflare.com` Quick Tunnel.
-6. Enable **Always Use HTTPS**, keep Universal SSL enabled, and set minimum TLS to 1.2.
-7. Create cache bypass rules for `/api/*` and `/admin*`. Static hashed JS/CSS/images may be cached.
-8. Enable the Free-plan DDoS protections and Bot Fight Mode available in your Cloudflare dashboard.
+Remove conflicting old `A`, `AAAA`, or `CNAME` records for `@` and `www`. Do not use a temporary `trycloudflare.com` Quick Tunnel for production.
 
-Cloudflare remains invisible to visitors; the browser, SEO metadata and admin continue using `https://www.misthustlers.in`.
+Recommended Cloudflare settings:
 
-## 7. Domain and checks
+```text
+Always Use HTTPS: On
+Universal SSL: On
+Minimum TLS: 1.2 or higher
+Cache bypass: /api/* and /admin*
+Bot Fight Mode: On if available
+Free DDoS protection: On by default
+```
+
+Cloudflare remains invisible to visitors; SEO metadata, forms and admin continue using `https://www.misthustlers.in`.
+
+## 7. Local Uploads
+
+Uploads currently stay on EC2 local storage under `backend/uploads`.
+
+Rules:
+
+```text
+Do not commit uploads to Git.
+Do not delete backend/uploads during deployment.
+Back up uploads before each update.
+Move uploads to AWS S3 later when traffic grows.
+```
+
+## 8. Health Checks
 
 ```bash
+curl http://127.0.0.1:3000/api/health
 curl https://www.misthustlers.in/api/health
 pm2 status
 pm2 logs misthustlers --lines 100
 sudo systemctl is-active cloudflared
 ```
 
-Verify `/`, `/admin`, a form submission, an image upload and an image reload.
+Also verify `/`, `/admin`, form submission, chatbot, image upload and image reload.
 
-## 8. Backups
+## 9. Backups
 
-Attach an IAM role that can write only to the private backup bucket. Add this to `.env`:
+The backup script uses `pg_dump` against Supabase and archives local uploads.
 
-```text
+Manual backup:
+
+```bash
+bash deploy/aws/backup.sh
+```
+
+Optional S3 backup target in `.env`:
+
+```env
 BACKUP_S3_URI=s3://YOUR_PRIVATE_BUCKET/misthustlers
 ```
 
-Test `bash deploy/aws/backup.sh`, then schedule it:
+Daily cron:
 
 ```bash
 crontab -e
 0 2 * * * cd /var/www/misthustlers && bash deploy/aws/backup.sh >> /var/log/misthustlers-backup.log 2>&1
 ```
 
-## 9. Automatic GitHub deployment
+## 10. Updates
 
-Before pushing this workflow, add these GitHub repository secrets under **Settings > Secrets and variables > Actions**:
-
-| Secret | Value |
-|---|---|
-| `AWS_EC2_HOST` | Elastic IP or trusted SSH hostname |
-| `AWS_EC2_USER` | Usually `ubuntu` |
-| `AWS_APP_PATH` | `/var/www/misthustlers` |
-| `AWS_SSH_PRIVATE_KEY` | Dedicated deployment private key |
-| `AWS_KNOWN_HOSTS` | Verified EC2 SSH host-key line |
-
-Use a dedicated SSH deployment key, not your personal key. Add its public key to `/home/ubuntu/.ssh/authorized_keys`. Obtain the host key from a trusted first connection and compare its fingerprint with the EC2 host before storing it as `AWS_KNOWN_HOSTS`.
-
-Every push to `main` will now:
-
-```text
-verify build -> SSH to EC2 -> git pull --ff-only -> validate env
--> backup -> migrate -> PM2 reload -> local health check -> public health check
-```
-
-For automatic cache purge, create a Cloudflare API token restricted to this zone with only `Zone.Cache Purge` permission, then set both `CLOUDFLARE_ZONE_ID` and `CLOUDFLARE_API_TOKEN` in the EC2 `.env`. They are optional; hashed assets work safely without them.
-
-## 10. Manual updates and rollback
-
-Create a database backup before every update.
+Manual update:
 
 ```bash
 cd /var/www/misthustlers
@@ -143,4 +187,24 @@ git pull --ff-only
 bash deploy/aws/deploy.sh
 ```
 
-Never delete `.env`, `backend/uploads`, PostgreSQL data or S3 backups during cleanup. Before the six-month period ends, export the database and media and either migrate or terminate the AWS resources.
+Every deploy does:
+
+```text
+validate env -> install deps -> build -> backup -> Prisma migrate deploy
+-> Prisma migrate status -> PM2 reload -> local health check -> optional Cloudflare cache purge
+```
+
+For automatic cache purge, create a Cloudflare API token restricted to this zone with only `Zone.Cache Purge` permission, then set both `CLOUDFLARE_ZONE_ID` and `CLOUDFLARE_API_TOKEN` in `.env`.
+
+## 11. Before Free Period Ends
+
+Before your AWS free period ends:
+
+```text
+Export Supabase database backup.
+Download backend/uploads backup.
+Download optional S3 backups.
+Move to a cheaper server or stop/terminate EC2.
+```
+
+Never delete `.env`, `backend/uploads`, Supabase backups or S3 backups during cleanup.

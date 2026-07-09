@@ -3,7 +3,7 @@ import { RefreshCw, Save, PlugZap } from 'lucide-react';
 
 const API = '/api';
 const FALLBACK_CONFIG = {
-  enabled: true, primaryColor: '#fc5000', position: 'bottom-right', maxMessageLength: 2000, sessionTtlMinutes: 43200,
+  enabled: true, primaryColor: '#fc5000', position: 'bottom-right', maxMessageLength: 2000, sessionTtlMinutes: 4320,
   greeting: '', greetingHindi: '', greetingHinglish: '', generativeEnabled: true, opencodeModel: 'deepseek-v4-flash-free',
   responseTone: 'consultative', salesInstructions: '', solutionInstructions: '', unknownAnswer: '', hasOpenCodeApiKey: false, opencodeApiKey: '',
 };
@@ -146,7 +146,7 @@ export default function ChatbotTab({ notify }: { notify: (msg: string, type?: 's
                 </div>
                 <div>
                   <label className="block text-[11px] text-white/50 mb-1">Session TTL (minutes)</label>
-                  <input className="field text-sm" type="number" value={configData.sessionTtlMinutes || 43200} onChange={(e) => setConfigData({ ...configData, sessionTtlMinutes: parseInt(e.target.value) || 43200 })} />
+                  <input className="field text-sm" type="number" value={configData.sessionTtlMinutes || 4320} onChange={(e) => setConfigData({ ...configData, sessionTtlMinutes: parseInt(e.target.value) || 4320 })} />
                 </div>
               </div>
             </div>

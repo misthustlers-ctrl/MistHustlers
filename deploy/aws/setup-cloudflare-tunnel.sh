@@ -32,4 +32,4 @@ systemctl enable --now cloudflared
 systemctl is-active --quiet cloudflared
 
 unset TUNNEL_TOKEN
-echo "Cloudflare Tunnel installed. Keep ports 80, 443, 9000 and 5432 closed in the AWS Security Group."
+echo "Cloudflare Tunnel installed. Keep ports 80, 443, 3000 and 5432 closed in the AWS Security Group."

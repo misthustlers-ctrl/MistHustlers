@@ -46,7 +46,7 @@ async function createSession(req, res, next) {
     const { language } = req.body || {};
     const token = generateToken();
     const detectedLang = language && ["en", "hi", "hiEn"].includes(language) ? language : "en";
-    const ttl = config?.sessionTtlMinutes || 43200;
+    const ttl = config?.sessionTtlMinutes || 4320;
 
     const session = await prisma.chatSession.create({
       data: {

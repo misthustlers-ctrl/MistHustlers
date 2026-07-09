@@ -14,3 +14,10 @@ backend/data/opportunities.json
 backend/data/projects.json
 backups/
 .aws-deploy/
+
+# Local Figma / design export files
+figma/
+figma-exports/
+ui-to-figma/
+*.fig
+*.figma

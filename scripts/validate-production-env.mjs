@@ -1,4 +1,4 @@
-const required = ["DATABASE_URL", "ADMIN_USERNAME", "ADMIN_PASSWORD", "ADMIN_SESSION_SECRET", "VITE_SITE_URL", "CORS_ORIGIN", "HOST", "TRUST_PROXY"];
+const required = ["DATABASE_URL", "ADMIN_USERNAME", "ADMIN_PASSWORD", "ADMIN_SESSION_SECRET", "VITE_SITE_URL", "CORS_ORIGIN", "PORT", "HOST", "TRUST_PROXY"];
 const placeholders = [/change-me/i, /replace-with/i, /example/i, /password/i];
 
 const missing = required.filter((name) => !String(process.env[name] || "").trim());
@@ -36,8 +36,8 @@ if (uploadDir.startsWith("/") || uploadDir.includes("..") || uploadDir.includes(
   throw new Error("UPLOAD_DIR must be a safe relative directory under backend/");
 }
 
-if (process.env.HOST !== "127.0.0.1" || process.env.TRUST_PROXY !== "loopback") {
-  throw new Error("AWS must use HOST=127.0.0.1 and TRUST_PROXY=loopback behind Cloudflare Tunnel");
+if (process.env.PORT !== "3000" || process.env.HOST !== "127.0.0.1" || process.env.TRUST_PROXY !== "loopback") {
+  throw new Error("AWS must use PORT=3000, HOST=127.0.0.1 and TRUST_PROXY=loopback behind Cloudflare Tunnel");
 }
 
 const smtpValues = [process.env.SMTP_EMAIL, process.env.SMTP_PASSWORD, process.env.EMAIL_TO].filter(Boolean);

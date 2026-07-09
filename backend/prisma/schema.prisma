@@ -356,7 +356,7 @@ model ChatbotConfig {
   primaryColor        String   @default("#fc5000") @map("primary_color")
   position            String   @default("bottom-right")
   maxMessageLength    Int      @default(2000) @map("max_message_length")
-  sessionTtlMinutes   Int      @default(43200) @map("session_ttl_minutes")
+  sessionTtlMinutes   Int      @default(4320) @map("session_ttl_minutes")
   responseTone        String   @default("consultative") @map("response_tone")
   salesInstructions   String   @default("Ask one useful question at a time. Recommend only verified services and prices. Never invent guarantees, discounts or delivery dates.") @map("sales_instructions")
   solutionInstructions String  @default("After a service is selected, understand the business and recommend a tailored blueprint with priorities, integrations, automation opportunities, phased scope, and clear reasoning.") @map("solution_instructions")

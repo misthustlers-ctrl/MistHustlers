@@ -11,7 +11,7 @@ try {
       "primary_color" TEXT NOT NULL DEFAULT '#fc5000',
       "position" TEXT NOT NULL DEFAULT 'bottom-right',
       "max_message_length" INTEGER NOT NULL DEFAULT 2000,
-      "session_ttl_minutes" INTEGER NOT NULL DEFAULT 43200,
+      "session_ttl_minutes" INTEGER NOT NULL DEFAULT 4320,
       "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
       "updated_at" TIMESTAMP(3) NOT NULL
     )

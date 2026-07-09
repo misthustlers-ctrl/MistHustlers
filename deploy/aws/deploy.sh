@@ -24,7 +24,7 @@ npm run db:status
 pm2 startOrReload ecosystem.config.cjs --update-env
 pm2 save
 
-curl --fail --silent --show-error http://127.0.0.1:9000/api/health
+curl --fail --silent --show-error http://127.0.0.1:3000/api/health
 echo
 bash deploy/aws/purge-cloudflare-cache.sh
 echo "Deployment complete."
