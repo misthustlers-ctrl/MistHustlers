@@ -37,10 +37,14 @@ The setup script installs Node.js 22, PM2, AWS CLI, PostgreSQL client tools for 
 
 Do not install or run PostgreSQL on EC2. Create a Supabase project and copy the PostgreSQL connection string.
 
-Use the Supabase pooled or direct PostgreSQL URL as:
+Use Supabase pooler URLs as:
 
 ```env
-DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DATABASE?schema=public
+# Runtime uses transaction-mode pooler.
+DATABASE_URL=postgresql://postgres.ysunzsuntpgwymwnfqmu:PASSWORD@aws-0-ap-northeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true
+
+# Prisma migrations and backups use session-mode pooler.
+DIRECT_URL=postgresql://postgres.ysunzsuntpgwymwnfqmu:PASSWORD@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres
 ```
 
 Keep the real URL only in `.env` on EC2.
@@ -62,6 +66,7 @@ HOST=127.0.0.1
 TRUST_PROXY=loopback
 
 DATABASE_URL=
+DIRECT_URL=
 
 SITE_URL=https://www.misthustlers.in
 PUBLIC_SITE_URL=https://www.misthustlers.in

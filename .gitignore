@@ -1,8 +1,12 @@
 node_modules/
 dist/
 .env
+backend/.env
 *.local
 *.log
+*.pem
+*service-role*
+*service_role*
 cloudflare-url.txt
 .DS_Store
 Thumbs.db

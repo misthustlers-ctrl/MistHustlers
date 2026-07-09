@@ -1,4 +1,4 @@
-const required = ["DATABASE_URL", "ADMIN_USERNAME", "ADMIN_PASSWORD", "ADMIN_SESSION_SECRET", "VITE_SITE_URL", "CORS_ORIGIN", "PORT", "HOST", "TRUST_PROXY"];
+const required = ["DATABASE_URL", "DIRECT_URL", "ADMIN_USERNAME", "ADMIN_PASSWORD", "ADMIN_SESSION_SECRET", "VITE_SITE_URL", "CORS_ORIGIN", "PORT", "HOST", "TRUST_PROXY"];
 const placeholders = [/change-me/i, /replace-with/i, /example/i, /password/i];
 
 const missing = required.filter((name) => !String(process.env[name] || "").trim());
@@ -19,6 +19,14 @@ if (!["postgres:", "postgresql:"].includes(databaseUrl.protocol)) {
 }
 if (!databaseUrl.username || !databaseUrl.password || !databaseUrl.pathname.slice(1)) {
   throw new Error("DATABASE_URL must include username, password, and database name");
+}
+
+const directUrl = new URL(process.env.DIRECT_URL);
+if (!["postgres:", "postgresql:"].includes(directUrl.protocol)) {
+  throw new Error("DIRECT_URL must use PostgreSQL");
+}
+if (!directUrl.username || !directUrl.password || !directUrl.pathname.slice(1)) {
+  throw new Error("DIRECT_URL must include username, password, and database name");
 }
 
 const siteUrl = new URL(process.env.VITE_SITE_URL);

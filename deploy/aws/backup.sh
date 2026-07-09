@@ -12,7 +12,7 @@ source .env
 set +a
 mkdir -p "$BACKUP_DIR"
 
-PG_DUMP_URL="$(node -e 'const url = new URL(process.env.DATABASE_URL); url.searchParams.delete("schema"); process.stdout.write(url.toString())')"
+PG_DUMP_URL="$(node -e 'const url = new URL(process.env.DIRECT_URL || process.env.DATABASE_URL); url.searchParams.delete("schema"); url.searchParams.delete("pgbouncer"); process.stdout.write(url.toString())')"
 pg_dump "$PG_DUMP_URL" --format=custom --file="$BACKUP_DIR/database-$STAMP.dump"
 tar -czf "$BACKUP_DIR/uploads-$STAMP.tar.gz" -C backend "${UPLOAD_DIR:-uploads}"
 find "$BACKUP_DIR" -type f -mtime +14 -delete
