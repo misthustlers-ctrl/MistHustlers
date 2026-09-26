@@ -379,7 +379,7 @@ const localBusinessSchema = {
   },
   url: SITE_URL,
   parentOrganization: { "@id": organizationId },
-  priceRange: "₹3999-₹50000",
+  priceRange: "₹14999-₹499999+",
   openingHoursSpecification: [
     { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "09:00", closes: "19:00" },
     { "@type": "OpeningHoursSpecification", dayOfWeek: "Saturday", opens: "10:00", closes: "16:00" },
@@ -393,18 +393,6 @@ const localBusinessSchema = {
     { "@type": "Country", name: "Singapore" },
     { "@type": "Country", name: "India" },
   ],
-  hasOfferCatalog: {
-    "@type": "OfferCatalog",
-    name: "MistHustlers Web Development & Automation Packages",
-    itemListElement: [
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Launch Landing Page" }, price: "3999", priceCurrency: "INR" },
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Business Starter Website" }, price: "7999", priceCurrency: "INR" },
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Business Growth Website" }, price: "12999", priceCurrency: "INR" },
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "MVP Prototype" }, price: "7999", priceCurrency: "INR" },
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Micro MVP SaaS" }, price: "24999", priceCurrency: "INR" },
-      { "@type": "Offer", itemOffered: { "@type": "Service", name: "AI Automation Starter" }, price: "19999", priceCurrency: "INR" },
-    ],
-  },
 };
 
 export default function SchemaMarkup({ page, faq, article, howToSteps, howToName, video }: SchemaProps) {

@@ -13,36 +13,36 @@ function HeroBrowserVisual({ onNavigate }: { onNavigate: (path: string) => void 
   const previewOptions = [
     {
       title: "Website Development",
-      desc: "Responsive business websites, SEO basics, lead forms, WhatsApp, Maps",
-      price: "From ₹3,999",
+      desc: "Landing pages, business & growth websites, SEO, lead forms",
+      price: "From ₹14,999",
       route: "/services/web-development",
     },
     {
-      title: "MVP Development",
-      desc: "Launch-ready MVPs for one core workflow, validation and early product demos",
-      price: "From ₹7,999",
+      title: "Web MVP Starter",
+      desc: "Clickable prototypes & launch-ready web MVPs for founders",
+      price: "From ₹74,999",
       route: "/services/mvp-development",
     },
     {
       title: "AI Automation",
-      desc: "Lead capture, Google Sheets, Gmail alerts, CRM sync and follow-up workflows",
-      price: "From ₹3,999",
+      desc: "Lead capture, CRM sync, AI agents & workflow processing",
+      price: "From ₹14,999",
       route: "/services/automation",
     },
     {
       title: "Maintenance & Support",
-      desc: "Backups, SSL/domain monitoring, content updates and performance support",
-      price: "From ₹999/mo",
-      route: "/services/maintenance",
+      desc: "Backups, SSL/domain monitoring, content updates, performance",
+      price: "From ₹1,499/mo",
+      route: "/contact",
     },
   ];
   const activePreview = previewOptions[activeTile];
   const serviceTiles = [
     {
       icon: Rocket,
-      title: "MVP Development",
-      desc: "Launch-ready MVPs for one core workflow",
-      price: "From ₹7,999",
+      title: "Web MVP Starter",
+      desc: "Clickable prototypes & launch-ready web MVPs",
+      price: "From ₹74,999",
       route: "/services/mvp-development",
       tone: "text-[#635bff] border-[#635bff]/35 bg-[#635bff]/7",
       pill: "border-[#635bff]/35 text-[#635bff] bg-[#635bff]/6",
@@ -50,8 +50,8 @@ function HeroBrowserVisual({ onNavigate }: { onNavigate: (path: string) => void 
     {
       icon: Sparkles,
       title: "AI & Workflow Automation",
-      desc: "Lead capture, Google Sheets, Gmail alerts, CRM sync",
-      price: "From ₹3,999",
+      desc: "Lead capture, CRM sync, AI agents & workflows",
+      price: "From ₹14,999",
       route: "/services/automation",
       tone: "text-digital-orange border-digital-orange/30 bg-digital-orange/7",
       pill: "border-digital-orange/30 text-digital-orange bg-digital-orange/6",
@@ -60,8 +60,8 @@ function HeroBrowserVisual({ onNavigate }: { onNavigate: (path: string) => void 
       icon: ShieldCheck,
       title: "Website Maintenance & Support",
       desc: "Backups, SSL/domain monitoring, content updates",
-      price: "From ₹999/mo",
-      route: "/services/maintenance",
+      price: "From ₹1,499/mo",
+      route: "/contact",
       tone: "text-[#168a3a] border-[#168a3a]/35 bg-[#168a3a]/7",
       pill: "border-[#168a3a]/35 text-[#168a3a] bg-[#168a3a]/6",
     },
@@ -318,24 +318,24 @@ const HOME_DEFAULTS: HomeContent = {
 
 const SERVICE_CARD_DEFAULTS: ServiceCard[] = [
   {
-    title: "Business Website",
+    title: "Website Development",
     category: "Website",
-    description: "Landing pages and business websites with responsive layouts, lead forms, WhatsApp, Maps, SEO basics and deployment support.",
-    price: "From ₹3,999",
+    description: "Landing pages, business & growth websites with responsive layouts, lead forms, WhatsApp, Maps, SEO foundations and deployment support.",
+    price: "From ₹14,999",
     link: "/services/web-development",
   },
   {
-    title: "Startup MVP",
+    title: "Web MVP Starter",
     category: "Product",
     description: "Clickable prototypes and launch-ready web MVPs for founders who need to validate, demonstrate and ship one core workflow.",
-    price: "From ₹7,999",
+    price: "From ₹74,999",
     link: "/services/mvp-development",
   },
   {
     title: "AI Automation",
     category: "Automation",
     description: "Lead capture, Google Sheets, Gmail alerts, CRM sync, follow-up automation and AI-assisted workflow processing.",
-    price: "From ₹3,999",
+    price: "From ₹14,999",
     link: "/services/automation",
   },
   {
@@ -350,16 +350,16 @@ const SERVICE_CARD_DEFAULTS: ServiceCard[] = [
 const SERVICES_PRICING_DEFAULTS = {
   serviceCards: SERVICE_CARD_DEFAULTS,
   pricing: {
-    homepageFeaturedIds: ["launch-landing-page", "quick-workflow-automation", "business-starter-website"],
+    homepageFeaturedIds: ["landing-page", "business-website", "business-growth-website"],
     tiers: [
-      { id: "launch-landing-page", name: "Launch Landing Page", price: "₹3,999", description: "One-page website for freelancers, personal brands, events and single-service businesses.", features: ["One-page website with up to 5 sections", "Mobile-responsive layout", "Contact or lead form plus WhatsApp", "Basic on-page SEO", "7 days of bug support"], popular: false, accent: "#070607", delivery: "4-6 working days", bestFor: "Freelancers, events and single-service businesses" },
-      { id: "quick-workflow-automation", name: "Quick Workflow Automation", price: "₹3,999", description: "One simple repetitive task automated with testing and short documentation.", features: ["One automation workflow", "Up to 2 connected tools", "Trigger and action setup", "Basic error notification", "7 days of technical support"], popular: false, accent: "#524ae9", delivery: "3-5 working days", bestFor: "One simple repetitive task" },
-      { id: "business-starter-website", name: "Business Starter Website", price: "₹7,999", description: "A professional four-page website for local and growing businesses.", features: ["Home, About, Services and Contact", "Contact form, WhatsApp and Maps", "Basic SEO and Analytics setup", "15 days of bug support"], popular: true, accent: "#fc5000", delivery: "7-10 working days", bestFor: "Clinics, gyms, consultants, salons and local businesses" },
+      { id: "landing-page", name: "Landing Page", price: "₹14,999", description: "High-conversion landing page for campaigns & launches.", features: ["1 High-Converting Responsive Page", "Figma UI Design + Clean React Code", "Contact Form & WhatsApp Integration", "SEO Meta Tags & Speed Optimization", "Source Code Handover", "Delivery in 5–7 Days"], popular: false, accent: "#070607", delivery: "5–7 Days", bestFor: "Campaigns, product launches, individuals" },
+      { id: "business-website", name: "Business Website", price: "₹29,999", description: "Professional website for companies needing strong online presence.", features: ["Up to 7 Custom Pages", "SEO Titles, Descriptions & Schema", "Google Maps & Local Business NAP", "Mobile-First Responsive Layout", "CMS for Content Updates", "1 Year Technical Support", "Delivery in 10–14 Days"], popular: true, accent: "#fc5000", delivery: "10–14 Days", bestFor: "Local businesses, service providers, SMEs" },
+      { id: "business-growth-website", name: "Business Growth Website", price: "₹49,999", description: "Advanced website with richer pages, conversion architecture & integrations.", features: ["Up to 15 Custom Pages + CMS Blog", "Interactive UI Micro-Animations", "Lead Capture & CRM Sync", "Core Web Vitals Guarantee (LCP < 2s)", "AEO & AI Search Readiness", "Custom API Integrations (up to 3)", "Delivery in 3–4 Weeks"], popular: false, accent: "#524ae9", delivery: "3–4 Weeks", bestFor: "Growing companies, marketing teams" },
     ] as PricingTier[],
   },
 };
 
-const HOMEPAGE_PACKAGE_IDS = ["launch-landing-page", "quick-workflow-automation", "business-starter-website"];
+const HOMEPAGE_PACKAGE_IDS = ["landing-page", "business-website", "business-growth-website"];
 
 export default function Home() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);

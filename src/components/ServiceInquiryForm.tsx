@@ -4,6 +4,14 @@ import { usePersistentForm } from "@/utils/usePersistentForm";
 import { buildServiceInquiryWhatsAppMessage, buildWhatsAppUrl } from "@/utils/whatsapp";
 import { Calendar, MessageCircle, Send } from "lucide-react";
 
+function trackEvent(name: string, data: Record<string, string | number | boolean> = {}) {
+  if (typeof window !== "undefined" && window.gtag) {
+    try {
+      window.gtag("event", name, data);
+    } catch {}
+  }
+}
+
 const FORM_SERVICE_DEFAULTS = { pricing: { tiers: [] } };
 
 const FALLBACK_TIERS = [
@@ -50,6 +58,13 @@ export default function ServiceInquiryForm({ preselectedPackage }: { preselected
   const [submitError, setSubmitError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Track Step 1 view
+  useEffect(() => {
+    if (formStep === 1) {
+      trackEvent("form_step1_start");
+    }
+  }, [formStep]);
+
   const hasStep1Values = formDataStep1.name || formDataStep1.email || formDataStep1.projectType;
 
   useEffect(() => {
@@ -93,7 +108,7 @@ export default function ServiceInquiryForm({ preselectedPackage }: { preselected
       setSubmitted(true);
       clearDraft1();
       clearDraft2();
-      setTimeout(() => setSubmitted(false), 5000);
+      // Success state persists until user dismisses manually
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : "Submission failed. Please try again.");
     } finally {
@@ -107,6 +122,9 @@ export default function ServiceInquiryForm({ preselectedPackage }: { preselected
       setSubmitError("Please fill in all required fields.");
       return;
     }
+    trackEvent("form_step1_complete", {
+      project_type: formDataStep1.projectType,
+    });
     setFormStep(2);
     setSubmitError("");
   };
@@ -118,6 +136,12 @@ export default function ServiceInquiryForm({ preselectedPackage }: { preselected
       setSubmitError("Please provide project details.");
       return;
     }
+
+    trackEvent("form_step2_submit", {
+      service: combinedData.service,
+      budget_range: combinedData.budget,
+      project_type: combinedData.projectType,
+    });
 
     const message = buildServiceInquiryWhatsAppMessage({
       name: combinedData.name,
@@ -135,17 +159,6 @@ export default function ServiceInquiryForm({ preselectedPackage }: { preselected
     const waUrl = buildWhatsAppUrl(contact.phoneHref || contact.phone || "8889937648", message);
 
     setIsSubmitting(true);
-    const toastEl = document.createElement("div");
-    toastEl.textContent = "Redirecting you to WhatsApp...";
-    toastEl.style.position = "fixed";
-    toastEl.style.right = "20px";
-    toastEl.style.top = "20px";
-    toastEl.style.background = "rgba(0,0,0,0.8)";
-    toastEl.style.color = "white";
-    toastEl.style.padding = "12px 16px";
-    toastEl.style.borderRadius = "8px";
-    toastEl.style.zIndex = "99999";
-    document.body.appendChild(toastEl);
 
     try {
       window.open(waUrl, "_blank");
@@ -153,13 +166,19 @@ export default function ServiceInquiryForm({ preselectedPackage }: { preselected
       window.location.href = waUrl;
     }
 
+    // Track WhatsApp click
+    trackEvent("whatsapp_click", {
+      service: combinedData.service,
+    });
+
     // Keep storing inquiry in background for records
     submitInquiry({ ...formDataStep1, ...formDataStep2 });
 
-    setTimeout(() => {
-      setIsSubmitting(false);
-      if (toastEl && toastEl.parentNode) toastEl.parentNode.removeChild(toastEl);
-    }, 2000);
+    trackEvent("inquiry_submitted", {
+      service: combinedData.service,
+      budget_range: combinedData.budget,
+      project_type: combinedData.projectType,
+    });
   };
 
   const handleBackToStep1 = () => {
@@ -172,13 +191,14 @@ export default function ServiceInquiryForm({ preselectedPackage }: { preselected
   };
 
   const projectTypeOptions = [
-    { value: "web-development", label: "Custom Web Development" },
+    { value: "web-development", label: "Web Development" },
     { value: "web-application", label: "Web Application / SaaS" },
     { value: "ecommerce", label: "E-commerce Development" },
-    { value: "mvp", label: "MVP / Startup Product" },
+    { value: "mvp", label: "MVP / Product Development" },
     { value: "ai-development", label: "AI Development / AI Agents" },
-    { value: "automation", label: "Workflow / AI Automation" },
+    { value: "automation", label: "AI & Automation" },
     { value: "website-redesign", label: "Website Redesign" },
+    { value: "crm", label: "CRM / Dashboard" },
     { value: "maintenance", label: "Maintenance & Support" },
     { value: "other", label: "Other / Not Sure" },
   ];
@@ -242,6 +262,7 @@ export default function ServiceInquiryForm({ preselectedPackage }: { preselected
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-3 bg-abyssal-ink text-white px-6 py-3 rounded-[12px] font-semibold text-sm hover:bg-digital-orange transition-colors"
+              onClick={() => trackEvent("calendly_click", { source: "sidebar_button" })}
             >
               <Calendar className="h-5 w-5" />
               <span>Book a 15-min Discovery Call</span>
@@ -259,6 +280,7 @@ export default function ServiceInquiryForm({ preselectedPackage }: { preselected
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-3 bg-green-500 text-white px-6 py-3 rounded-[12px] font-semibold text-sm hover:bg-green-600 transition-colors"
+              onClick={() => trackEvent("whatsapp_click", { source: "sidebar_button" })}
             >
               <MessageCircle className="h-5 w-5" />
               <span>Chat on WhatsApp</span>
@@ -295,7 +317,7 @@ export default function ServiceInquiryForm({ preselectedPackage }: { preselected
                     </div>
                     <h3 className="display text-[26px] font-[700] mb-[12px]" style={{ color: "var(--mh-text)" }}>Inquiry received</h3>
                     <p className="text-[15px] leading-[1.6] max-w-[360px] mx-auto font-[450]" style={{ color: "rgba(7, 6, 7, 0.7)" }}>
-                      We&rsquo;ll review and send a fixed-price proposal within 48 hours. Check your email.
+                      Your inquiry has been submitted. We've opened WhatsApp so you can continue the conversation with MistHustlers.
                     </p>
                   </div>
                 ) : (

@@ -55,9 +55,9 @@ export default function CRMDevelopment() {
                 definition:
                   "CRM (Customer Relationship Management) development is the design and build of custom software that centralises customer data, lead pipelines, staff tasks, and reporting for a business. Unlike off-the-shelf CRMs, a custom CRM is tailored 100% to existing workflows with no per-user licence models.",
               }}
-              executiveSummary="MistHustlers builds custom CRM systems, CMS admin panels, and internal dashboards in Indore — tailored to your business process with no per-user licence fees. A custom CRM (₹12,999+) replaces generic SaaS tools like Salesforce or HubSpot with your exact workflows, automated lead routing, and reporting, with full source code ownership."
+              executiveSummary="MistHustlers builds custom CRM systems, CMS admin panels, and internal dashboards in Indore — tailored to your business process with no per-user licence fees. A custom CRM (₹29,999+) replaces generic SaaS tools like Salesforce or HubSpot with your exact workflows, automated lead routing, and reporting, with full source code ownership."
               keyTakeaways={[
-                "Custom CRMs start at ₹12,999+ with no recurring per-user licence fees.",
+                "Custom CRMs start at ₹29,999+ with no recurring per-user licence fees.",
                 "Tailored to your workflow — not your business adapting to a rigid SaaS tool.",
                 "Integrates with WhatsApp, Gmail, website forms, and payment gateways.",
                 "Full source code and data ownership — no vendor lock-in.",
@@ -88,7 +88,7 @@ export default function CRMDevelopment() {
               misconceptions={[
                 {
                   myth: "Custom CRM software is affordable only for big enterprises.",
-                  reality: "MistHustlers builds business-grade CRMs from ₹12,000+, and because you own the code there are no monthly 'per user' licence costs multiplying across your team.",
+                  reality: "MistHustlers builds business-grade CRMs from ₹29,999+, and because you own the code there are no monthly 'per user' licence costs multiplying across your team.",
                 },
                 {
                   myth: "Off-the-shelf CRMs like Salesforce are cheaper in the long run.",

@@ -51,7 +51,7 @@ export default function AppDevelopment() {
 
             <div className="lg:col-span-5 rounded-3xl border border-abyssal-ink/10 bg-white p-6 shadow-xl">
               <h3 className="font-display text-xl font-bold text-abyssal-ink mb-4">Request App Development Estimate</h3>
-              <ServiceInquiryForm preselectedPackage="Micro MVP" />
+              <ServiceInquiryForm preselectedPackage="mobile-app-mvp" />
             </div>
           </section>
 
@@ -69,9 +69,9 @@ export default function AppDevelopment() {
                 definition:
                   "Mobile app development is the process of building software applications that run on mobile devices — iOS, Android, or both via cross-platform frameworks. It covers product scoping, UI/UX design, backend engineering, push notifications, offline data sync, payment integration, and app store deployment.",
               }}
-              executiveSummary="MistHustlers is a mobile and web app development company in Indore building iOS, Android, and Progressive Web Apps (PWAs) with Flutter and React Native. An app MVP typically takes 3-5 weeks and costs from ₹24,999; enterprise apps with integrations take 6-10 weeks. Every build features clean architecture, offline-first sync, and full source code ownership."
+              executiveSummary="MistHustlers is a mobile and web app development company in Indore building iOS, Android, and Progressive Web Apps (PWAs) with Flutter and React Native. A Mobile App MVP typically takes 3-5 weeks and costs from ₹24,999; enterprise apps with integrations take 6-10 weeks. Every build features clean architecture, offline-first sync, and full source code ownership."
               keyTakeaways={[
-                "App MVPs in Indore start from ₹24,999 with 3-5 week delivery timelines.",
+                "Mobile App MVPs in Indore start from ₹24,999 with 3-5 week delivery timelines.",
                 "Cross-platform Flutter/React Native builds cover both iOS and Android from one codebase.",
                 "Push notifications and offline access help apps retain users up to 4x better than mobile web.",
                 "Full source code and IP ownership transfer with every MistHustlers mobile project.",
@@ -96,7 +96,7 @@ export default function AppDevelopment() {
                 { type: "pro", text: "Offline-first sync so field staff and users work without internet drops" },
                 { type: "pro", text: "Published pricing with no per-hour billing surprises" },
                 { type: "pro", text: "Full source code owned by you — no platform lock-in" },
-                { type: "pro", text: "Typical MVP launch within 3-5 weeks" },
+                { type: "pro", text: "Typical Mobile App MVP launch within 3-5 weeks" },
                 { type: "con", text: "Cross-platform frameworks fit most apps but not unusually hardware-dependent games" },
                 { type: "con", text: "App store approval timelines are outside developer control" },
               ]}
@@ -107,7 +107,7 @@ export default function AppDevelopment() {
                 },
                 {
                   myth: "Mobile apps are always far more expensive than websites.",
-                  reality: "A validated app MVP at MistHustlers starts well under ₹25,000-₹40,000 — comparable to a budget corporate website but with a revenue potential far beyond it.",
+                  reality: "A validated Mobile App MVP at MistHustlers starts well under ₹25,000-₹40,000 — comparable to a budget corporate website but with a revenue potential far beyond it.",
                 },
               ]}
             />

@@ -12,23 +12,23 @@ const MVP_AEO = {
       "An MVP (Minimum Viable Product) development company builds the smallest functional version of a product that allows founders to test their core hypothesis with real users, validate market demand, and secure funding. Unlike full product development, MVP focuses on one core workflow with minimal features.",
   },
   executiveSummary:
-    "MistHustlers is a global MVP development partner for founders worldwide. From our Indore HQ, we ship investor-ready MVPs in 2–4 weeks at 70–90% lower cost than traditional agencies. We've helped founders in the US, UK, Canada, Australia, and Singapore validate ideas, raise seed funding, and onboard first users. Fixed pricing from $99/£79/€90/₹7,999. Full source code ownership. Founder-led delivery.",
+    "MistHustlers is a global MVP development partner for founders worldwide. From our Indore HQ, we ship investor-ready MVPs in 3–4 weeks at 70–90% lower cost than traditional agencies. We've helped founders in the US, UK, Canada, Australia, and Singapore validate ideas, raise seed funding, and onboard first users. Fixed pricing from ₹74,999. Full source code ownership. Founder-led delivery.",
   keyTakeaways: [
     "MistHustlers serves founders across 7 countries (US, UK, Canada, Australia, UAE, Singapore, India) from our Indore HQ.",
-    "MVP prototypes from $99/£79/€90/₹7,999. Full MVPs from $300/£240/€280/₹24,999. Fixed pricing, no hidden costs.",
-    "Typical delivery: 2–4 weeks for prototypes, 4–8 weeks for full MVPs. Daily updates, no surprises.",
+    "Web MVP Starter from ₹74,999. MVP Launch from ₹1,49,999. Fixed pricing, no hidden costs.",
+    "Typical delivery: 3–4 weeks for Web MVP Starter, 6–8 weeks for MVP Launch. Daily updates, no surprises.",
     "Direct founder communication with Naveen Salve throughout — no account managers.",
     "100% source code ownership, full IP rights, complete documentation handed over at launch.",
   ],
   processSteps: [
     { step: 1, title: "Requirements", description: "You share your idea. We clarify scope and identify the riskiest assumption to test.", duration: "1–2 days" },
     { step: 2, title: "Proposal", description: "Fixed-price quote within 48 hours with detailed scope, timeline, and tech stack.", duration: "1 day" },
-    { step: 3, title: "Build", description: "Daily updates via WhatsApp/email. Core workflow first, then auth, database, API, and deployment.", duration: "2–8 weeks" },
+    { step: 3, title: "Build", description: "Daily updates via WhatsApp/email. Core workflow first, then auth, database, API, and deployment.", duration: "3–8 weeks" },
     { step: 4, title: "Ship", description: "Deployed with full source code, documentation, and 30 days bug support. You own everything.", duration: "Launch day" },
   ],
   comparisonRows: [
     { feature: "Fixed Price (No Surprises)", mistHustlers: true, freelancer: false, bigAgency: false },
-    { feature: "2–4 Week Delivery", mistHustlers: true, freelancer: "Varies", bigAgency: false },
+    { feature: "3–8 Week Delivery", mistHustlers: true, freelancer: "Varies", bigAgency: false },
     { feature: "Source Code Ownership", mistHustlers: true, freelancer: "Sometimes", bigAgency: false },
     { feature: "Founder-Led Engineering", mistHustlers: true, freelancer: true, bigAgency: false },
     { feature: "Investor-Ready Output", mistHustlers: true, freelancer: false, bigAgency: true },
@@ -46,7 +46,7 @@ const MVP_AEO = {
   misconceptions: [
     {
       myth: "MVP development requires a large team and 6+ months.",
-      reality: "A focused MVP with one core workflow can be built in 2–4 weeks by a senior engineer. The key is ruthless scope discipline — we cut features that don't test the core hypothesis.",
+      reality: "A focused MVP with one core workflow can be built in 3–4 weeks by a senior engineer. The key is ruthless scope discipline — we cut features that don't test the core hypothesis.",
     },
     {
       myth: "Cheaper MVP development means lower quality code.",
@@ -62,11 +62,11 @@ const MVP_FAQ = [
   },
   {
     q: "How much does MVP development cost?",
-    a: "MVP prototypes (clickable, no backend): $99/£79/€90/₹7,999. Functional MVPs with auth, database, API: $300–$600/₹24,999–₹49,999. Full MVPs with payments, admin, multi-role: $600+/₹49,999+. Fixed pricing, 48-hour quotes.",
+    a: "Web MVP Starter (clickable prototype + core workflow): ₹74,999. MVP Launch (full-stack with auth, DB, API, payments): ₹1,49,999+. Fixed pricing, 48-hour quotes.",
   },
   {
     q: "How long does it take to build an MVP?",
-    a: "Clickable prototype: 7–10 working days. Functional MVP (auth, DB, API, one core workflow): 2–4 weeks. Full MVP (payments, admin, multi-role): 4–8 weeks. We provide exact timeline in the fixed-price proposal.",
+    a: "Web MVP Starter: 3–4 weeks. MVP Launch: 6–8 weeks. We provide exact timeline in the fixed-price proposal.",
   },
   {
     q: "What technologies do you use for MVPs?",
@@ -144,7 +144,7 @@ export default function MVPDevelopment() {
                   </div>
                 ))}
               </div>
-              <p className="text-abyssal-ink/50 mb-8 font-body">Pricing: $99/£79/€90/₹7,999 for prototypes, $300+/₹24,999+ for full MVPs.</p>
+              <p className="text-abyssal-ink/50 mb-8 font-body">Web MVP Starter from ₹74,999, MVP Launch from ₹1,49,999. Fixed pricing, 48-hour quotes.</p>
               <Link to="/contact" className="inline-flex min-h-12 items-center justify-center magnetic-btn bg-digital-orange text-white px-6 sm:px-8 py-4 rounded-[800px] text-base font-semibold font-body">
                 Start Your MVP
               </Link>

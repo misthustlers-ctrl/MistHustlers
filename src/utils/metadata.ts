@@ -24,10 +24,10 @@ export const PAGE_META: Record<string, PageMeta> = {
     keywords: "web development company, web development agency, custom web development, web application development, ecommerce development, MVP development, SaaS development, AI development, AI automation, workflow automation, website redesign",
   },
   services: {
-    title: "Global Web Development & AI Automation Services — MistHustlers",
-    description: "Explore fixed-price website development, custom web applications, MVP builds, SaaS development, AI workflow automation, ecommerce development, and website redesign. Serving clients worldwide from our Indore HQ.",
+    title: "Global Web & Mobile Development & AI Automation Services — MistHustlers",
+    description: "Explore fixed-price website development, custom web applications, Mobile App MVPs, Web MVP Starters, SaaS development, AI workflow automation, ecommerce development, and website redesign. Serving clients worldwide from our Indore HQ.",
     canonical: `${SITE_URL}/services`,
-    keywords: "web development services, website development agency, custom web development, web application development, ecommerce development, MVP development, SaaS development, AI development, AI automation, workflow automation, website redesign",
+    keywords: "web development services, website development agency, custom web development, mobile app development, mobile app MVP, web application development, ecommerce development, MVP development, SaaS development, AI development, AI automation, workflow automation, website redesign",
   },
   webDevelopment: {
     title: "Custom Web Development Company — Global Web Development Services | MistHustlers",
@@ -90,10 +90,10 @@ export const PAGE_META: Record<string, PageMeta> = {
     keywords: "CRM development, custom CRM, lead management portal, admin dashboard development, custom CMS",
   },
   mvpDevelopment: {
-    title: "Startup MVP Development Company — Global MVP Services | MistHustlers",
-    description: "Launch your startup idea in 2-4 weeks. Founder-focused MVP development company providing prototyping, full-stack build, and market handover. Fixed pricing. 48-hour quotes. Global delivery.",
+    title: "Web MVP Development Company — Global Web MVP Services | MistHustlers",
+    description: "Launch your web startup idea in 3-4 weeks. Founder-focused Web MVP development company providing clickable prototypes, full-stack build, and market handover. Web MVP Starter from ₹74,999. Fixed pricing. 48-hour quotes. Global delivery.",
     canonical: `${SITE_URL}/services/mvp-development`,
-    keywords: "MVP development, startup MVP development, SaaS prototype developer, fast MVP build, MVP development company",
+    keywords: "MVP development, web MVP development, startup web MVP, SaaS prototype developer, fast MVP build, MVP development company",
   },
   uiUx: {
     title: "UI/UX Design Agency — Global Design Services | MistHustlers",
@@ -108,10 +108,10 @@ export const PAGE_META: Record<string, PageMeta> = {
     keywords: "website maintenance, website speed optimization, Core Web Vitals fix, WordPress maintenance, website support",
   },
   appDevelopment: {
-    title: "Mobile & Web App Development Services — Global App Development | MistHustlers",
-    description: "Custom mobile and web app development for startups and businesses. React Native, Flutter, Next.js, Node.js. Fixed pricing. 48-hour quotes. Global delivery.",
+    title: "Mobile App Development Company — Global Mobile App MVP | MistHustlers",
+    description: "Custom mobile app development for iOS & Android. Flutter, React Native, cross-platform MVP from ₹24,999+. Fixed pricing. 48-hour quotes. App Store/Play Store deployment. Global delivery.",
     canonical: `${SITE_URL}/services/app-development`,
-    keywords: "app development company, mobile app development, web app development, custom app development, React Native, Flutter, cross-platform app development",
+    keywords: "mobile app development, app development company, mobile app MVP, Flutter development, React Native, cross-platform app development, iOS Android app",
   },
 
   // Industry Landing Pages
@@ -184,10 +184,10 @@ export const PAGE_META: Record<string, PageMeta> = {
 
   // Trust & Pricing
   pricing: {
-    title: "Transparent Web Development & AI Automation Pricing | MistHustlers",
-    description: "Clear fixed pricing starting at ₹3,999. No hidden costs. Website packages, MVP development fees, and AI automation pricing in Indore.",
+    title: "Transparent Web & Mobile Development, Ecommerce, MVP & AI Automation Pricing | MistHustlers",
+    description: "Clear fixed pricing starting at ₹14,999. No hidden costs. Website packages from ₹14,999, Mobile App MVP from ₹24,999+, Web MVP Starter from ₹74,999+, SaaS from ₹2,49,999+, AI Automation from ₹14,999+, Maintenance from ₹1,499/month.",
     canonical: `${SITE_URL}/pricing`,
-    keywords: "web development pricing Indore, cost to build website India, website cost calculator, transparent dev pricing",
+    keywords: "web development pricing, mobile app development cost, MVP development fees, SaaS development pricing, AI automation cost, website maintenance pricing, transparent dev pricing",
   },
   testimonials: {
     title: "Client Reviews & Testimonials — Web Agency Indore | MistHustlers",
@@ -245,11 +245,11 @@ export const PAGE_META: Record<string, PageMeta> = {
   // City & Location Pages
   locationIndore: {
     title: "Web Development Company in Indore | Top Websites & AI Automation — MistHustlers",
-    description: "Indore's leading web development company. We build fast business websites, startup MVPs, and AI automation workflows for local and national clients. Call +91 888 993 7648.",
+    description: "Indore's leading web development company. We build fast business websites, Mobile App MVPs, Web MVP Starters, and AI automation workflows for local and national clients. Starting at ₹14,999. Call +91 888 993 7648.",
     canonical: `${SITE_URL}/web-development-company-indore`,
     keywords: "web development company Indore, website developer Indore, web design agency Indore, software company Indore, IT company Indore, MistHustlers Indore",
     ogTitle: "#1 Web Development Company in Indore — MistHustlers",
-    ogDescription: "Indore's top web dev & AI automation agency. Business websites from ₹3,999. MVPs from ₹24,999. 48-hour quotes. Fixed price. Call now.",
+    ogDescription: "Indore's top web dev & AI automation agency. Business websites from ₹14,999. Mobile App MVPs from ₹24,999. Web MVPs from ₹74,999. 48-hour quotes. Fixed price. Call now.",
   },
 
   // Case Studies

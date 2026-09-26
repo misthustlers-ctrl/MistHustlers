@@ -48,30 +48,36 @@ type ServicesContent = {
 };
 
 const PRICE_FILTERS = [
-  { id: "budget", label: "Budget friendly", description: "Under ₹10k first" },
-  { id: "website", label: "Website", description: "Landing and business sites" },
-  { id: "automation", label: "Automation", description: "Workflow and AI automation" },
-  { id: "mvp", label: "MVP", description: "Founder product plans" },
-  { id: "monthly", label: "Monthly care", description: "Support plans" },
+  { id: "budget", label: "Budget friendly", description: "Under ₹15k first" },
+  { id: "website", label: "Website", description: "Landing, business & growth sites" },
+  { id: "ecommerce", label: "Ecommerce", description: "Online stores & commerce" },
+  { id: "mobile-app", label: "Mobile App", description: "iOS & Android apps" },
+  { id: "mvp", label: "MVP & SaaS", description: "Founder product plans" },
+  { id: "automation", label: "AI & Automation", description: "Workflow and AI agents" },
+  { id: "monthly", label: "Maintenance", description: "Monthly support plans" },
   { id: "all", label: "All plans", description: "Show every package" },
 ];
 
 function priceNumber(price = "") {
-  const match = price.replace(/,/g, "").match(/\d+/);
+  const match = price.replace(/,/g, "").replace(/\+/, "").match(/\d+/);
   return match ? Number(match[0]) : Number.POSITIVE_INFINITY;
 }
 
 function tierCategory(tier: PricingTier) {
   const text = `${tier.id} ${tier.name}`.toLowerCase();
-  if (text.includes("mvp") || text.includes("prototype")) return "mvp";
-  if (text.includes("automation") || text.includes("workflow")) return "automation";
-  if (text.includes("care") || text.includes("maintenance") || text.includes("month")) return "monthly";
+  if (text.includes("mvp") || text.includes("saas") || text.includes("saas-advanced")) return "mvp";
+  if (text.includes("ecommerce")) return "ecommerce";
+  if (text.includes("mobile-app")) return "mobile-app";
+  if (text.includes("automation") || text.includes("ai-")) return "automation";
+  if (text.includes("maintenance") || text.includes("care") || tier.period === "month") return "monthly";
   return "website";
 }
 
 function tierServiceLink(tier: PricingTier) {
   const category = tierCategory(tier);
   if (category === "mvp") return "/services/mvp-development";
+  if (category === "ecommerce") return "/services/ecommerce-development";
+  if (category === "mobile-app") return "/services/app-development";
   if (category === "automation") return "/services/automation";
   if (category === "monthly") return "/contact";
   return "/services/web-development";
@@ -81,8 +87,8 @@ const SERVICE_CARD_DEFAULTS: ServiceCard[] = [
   {
     title: "Website Development",
     category: "Website",
-    description: "Landing pages and business websites with responsive layouts, lead forms, WhatsApp, Maps, SEO basics and deployment support.",
-    price: "From ₹3,999",
+    description: "Landing pages, business websites, and growth websites with responsive layouts, lead forms, WhatsApp, Maps, SEO foundations and deployment support.",
+    price: "From ₹14,999",
     link: "/services/web-development",
     enabled: true,
   },
@@ -90,7 +96,7 @@ const SERVICE_CARD_DEFAULTS: ServiceCard[] = [
     title: "Custom Web Development",
     category: "Website",
     description: "Bespoke websites and applications tailored to unique business processes with custom databases, workflows, integrations, and proprietary features.",
-    price: "From ₹19,999",
+    price: "From ₹29,999",
     link: "/services/custom-web-development",
     enabled: true,
   },
@@ -98,7 +104,7 @@ const SERVICE_CARD_DEFAULTS: ServiceCard[] = [
     title: "Web Application Development",
     category: "Website",
     description: "Custom web applications, SaaS platforms, admin dashboards, and API-first products built with Next.js, React, TypeScript, and Node.js.",
-    price: "From ₹19,999",
+    price: "From ₹2,49,999",
     link: "/services/web-application-development",
     enabled: true,
   },
@@ -106,7 +112,7 @@ const SERVICE_CARD_DEFAULTS: ServiceCard[] = [
     title: "Ecommerce Development",
     category: "Website",
     description: "Custom Shopify, WooCommerce, headless commerce, and B2B wholesale portals built for conversion, scale, and global sales.",
-    price: "From ₹9,999",
+    price: "From ₹59,999",
     link: "/services/ecommerce-development",
     enabled: true,
   },
@@ -114,15 +120,15 @@ const SERVICE_CARD_DEFAULTS: ServiceCard[] = [
     title: "Website Redesign",
     category: "Website",
     description: "Transform outdated websites into high-converting, SEO-optimized, Core Web Vitals-optimized platforms with WordPress to Next.js migrations.",
-    price: "From ₹19,999",
+    price: "From ₹14,999",
     link: "/services/website-redesign",
     enabled: true,
   },
   {
-    title: "MVP Development",
+    title: "Web MVP Starter",
     category: "Product",
     description: "Clickable prototypes and launch-ready web MVPs for founders who need to validate, demonstrate and ship one core workflow.",
-    price: "From ₹7,999",
+    price: "From ₹74,999",
     link: "/services/mvp-development",
     enabled: true,
   },
@@ -130,7 +136,7 @@ const SERVICE_CARD_DEFAULTS: ServiceCard[] = [
     title: "SaaS Development",
     category: "Product",
     description: "Multi-tenant SaaS platforms with Stripe billing, user management, admin dashboards, and customer APIs.",
-    price: "From ₹49,999",
+    price: "From ₹2,49,999",
     link: "/services/saas-development",
     enabled: true,
   },
@@ -138,7 +144,7 @@ const SERVICE_CARD_DEFAULTS: ServiceCard[] = [
     title: "AI Development",
     category: "Product",
     description: "Custom AI agents, RAG systems, LLM chatbots, document intelligence, and custom fine-tuning for business automation.",
-    price: "From ₹19,999",
+    price: "From ₹49,999",
     link: "/services/ai-development",
     enabled: true,
   },
@@ -146,7 +152,7 @@ const SERVICE_CARD_DEFAULTS: ServiceCard[] = [
     title: "AI & Workflow Automation",
     category: "Automation",
     description: "Lead capture, Google Sheets, Gmail alerts, CRM sync, follow-up automation and AI-assisted workflow processing.",
-    price: "From ₹3,999",
+    price: "From ₹14,999",
     link: "/services/automation",
     enabled: true,
   },
@@ -170,25 +176,33 @@ const SERVICE_CARD_DEFAULTS: ServiceCard[] = [
     title: "Website Maintenance & Support",
     category: "Support",
     description: "Monthly backup, uptime checks, SSL/domain monitoring, integration checks, content updates and performance support.",
-    price: "From ₹999/mo",
+    price: "From ₹1,499/mo",
     link: "/contact",
     enabled: true,
   },
 ];
 
 const PRICING_TIER_DEFAULTS: PricingTier[] = [
-  { id: "launch-landing-page", name: "Launch Landing Page", price: "₹3,999", description: "One-page website for freelancers, personal brands, events and single-service businesses.", features: ["One-page website with up to 5 sections", "Mobile-responsive layout", "Contact or lead form plus WhatsApp", "Basic on-page SEO", "SSL and deployment support", "7 days of bug support"], popular: false, accent: "#070607", delivery: "4-6 working days", bestFor: "Freelancers, events and single-service businesses" },
-  { id: "business-starter-website", name: "Business Starter Website", price: "₹7,999", description: "A professional four-page website for local and growing businesses.", features: ["Home, About, Services and Contact", "Mobile and tablet responsiveness", "Contact form, WhatsApp and Maps", "Basic SEO and performance setup", "Google Analytics setup", "15 days of bug support"], popular: true, accent: "#fc5000", delivery: "7-10 working days", bestFor: "Clinics, gyms, consultants, salons, coaching centres and local businesses" },
-  { id: "business-growth-website", name: "Business Growth Website", price: "₹12,999", description: "A stronger business website with more content, credibility and selected CMS support.", features: ["Up to 7 pages", "Customized visual styling", "Service-detail pages", "Portfolio or project section", "FAQ and basic schema markup", "30 days of bug support"], popular: false, accent: "#524ae9", delivery: "12-18 working days", bestFor: "Growing businesses requiring stronger credibility" },
-  { id: "mvp-idea-prototype", name: "MVP Idea Prototype", price: "₹7,999", description: "Clickable prototype for founders who want to present or validate an idea before development.", features: ["Requirement discussion", "Basic user-flow planning", "Up to 6 interface screens", "Clickable prototype", "Landing-page concept", "Basic feature roadmap"], popular: false, accent: "#070607", delivery: "7-10 working days", bestFor: "Founders validating an idea before backend development" },
-  { id: "micro-mvp", name: "Micro MVP", price: "Starting at ₹24,999", description: "A functional web MVP focused on one user role and one core workflow.", features: ["Responsive web application", "One user role and one core workflow", "Registration and login", "Database setup", "Basic dashboard and admin management", "30 days of bug support"], popular: false, accent: "#524ae9", delivery: "3-5 weeks", bestFor: "Founders testing one core digital-product idea" },
-  { id: "startup-mvp", name: "Startup MVP", price: "Starting at ₹44,999", description: "A stronger first usable product with more workflows and launch-ready foundations.", features: ["Responsive web application", "Up to 2 user roles", "Up to 2 core workflows", "Admin dashboard", "Search and filters", "One external API integration"], popular: false, accent: "#fc5000", delivery: "5-8 weeks", bestFor: "Founders requiring a stronger first usable product" },
-  { id: "quick-workflow-automation", name: "Quick Workflow Automation", price: "₹3,999", description: "One simple repetitive task automated with testing and short documentation.", features: ["One automation workflow", "Up to 2 connected tools", "Trigger and action setup", "Basic error notification", "Testing", "7 days of technical support"], popular: false, accent: "#070607", delivery: "3-5 working days", bestFor: "One simple repetitive task" },
-  { id: "business-workflow-package", name: "Business Workflow Package", price: "₹9,999", description: "Up to three connected workflows for related daily business processes.", features: ["Up to 3 connected workflows", "Up to 4 tools", "Lead collection", "Automated notifications", "Spreadsheet or CRM synchronization", "15 days of support"], popular: false, accent: "#fc5000", delivery: "7-14 working days", bestFor: "Businesses automating related daily processes" },
-  { id: "ai-automation-starter", name: "AI Automation Starter", price: "Starting at ₹19,999", description: "AI-assisted workflows with summarization, classification or reply drafts.", features: ["Up to 3 AI-assisted workflows", "AI summarization or classification", "AI-generated reply drafts", "One approval step", "Spreadsheet or CRM connection", "30 days of support"], popular: false, accent: "#524ae9", delivery: "2-4 weeks", bestFor: "Businesses that need AI-assisted processing" },
-  { id: "essential-care", name: "Essential Care", price: "₹999/month", description: "Monthly maintenance for basic website health and small changes.", features: ["Monthly backup", "Uptime check", "SSL and domain monitoring", "Basic dependency updates", "Up to 30 minutes of small changes", "Email support"], popular: false, accent: "#070607", delivery: "Monthly", bestFor: "Small websites needing basic care" },
-  { id: "business-care", name: "Business Care", price: "₹2,499/month", description: "Maintenance plan with weekly backups, checks and priority support.", features: ["Everything in Essential Care", "Weekly backup", "Form and integration checks", "Basic security monitoring", "Performance check", "Up to 2 hours of changes"], popular: false, accent: "#fc5000", delivery: "Monthly", bestFor: "Business websites with active forms and integrations" },
-  { id: "growth-care", name: "Growth Care", price: "₹4,999/month", description: "Growth support for automation monitoring, content updates and monthly summaries.", features: ["Everything in Business Care", "Automation monitoring", "Content updates", "Up to 5 hours of changes", "Monthly performance summary", "One consultation call"], popular: false, accent: "#524ae9", delivery: "Monthly", bestFor: "Growing businesses with ongoing digital operations" },
+  { id: "landing-page", name: "Landing Page", price: "₹14,999", description: "High-conversion landing page for campaigns & launches.", features: ["1 High-Converting Responsive Page", "Figma UI Design + Clean React Code", "Contact Form & WhatsApp Integration", "SEO Meta Tags & Speed Optimization", "Source Code Handover", "Delivery in 5–7 Days"], popular: false, accent: "#070607", delivery: "5–7 Days", bestFor: "Campaigns, product launches, individuals" },
+  { id: "business-website", name: "Business Website", price: "₹29,999", description: "Professional website for companies needing strong online presence.", features: ["Up to 7 Custom Pages", "SEO Titles, Descriptions & Schema", "Google Maps & Local Business NAP", "Mobile-First Responsive Layout", "CMS for Content Updates", "1 Year Technical Support", "Delivery in 10–14 Days"], popular: true, accent: "#fc5000", delivery: "10–14 Days", bestFor: "Local businesses, service providers, SMEs" },
+  { id: "business-growth-website", name: "Business Growth Website", price: "₹49,999", description: "Advanced website with richer pages, conversion architecture & integrations.", features: ["Up to 15 Custom Pages + CMS Blog", "Interactive UI Micro-Animations", "Lead Capture & CRM Sync", "Core Web Vitals Guarantee (LCP < 2s)", "AEO & AI Search Readiness", "Custom API Integrations (up to 3)", "Delivery in 3–4 Weeks"], popular: false, accent: "#524ae9", delivery: "3–4 Weeks", bestFor: "Growing companies, marketing teams" },
+  { id: "corporate-website", name: "Corporate / Premium Website", price: "₹79,999", description: "Premium custom website for established brands & organizations.", features: ["Unlimited Custom Pages & Sections", "Custom Design System & Components", "Advanced Integrations (CRM, ERP, Marketing)", "Multi-language & Multi-region Ready", "Enterprise Security & Compliance", "Dedicated Project Manager", "Delivery in 4–6 Weeks"], popular: false, accent: "#635bff", delivery: "4–6 Weeks", bestFor: "Established brands, enterprises" },
+  { id: "mobile-app-mvp", name: "Mobile App MVP", price: "₹24,999+", description: "Cross-platform mobile app MVP for iOS & Android.", features: ["Flutter / React Native Cross-Platform Build", "iOS & Android App Store Deployment", "Push Notifications & Offline-First Sync", "Backend API + Database (Node.js/PostgreSQL)", "Complete IP & Code Rights Handover", "Delivery in 3–5 Weeks"], popular: false, accent: "#635bff", delivery: "3–5 Weeks", bestFor: "Mobile-first products, consumer apps" },
+  { id: "ecommerce-starter", name: "Ecommerce Starter", price: "₹59,999", description: "Launch your online store with essential features.", features: ["Shopify / WooCommerce Setup", "Up to 50 Products", "Payment Gateway (Razorpay/Stripe)", "Shipping & Tax Configuration", "Basic SEO & Speed Optimization", "Source Code / Theme Handover", "Delivery in 3–4 Weeks"], popular: false, accent: "#070607", delivery: "3–4 Weeks", bestFor: "New online stores, small catalogs" },
+  { id: "ecommerce-pro", name: "Ecommerce Professional", price: "₹99,999", description: "Full-featured store for growing brands.", features: ["Custom Theme (React/Next.js or Shopify Plus)", "Up to 500 Products with Variants", "Advanced Filtering, Search & Wishlist", "Subscription / Recurring Orders", "Abandoned Cart Recovery & Email Flows", "Analytics & Conversion Tracking", "Delivery in 4–6 Weeks"], popular: true, accent: "#fc5000", delivery: "4–6 Weeks", bestFor: "Growing brands, D2C businesses" },
+  { id: "ecommerce-custom", name: "Custom Ecommerce", price: "₹1,49,999+", description: "Enterprise-grade commerce platform with custom workflows.", features: ["Headless Commerce (Next.js + Shopify/Medusa)", "Unlimited Products & Custom Catalogs", "B2B Wholesale Portal with Tiered Pricing", "Custom Checkout & Subscription Logic", "ERP / POS / Inventory Sync", "Multi-currency & Multi-region", "Delivery in 6–10 Weeks"], popular: false, accent: "#524ae9", delivery: "6–10 Weeks", bestFor: "Enterprise, B2B, complex catalogs" },
+  { id: "mvp-starter", name: "Web MVP Starter", price: "₹74,999+", description: "Investor-ready prototype to validate your idea.", features: ["Clickable Prototype + Core User Flows", "Auth, Database, API (Next.js + PostgreSQL)", "Admin Dashboard", "Payment Gateway (Stripe/Razorpay)", "Complete IP & Code Rights Handover", "Delivery in 3–4 Weeks"], popular: false, accent: "#070607", delivery: "3–4 Weeks", bestFor: "Pre-seed founders, idea validation" },
+  { id: "mvp-launch", name: "MVP Launch", price: "₹1,49,999+", description: "Production-ready MVP for market launch.", features: ["Full-Stack Web App (React/Next.js + Node/PostgreSQL)", "Multi-role Auth & User Management", "Core Business Logic & Workflows", "Third-party API Integrations (up to 5)", "CI/CD, Monitoring & Error Tracking", "Delivery in 6–8 Weeks"], popular: false, accent: "#524ae9", delivery: "6–8 Weeks", bestFor: "Funded startups, market launch" },
+  { id: "saas-platform", name: "SaaS / Custom Web Application", price: "₹2,49,999+", description: "Multi-tenant SaaS platform with billing & user management.", features: ["Multi-tenant Architecture (Row-level Security)", "Stripe Billing (Subscriptions, Trials, Coupons)", "Customer Portal & Admin Dashboard", "Customer-facing API with Rate Limiting", "Feature Flags & Usage Analytics", "Delivery in 8–12 Weeks"], popular: true, accent: "#fc5000", delivery: "8–12 Weeks", bestFor: "SaaS founders, B2B platforms" },
+  { id: "saas-advanced", name: "Advanced SaaS / Platform", price: "₹4,99,999+", description: "Enterprise-grade platform with custom infrastructure.", features: ["Custom Infrastructure (AWS/GCP) with IaC", "Advanced Security (SSO, RBAC, Audit Logs)", "Real-time Features (WebSockets, Presence)", "Microservices Architecture Ready", "SLA-backed Support & Maintenance", "Delivery in 12–16 Weeks"], popular: false, accent: "#635bff", delivery: "12–16 Weeks", bestFor: "Enterprise SaaS, platforms" },
+  { id: "automation-basic", name: "Basic Automation", price: "₹14,999+", description: "Eliminate repetitive manual tasks.", features: ["1–2 Tool Workflow (Zapier/Make/n8n)", "Trigger → Action Automation", "Error Handling & Notifications", "Documentation & Runbook", "Delivery in 1–2 Weeks"], popular: false, accent: "#070607", delivery: "1–2 Weeks", bestFor: "Simple task automation" },
+  { id: "automation-business", name: "Business Automation", price: "₹29,999+", description: "Connect multiple tools & automate business processes.", features: ["3–5 Connected Workflows", "CRM / ERP / Spreadsheet Sync", "AI-assisted Steps (Summarization, Classification)", "Custom Monitoring Dashboard", "Delivery in 2–3 Weeks"], popular: false, accent: "#524ae9", delivery: "2–3 Weeks", bestFor: "Process automation, ops teams" },
+  { id: "automation-ai", name: "AI Automation", price: "₹49,999+", description: "Intelligent workflows with LLM-powered decision making.", features: ["Custom AI Agents (LangGraph / LangChain)", "RAG-based Knowledge Retrieval", "Document Processing & Extraction", "Human-in-the-loop Approval Flows", "Delivery in 4–6 Weeks"], popular: true, accent: "#fc5000", delivery: "4–6 Weeks", bestFor: "AI-powered operations" },
+  { id: "automation-advanced", name: "Advanced AI Agent / Workflow", price: "₹99,999+", description: "Autonomous multi-agent systems for complex operations.", features: ["Multi-agent Orchestration", "Custom Model Fine-tuning (LoRA/QLoRA)", "Evaluation Loops & Guardrails", "Observability & A/B Testing", "Delivery in 8–12 Weeks"], popular: false, accent: "#635bff", delivery: "8–12 Weeks", bestFor: "Complex autonomous systems" },
+  { id: "maintenance-essential", name: "Essential Care", price: "₹1,499", period: "month", description: "Basic health monitoring for small websites.", features: ["Monthly Backup & Uptime Monitoring", "SSL & Domain Expiry Alerts", "Core Dependency Updates", "Up to 30 mins Changes/Month", "Email Support"], popular: false, accent: "#070607", delivery: "Monthly", bestFor: "Small websites, personal projects" },
+  { id: "maintenance-business", name: "Business Care", price: "₹2,999", period: "month", description: "Proactive maintenance for business websites.", features: ["Weekly Backups & Daily Uptime Checks", "Form & Integration Health Monitoring", "Security Scanning & Malware Cleanup", "Up to 2 Hours Changes/Month", "Priority Email + WhatsApp Support", "Monthly Performance Report"], popular: true, accent: "#fc5000", delivery: "Monthly", bestFor: "Business websites, active forms" },
+  { id: "maintenance-growth", name: "Growth Care", price: "₹5,999", period: "month", description: "Growth-focused support for scaling businesses.", features: ["Everything in Business Care", "Automation & AI Workflow Monitoring", "Content Updates & New Page Builds", "Up to 5 Hours Changes/Month", "Quarterly Strategy Call", "CRO Review"], popular: false, accent: "#524ae9", delivery: "Monthly", bestFor: "Scaling businesses, marketing teams" },
+  { id: "maintenance-premium", name: "Premium / Priority", price: "₹9,999+", period: "month", description: "Dedicated support for mission-critical platforms.", features: ["Everything in Growth Care", "24/7 Incident Response (SLA-backed)", "Infrastructure Management (AWS/Vercel)", "Unlimited Reasonable Changes", "Dedicated Account Engineer", "Custom SLA & Compliance Reporting"], popular: false, accent: "#635bff", delivery: "Monthly", bestFor: "Mission-critical, enterprise" },
 ];
 
 const SERVICES_DEFAULTS: ServicesContent = {

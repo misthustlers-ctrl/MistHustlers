@@ -12,10 +12,10 @@ const AUTOMATION_AEO = {
       "An AI automation agency builds software systems that automate repetitive business processes using artificial intelligence and workflow automation tools. This includes lead qualification, CRM data synchronization, WhatsApp/email automation, document processing, and custom AI agents that integrate with existing business tools.",
   },
   executiveSummary:
-    "MistHustlers is a global AI automation partner helping businesses eliminate manual work across 7 countries. From our Indore HQ, we build custom workflow automation, AI chatbots, WhatsApp automation, CRM integrations, and AI agents for clients in the US, UK, Canada, Australia, UAE, and Singapore. Fixed pricing from $49/£39/€45/₹3,999. Founder-led delivery with direct access to Naveen Salve.",
+    "MistHustlers is a global AI automation partner helping businesses eliminate manual work across 7 countries. From our Indore HQ, we build custom workflow automation, AI chatbots, WhatsApp automation, CRM integrations, and AI agents for clients in the US, UK, Canada, Australia, UAE, and Singapore. Fixed pricing from ₹14,999. Founder-led delivery with direct access to Naveen Salve.",
   keyTakeaways: [
     "MistHustlers serves clients across 7 countries (US, UK, Canada, Australia, UAE, Singapore, India) from our Indore HQ.",
-    "Workflow automation from $49/£39/€45/₹3,999. AI agents from $199/£159/€180/₹19,999. Fixed pricing, 48-hour quotes.",
+    "Basic Automation from ₹14,999. Business Automation from ₹29,999. AI Automation from ₹49,999. Advanced AI Agent from ₹99,999. Fixed pricing, 48-hour quotes.",
     "We build with n8n, Make.com, Zapier, custom Node.js, OpenAI API, WhatsApp Business API, and CRM APIs (HubSpot, Salesforce, Pipedrive).",
     "Direct founder communication with Naveen Salve — no account managers. Async-first across US, UK, EU, APAC timezones.",
     "100% source code ownership. You own the automation logic, credentials, and data. No vendor lock-in.",
@@ -62,7 +62,7 @@ const AUTOMATION_FAQ = [
   },
   {
     q: "How much does AI automation cost?",
-    a: "Simple workflow automation (1–2 tools): $49/£39/€45/₹3,999. Multi-step workflows with AI: $199–$499/₹19,999–₹49,999. Custom AI agents: $499+/₹49,999+. Fixed pricing, 48-hour quotes.",
+    a: "Basic Automation (1–2 tools): ₹14,999. Business Automation (3–5 workflows): ₹29,999. AI Automation (custom AI agents, RAG): ₹49,999. Advanced AI Agent (multi-agent, fine-tuning): ₹99,999+. Fixed pricing, 48-hour quotes.",
   },
   {
     q: "What tools do you use for automation?",

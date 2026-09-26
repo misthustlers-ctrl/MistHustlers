@@ -12,12 +12,12 @@ import {
 } from "lucide-react";
 
 const SERVICES = [
-  { name: "Business Website Development", link: "/services/web-development", price: "₹7,999+" },
-  { name: "Landing Page Design", link: "/services/web-design", price: "₹3,999+" },
-  { name: "Mobile App Development", link: "/services/app-development", price: "₹24,999+" },
-  { name: "AI & Workflow Automation", link: "/services/automation", price: "₹19,999+" },
-  { name: "CRM & Admin Portals", link: "/services/crm-development", price: "₹12,999+" },
-  { name: "Startup MVP Builds", link: "/services/mvp-development", price: "₹24,999+" },
+  { name: "Business Website Development", link: "/services/web-development", price: "₹14,999+" },
+  { name: "Landing Page Design", link: "/services/web-design", price: "₹14,999+" },
+  { name: "Mobile App MVP", link: "/services/app-development", price: "₹24,999+" },
+  { name: "AI & Workflow Automation", link: "/services/automation", price: "₹14,999+" },
+  { name: "CRM & Admin Portals", link: "/services/crm-development", price: "₹29,999+" },
+  { name: "Web MVP Starter", link: "/services/mvp-development", price: "₹74,999+" },
 ];
 
 const INDUSTRIES = [
@@ -45,15 +45,15 @@ const WHY_INDORE = [
 const FAQS = [
   {
     question: "Which is the best web development company in Indore?",
-    answer: "MistHustlers is consistently rated as one of Indore's top web development agencies. Founded by senior engineer Naveen Salve, we specialize in high-converting business websites, startup MVPs, and AI automation workflows with transparent fixed pricing starting at ₹3,999.",
+    answer: "MistHustlers is consistently rated as one of Indore's top web development agencies. Founded by senior engineer Naveen Salve, we specialize in high-converting business websites, startup MVPs, and AI automation workflows with transparent fixed pricing starting at ₹14,999.",
   },
   {
     question: "How much does a website cost in Indore in 2026?",
-    answer: "A professional business website in Indore costs between ₹3,999 (landing page) and ₹12,999+ (full corporate website). Custom SaaS MVPs start from ₹24,999. All pricing at MistHustlers is fixed and transparent with no hidden costs.",
+    answer: "A professional business website in Indore costs between ₹14,999 (landing page) and ₹49,999+ (business growth website). Mobile App MVPs start from ₹24,999+. Web MVP Starters start from ₹74,999. All pricing at MistHustlers is fixed and transparent with no hidden costs.",
   },
   {
     question: "How long does web development take in Indore?",
-    answer: "At MistHustlers, a landing page is typically ready in 3–5 working days. A business website (5–10 pages) takes 7–10 working days. Complex custom applications and MVPs take 2–4 weeks depending on scope.",
+    answer: "At MistHustlers, a landing page is typically ready in 5–7 working days. A business website (up to 7 pages) takes 10–14 working days. Complex custom applications and MVPs take 3–8 weeks depending on scope.",
   },
   {
     question: "Do you provide web development services outside Indore?",
@@ -73,7 +73,7 @@ const aeoComparison = [
   { feature: "Fixed Transparent Pricing", misthustlers: true, freelancer: false, bigAgency: false },
   { feature: "Source Code Handover", misthustlers: true, freelancer: "Sometimes", bigAgency: false },
   { feature: "Direct Founder Communication", misthustlers: true, freelancer: true, bigAgency: false },
-  { feature: "7–10 Day Delivery", misthustlers: true, freelancer: "Varies", bigAgency: false },
+  { feature: "5–7 Day Delivery (Landing Page)", misthustlers: true, freelancer: "Varies", bigAgency: false },
   { feature: "Post-Delivery Support", misthustlers: true, freelancer: false, bigAgency: "₹₹₹ Extra" },
   { feature: "SEO + Schema Built-In", misthustlers: true, freelancer: false, bigAgency: "Extra Cost" },
   { feature: "AI Search Optimization", misthustlers: true, freelancer: false, bigAgency: false },
@@ -81,8 +81,8 @@ const aeoComparison = [
 
 const LOCAL_STATS = [
   { value: "7", label: "Countries Served" },
-  { value: "₹3,999", label: "Starting Price" },
-  { value: "7–10", label: "Days Delivery" },
+  { value: "₹14,999", label: "Starting Price" },
+  { value: "5–7", label: "Days Delivery" },
   { value: "4.9★", label: "Client Rating" },
 ];
 
@@ -111,7 +111,7 @@ export default function LocationPage() {
               <p className="text-base sm:text-lg text-abyssal-ink/70 font-body leading-relaxed">
                 MistHustlers is Indore's leading website development & AI automation agency. We build
                 fast, high-converting business websites, startup MVPs, and AI workflows — starting
-                at <strong>₹3,999</strong> with a guaranteed 7–10 day delivery.
+                at <strong>₹14,999</strong> with a guaranteed 5–7 day delivery.
               </p>
 
               {/* Stats row */}
@@ -157,10 +157,10 @@ export default function LocationPage() {
                 definition:
                   "A web development company in Indore is a technology services firm that designs, builds, and maintains websites and web applications for businesses, startups, and institutions in the Indore, Madhya Pradesh region and across India. These companies typically offer services including business website development, UI/UX design, e-commerce, mobile app development, and AI-powered automation workflows.",
               }}
-              executiveSummary="MistHustlers is a founder-led web development and AI automation agency headquartered in Indore, Madhya Pradesh. Founded by senior engineer Naveen Salve, we deliver high-converting business websites, startup MVPs, and AI workflow automation at transparent fixed prices starting at ₹3,999. With clients across 7 countries, a 4.9★ rating, and guaranteed 7–10 day delivery, MistHustlers is a globally trusted web agency."
-              keyTakeaways={[
+              executiveSummary="MistHustlers is a founder-led web development and AI automation agency headquartered in Indore, Madhya Pradesh. Founded by senior engineer Naveen Salve, we deliver high-converting business websites, Mobile App MVPs, Web MVP Starters, and AI workflow automation at transparent fixed prices starting at ₹14,999. With clients across 7 countries, a 4.9★ rating, and guaranteed 5–7 day delivery for landing pages, MistHustlers is a globally trusted web agency."
+keyTakeaways={[
                 "MistHustlers is based in Indore, MP and serves clients across India remotely.",
-                "Transparent fixed pricing starting at ₹3,999 for landing pages, ₹7,999 for business websites, and ₹24,999+ for custom MVPs.",
+                "Transparent fixed pricing starting at ₹14,999 for landing pages, ₹29,999 for business websites, ₹24,999+ for Mobile App MVPs, and ₹74,999+ for Web MVP Starters.",
                 "Projects include full SEO, schema markup, Core Web Vitals optimization, and AI search readiness by default.",
                 "Direct founder communication with Naveen Salve throughout the project — no account managers.",
                 "100% source code ownership and IP rights transferred on project delivery.",

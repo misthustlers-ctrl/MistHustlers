@@ -65,7 +65,7 @@ export default function About() {
                   { value: "7", label: "Countries Served" },
                   { value: "4.9★", label: "Client Rating" },
                   { value: "2026", label: "Founded" },
-                  { value: "₹3,999", label: "Starting Price" },
+                  { value: "₹14,999", label: "Starting Price" },
                 ].map((stat) => (
                   <div key={stat.label} className="text-center">
                     <div className="font-display text-3xl font-bold text-digital-orange">{stat.value}</div>

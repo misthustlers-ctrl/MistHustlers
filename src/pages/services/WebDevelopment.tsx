@@ -15,7 +15,7 @@ const WEB_DEV_AEO = {
     "MistHustlers is a global web development and AI technology partner headquartered in Indore, India. We build custom websites, web applications, and digital products for businesses worldwide — from US and UK startups to enterprises in Australia, UAE, and Singapore. Our founder-led team delivers production-grade React, Next.js, and Node.js solutions with transparent fixed pricing, 48-hour quotes, and complete source code ownership.",
   keyTakeaways: [
     "MistHustlers serves clients across 7 countries (US, UK, Canada, Australia, UAE, Singapore, India) from our Indore HQ.",
-    "Fixed pricing starting at $49/£39/€45/₹3,999 for landing pages, $99/£79/€90/₹7,999 for business websites.",
+    "Fixed pricing starting at ₹14,999 for landing pages, ₹29,999 for business websites, ₹49,999 for growth websites.",
     "Every project includes SEO-optimized markup, JSON-LD schema, Core Web Vitals optimization (LCP <2s), and AI search readiness.",
     "Direct founder communication with Naveen Salve throughout the project — no account managers.",
     "100% source code ownership and IP rights transferred on project delivery.",
@@ -81,7 +81,7 @@ export default function WebDevelopment() {
             <div className="grid md:grid-cols-3 gap-6 mb-16">
               {[
                 { title: "Business Websites", desc: "Multi-page websites with CMS, contact forms, SEO optimization, and analytics integration." },
-                { title: "Landing Pages", desc: "High-converting single-page sites with custom design, A/B testing ready, starting at $49/₹3,999." },
+                { title: "Landing Pages", desc: "High-converting single-page sites with custom design, A/B testing ready, starting at ₹14,999." },
                 { title: "Full-Stack Web Apps", desc: "Complete web applications with database, authentication, API integration, and cloud deployment." },
                 { title: "E-Commerce Platforms", desc: "Online stores with payment gateway integration, inventory management, and order tracking." },
                 { title: "Portfolio Sites", desc: "Showcase your work with custom galleries, case studies, and client testimonial sections." },
@@ -96,7 +96,7 @@ export default function WebDevelopment() {
 
             <div className="text-center mb-16">
               <h2 className="font-body font-bold text-3xl tracking-[0.02em] text-abyssal-ink mb-4">Pricing</h2>
-              <p className="text-abyssal-ink/50 mb-8 font-body">Starting from $49/£39/€45/₹3,999 for landing pages, custom quotes for larger projects.</p>
+              <p className="text-abyssal-ink/50 mb-8 font-body">Starting from ₹14,999 for landing pages, ₹29,999 for business websites, custom quotes for larger projects.</p>
               <Link to="/contact" className="inline-flex min-h-12 items-center justify-center magnetic-btn bg-digital-orange text-white px-6 sm:px-8 py-4 rounded-[800px] text-base font-semibold font-body">
                 Get a Quote
               </Link>
@@ -121,11 +121,11 @@ const WEB_DEV_FAQ = [
   },
   {
     q: "How much does custom web development cost?",
-    a: "Custom web development costs vary by scope. Landing pages start at $49/₹3,999. Business websites (5–10 pages) range $99–$499/₹7,999–₹39,999. Complex web applications with databases, authentication, and APIs start at $2,000/₹1,50,000+. MistHustlers provides fixed-price quotes within 48 hours.",
+    a: "Custom web development costs vary by scope. Landing pages start at ₹14,999. Business websites (up to 7 pages) start at ₹29,999. Growth websites (up to 15 pages) start at ₹49,999. Complex web applications with databases, authentication, and APIs start at ₹2,49,999+. MistHustlers provides fixed-price quotes within 48 hours.",
   },
   {
     q: "How long does website development take?",
-    a: "Timeline depends on scope. Landing pages: 4–6 working days. Business websites (5–10 pages): 7–10 working days. Full-stack web applications with database, auth, and APIs: 4–16 weeks. MVPs: 2–4 weeks.",
+    a: "Timeline depends on scope. Landing pages: 5–7 working days. Business websites (up to 7 pages): 10–14 working days. Growth websites (up to 15 pages): 3–4 weeks. Full-stack web applications with database, auth, and APIs: 4–16 weeks. MVPs: 3–4 weeks.",
   },
   {
     q: "What technologies do you use for web development?",
@@ -145,6 +145,6 @@ const WEB_DEV_FAQ = [
   },
   {
     q: "What is included in your web development packages?",
-    a: "All packages include: responsive design, SEO-optimized markup, JSON-LD schema, Core Web Vitals optimization (LCP <2s), JSON-LD schema, analytics setup, SSL/deployment, and 15–30 days bug support. Source code and documentation included.",
+    a: "All packages include: responsive design, SEO-optimized markup, JSON-LD schema, Core Web Vitals optimization (LCP <2s), analytics setup, SSL/deployment, and 15–30 days bug support. Source code and documentation included.",
   },
 ];

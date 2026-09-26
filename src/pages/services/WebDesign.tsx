@@ -104,10 +104,10 @@ export default function WebDesign() {
                 definition:
                   "Web design is the process of planning, conceptualizing, and arranging content online to make a website user-friendly and conversion-optimised. It combines visual identity, typography, colour, layout, navigation structure, and responsive behaviour for mobile and desktop across the web design and development.",
               }}
-              executiveSummary="MistHustlers is a custom web design company in Indore that designs high-converting, mobile-first, UI/UX-optimised business websites. Pricing starts at ₹3,999 (landing page), ₹7,999 (5-page business site), and ₹12,999 (corporate growth design), with typical delivery of 3-14 working days. Every project includes custom Figma mockups, CRO-focused micro-interactions, SEO-ready markup, and full source code handover."
+              executiveSummary="MistHustlers is a custom web design company in Indore that designs high-converting, mobile-first, UI/UX-optimised business websites. Pricing starts at ₹14,999 (landing page), ₹29,999 (business website), and ₹49,999 (business growth website), with typical delivery of 5-14 working days. Every project includes custom Figma mockups, CRO-focused micro-interactions, SEO-ready markup, and full source code handover."
               keyTakeaways={[
-                "Custom web design in Indore costs ₹3,999–₹12,999 with fully transparent fixed pricing.",
-                "Typical delivery timelines: landing pages 3-5 days, business websites 7-10 days, corporate sites 10-14 days.",
+                "Custom web design in Indore costs ₹14,999–₹49,999 with fully transparent fixed pricing.",
+                "Typical delivery timelines: landing pages 5-7 days, business websites 10-14 days, growth sites 3-4 weeks.",
                 "Professionally designed sites convert 2-4x more visitors than generic templates.",
                 "Every MistHustlers design is mobile-first, SEO-ready, and ships with Figma source files and full code ownership.",
               ]}
@@ -157,9 +157,9 @@ export default function WebDesign() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-body">
               {[
-                { name: "Landing Page Design", price: "₹3,999", time: "3-5 Days", features: ["1 High-Converting Page", "Figma Design & Code", "Mobile Responsive", "Contact Form Setup"] },
-                { name: "Business Website Design", price: "₹7,999", time: "7-10 Days", features: ["Up to 5 Custom Pages", "SEO Meta & Schema", "WhatsApp Integration", "Google Maps Embed"] },
-                { name: "Corporate Growth Design", price: "₹12,999", time: "10-14 Days", features: ["Up to 10 Custom Pages", "Interactive UI Elements", "CMS Content Management", "Speed & Performance Guarantee"] },
+                { name: "Landing Page Design", price: "₹14,999", time: "5-7 Days", features: ["1 High-Converting Page", "Figma Design & Code", "Mobile Responsive", "Contact Form Setup"] },
+                { name: "Business Website Design", price: "₹29,999", time: "10-14 Days", features: ["Up to 7 Custom Pages", "SEO Meta & Schema", "WhatsApp Integration", "Google Maps Embed"] },
+                { name: "Business Growth Design", price: "₹49,999", time: "3-4 Weeks", features: ["Up to 15 Custom Pages", "Interactive UI Elements", "CMS Content Management", "Speed & Performance Guarantee"] },
               ].map((pkg, i) => (
                 <div key={i} className="rounded-2xl border border-abyssal-ink/10 bg-white p-6 flex flex-col justify-between shadow-sm">
                   <div>

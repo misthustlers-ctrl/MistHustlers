@@ -25,31 +25,42 @@ export function buildWhatsAppUrl(phone: string, message: string, fallbackPhone =
   return `https://wa.me/${targetPhone}?text=${encodeURIComponent(message)}`;
 }
 
+function getServiceLabel(serviceId: string): string {
+  const labels: Record<string, string> = {
+    "mobile-app-mvp": "Mobile App MVP",
+    "mvp-starter": "Web MVP Starter",
+    "mvp-launch": "MVP Launch",
+    "saas-platform": "SaaS / Custom Web Application",
+    "saas-advanced": "Advanced SaaS / Platform",
+    "web-development": "Web Development",
+    "custom-web-development": "Custom Web Development",
+    "web-application-development": "Web Application Development",
+    "ecommerce-development": "Ecommerce Development",
+    "website-redesign": "Website Redesign",
+    "automation-basic": "Basic Automation",
+    "automation-business": "Business Automation",
+    "automation-ai": "AI Automation",
+    "automation-advanced": "Advanced AI Agent / Workflow",
+    "ai-development": "AI Development",
+    "custom-web-development": "Custom Web Development",
+    "web-application-development": "Web Application Development",
+    "ecommerce-development": "Ecommerce Development",
+    "website-redesign": "Website Redesign",
+    "saas-development": "SaaS Development",
+    "ai-development": "AI Development",
+    "automation": "AI & Workflow Automation",
+    "crm-development": "CRM & Dashboard Development",
+    "ui-ux": "UI/UX Design",
+    "maintenance": "Maintenance & Support",
+  };
+  return labels[serviceId] || serviceId;
+}
+
 export function buildServiceInquiryWhatsAppMessage(data: ServiceInquiryFormData) {
+  const serviceLabel = getServiceLabel(data.service);
   return [
-    "🚀 NEW SERVICE INQUIRY",
+    "Hi MistHustlers, I'd like to discuss " + serviceLabel + ".",
     "",
-    `👤 Name: ${data.name || "-"}`,
-    "",
-    `🏢 Company:\n${data.company || "-"}`,
-    "",
-    `📧 Email:\n${data.email || "-"}`,
-    "",
-    `📱 Phone:\n${data.phone || "-"}`,
-    "",
-    `🌐 Website:\n${data.website || "-"}`,
-    "",
-    `🛠 Service Required:\n${data.service || "-"}`,
-    "",
-    `💰 Budget:\n${data.budget || "-"}`,
-    "",
-    `⏳ Timeline:\n${data.timeline || "-"}`,
-    "",
-    `📞 Preferred Contact:\n${data.preferredContact || "-"}`,
-    "",
-    `📝 Project Details:\n${data.message || "-"}`,
-    "",
-    "━━━━━━━━━━━━━━━━━━",
     "Sent from MistHustlers Website",
   ].join("\n");
 }
