@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Our Story | Ember &amp; Oak</title>
+<script src="/demo/tailwindcss.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,100..900;1,100..900&amp;family=Manrope:wght@200..800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@100..900&amp;family=Manrope:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#16130c",
+                        "secondary-container": "#853a00",
+                        "surface": "#16130c",
+                        "primary-fixed": "#ece0d8",
+                        "inverse-surface": "#eae1d5",
+                        "secondary-fixed": "#ffdbc9",
+                        "inverse-on-surface": "#343027",
+                        "on-primary": "#352f2a",
+                        "on-tertiary-container": "#a07b38",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#271900",
+                        "on-secondary": "#532200",
+                        "tertiary-fixed-dim": "#ebc076",
+                        "on-surface": "#eae1d5",
+                        "on-secondary-container": "#ffb184",
+                        "surface-container-high": "#2e2921",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-container": "#231600",
+                        "on-primary-container": "#888078",
+                        "secondary-fixed-dim": "#ffb68e",
+                        "secondary": "#ffb68e",
+                        "tertiary-fixed": "#ffdea9",
+                        "on-secondary-fixed": "#331200",
+                        "primary-container": "#1c1712",
+                        "surface-variant": "#39342c",
+                        "on-primary-fixed": "#201b16",
+                        "on-secondary-fixed-variant": "#763300",
+                        "tertiary": "#ebc076",
+                        "surface-tint": "#cfc5bc",
+                        "surface-container-lowest": "#110e07",
+                        "on-tertiary-fixed-variant": "#5e4100",
+                        "on-background": "#eae1d5",
+                        "outline-variant": "#4c463f",
+                        "error": "#ffb4ab",
+                        "background": "#16130c",
+                        "surface-container-highest": "#39342c",
+                        "primary": "#cfc5bc",
+                        "on-surface-variant": "#cfc5bc",
+                        "surface-bright": "#3d3930",
+                        "primary-fixed-dim": "#cfc5bc",
+                        "on-error": "#690005",
+                        "surface-container-low": "#1f1b13",
+                        "outline": "#988f88",
+                        "on-tertiary": "#422d00",
+                        "inverse-primary": "#655d56",
+                        "surface-container": "#231f17",
+                        "on-primary-fixed-variant": "#4c463f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "margin-mobile": "20px",
+                        "unit": "8px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Fraunces"],
+                        "accent-italic": ["Fraunces"],
+                        "display-lg": ["Fraunces"],
+                        "headline-lg": ["Fraunces"],
+                        "body-lg": ["Manrope"],
+                        "display-lg-mobile": ["Fraunces"],
+                        "label-md": ["Manrope"],
+                        "body-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                        "accent-italic": ["20px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "display-lg": ["56px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-lg-mobile": ["40px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .warm-glass {
+            background: rgba(255, 244, 230, 0.06);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(201, 161, 90, 0.2);
+        }
+        .brass-border {
+            border: 1px solid transparent;
+            background-image: linear-gradient(#16130c, #16130c), linear-gradient(to right, #c9a15a, rgba(201, 161, 90, 0.1));
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+        .grain-overlay {
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            opacity: 0.05;
+            pointer-events: none;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-tertiary selection:text-on-tertiary">
+<!-- Fixed TopNavBar Shell -->
+<nav class="fixed top-4 left-1/2 -translate-x-1/2 w-[90%] max-w-7xl rounded-full z-50 backdrop-blur-xl bg-surface-container/30 border border-tertiary/20 shadow-2xl shadow-surface-dim/50 flex justify-between items-center px-8 py-3">
+<div class="font-headline-lg text-headline-lg font-bold text-tertiary">Ember &amp; Oak</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-on-surface/80 hover:text-tertiary transition-colors font-label-md text-label-md" href="../home_ember_oak/code.html">Home</a>
+<a class="text-on-surface/80 hover:text-tertiary transition-colors font-label-md text-label-md" href="../menu_ember_oak/code.html">Menu</a>
+<a class="text-tertiary font-bold border-b border-tertiary pb-1 font-label-md text-label-md" href="#">Our Story</a>
+<a class="text-on-surface/80 hover:text-tertiary transition-colors font-label-md text-label-md" href="../gallery_ember_oak/code.html">Gallery</a>
+</div>
+<a href="../reservations_ember_oak/code.html"><button class="bg-[#d97a3f] text-[#ece0d8] px-6 py-2 rounded-full font-label-md text-label-md scale-95 active:scale-90 transition-transform hover:brightness-110">Book Table</button></a>
+</nav>
+<main class="relative overflow-x-hidden">
+<div class="grain-overlay absolute inset-0 z-0"></div>
+<!-- Full-bleed Hero Section -->
+<section class="relative h-screen w-full flex items-end overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10"></div>
+<img alt="The Ember &amp; Oak Team" class="absolute inset-0 w-full h-full object-cover grayscale-[20%] sepia-[15%] brightness-75 transition-transform duration-10000 hover:scale-105" src="https://lh3.googleusercontent.com/aida/AP1WRLuhqC8Y6qSDXzVcbdQ72tCPd-Gd0-aB6T3-9RD_-O04cvPvkrxZb7pu2_yxKL5t2L0GycUS7DM_RqVTwXBW5PI5tQN1wRhcKEtqmsEX5zEWiso_eojxEth4cUlmu1iWUNMt74KoHk8aXH_8S5T-EpvcMxav9e8lYuZUBoCX8ONPb-np2FC0azsoAsXOvL3qX0hL4kY03OZrzsqTuPCnQHH3Awwh4wZDtY3JnaTOahV8b6lobOUccVS4"/>
+<div class="relative z-20 px-margin-desktop mb-24 max-w-4xl">
+<p class="text-tertiary font-label-md text-label-md uppercase tracking-widest mb-4">Born in 2020</p>
+<h1 class="font-display-lg text-display-lg md:text-display-lg text-primary leading-tight">Crafted for the <span class="italic font-accent-italic text-tertiary">Slow-Food</span> Philosophy.</h1>
+</div>
+</section>
+<!-- The Open Hearth Section -->
+<section class="py-32 px-margin-desktop container-max mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+<div class="md:col-span-5 space-y-8 order-2 md:order-1">
+<span class="inline-block px-4 py-1 rounded-full warm-glass text-tertiary font-label-md text-label-md">Philosophy</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">The Open Hearth</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                        At Ember &amp; Oak, our heart beat is the fire. We believe that the most authentic flavors are unlocked through the ancient dance of wood and flame. Our custom-built hearth isn't just a kitchen tool; it's the anchor of our home, radiating a warmth that permeates every dish and every conversation.
+                    </p>
+<div class="pt-4">
+<button class="flex items-center gap-2 group transition-all">
+<span class="text-tertiary font-label-md text-label-md border-b border-tertiary/30 group-hover:border-tertiary transition-all">Watch our process</span>
+<span class="material-symbols-outlined text-tertiary group-hover:translate-x-1 transition-transform">play_circle</span>
+</button>
+</div>
+</div>
+<div class="md:col-span-7 order-1 md:order-2">
+<div class="warm-glass rounded-xl p-4 brass-border overflow-hidden rotate-1 shadow-2xl">
+<img alt="Chef kneading dough in a sunlit kitchen" class="w-full h-[500px] object-cover rounded-lg" src="https://lh3.googleusercontent.com/aida/AP1WRLv25giAubvHohmYkb1Swew5vn3nFyxafD4eyhXK6nb6x1SnMHlGq3MVY8ked8k645zevmRsug4UX6BjC2kUo64JfQzmsU2MrHhzyyqgAy8NZtnVKWoc3-8TCiRARIzM7SxP6Yk4ipblThI1vEUagk177xdVmdJPuZA2xcUkvf9M_0kI9voc57u7mta6nDGIRG5e-7iSXJD1nezp4SBSXE_syERwg5XiP06xjQH-ate8WavUo6CQgUT0"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Ingredient Macro Strip -->
+<section class="py-12 bg-surface-container-lowest overflow-hidden">
+<div class="flex flex-nowrap gap-gutter animate-infinite-scroll">
+<!-- Coffee Block -->
+<div class="flex-none w-80 h-96 warm-glass rounded-lg overflow-hidden group relative">
+<img alt="Roasted coffee beans" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/AP1WRLugqX3K6ib-4TuuwMcHXgOTwEF6EKhtyrw2hUhUsrc1e8XLk9t9izL4h1-bJ8UdhpGJ8z7fpyA2BtN_5TvmbsIdE7wl5PbtgTQs_mz28KO7-xp9tMS7aBSnSiChL8wS0NtkTgFbPvEVpbw-fL9lV8mZ7RPwslki1wFq3gLC9_52sBh4ANW6gpqZXLkiETUEcx3kxWov0joflZW-rV4BavlB9OoQxTsKYC5OcIJmf1MhxrJ396vXOdV7"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim to-transparent opacity-60"></div>
+<div class="absolute bottom-6 left-6">
+<p class="text-tertiary font-label-md text-label-md">ETHIOPIAN ROAST</p>
+<h4 class="font-headline-md text-headline-md text-primary">Sun-Dried Coffee</h4>
+</div>
+</div>
+<!-- Herb Block -->
+<div class="flex-none w-[500px] h-96 warm-glass rounded-lg overflow-hidden group relative">
+<img alt="Fresh herbs being chopped" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/AP1WRLvFRFJps15H3LwzSxlDaRqoeYNhZ__THlH7NlG2McnyHR994ict0f7LL46K6S39zChAEcQDUfHioa3jDY5qIpYMx4_R8lQUb6dxfV7h_VQl_EP6rN6bMLVFIf3PheSgqTL0hSZPn_fz4EbIw1ubKwk5RYKGhnFTBrNV8qZi-VxkS7sl-iujgeg8-Dr8_jeJeOC2e8B1MCjLWVTQ9ENfl5ClaQylGFjHBEAA8tAaerxiXM3E_Tc7NiOG"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim to-transparent opacity-60"></div>
+<div class="absolute bottom-6 left-6">
+<p class="text-tertiary font-label-md text-label-md">LOCAL GARDENS</p>
+<h4 class="font-headline-md text-headline-md text-primary">Wild Sage &amp; Rosemary</h4>
+</div>
+</div>
+<!-- Repeat for seamless scroll effect -->
+<div class="flex-none w-80 h-96 warm-glass rounded-lg overflow-hidden group relative">
+<img alt="Roasted coffee beans" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/AP1WRLugqX3K6ib-4TuuwMcHXgOTwEF6EKhtyrw2hUhUsrc1e8XLk9t9izL4h1-bJ8UdhpGJ8z7fpyA2BtN_5TvmbsIdE7wl5PbtgTQs_mz28KO7-xp9tMS7aBSnSiChL8wS0NtkTgFbPvEVpbw-fL9lV8mZ7RPwslki1wFq3gLC9_52sBh4ANW6gpqZXLkiETUEcx3kxWov0joflZW-rV4BavlB9OoQxTsKYC5OcIJmf1MhxrJ396vXOdV7"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim to-transparent opacity-60"></div>
+<div class="absolute bottom-6 left-6">
+<p class="text-tertiary font-label-md text-label-md">ETHIOPIAN ROAST</p>
+<h4 class="font-headline-md text-headline-md text-primary">Sun-Dried Coffee</h4>
+</div>
+</div>
+<div class="flex-none w-[500px] h-96 warm-glass rounded-lg overflow-hidden group relative">
+<img alt="Fresh herbs being chopped" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/AP1WRLvFRFJps15H3LwzSxlDaRqoeYNhZ__THlH7NlG2McnyHR994ict0f7LL46K6S39zChAEcQDUfHioa3jDY5qIpYMx4_R8lQUb6dxfV7h_VQl_EP6rN6bMLVFIf3PheSgqTL0hSZPn_fz4EbIw1ubKwk5RYKGhnFTBrNV8qZi-VxkS7sl-iujgeg8-Dr8_jeJeOC2e8B1MCjLWVTQ9ENfl5ClaQylGFjHBEAA8tAaerxiXM3E_Tc7NiOG"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim to-transparent opacity-60"></div>
+<div class="absolute bottom-6 left-6">
+<p class="text-tertiary font-label-md text-label-md">LOCAL GARDENS</p>
+<h4 class="font-headline-md text-headline-md text-primary">Wild Sage &amp; Rosemary</h4>
+</div>
+</div>
+</div>
+</section>
+<!-- Seasonal Sourcing Section -->
+<section class="py-32 px-margin-desktop container-max mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+<div class="md:col-span-7">
+<div class="warm-glass rounded-xl p-4 brass-border overflow-hidden -rotate-1 shadow-2xl">
+<img alt="Handheld macro shot of fresh ingredients" class="w-full h-[500px] object-cover rounded-lg" src="https://lh3.googleusercontent.com/aida/AP1WRLvFRFJps15H3LwzSxlDaRqoeYNhZ__THlH7NlG2McnyHR994ict0f7LL46K6S39zChAEcQDUfHioa3jDY5qIpYMx4_R8lQUb6dxfV7h_VQl_EP6rN6bMLVFIf3PheSgqTL0hSZPn_fz4EbIw1ubKwk5RYKGhnFTBrNV8qZi-VxkS7sl-iujgeg8-Dr8_jeJeOC2e8B1MCjLWVTQ9ENfl5ClaQylGFjHBEAA8tAaerxiXM3E_Tc7NiOG"/>
+</div>
+</div>
+<div class="md:col-span-5 space-y-8 pl-0 md:pl-12">
+<span class="inline-block px-4 py-1 rounded-full warm-glass text-tertiary font-label-md text-label-md">Commitment</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Seasonal Sourcing</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                        We don't follow a calendar; we follow the soil. Our menu evolves weekly based on what our local farmers and foragers bring to our doorstep. By honoring the seasons, we ensure that every bite is a snapshot of our landscape's peak vitality.
+                    </p>
+<div class="grid grid-cols-2 gap-4 pt-4">
+<div class="p-6 warm-glass rounded-xl">
+<h5 class="text-tertiary font-headline-md text-headline-md mb-2">42+</h5>
+<p class="font-label-md text-label-md opacity-70">Local Producers</p>
+</div>
+<div class="p-6 warm-glass rounded-xl">
+<h5 class="text-tertiary font-headline-md text-headline-md mb-2">0 km</h5>
+<p class="font-label-md text-label-md opacity-70">Herb Garden</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid: The Kitchen Life -->
+<section class="py-32 bg-surface-container-low px-margin-desktop">
+<div class="container-max mx-auto">
+<div class="text-center mb-20">
+<h2 class="font-display-lg text-display-lg text-primary mb-4">Behind the Brass</h2>
+<p class="text-on-surface-variant max-w-xl mx-auto">A glimpse into the daily rhythm of craft, concentration, and camaraderie.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-gutter h-auto md:h-[800px]">
+<div class="md:col-span-2 md:row-span-2 warm-glass rounded-3xl overflow-hidden relative group p-1">
+<img alt="Kitchen staff working together" class="w-full h-full object-cover rounded-[20px] transition-all duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida/AP1WRLuhqC8Y6qSDXzVcbdQ72tCPd-Gd0-aB6T3-9RD_-O04cvPvkrxZb7pu2_yxKL5t2L0GycUS7DM_RqVTwXBW5PI5tQN1wRhcKEtqmsEX5zEWiso_eojxEth4cUlmu1iWUNMt74KoHk8aXH_8S5T-EpvcMxav9e8lYuZUBoCX8ONPb-np2FC0azsoAsXOvL3qX0hL4kY03OZrzsqTuPCnQHH3Awwh4wZDtY3JnaTOahV8b6lobOUccVS4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim via-transparent to-transparent p-12 flex flex-col justify-end">
+<h3 class="font-headline-lg text-headline-lg text-primary">The Synergy</h3>
+</div>
+</div>
+<div class="md:col-span-2 warm-glass rounded-3xl overflow-hidden relative group p-1">
+<img alt="Detail of artisan bread" class="w-full h-full object-cover rounded-[20px] transition-all duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida/AP1WRLv25giAubvHohmYkb1Swew5vn3nFyxafD4eyhXK6nb6x1SnMHlGq3MVY8ked8k645zevmRsug4UX6BjC2kUo64JfQzmsU2MrHhzyyqgAy8NZtnVKWoc3-8TCiRARIzM7SxP6Yk4ipblThI1vEUagk177xdVmdJPuZA2xcUkvf9M_0kI9voc57u7mta6nDGIRG5e-7iSXJD1nezp4SBSXE_syERwg5XiP06xjQH-ate8WavUo6CQgUT0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim via-transparent to-transparent p-8 flex flex-col justify-end">
+<h3 class="font-headline-md text-headline-md text-primary">Dough &amp; Patience</h3>
+</div>
+</div>
+<div class="warm-glass rounded-3xl overflow-hidden relative group p-1">
+<img alt="Tactile coffee beans" class="w-full h-full object-cover rounded-[20px] transition-all duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida/AP1WRLugqX3K6ib-4TuuwMcHXgOTwEF6EKhtyrw2hUhUsrc1e8XLk9t9izL4h1-bJ8UdhpGJ8z7fpyA2BtN_5TvmbsIdE7wl5PbtgTQs_mz28KO7-xp9tMS7aBSnSiChL8wS0NtkTgFbPvEVpbw-fL9lV8mZ7RPwslki1wFq3gLC9_52sBh4ANW6gpqZXLkiETUEcx3kxWov0joflZW-rV4BavlB9OoQxTsKYC5OcIJmf1MhxrJ396vXOdV7"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim via-transparent to-transparent p-6 flex flex-col justify-end">
+<h3 class="font-label-md text-label-md text-primary">Morning Rituals</h3>
+</div>
+</div>
+<div class="warm-glass rounded-3xl overflow-hidden relative group p-1">
+<img alt="Herbs and light" class="w-full h-full object-cover rounded-[20px] transition-all duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida/AP1WRLvFRFJps15H3LwzSxlDaRqoeYNhZ__THlH7NlG2McnyHR994ict0f7LL46K6S39zChAEcQDUfHioa3jDY5qIpYMx4_R8lQUb6dxfV7h_VQl_EP6rN6bMLVFIf3PheSgqTL0hSZPn_fz4EbIw1ubKwk5RYKGhnFTBrNV8qZi-VxkS7sl-iujgeg8-Dr8_jeJeOC2e8B1MCjLWVTQ9ENfl5ClaQylGFjHBEAA8tAaerxiXM3E_Tc7NiOG"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim via-transparent to-transparent p-6 flex flex-col justify-end">
+<h3 class="font-label-md text-label-md text-primary">Garden Harvest</h3>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-40 text-center relative overflow-hidden">
+<div class="absolute inset-0 z-0">
+
+</div>
+<div class="relative z-10 space-y-10 px-margin-mobile">
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary">Join us at our table.</h2>
+<div class="flex flex-col md:flex-row justify-center items-center gap-6">
+<a href="../reservations_ember_oak/code.html"><button class="bg-[#d97a3f] text-[#ece0d8] px-10 py-4 rounded-full font-label-md text-label-md shadow-xl transition-all hover:scale-105 active:scale-95">RESERVE A TABLE</button></a>
+<a href="../menu_ember_oak/code.html"><button class="warm-glass brass-border text-tertiary px-10 py-4 rounded-full font-label-md text-label-md transition-all hover:bg-tertiary/10">VIEW THE MENU</button></a>
+</div>
+</div>
+</section>
+<!-- Footer Shell -->
+<footer class="w-full px-margin-desktop py-12 flex flex-col md:flex-row justify-between items-center gap-gutter bg-surface-container-lowest border-t border-tertiary/10">
+<div class="font-headline-md text-headline-md text-tertiary">Ember &amp; Oak</div>
+<div class="text-on-surface-variant font-body-md text-body-md md:order-2">
+                © 2024 Ember &amp; Oak. Crafted for the slow-food philosophy.
+            </div>
+<div class="flex gap-8 md:order-3">
+<a class="text-on-surface-variant hover:text-tertiary transition-colors duration-200 font-label-md text-label-md" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-tertiary transition-colors duration-200 font-label-md text-label-md" href="#">Contact Us</a>
+<a class="text-on-surface-variant hover:text-tertiary transition-colors duration-200 font-label-md text-label-md" href="#">Careers</a>
+</div>
+</footer>
+</main>
+<script>
+        // Simple infinite scroll animation control
+        const scroller = document.querySelector('.animate-infinite-scroll');
+        if (scroller) {
+            scroller.addEventListener('mouseenter', () => scroller.style.animationPlayState = 'paused');
+            scroller.addEventListener('mouseleave', () => scroller.style.animationPlayState = 'running');
+        }
+    </script>
+<style>
+        @keyframes infinite-scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+        .animate-infinite-scroll {
+            display: flex;
+            width: max-content;
+            animation: infinite-scroll 40s linear infinite;
+        }
+    </style>
+</body></html>

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ember &amp; Oak | Artisan Menu</title>
+<script src="/demo/tailwindcss.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#16130c",
+                        "secondary-container": "#853a00",
+                        "surface": "#16130c",
+                        "primary-fixed": "#ece0d8",
+                        "inverse-surface": "#eae1d5",
+                        "secondary-fixed": "#ffdbc9",
+                        "inverse-on-surface": "#343027",
+                        "on-primary": "#352f2a",
+                        "on-tertiary-container": "#a07b38",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#271900",
+                        "on-secondary": "#532200",
+                        "tertiary-fixed-dim": "#ebc076",
+                        "on-surface": "#eae1d5",
+                        "on-secondary-container": "#ffb184",
+                        "surface-container-high": "#2e2921",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-container": "#231600",
+                        "on-primary-container": "#888078",
+                        "secondary-fixed-dim": "#ffb68e",
+                        "secondary": "#ffb68e",
+                        "tertiary-fixed": "#ffdea9",
+                        "on-secondary-fixed": "#331200",
+                        "primary-container": "#1c1712",
+                        "surface-variant": "#39342c",
+                        "on-primary-fixed": "#201b16",
+                        "on-secondary-fixed-variant": "#763300",
+                        "tertiary": "#ebc076",
+                        "surface-tint": "#cfc5bc",
+                        "surface-container-lowest": "#110e07",
+                        "on-tertiary-fixed-variant": "#5e4100",
+                        "on-background": "#eae1d5",
+                        "outline-variant": "#4c463f",
+                        "error": "#ffb4ab",
+                        "background": "#16130c",
+                        "surface-container-highest": "#39342c",
+                        "primary": "#cfc5bc",
+                        "on-surface-variant": "#cfc5bc",
+                        "surface-bright": "#3d3930",
+                        "primary-fixed-dim": "#cfc5bc",
+                        "on-error": "#690005",
+                        "surface-container-low": "#1f1b13",
+                        "outline": "#988f88",
+                        "on-tertiary": "#422d00",
+                        "inverse-primary": "#655d56",
+                        "surface-container": "#231f17",
+                        "on-primary-fixed-variant": "#4c463f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "margin-mobile": "20px",
+                        "unit": "8px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Fraunces"],
+                        "accent-italic": ["Fraunces"],
+                        "display-lg": ["Fraunces"],
+                        "headline-lg": ["Fraunces"],
+                        "body-lg": ["Manrope"],
+                        "display-lg-mobile": ["Fraunces"],
+                        "label-md": ["Manrope"],
+                        "body-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                        "accent-italic": ["20px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "display-lg": ["56px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-lg-mobile": ["40px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .warm-glass {
+            background: rgba(255, 244, 230, 0.06);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(201, 161, 90, 0.2);
+            box-shadow: 0 40px 40px -10px rgba(22, 19, 12, 0.5);
+        }
+        .brass-border {
+            border: 1px solid transparent;
+            background-image: linear-gradient(#16130c, #16130c), linear-gradient(to bottom right, #c9a15a, transparent);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+        .active-category {
+            color: #ebc076;
+            border-bottom: 2px solid #ebc076;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #16130c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c9a15a;
+            border-radius: 10px;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="bg-surface-dim text-on-surface font-body-md overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="fixed top-4 left-1/2 -translate-x-1/2 w-[90%] max-w-7xl rounded-full border border-tertiary/20 backdrop-blur-xl bg-surface-container/30 shadow-2xl shadow-surface-dim/50 flex justify-between items-center px-8 py-3 z-50">
+<div class="font-headline-lg text-headline-lg font-bold text-tertiary">Ember &amp; Oak</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-on-surface/80 hover:text-tertiary transition-colors font-label-md text-label-md" href="../home_ember_oak/code.html">Home</a>
+<a class="text-tertiary font-bold border-b border-tertiary pb-1 font-label-md text-label-md" href="#">Menu</a>
+<a class="text-on-surface/80 hover:text-tertiary transition-colors font-label-md text-label-md" href="../our_story_ember_oak/code.html">Our Story</a>
+<a class="text-on-surface/80 hover:text-tertiary transition-colors font-label-md text-label-md" href="../gallery_ember_oak/code.html">Gallery</a>
+</div>
+<a href="../reservations_ember_oak/code.html"><button class="bg-secondary-container text-on-secondary-container px-6 py-2 rounded-full font-label-md text-label-md hover:scale-95 active:scale-90 transition-transform">
+            Book Table
+        </button></a>
+</nav>
+<!-- Header Section -->
+<header class="relative w-full h-[60vh] flex items-end pb-12 px-margin-desktop overflow-hidden">
+
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim via-transparent to-transparent"></div>
+<div class="relative z-10 max-w-4xl">
+<h1 class="font-display-lg text-display-lg text-tertiary leading-none mb-4">The Artisan Kitchen</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">A curated selection of wood-fired specialties and slow-crafted delights, honoring the harmony of seasonal ingredients and traditional fire-cooking.</p>
+</div>
+</header>
+<!-- Sticky Category Nav -->
+<div class="sticky top-[80px] z-40 w-full bg-surface-dim/80 backdrop-blur-md border-y border-outline-variant/20">
+<div class="max-w-7xl mx-auto px-margin-desktop py-4 flex justify-center gap-8 md:gap-16">
+<a class="category-link font-label-md text-label-md tracking-widest text-on-surface-variant hover:text-tertiary transition-all uppercase" href="#breakfast">Breakfast</a>
+<a class="category-link font-label-md text-label-md tracking-widest text-on-surface-variant hover:text-tertiary transition-all uppercase" href="#coffee">Coffee &amp; Bar</a>
+<a class="category-link font-label-md text-label-md tracking-widest text-on-surface-variant hover:text-tertiary transition-all uppercase" href="#mains">Mains</a>
+<a class="category-link font-label-md text-label-md tracking-widest text-on-surface-variant hover:text-tertiary transition-all uppercase" href="#desserts">Desserts</a>
+</div>
+</div>
+<main class="max-w-7xl mx-auto px-margin-desktop py-12 space-y-32">
+<!-- BREAKFAST SECTION -->
+<section class="scroll-mt-32" id="breakfast">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center mb-16">
+<div class="md:col-span-7 rounded-2xl overflow-hidden aspect-video relative group border border-tertiary/10">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A macro close-up of a perfectly poached egg on a slice of thick artisan sourdough toast. The yolk is vibrant orange and spilling luxuriously over the golden-brown crust. Soft morning sunlight filters through a nearby window, illuminating wisps of steam and a scattering of coarse sea salt and cracked pepper. The mood is intimate and warm, emphasizing the tactile textures of the slow-cooked food." src="https://lh3.googleusercontent.com/aida/AP1WRLtPKDPoimGSRgK-3PZrDUHnF0SlwUcLOXxoxJ_XDO1KkLlf0AUh9vNpfRTA-0hnGzYudj2QU4RK4EhWIWwJKanRbmhP_N_x-jbCBZlngAWGSoxyBrzZn1yFhZr-xkVC4GfkXLf9LY9AvGiaFM6kEmIx445b57eXEHRjZJGoKSC_6X3SHnmsVUlqLZyNixcjg3s1431Q2Ign99osse8QyZl-NGrSkjcCnTw6pDRt2Z4mPKrtm-PRXlw"/>
+<div class="absolute inset-0 bg-gradient-to-r from-surface-dim/60 to-transparent"></div>
+<div class="absolute bottom-8 left-8">
+<h2 class="font-headline-lg text-headline-lg text-tertiary">Morning Hearth</h2>
+<p class="font-body-md text-body-md text-on-surface/80">From our wood-fired oven to your plate.</p>
+</div>
+</div>
+<div class="md:col-span-5 space-y-6">
+<h3 class="font-accent-italic text-accent-italic text-secondary italic">"Breakfast is a quiet celebration of a new day."</h3>
+<p class="text-on-surface-variant font-body-md">We start our fires at dawn to ensure every slice of bread and every roasted tomato carries the smoky soul of Ember &amp; Oak.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Item Card 1 -->
+<div class="warm-glass rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02] hover:bg-tertiary/5 border border-tertiary/20">
+<div class="aspect-square rounded-xl overflow-hidden mb-6">
+<div class="bg-cover bg-center w-full h-full" data-alt="Close-up of a seasonal fruit bowl featuring thick Greek yogurt, house-made granola with chunks of dark chocolate, and fresh figs drizzled with honeycomb. Warm atmospheric lighting with a moody, luxurious feel." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAEwmUKbVktH50xQGgpC0YgQ7SpXtG7NNKsxakk5P4WVt0b3HZOZcyuY3IUHujLOZpvJkc6KOJ2HamzjYw9T1QMZIPdYmz-siug8vfTOfHp8KY8g8mSr1LKYfahVos8yRlEeFqUuRw1WcYAzvvapEpdfrSR-KB4VNo5wljgy-nlCSH7x2gr65rsKnECBgqpRKw6U-RMlCza3ibMEaZX3EvoIbaIkdFqOFcAcLmyA6iTdjHjsgnPIQ')"></div>
+</div>
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-headline-md text-headline-md text-on-surface">Honey Fig Bowl</h4>
+<span class="font-label-md text-label-md text-tertiary">$14</span>
+</div>
+<p class="text-on-surface-variant text-body-md mb-4">Whipped sheep's yogurt, burnt honey, mission figs, toasted hazelnuts.</p>
+<div class="flex gap-2">
+<span class="px-3 py-1 rounded-full bg-tertiary/10 text-tertiary text-[10px] font-bold uppercase tracking-widest border border-tertiary/20">Vegan Opt</span>
+</div>
+</div>
+<!-- Item Card 2 -->
+<div class="warm-glass rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02] hover:bg-tertiary/5 border border-tertiary/20">
+<div class="aspect-square rounded-xl overflow-hidden mb-6">
+<div class="bg-cover bg-center w-full h-full" data-alt="A slice of dark, dense rye bread topped with smoked salmon, capers, and dill fronds. The scene is lit by soft, golden evening light, highlighting the glossy textures of the fish." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDOtNZhsa1uKDuEIQx8MCUopYFWC1Iwb9nDIHgMSWSK-3IZg4qa5T8h1vAfcMF2q2hqwI3DFMDgGEs9o3V01QviOTYhW_FeL__rCMQJFwBBF5YnEuHyj3cevn2qNAuwaOHufZpgboVXaj4lDN6vh8_-hYYatk2Bd-g4io3zFnM-sjbCFbYuJWPlEgJ-r3YKDM4hcGxXp5wdQuzuJk9q_7OB7IQLouPsT2Zf72xkimBItkbrvLv87w')"></div>
+</div>
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-headline-md text-headline-md text-on-surface">Smoked Rye Tartine</h4>
+<span class="font-label-md text-label-md text-tertiary">$18</span>
+</div>
+<p class="text-on-surface-variant text-body-md mb-4">Cold-smoked salmon, lemon labneh, pickled shallots, dill, dark rye.</p>
+<div class="flex gap-2">
+<span class="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-[10px] font-bold uppercase tracking-widest border border-secondary/20">Chef's Pick</span>
+</div>
+</div>
+<!-- Item Card 3 -->
+<div class="warm-glass rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02] hover:bg-tertiary/5 border border-tertiary/20">
+<div class="aspect-square rounded-xl overflow-hidden mb-6">
+<div class="bg-cover bg-center w-full h-full" data-alt="A skillet of shakshuka with vibrant red pepper sauce and two eggs nestled in the center. The cast iron pan sits on a wooden board, surrounded by torn basil and crusty bread." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAD_u0yGfyooc-jzkhRffvYX-NyIFkP79clZX52yah0dlTNuKUO3Ir2129CUcyYXFhU6qgGIyOuPPgvSEp5jFPxGxG0j9bAT_wYGkVzf-hmZRw_hYa_5hng5Q-2Js_Io1lWahwXTtaWhehmSXHcOnplvh1dxzftsu5e59zqGVDJbv1erveWtXrmsOFm9GEGL71ND8V8QZRrXt8byBBQ9e-oQ8M5iXLjJpzLIkoRNNGg5z4ARRX8OQ')"></div>
+</div>
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-headline-md text-headline-md text-on-surface">Hearth Shakshuka</h4>
+<span class="font-label-md text-label-md text-tertiary">$16</span>
+</div>
+<p class="text-on-surface-variant text-body-md mb-4">Wood-roasted bell peppers, cumin, feta, two farm eggs, charred sourdough.</p>
+</div>
+</div>
+</section>
+<!-- COFFEE & BAR SECTION -->
+<section class="scroll-mt-32" id="coffee">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center mb-16">
+<div class="md:col-span-5 order-2 md:order-1 space-y-6">
+<h2 class="font-headline-lg text-headline-lg text-tertiary">Roasted &amp; Distilled</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Our beans are ethically sourced and small-batch roasted in-house. For the bar, we focus on botanical infusions and barrel-aged classics.</p>
+<div class="flex items-center gap-4 text-tertiary">
+<span class="material-symbols-outlined">local_cafe</span>
+<span class="font-label-md text-label-md tracking-widest uppercase">Signature Blends</span>
+</div>
+</div>
+<div class="md:col-span-7 order-1 md:order-2 rounded-2xl overflow-hidden aspect-video relative group border border-tertiary/10">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Close-up macro shot of artisan coffee being poured into a ceramic cup, steam rising, warm morning light, shallow depth of field, tactile texture." src="https://lh3.googleusercontent.com/aida/AP1WRLtz8twAu62AO2V1g58nBroB0uJeHUaLDMGlE9V2O2_bJgLVUGk9PRM7Xc9qmULOP41NjBc28XbGBRndF1qQ8kSRN0AMxhIUNYBZcziOx3rSvLurcBrX45dtIYLmj_gFzU1FWjTpbJ5l7qlB5yoWnE9ubSzl6IVC8mhT2g1hQTJ4MfnKmMKIqZnpMt1Nmnp0om4myrLSQHNVM2MY8Xl7H4WWMbSM0iI8Ci03FZz_BEVtsXihjTRrLh0"/>
+<div class="absolute inset-0 bg-surface-dim/20 mix-blend-overlay"></div>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Coffee 1 -->
+<div class="warm-glass rounded-2xl p-6 transition-all duration-300 border border-tertiary/10">
+<h4 class="font-label-md text-label-md text-secondary uppercase tracking-widest mb-1">Drip</h4>
+<div class="flex justify-between items-end mb-4">
+<p class="font-headline-md text-headline-md leading-tight">Ember House Blend</p>
+<span class="text-tertiary">$5</span>
+</div>
+<p class="text-on-surface-variant text-sm italic">Notes: Dark chocolate, cherry, cedar smoke.</p>
+</div>
+<!-- Coffee 2 -->
+<div class="warm-glass rounded-2xl p-6 transition-all duration-300 border border-tertiary/10">
+<h4 class="font-label-md text-label-md text-secondary uppercase tracking-widest mb-1">Signature</h4>
+<div class="flex justify-between items-end mb-4">
+<p class="font-headline-md text-headline-md leading-tight">Smoked Oak Latte</p>
+<span class="text-tertiary">$7</span>
+</div>
+<p class="text-on-surface-variant text-sm italic">Infused with oak-wood smoke and maple syrup.</p>
+</div>
+<!-- Bar 1 -->
+<div class="warm-glass rounded-2xl p-6 transition-all duration-300 border border-tertiary/10">
+<h4 class="font-label-md text-label-md text-secondary uppercase tracking-widest mb-1">Cocktail</h4>
+<div class="flex justify-between items-end mb-4">
+<p class="font-headline-md text-headline-md leading-tight">The Gilded Spritz</p>
+<span class="text-tertiary">$15</span>
+</div>
+<p class="text-on-surface-variant text-sm italic">Elderflower, prosecco, pear, and a touch of gold leaf.</p>
+</div>
+<!-- Bar 2 -->
+<div class="warm-glass rounded-2xl p-6 transition-all duration-300 border border-tertiary/10">
+<h4 class="font-label-md text-label-md text-secondary uppercase tracking-widest mb-1">Spirit</h4>
+<div class="flex justify-between items-end mb-4">
+<p class="font-headline-md text-headline-md leading-tight">Charred Old Fashioned</p>
+<span class="text-tertiary">$16</span>
+</div>
+<p class="text-on-surface-variant text-sm italic">Bourbon, bitters, torched orange peel.</p>
+</div>
+</div>
+</section>
+<!-- MAINS SECTION -->
+<section class="scroll-mt-32" id="mains">
+<div class="relative w-full rounded-3xl overflow-hidden mb-16 h-80 flex items-center justify-center">
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="A beautiful, bubbly wood-fired pizza on a wooden peel, fresh out of the oven. Melted mozzarella and vibrant red pepperoni are perfectly crisped, with fresh basil leaves adding a pop of green. The charred crust has a rustic, artisanal appearance with dark, blistered spots. In the background, the glowing orange embers of a brick oven provide a warm, atmospheric backlighting." src="https://lh3.googleusercontent.com/aida/AP1WRLsPcOMj1KOFUibeV5TayMZq-YR5jc09xF85hQ2tnIh96Ge2pL1-u73cxyeO3o2VvQCPvtySe0w4VLhpibsVJnuhnQMBWYitO_Jx0p3-j6I-491KhRNxX_e_1LdGnrpU88pF1CfUpBzjHP155W4V-6j-LCkWVM-t-NNF9jP_TRv85mVHbTMaC4AeTf8uyzc9wfIg320nic8H3wS6Oo4e0ylAyPQoJl9OZpSK4QLV98moh8UGlQsJGbE"/>
+<div class="absolute inset-0 bg-surface-dim/40 backdrop-blur-[2px]"></div>
+<div class="relative text-center space-y-4 px-6">
+<h2 class="font-display-lg text-display-lg text-tertiary">Fire &amp; Flour</h2>
+<p class="font-label-md text-label-md tracking-[0.4em] uppercase text-on-surface">Available from 12:00 PM</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
+<!-- Main Item 1 -->
+<div class="flex gap-6 group">
+<div class="w-32 h-32 flex-shrink-0 rounded-2xl overflow-hidden brass-border">
+<div class="bg-cover bg-center w-full h-full transition-transform group-hover:scale-110" data-alt="Slow-braised short rib on a bed of creamy polenta, garnished with gremolata. Deep shadows and high-contrast lighting emphasizing the rich textures of the meat." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDMc8lmGnDCj8e_gAxJxRl0F_YMyTqKZK-ArVtGYtunoyOUEhgK1B7JbyvS24h40o8plwL2dzsD_pGgfzVLuH1TOukRcwWYtAdtVtN73b3sywAildbtmeqHPjDnPa0RZ2wsPCnNFEH9pybNYqhu2r_f2icffl0QsU5TuU5Fv5TkYgk5S-SO5WZACWRA0C05YtH78Ya1HoIKlovP-BrG8rRZCxTJifr15gQTp-b3YyKJPmDWcADsQQ')"></div>
+</div>
+<div class="flex-grow border-b border-outline-variant/30 pb-4">
+<div class="flex justify-between items-baseline mb-2">
+<h4 class="font-headline-md text-headline-md">Oak-Smoked Rib</h4>
+<span class="text-tertiary font-label-md">$34</span>
+</div>
+<p class="text-on-surface-variant text-body-md mb-2">12-hour braised short rib, bone marrow mash, roasted parsnips.</p>
+<span class="px-2 py-0.5 rounded-full bg-secondary/10 text-secondary text-[10px] font-bold uppercase tracking-widest border border-secondary/20">Chef's Pick</span>
+</div>
+</div>
+<!-- Main Item 2 -->
+<div class="flex gap-6 group">
+<div class="w-32 h-32 flex-shrink-0 rounded-2xl overflow-hidden brass-border">
+<div class="bg-cover bg-center w-full h-full transition-transform group-hover:scale-110" data-alt="Grilled sea bass with charred lemon and herb oil on a minimalist ceramic plate. Bright, clean lighting with a focus on fresh ingredients and high-end presentation." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBKRp3DMM1SyAaLoKFRa8YXqSYTDeRZ9hpc63UxH1gR_fn_6An2J0Ek2ZbG7WYUPwzW3dkMPfsQrSj0NMKh6OBk_Mlchn_1eLzvrj7ZjA_faoogunvRzF4BVVHxLKtEAiR7yEEL4JPo_JNVKXO7NnHcs2cV5ic3C11vPR5QI1jqS3Yvc4NAeielbpZGu0yPKenAI3EqXUDKX-hSrvLOHTsyFQ0c4wqT8ZtFqdYTotWICUcXK3p4gQ')"></div>
+</div>
+<div class="flex-grow border-b border-outline-variant/30 pb-4">
+<div class="flex justify-between items-baseline mb-2">
+<h4 class="font-headline-md text-headline-md">Hearth Sea Bass</h4>
+<span class="text-tertiary font-label-md">$29</span>
+</div>
+<p class="text-on-surface-variant text-body-md">Line-caught bass, charred fennel, caper berry emulsion, wilted greens.</p>
+</div>
+</div>
+<!-- Main Item 3 -->
+<div class="flex gap-6 group">
+<div class="w-32 h-32 flex-shrink-0 rounded-2xl overflow-hidden brass-border">
+<div class="bg-cover bg-center w-full h-full transition-transform group-hover:scale-110" data-alt="A vibrant salad with roasted beets, goat cheese, and pumpkin seeds. Atmospheric lighting with golden hour tones." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDs3TLNouz8twHgVCMGAjrP4zHcmYVC2xTtv7YrPflj6yyYaoVLQo9bowsiyx12YcNubkNCwTnja177ssOLRzJcUei-sewu_oNUfhuoeF1gsZp8Y9rNvZLEmT8L60iZvBkeVJNMSUCoSco86wYqv_rk_NFu3La2cBzLZzUPBpvG2q5N5jebXhiH3Hj5Twd6ZzNRTvG5i_hc7y3wQwaIk8H7AgY3R9GyfONWwHvnbUIDzwq1L1qcKg')"></div>
+</div>
+<div class="flex-grow border-b border-outline-variant/30 pb-4">
+<div class="flex justify-between items-baseline mb-2">
+<h4 class="font-headline-md text-headline-md">Roasted Root Salad</h4>
+<span class="text-tertiary font-label-md">$19</span>
+</div>
+<p class="text-on-surface-variant text-body-md mb-2">Heritage beets, whipped chevre, toasted pepitas, arugula, balsamic cloud.</p>
+<span class="px-2 py-0.5 rounded-full bg-tertiary/10 text-tertiary text-[10px] font-bold uppercase tracking-widest border border-tertiary/20">Vegan</span>
+</div>
+</div>
+<!-- Main Item 4 -->
+<div class="flex gap-6 group">
+<div class="w-32 h-32 flex-shrink-0 rounded-2xl overflow-hidden brass-border">
+<div class="bg-cover bg-center w-full h-full transition-transform group-hover:scale-110" data-alt="Wood-fired sourdough pizza with wild mushrooms and truffle oil. Deep moody tones." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC5UKxC_8PfqE_hsqTqXeqnldjtKrHISi_oBFzrHq-zbvsRKDsSR0nERooN9klFs5VWD0-heSyNzhY2aQUrcp49YUmFu7wpgFDKL_5JLc05JIBIQH8JEsi5yQEjWo7ZWxkbKgK6x3xUwaIqKsXr3pRcLsyt1TyX8G5SisHI9AKtyFeAXuNjtgwvw41F1FwO6SVqWkvNcE95G35tJ0uUboACsW8Fgsxd1Gwecg56eC9N36NHpNOATA')"></div>
+</div>
+<div class="flex-grow border-b border-outline-variant/30 pb-4">
+<div class="flex justify-between items-baseline mb-2">
+<h4 class="font-headline-md text-headline-md">Truffle Forest Pizza</h4>
+<span class="text-tertiary font-label-md">$24</span>
+</div>
+<p class="text-on-surface-variant text-body-md">Wild oyster mushrooms, truffle cream, fior di latte, fresh thyme.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- DESSERTS SECTION -->
+<section class="scroll-mt-32" id="desserts">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center mb-16">
+<div class="md:col-span-7 rounded-2xl overflow-hidden aspect-video relative group border border-tertiary/10">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A decadent chocolate tart garnished with vibrant red raspberries, blackberries, and blueberries. Small flakes of edible gold leaf catch the light on the smooth, dark chocolate surface. The tart sits on a textured dark ceramic plate, which is placed on a rustic wooden table. The lighting is warm and directional, creating deep, soft shadows that emphasize the richness of the chocolate and the freshness of the berries." src="https://lh3.googleusercontent.com/aida/AP1WRLve8brA2b3S163QrTg5w9xunYk7MztXGY9amZMLgeZ6XOngXEdPurTu8v-EVjvi8kggSmtipDlcYzxq18Bz73-ZZIiixCUmHWiN1_xnRFIZYY8POWNLzg-UVtKu98C8EK2NiN1I_LNJg5jKOhkbIW9BiTPIpPZJkVet8QRnH_IdhXiAQMoW414CGFRpmaEC59TLrNurr8OBSV5hbzhGt1mxYJJGnajaw-bMOyqgASwoBYdJSdTHbYU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim/80 to-transparent"></div>
+<div class="absolute bottom-8 left-8">
+<h2 class="font-headline-lg text-headline-lg text-tertiary">The Final Glow</h2>
+</div>
+</div>
+<div class="md:col-span-5 space-y-6">
+<p class="font-body-lg text-body-lg text-on-surface-variant">Elevate your evening with our decadent artisan desserts, designed to linger on the palate and leave a lasting impression of refined indulgence.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="warm-glass p-8 rounded-3xl text-center space-y-4">
+<h4 class="font-headline-md text-headline-md">Gold Leaf Tart</h4>
+<p class="text-on-surface-variant text-body-md italic">70% Dark chocolate, sea salt, edible gold, berries.</p>
+<p class="text-tertiary font-bold">$14</p>
+</div>
+<div class="warm-glass p-8 rounded-3xl text-center space-y-4">
+<h4 class="font-headline-md text-headline-md">Burnt Citrus Cake</h4>
+<p class="text-on-surface-variant text-body-md italic">Blood orange, olive oil cake, rosemary cream.</p>
+<p class="text-tertiary font-bold">$12</p>
+</div>
+<div class="warm-glass p-8 rounded-3xl text-center space-y-4">
+<h4 class="font-headline-md text-headline-md">Hearth Peach Crumble</h4>
+<p class="text-on-surface-variant text-body-md italic">Wood-roasted peaches, pecan oat crumble, vanilla bean gelato.</p>
+<p class="text-tertiary font-bold">$13</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full px-margin-desktop py-12 flex flex-col md:flex-row justify-between items-center gap-gutter bg-surface-container-lowest border-t border-tertiary/10">
+<div class="text-center md:text-left">
+<div class="font-headline-md text-headline-md text-tertiary mb-2">Ember &amp; Oak</div>
+<p class="text-on-surface-variant text-sm max-w-sm">© 2024 Ember &amp; Oak. Crafted for the slow-food philosophy. Every ingredient tells a story of the soil and the flame.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="text-on-surface-variant hover:text-tertiary transition-colors duration-200 text-label-md" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-tertiary transition-colors duration-200 text-label-md" href="#">Contact Us</a>
+<a class="text-on-surface-variant hover:text-tertiary transition-colors duration-200 text-label-md" href="#">Careers</a>
+<a class="text-on-surface-variant hover:text-tertiary transition-colors duration-200 text-label-md" href="#">Press Kit</a>
+</div>
+</footer>
+<script>
+        // Simple Intersection Observer for category highlighting
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.category-link');
+
+        window.addEventListener('scroll', () => {
+            let current = "";
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 150)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active-category');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active-category');
+                }
+            });
+        });
+
+        // Soft Hover Effect on glass cards
+        document.querySelectorAll('.warm-glass').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.background = 'rgba(255, 244, 230, 0.1)';
+                card.style.backdropFilter = 'blur(12px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.background = 'rgba(255, 244, 230, 0.06)';
+                card.style.backdropFilter = 'blur(8px)';
+            });
+        });
+    </script>
+</body></html>

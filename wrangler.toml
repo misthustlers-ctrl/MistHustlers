@@ -1,0 +1,13 @@
+name = "misthustlers"
+compatibility_date = "2026-08-06"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "dist"
+not_found_handling = "single-page-application"
+
+[build]
+command = "npm ci && npm run build:pages"
+
+# Supabase secrets — set these in Cloudflare Pages dashboard
+# (Settings > Environment variables, mark SUPABASE_SERVICE_ROLE_KEY as encrypted):
+#   SUPABASE_URL                 -> https://<project-ref>.supabase.co
+#   SUPABASE_SERVICE_ROLE_KEY    -> project Settings > API > service_role secret

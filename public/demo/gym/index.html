@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gym / Fitness Website Demo - MistHustlers Indore</title>
+  <meta name="description" content="Premium high-energy gym and fitness studio landing page demo for Indore. Trial booking, memberships, trainer profiles. Built by MistHustlers.">
+  <link rel="canonical" href="https://www.misthustlers.in/demo/gym/">
+  <meta name="robots" content="noindex, follow">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%237C3AED'/%3E%3Ctext x='50' y='65' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3EM%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    :root {
+      --gym-orange: #FF5722;
+      --gym-orange-dark: #E64A19;
+      --gym-black: #0D0D0D;
+      --gym-dark: #1A1A1A;
+    }
+    body { background: var(--gym-black); color: #fff; font-family: 'Barlow', sans-serif; }
+    h1, h2, h3, .bebas { font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
+    
+.hero {
+      min-height: 100vh; display: flex; align-items: center; position: relative; padding: 140px 0 80px; overflow: hidden;
+      background: linear-gradient(rgba(13,13,13,0.85), rgba(13,13,13,0.95)), var(--gym-black);
+    }
+    .hero::before { content: ''; position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1600&q=80') center/cover; opacity: 0.25; z-index: 0; }
+    .hero .container { position: relative; z-index: 1; text-align: center; }
+    .hero h1 { font-size: clamp(2.4rem, 8vw, 5rem); line-height: 1; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 2px; }
+    .hero p { font-size: 1.2rem; opacity: 0.85; margin-bottom: 32px; max-width: 620px; margin-left: auto; margin-right: auto; }
+    .btn-orange { background: var(--gym-orange); color: #fff; font-weight: 700; font-family: 'Barlow', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
+    .btn-orange:hover { background: var(--gym-orange-dark); box-shadow: 0 12px 32px rgba(255,87,34,0.35); }
+    .btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.35); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+    .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
+
+    .clip-divider { height: 80px; background: var(--gym-dark); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 0); }
+    .clip-divider-reverse { height: 80px; background: var(--gym-black); clip-path: polygon(0 100%, 100% 0, 100% 100%, 0 100%); margin-top: -1px; }
+
+    .offer-banner { background: var(--gym-orange); color: #fff; padding: 18px 0; text-align: center; font-weight: 700; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; }
+
+    .section-title { color: #fff; font-size: clamp(2.2rem, 6vw, 4rem); text-transform: uppercase; font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
+    .section-subtitle { color: rgba(255,255,255,0.7); }
+    .plans-section { background: var(--gym-dark); padding: 96px 0; }
+    .plans-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
+    @media (min-width: 768px) { .plans-grid { grid-template-columns: repeat(3, 1fr); } }
+    .plan-card { background: var(--gym-black); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 32px; text-align: center; transition: transform 0.3s var(--ease-out), box-shadow 0.3s, border-color 0.3s; }
+    .plan-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(255,87,34,0.18); border-color: var(--gym-orange); }
+    .plan-card.featured { border: 2px solid var(--gym-orange); transform: scale(1.02); }
+    .plan-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; margin-bottom: 8px; }
+    .plan-price { font-size: 2.5rem; font-weight: 700; color: var(--gym-orange); margin-bottom: 16px; }
+    .plan-price small { font-size: 0.9rem; color: #aaa; font-weight: 400; }
+    .plan-features { text-align: left; margin-bottom: 24px; }
+    .plan-features li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 0.95rem; }
+    .plan-features li::before { content: '✓'; color: var(--gym-orange); margin-right: 8px; font-weight: 700; }
+
+    .trial-section { background: var(--gym-black); padding: 96px 0; }
+    .trial-form { max-width: 640px; margin: 0 auto; background: rgba(255,255,255,0.04); border-radius: 24px; padding: 40px; border: 1px solid rgba(255,87,34,0.3); }
+    .submit-btn { width: 100%; background: var(--gym-orange); color: #fff; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 16px; border-radius: 16px; cursor: pointer; }
+    .submit-btn:hover { opacity: 0.9; }
+    .form-success { background: rgba(255,87,34,0.15); color: var(--gym-orange); border: 1px solid rgba(255,87,34,0.3); }
+    .form-note a { color: var(--gym-orange); }
+
+    .facilities-section { background: var(--gym-dark); padding: 96px 0; }
+    .facilities-grid { display: grid; gap: 16px; grid-template-columns: repeat(2, 1fr); }
+    @media (min-width: 640px) { .facilities-grid { grid-template-columns: repeat(3, 1fr); } }
+    .facility { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 28px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
+    .facility:hover { transform: translateY(-4px); border-color: var(--gym-orange); }
+    .facility-icon { font-size: 1.6rem; margin-bottom: 8px; display: block; }
+    .facility span { font-weight: 600; font-size: 0.95rem; }
+
+    .transformation-section { padding: 96px 0; background: linear-gradient(135deg, var(--gym-black), var(--gym-dark)); }
+    .transformation-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
+    @media (min-width: 900px) { .transformation-grid { grid-template-columns: repeat(2, 1fr); } }
+    .transformation-card { border-radius: 24px; overflow: hidden; aspect-ratio: 4 / 3; position: relative; }
+    .transformation-card img { width: 100%; height: 100%; object-fit: cover; }
+    .transformation-card .tag { position: absolute; bottom: 16px; left: 16px; background: var(--gym-orange); color: #fff; padding: 6px 14px; border-radius: 999px; font-weight: 700; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; }
+
+    .trainers-section { background: var(--gym-black); padding: 96px 0; }
+    .trainers-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
+    @media (min-width: 768px) { .trainers-grid { grid-template-columns: repeat(3, 1fr); } }
+    .trainer-card { background: var(--gym-dark); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); transition: transform 0.3s; }
+    .trainer-card:hover { transform: translateY(-6px); }
+    .trainer-photo { aspect-ratio: 3 / 4; overflow: hidden; }
+    .trainer-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+    .trainer-card:hover .trainer-photo img { transform: scale(1.05); }
+    .trainer-info { padding: 24px; }
+    .trainer-info h3 { font-size: 1.4rem; margin-bottom: 4px; }
+    .trainer-info .specialty { color: var(--gym-orange); font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; }
+    .trainer-info p { font-size: 0.9rem; color: #aaa; max-width: 100%; }
+
+    .footer-note { text-align: center; padding: 40px 0; background: #080808; color: rgba(255,255,255,0.4); font-size: 0.9rem; }
+.sticky-footer { background: rgba(8,8,8,0.95); border-top: 1px solid rgba(255,87,34,0.3); }
+    .sticky-footer .btn-primary { background: var(--gym-orange); color: #fff; }
+    .sticky-footer .btn-secondary { background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+  </style>
+</head>
+<body>
+<section class="hero">
+    <div class="container">
+      <h1 class="reveal">Transform. Commit. Conquer.</h1>
+      <p class="reveal">Indore's most intense fitness studio. No excuses. Only results. Start your transformation today.</p>
+      <a href="#trial" class="btn btn-xl btn-orange no-arrow reveal" data-track="gym_hero_trial">Start Free Trial</a>
+    </div>
+  </section>
+
+  <div class="clip-divider"></div>
+
+  <div class="offer-banner">
+    <div class="container">First Month at Rs. 999 Only — Limited Slots!</div>
+  </div>
+
+  <section class="plans-section">
+    <div class="container">
+      <h2 class="section-title reveal">Membership Plans</h2>
+      <p class="section-subtitle reveal">Pick your commitment level.</p>
+      <div class="plans-grid reveal-stagger">
+        <div class="plan-card reveal">
+          <div class="plan-name">Basic</div>
+          <div class="plan-price">₹999<small>/month</small></div>
+          <ul class="plan-features">
+            <li>Gym Access</li>
+            <li>Cardio Zone</li>
+            <li>Lockers</li>
+          </ul>
+          <a href="#" class="btn btn-orange btn-block no-arrow" data-track="gym_plan_basic">Choose Basic</a>
+        </div>
+        <div class="plan-card featured reveal">
+          <div class="plan-name">Pro</div>
+          <div class="plan-price">₹1,999<small>/month</small></div>
+          <ul class="plan-features">
+            <li>All Basic Features</li>
+            <li>Group Classes</li>
+            <li>Steam Room</li>
+            <li>2 Diet Sessions</li>
+          </ul>
+          <a href="#" class="btn btn-orange btn-block no-arrow" data-track="gym_plan_pro">Choose Pro</a>
+        </div>
+        <div class="plan-card reveal">
+          <div class="plan-name">Unlimited</div>
+          <div class="plan-price">₹3,499<small>/month</small></div>
+          <ul class="plan-features">
+            <li>All Pro Features</li>
+            <li>Personal Training</li>
+            <li>Nutrition Plan</li>
+            <li>24/7 Access</li>
+          </ul>
+          <a href="#" class="btn btn-orange btn-block no-arrow" data-track="gym_plan_unlimited">Choose Unlimited</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="clip-divider-reverse"></div>
+
+  <section id="trial" class="trial-section">
+    <div class="container">
+      <h2 class="section-title text-center reveal">Book My Free Trial Class</h2>
+      <p class="section-subtitle text-center reveal" style="margin-left:auto; margin-right:auto;">Start today. No payment required.</p>
+      <form class="trial-form reveal" data-demo="gym">
+        <div class="grid-2">
+          <div class="form-group"><label for="gym-name">Name</label><input id="gym-name" type="text" class="form-control" placeholder="Your name" required></div>
+          <div class="form-group"><label for="gym-phone">Phone</label><input id="gym-phone" type="tel" class="form-control" placeholder="Your phone" pattern="[0-9]{10}" required></div>
+          <div class="form-group">
+            <label for="gym-goal">Goal</label>
+            <select id="gym-goal" class="form-control" required>
+              <option value="">Select Goal</option>
+              <option>Weight Loss</option>
+              <option>Muscle Gain</option>
+              <option>Flexibility</option>
+              <option>General Fitness</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="gym-time">Preferred Time</label>
+            <select id="gym-time" class="form-control" required>
+              <option value="">Select Time</option>
+              <option>Morning (6-10 AM)</option>
+              <option>Afternoon (12-4 PM)</option>
+              <option>Evening (5-9 PM)</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn no-arrow" data-track="gym_form_submit">Book My Free Trial Class</button>
+        <p class="form-note">Prefer WhatsApp? <a href="#" data-whatsapp="I saw your gym demo, interested!" data-demo="gym">Chat directly</a></p>
+      </form>
+    </div>
+  </section>
+
+  <section class="facilities-section">
+    <div class="container">
+      <h2 class="section-title reveal">World-Class Facilities</h2>
+      <p class="section-subtitle reveal">Everything you need to push your limits.</p>
+      <div class="facilities-grid reveal-stagger">
+        <div class="facility reveal"><span class="facility-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12M6 20h12M6 12h12M4 8h2M4 16h2M18 8h2M18 16h2M8 4v16M16 4v16"></path></svg></span><span>Free Weights</span></div>
+        <div class="facility reveal"><span class="facility-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg></span><span>Cardio Zone</span></div>
+        <div class="facility reveal"><span class="facility-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg></span><span>Personal Training</span></div>
+        <div class="facility reveal"><span class="facility-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span><span>Group Classes</span></div>
+        <div class="facility reveal"><span class="facility-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"></path></svg></span><span>Steam Room</span></div>
+        <div class="facility reveal"><span class="facility-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg></span><span>Nutrition</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="transformation-section">
+    <div class="container">
+      <h2 class="section-title reveal">Real Transformations</h2>
+      <p class="section-subtitle reveal">Results from our members.</p>
+      <div class="transformation-grid reveal-stagger">
+        <div class="transformation-card reveal">
+          <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=800&q=80" alt="Fitness transformation member before" width="800" height="600" loading="lazy" decoding="async">
+          <span class="tag">Before</span>
+        </div>
+        <div class="transformation-card reveal">
+          <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=800&q=80" alt="Fitness transformation member after" width="800" height="600" loading="lazy" decoding="async">
+          <span class="tag">After 6 Months</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="trainers-section">
+    <div class="container">
+      <h2 class="section-title reveal">Our Trainers</h2>
+      <p class="section-subtitle reveal">Learn from certified professionals.</p>
+      <div class="trainers-grid reveal-stagger">
+        <div class="trainer-card reveal">
+          <div class="trainer-photo"><img src="https://images.unsplash.com/photo-1567013127542-490d757e51fc?w=600&q=80" alt="Strength trainer Rahul Verma" width="600" height="800" loading="lazy" decoding="async"></div>
+          <div class="trainer-info">
+            <h3>Rahul Verma</h3>
+            <div class="specialty">Strength & Conditioning</div>
+            <p>8 years experience. Certified NASM trainer.</p>
+          </div>
+        </div>
+        <div class="trainer-card reveal">
+          <div class="trainer-photo"><img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80" alt="Yoga trainer Pooja Sharma" width="600" height="800" loading="lazy" decoding="async"></div>
+          <div class="trainer-info">
+            <h3>Pooja Sharma</h3>
+            <div class="specialty">Yoga & Flexibility</div>
+            <p>6 years experience. RYT-500 certified.</p>
+          </div>
+        </div>
+        <div class="trainer-card reveal">
+          <div class="trainer-photo"><img src="https://images.unsplash.com/photo-1597347343908-2937e7cc5611?w=600&q=80" alt="Functional trainer Amit Patel" width="600" height="800" loading="lazy" decoding="async"></div>
+          <div class="trainer-info">
+            <h3>Amit Patel</h3>
+            <div class="specialty">Functional Fitness</div>
+            <p>7 years experience. CrossFit L1 trainer.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    <div class="container">© 2025 MistHustlers Indore — Gym / Fitness Demo</div>
+  </div>
+  <div class="sticky-footer">
+    <div class="container">
+      <span class="text">Want this for your business?</span>
+      <a href="tel:XXXXXXXXXX" class="btn btn-sm btn-secondary no-arrow" data-track="gym_footer_call">Call</a>
+      <a href="#" class="btn btn-sm btn-primary no-arrow" data-whatsapp="I saw your gym demo, interested!" data-demo="gym" data-track="gym_footer_whatsapp">WhatsApp</a>
+    </div>
+  </div>
+
+  <script src="../js/shared.js"></script>
+</body>
+</html>

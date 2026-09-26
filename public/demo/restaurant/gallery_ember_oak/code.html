@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gallery | Ember &amp; Oak</title>
+<script src="/demo/tailwindcss.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;700&amp;family=Manrope:wght@400;600;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#16130c",
+                        "secondary-container": "#853a00",
+                        "surface": "#16130c",
+                        "primary-fixed": "#ece0d8",
+                        "inverse-surface": "#eae1d5",
+                        "secondary-fixed": "#ffdbc9",
+                        "inverse-on-surface": "#343027",
+                        "on-primary": "#352f2a",
+                        "on-tertiary-container": "#a07b38",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#271900",
+                        "on-secondary": "#532200",
+                        "tertiary-fixed-dim": "#ebc076",
+                        "on-surface": "#eae1d5",
+                        "on-secondary-container": "#ffb184",
+                        "surface-container-high": "#2e2921",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-container": "#231600",
+                        "on-primary-container": "#888078",
+                        "secondary-fixed-dim": "#ffb68e",
+                        "secondary": "#ffb68e",
+                        "tertiary-fixed": "#ffdea9",
+                        "on-secondary-fixed": "#331200",
+                        "primary-container": "#1c1712",
+                        "surface-variant": "#39342c",
+                        "on-primary-fixed": "#201b16",
+                        "on-secondary-fixed-variant": "#763300",
+                        "tertiary": "#ebc076",
+                        "surface-tint": "#cfc5bc",
+                        "surface-container-lowest": "#110e07",
+                        "on-tertiary-fixed-variant": "#5e4100",
+                        "on-background": "#eae1d5",
+                        "outline-variant": "#4c463f",
+                        "error": "#ffb4ab",
+                        "background": "#16130c",
+                        "surface-container-highest": "#39342c",
+                        "primary": "#cfc5bc",
+                        "on-surface-variant": "#cfc5bc",
+                        "surface-bright": "#3d3930",
+                        "primary-fixed-dim": "#cfc5bc",
+                        "on-error": "#690005",
+                        "surface-container-low": "#1f1b13",
+                        "outline": "#988f88",
+                        "on-tertiary": "#422d00",
+                        "inverse-primary": "#655d56",
+                        "surface-container": "#231f17",
+                        "on-primary-fixed-variant": "#4c463f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "margin-mobile": "20px",
+                        "unit": "8px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Fraunces"],
+                        "accent-italic": ["Fraunces"],
+                        "display-lg": ["Fraunces"],
+                        "headline-lg": ["Fraunces"],
+                        "body-lg": ["Manrope"],
+                        "display-lg-mobile": ["Fraunces"],
+                        "label-md": ["Manrope"],
+                        "body-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                        "accent-italic": ["20px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "display-lg": ["56px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-lg-mobile": ["40px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #16130c;
+            color: #eae1d5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .warm-glass {
+            background: rgba(255, 244, 230, 0.06);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(201, 161, 90, 0.2);
+        }
+
+        .brass-border {
+            border: 1px solid transparent;
+            background: linear-gradient(#16130c, #16130c) padding-box,
+                        linear-gradient(to bottom right, #c9a15a, transparent) border-box;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 24px;
+        }
+
+        @media (min-width: 768px) {
+            .masonry-grid {
+                column-count: 2;
+                column-gap: 24px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .masonry-grid {
+                column-count: 3;
+                column-gap: 24px;
+            }
+        }
+
+        .lightbox {
+            display: none;
+            background: rgba(17, 14, 7, 0.95);
+            backdrop-filter: blur(20px);
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="selection:bg-tertiary selection:text-on-tertiary overflow-x-hidden">
+<!-- Top Navigation -->
+<nav class="fixed top-4 left-1/2 -translate-x-1/2 w-[90%] max-w-7xl rounded-full border border-tertiary/20 backdrop-blur-xl bg-surface-container/30 z-50 flex justify-between items-center px-8 py-3 shadow-2xl shadow-surface-dim/50">
+<div class="font-headline-lg text-headline-lg font-bold text-tertiary tracking-tight">Ember &amp; Oak</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="font-label-md text-label-md text-on-surface/80 hover:text-tertiary transition-colors" href="../home_ember_oak/code.html">Home</a>
+<a class="font-label-md text-label-md text-on-surface/80 hover:text-tertiary transition-colors" href="../menu_ember_oak/code.html">Menu</a>
+<a class="font-label-md text-label-md text-on-surface/80 hover:text-tertiary transition-colors" href="../our_story_ember_oak/code.html">Our Story</a>
+<a class="font-label-md text-label-md text-tertiary font-bold border-b border-tertiary pb-1" href="#">Gallery</a>
+</div>
+<a href="../reservations_ember_oak/code.html"><button class="bg-secondary text-on-secondary px-6 py-2 rounded-full font-label-md text-label-md hover:scale-105 active:scale-95 transition-all duration-300">
+            Book Table
+        </button></a>
+</nav>
+<!-- Hero Section -->
+<header class="relative pt-48 pb-24 px-margin-desktop text-center">
+<div class="max-w-4xl mx-auto">
+<span class="font-label-md text-label-md uppercase tracking-[0.3em] text-tertiary block mb-4 opacity-80">Atmosphere</span>
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg mb-6 leading-none">The Visual Narrative of <span class="italic font-accent-italic text-tertiary">Craft</span></h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                Explore the textures, tones, and timeless moments captured within our walls. A slow-food philosophy brought to life through light and smoke.
+            </p>
+</div>
+</header>
+<!-- Gallery Grid -->
+<main class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto pb-32">
+<div class="masonry-grid">
+<!-- Image 1 -->
+<div class="masonry-item reveal group cursor-pointer" onclick="openLightbox('https://lh3.googleusercontent.com/aida/AP1WRLu0jCEHnLuo6ZmZ4dZsuEen9If5TekXyuiRccHG75jVz6EHdG0JHnoHo2FSSckX-TT1fzvtiTLxjHyxtUNXOC2k1vIMbB6IVqAfmVb3rQy4zFJQPvKdpIvN_3lL6ZOgF6GONdsqdce9XDUOp5OSQj_lnWG6HbdS3q4TgUR4eyAXXcK48dkD5cDj56k90leelAv_msEDIiS64aTJf_Ltuf1FblvaBmphfOOspqS7IARrZ72JPem3Px0d')">
+<div class="overflow-hidden rounded-xl brass-border relative">
+<img class="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700 ease-out" src="https://lh3.googleusercontent.com/aida/AP1WRLu0jCEHnLuo6ZmZ4dZsuEen9If5TekXyuiRccHG75jVz6EHdG0JHnoHo2FSSckX-TT1fzvtiTLxjHyxtUNXOC2k1vIMbB6IVqAfmVb3rQy4zFJQPvKdpIvN_3lL6ZOgF6GONdsqdce9XDUOp5OSQj_lnWG6HbdS3q4TgUR4eyAXXcK48dkD5cDj56k90leelAv_msEDIiS64aTJf_Ltuf1FblvaBmphfOOspqS7IARrZ72JPem3Px0d"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+<p class="font-label-md text-label-md text-tertiary">Interior Atmosphere</p>
+</div>
+</div>
+</div>
+<!-- Image 2 -->
+<div class="masonry-item reveal group cursor-pointer" onclick="openLightbox('placeholder')">
+<div class="overflow-hidden rounded-xl brass-border relative">
+<img class="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700 ease-out" data-alt="A macro close-up of a beautifully seared artisan steak being sliced, resting on a rustic wooden board. Steam rises softly against a dark, moody background lit by flickering candle-light. The colors are rich ambers, deep browns, and vibrant pinks of the meat, matching the Ember &amp; Oak aesthetic of high-end tactile luxury." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZglyvLt58s28pJozKKYy3VFlBWlHn-l6NBhZ_xlX4on1Dn7wJDB367xPzQMqSgMUgkMjVhbvddZKDN1BmC8Sv-slMaGWM4NUbNdguhtUH3r-eTfBhu5HP3iX5JsuRTQRTc_clHDCcXyy1feTtzr3CyWhwZ5jF5sJfqoGtKcJf6p0e_g9MBb1mITj_YMn6YX35wGsV9TPxqc2azg-BYKpZYhukIr8gGMrX4MKKTaCYYGLKwYuhuQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+<p class="font-label-md text-label-md text-tertiary">The Wood-Fired Cut</p>
+</div>
+</div>
+</div>
+<!-- Image 3 -->
+<div class="masonry-item reveal group cursor-pointer" onclick="openLightbox('https://lh3.googleusercontent.com/aida/AP1WRLtJ8lqc6qoANkLvNY5wj_1qqDdbI-ZYrq2neiRSrtf7Z1wuqLlO_hjwTVWWutVOgXJ7EBR9QIIv19OM4i0GfjCYwlHjsGFaFzIMEqb6DW-pJWjPcMjbnXM624J7iH7CY6HnJzXZmlhh-GzV2gPD1Otm0ORNp7Al11z80oczT1_Q_oggX9UmMdxWmiutDeDhDtIZWlX23faVllv25OKLwOG6rCgszHXHnba9aosKhhk5sOvN2_rW7B4p')">
+<div class="overflow-hidden rounded-xl brass-border relative">
+<img class="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700 ease-out" src="https://lh3.googleusercontent.com/aida/AP1WRLtJ8lqc6qoANkLvNY5wj_1qqDdbI-ZYrq2neiRSrtf7Z1wuqLlO_hjwTVWWutVOgXJ7EBR9QIIv19OM4i0GfjCYwlHjsGFaFzIMEqb6DW-pJWjPcMjbnXM624J7iH7CY6HnJzXZmlhh-GzV2gPD1Otm0ORNp7Al11z80oczT1_Q_oggX9UmMdxWmiutDeDhDtIZWlX23faVllv25OKLwOG6rCgszHXHnba9aosKhhk5sOvN2_rW7B4p"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+<p class="font-label-md text-label-md text-tertiary">Evening Glow</p>
+</div>
+</div>
+</div>
+<!-- Image 4 -->
+<div class="masonry-item reveal group cursor-pointer" onclick="openLightbox('placeholder')">
+<div class="overflow-hidden rounded-xl brass-border relative">
+<img class="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700 ease-out" data-alt="A wide shot of an elegant, dimly lit restaurant bar featuring glowing amber bottles behind a dark wood counter. Soft golden light spills across the surfaces, highlighting the brass fixtures and linen-textured menus. The mood is intimate and sophisticated, consistent with the slow-food aesthetic of Ember &amp; Oak." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPY-gFkdumLuQE2bmn7K7KxmvxnrbRg2PJy-HZ_RP6tZ-Kewh2h-_EowrqGpeNutUtpJd8DBAyKV4py-ewGCLYhGTc_GvH6SfBl3lT00tESxA8qtR-Yxy0aaVJBDGvcC1q8nBedm0t_4A-BQ2cHmH2kfpTLyJ-BvRSsI4o_H3qLoVLFoenHcwVpTzxDcgm5mJEt_e-U5WihtTDVRMZ3FuLRxUf8t9CbZaQBv_sISkSC8c-0TkfdQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+<p class="font-label-md text-label-md text-tertiary">Apertifs &amp; Spirits</p>
+</div>
+</div>
+</div>
+<!-- Image 5 -->
+<div class="masonry-item reveal group cursor-pointer" onclick="openLightbox('https://lh3.googleusercontent.com/aida/AP1WRLtwGuCIpO8x7hEy1Rhgvw6acCrHVeOntC4j-4zvCrBxND1AJ2yvVtQawC98oCE5qbptfwEE3p0fnEzR84lcAJtbzppopGQNGR5Wr1SNOiuejZtVnMGGC1kLWiUwBwLSzgKtd_dB7LY6D2c0E-ZqEpYSzSumEKs4H3GCir3XmcxJ2G2dhTvHoNglfqs_KAhc-3c1XkpXBTUpA1QDIDrbX3dlQj3Rg9yiLyQMASIdLE2ZNkQv-xP_wvzq')">
+<div class="overflow-hidden rounded-xl brass-border relative">
+<img class="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700 ease-out" src="https://lh3.googleusercontent.com/aida/AP1WRLtwGuCIpO8x7hEy1Rhgvw6acCrHVeOntC4j-4zvCrBxND1AJ2yvVtQawC98oCE5qbptfwEE3p0fnEzR84lcAJtbzppopGQNGR5Wr1SNOiuejZtVnMGGC1kLWiUwBwLSzgKtd_dB7LY6D2c0E-ZqEpYSzSumEKs4H3GCir3XmcxJ2G2dhTvHoNglfqs_KAhc-3c1XkpXBTUpA1QDIDrbX3dlQj3Rg9yiLyQMASIdLE2ZNkQv-xP_wvzq"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+<p class="font-label-md text-label-md text-tertiary">Chef's Table</p>
+</div>
+</div>
+</div>
+<!-- Image 6 -->
+<div class="masonry-item reveal group cursor-pointer" onclick="openLightbox('placeholder')">
+<div class="overflow-hidden rounded-xl brass-border relative">
+<img class="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700 ease-out" data-alt="Handcrafted ceramic plates stacked in a rustic kitchen setting, catch the warm light of a nearby window. The textures of the stoneware and the soft linen napkins nearby create a sense of tactile minimalism. The lighting is soft and golden, characteristic of an artisan kitchen at sunset." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSu3BoGkAmXzPT24Z8kSH4pMnO5WLN2L_UCcC_z7rJzzQ9NoDBuqEPWoiN74ivkoVt6VTLtvlXjwAa0JZ11XlE2L-U0_V1be2qHdsh68c3OI6Znje0jE9MdOsRKH6HygaVgmL0BSU_Of71gRBiDiICqJeZP9Bpwdph2-ssK42qVobG_DP0c0NA2R4bCcWwQY04WmT0phn3PBZJxvg2JNajx1UOr8N6szZhvVEfZGwW6lFKn1PpNg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+<p class="font-label-md text-label-md text-tertiary">Artisan Details</p>
+</div>
+</div>
+</div>
+<!-- Image 7 -->
+<div class="masonry-item reveal group cursor-pointer" onclick="openLightbox('https://lh3.googleusercontent.com/aida/AP1WRLt-3eaqXJytCpWC5Ppr2o1S29eY5wia0J1tJStlXJjvtq5AWW50OpyEVcGCiAki0-VkOLn5m0QkN-4xN0qcGkHsCSGjA_oxZ0ApbiYXo6IFJroZ_IR7l8I5gfi_2ZZz82qODTHkW3rRLSTx4uEyBtud1DK_QEvV6k0t597R-hxfEfF1j1OJsrS0Tw3jHxMzSe7v2fttbSMOKb42s5f8wfQeqGgmX54gqDLMEXhi7rL284b2_zeoXFFm')">
+<div class="overflow-hidden rounded-xl brass-border relative">
+<img class="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700 ease-out" src="https://lh3.googleusercontent.com/aida/AP1WRLt-3eaqXJytCpWC5Ppr2o1S29eY5wia0J1tJStlXJjvtq5AWW50OpyEVcGCiAki0-VkOLn5m0QkN-4xN0qcGkHsCSGjA_oxZ0ApbiYXo6IFJroZ_IR7l8I5gfi_2ZZz82qODTHkW3rRLSTx4uEyBtud1DK_QEvV6k0t597R-hxfEfF1j1OJsrS0Tw3jHxMzSe7v2fttbSMOKb42s5f8wfQeqGgmX54gqDLMEXhi7rL284b2_zeoXFFm"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+<p class="font-label-md text-label-md text-tertiary">Exterior Entrance</p>
+</div>
+</div>
+</div>
+<!-- Image 8 -->
+<div class="masonry-item reveal group cursor-pointer" onclick="openLightbox('placeholder')">
+<div class="overflow-hidden rounded-xl brass-border relative">
+<img class="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700 ease-out" data-alt="A close up of a flickering fireplace inside a high-end restaurant, with cast iron tools resting against the side. The warm orange glow of the embers illuminates the surrounding dark oak paneling. The atmosphere is cozy and luxurious, evoking the sensory experience of a high-end hearth-centered kitchen." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtOfeYP-CNm0jtEAj7K4w9jlZFcqO4IUAO4z8r2U6mqhGFSOaYWos-Ig1zjWMpBxZNrCf1L3rvwrLLQz-wfuWzixWF8A0Jrhys5jCFaZo_7VfcHzUMei7bSY-wrCvvY9bIQt5Dwn8EH3o4j7W1Bgl0B7leHrcuZ2iJziYSQDK8X6k-q7pjxudWT_1mg8IYE_oqf7iWMZL6yNkvi3RRQOMDAoRjY36a4WnF1S5AOcLKeQ9QjLJeFQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+<p class="font-label-md text-label-md text-tertiary">The Hearth</p>
+</div>
+</div>
+</div>
+<!-- Image 9 -->
+<div class="masonry-item reveal group cursor-pointer" onclick="openLightbox('placeholder')">
+<div class="overflow-hidden rounded-xl brass-border relative">
+<img class="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700 ease-out" data-alt="A delicately plated dessert featuring dark chocolate and gold leaf, presented on a dark stone plate. The lighting highlights the glossy finish of the chocolate and the fine textures of the garnish. Dark, moody, and sophisticated food photography that emphasizes the luxury and craft of the culinary arts." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBraVtbChaEERWD0EsSz-m-E3V6fA4nuN6eVtfkXJG6M_vIYcOfndWVzi87Naj1N3i0W4K3xIl7rYtz58YkkXzgnUV70vn40QhJIiTBgn7QTUvibNoCdSLQ9FmlxMnZpiTnhznRXJI8D8lbB9Q8dl7TCfy7HcKJFOwTt76R6KVwOclT4QA43B6UQCxvc57u11ua1mXIYCAsT7dMzkMbDQiMMVH5Y80UFTaL64kewl74bvUITYzbmQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+<p class="font-label-md text-label-md text-tertiary">Final Course</p>
+</div>
+</div>
+</div>
+<!-- Image 10 -->
+<div class="masonry-item reveal group cursor-pointer" onclick="openLightbox('placeholder')">
+<div class="overflow-hidden rounded-xl brass-border relative">
+<img class="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700 ease-out" data-alt="An overhead shot of a long communal wooden table set for a feast with linen runners, candles in brass holders, and mismatched artisan glassware. The scene is bathed in the warm, diffused light of 'golden hour', creating an intimate and welcoming atmosphere for slow dining." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBYlGhk-cBcwvxNkOTIv6xc9Pfj__QZX9C_cmrRo6Ftr-y8z0hEPj6nGjfBZ6ogWxl0VztFEydEJaJhaxPAPGWXkj3h8mOJbcE8AXWPOkC8uBkl6s8tC-e9wzoN3nAw795gV78n8FJ6rRUCGRvnxviZaYn74FvHKuPUhgarHXHcgrGI_7sjhm3wNzq4XtJqMKppIXGbK2iPk4M-wDZr0NagC8J91GliyPLO3kXEZQoO6LfE5zEcw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+<p class="font-label-md text-label-md text-tertiary">Gathering</p>
+</div>
+</div>
+</div>
+<!-- Image 11 -->
+<div class="masonry-item reveal group cursor-pointer" onclick="openLightbox('placeholder')">
+<div class="overflow-hidden rounded-xl brass-border relative">
+<img class="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700 ease-out" data-alt="A professional chef's hands carefully arranging herbs on a dish with culinary tweezers. The background is a stainless steel and dark wood kitchen, blurred softly. The sharp focus on the meticulous action conveys the message of precision and dedication to the craft of slow-food philosophy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAG-ybxuNlHxc8BpKsU38F2XT5cgvpPI5R_A0Ko_-gxSemfxIoU_qswPQcSD_Y8pSivZGxy-mWy50-7Rsl2PDGaqj45YTodMLiPIe0IKSMNmbk16pJDJ6GB4fyec17sf7k1ItTiVdY5wHUXafMF6ReqLLD8A_yqeQ489wNZl8vZMnDETas1mmZqLcfPJarsdMwfyfZ1zQAlCenG_sJvlqmVwbge8pJrxnhJys8_9-LJ4NeITS5SOg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+<p class="font-label-md text-label-md text-tertiary">Precision</p>
+</div>
+</div>
+</div>
+<!-- Image 12 -->
+<div class="masonry-item reveal group cursor-pointer" onclick="openLightbox('placeholder')">
+<div class="overflow-hidden rounded-xl brass-border relative">
+<img class="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700 ease-out" data-alt="A vintage wine cellar with rows of oak barrels and softly lit bottles in the background. A single glass of deep red wine sits on a rough-hewn wooden stool in the foreground, catching a sliver of warm light. The aesthetic is timeless, traditional, and deeply rooted in high-quality materials and craftsmanship." src="https://lh3.googleusercontent.com/aida-public/AB6AXuChpSl_5oqANkBRp1NMTAx6rK6sY8yYm_YRzQJaa16yhwdTz0DoBHMrJwtX1lqp1tSdbh-4n8Jn80_taUPEgk8gXJ1LavotradpMGy0jn3B9OMX-f-3_tk0ANExCg7GqbiFMAzZc5rqyvSDWxcdwwWKrA4Sgyk9wWzvvmDzZ6ggaOQDR6YLCe94sVHsxWpLTtCJnIu1r2B0V-bL5TllXMzt4FlN2WmUE2__Tb7JI7gGPmsXOwnnwg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+<p class="font-label-md text-label-md text-tertiary">The Cellar</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full px-margin-desktop py-12 flex flex-col md:flex-row justify-between items-center gap-gutter bg-surface-container-lowest border-t border-tertiary/10">
+<div class="font-headline-md text-headline-md text-tertiary">Ember &amp; Oak</div>
+<div class="flex gap-6">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-tertiary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-tertiary transition-colors" href="#">Contact Us</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-tertiary transition-colors" href="#">Careers</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-tertiary transition-colors" href="#">Press Kit</a>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant opacity-60">
+            © 2024 Ember &amp; Oak. Crafted for the slow-food philosophy.
+        </p>
+</footer>
+<!-- Lightbox Overlay -->
+<div class="lightbox fixed inset-0 z-[100] hidden items-center justify-center p-8 transition-opacity duration-500" id="lightbox" onclick="closeLightbox()">
+<button class="absolute top-8 right-8 text-on-surface/50 hover:text-tertiary transition-colors">
+<span class="material-symbols-outlined text-4xl">close</span>
+</button>
+<div class="relative max-w-5xl w-full h-full flex items-center justify-center" onclick="event.stopPropagation()">
+<img class="max-w-full max-h-full object-contain rounded-lg shadow-2xl brass-border" id="lightbox-img" src=""/>
+</div>
+</div>
+<script>
+        // Reveal on scroll
+        const revealElements = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => observer.observe(el));
+
+        // Lightbox Logic
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+
+            // If it's a placeholder with a data-alt, we'll keep the placeholder for now
+            // In a real app, you'd map the index to the high-res source
+            img.src = src;
+
+            lightbox.classList.remove('hidden');
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.add('hidden');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        // Atmospheric micro-interaction
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+
+            document.body.style.background = `radial-gradient(circle at ${x * 100}% ${y * 100}%, #1f1b13 0%, #16130c 70%)`;
+        });
+    </script>
+</body></html>

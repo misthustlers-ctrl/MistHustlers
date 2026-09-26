@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interior Design Website Demo - MistHustlers Indore</title>
+  <meta name="description" content="Premium interior design portfolio demo for Indore. Luxury gallery, project showcase, before/after, and consultation CTA. Built by MistHustlers.">
+  <link rel="canonical" href="https://www.misthustlers.in/demo/interior/">
+  <meta name="robots" content="noindex, follow">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%237C3AED'/%3E%3Ctext x='50' y='65' font-size='55' text-anchor='middle' fill='white' font-family='Arial'%3EM%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600&family=Jost:wght@300;400;500&family=Josefin+Sans:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/shared.css">
+  <style>
+    :root {
+      --interior-gold: #C9A84C;
+      --interior-gold-light: #E0C878;
+      --interior-charcoal: #1E1E1E;
+      --interior-cream: #F0EDE6;
+      --interior-gray: #3D3D3D;
+    }
+    body { background: var(--interior-charcoal); color: var(--interior-cream); font-family: 'Jost', sans-serif; font-weight: 300; }
+    h1, h2, h3, .editorial { font-family: 'Cormorant Garamond', serif; font-style: italic; }
+    .label { font-family: 'Josefin Sans', sans-serif; text-transform: uppercase; letter-spacing: 2px; font-size: 0.75rem; }
+    
+.hero {
+      min-height: 95vh; display: flex; align-items: center;
+      background: linear-gradient(rgba(30,30,30,0.65), rgba(30,30,30,0.85)), var(--interior-charcoal);
+      position: relative; padding: 140px 0 80px; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1600&q=80') center/cover; opacity: 0.5; z-index: 0;
+    }
+    .hero .container { position: relative; z-index: 1; text-align: center; }
+    .hero .label { color: var(--interior-gold); margin-bottom: 20px; display: block; }
+    .hero h1 { font-size: clamp(2.6rem, 7vw, 5.5rem); line-height: 1; margin-bottom: 20px; }
+    .hero p { font-size: 1.25rem; opacity: 0.85; margin-bottom: 32px; font-weight: 300; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .btn-gold {
+      background: transparent; color: var(--interior-gold); border: 1px solid var(--interior-gold);
+      font-family: 'Josefin Sans', sans-serif; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
+    }
+    .btn-gold:hover { background: var(--interior-gold); color: var(--interior-charcoal); }
+    .btn-outline { background: transparent; color: var(--interior-cream); border: 1px solid rgba(240,237,230,0.3); }
+    .btn-outline:hover { border-color: var(--interior-cream); background: rgba(255,255,255,0.05); }
+
+    .section-title { color: var(--interior-cream); font-size: clamp(2.2rem, 5vw, 3.5rem); }
+    .section-subtitle { color: rgba(240,237,230,0.7); }
+
+    .gallery-section { padding: 96px 0; }
+    .masonry { display: grid; gap: 16px; grid-template-columns: 1fr; grid-auto-rows: 220px; }
+    @media (min-width: 640px) { .masonry { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 900px) { .masonry { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 260px; } }
+    .project-card {
+      position: relative; border-radius: 16px; overflow: hidden; background: var(--interior-gray);
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+    .project-card:hover .overlay { opacity: 1; }
+    .project-card:hover img { transform: scale(1.08); }
+    .project-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--ease-out); }
+    .project-card .overlay {
+      position: absolute; inset: 0; background: rgba(0,0,0,0.55); opacity: 0;
+      display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start;
+      transition: opacity 0.4s; color: var(--interior-cream); text-align: left; padding: 24px;
+    }
+    .project-card .overlay h3 { font-size: 1.6rem; margin-bottom: 6px; }
+    .project-card .overlay span { font-family: 'Josefin Sans', sans-serif; text-transform: uppercase; letter-spacing: 2px; font-size: 0.75rem; color: var(--interior-gold); }
+    .project-card:nth-child(1) { grid-row: span 2; }
+    .project-card:nth-child(4) { grid-row: span 2; }
+    .project-card:nth-child(5) { grid-column: span 2; grid-row: span 1; }
+    @media (max-width: 899px) { .project-card:nth-child(5) { grid-column: span 1; } }
+
+    .process-section { background: rgba(0,0,0,0.2); padding: 96px 0; }
+    .process-steps { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; position: relative; max-width: 900px; margin: 0 auto; }
+    .process-steps::before { content: ''; position: absolute; top: 24px; left: 10%; right: 10%; height: 1px; background: var(--interior-gold); opacity: 0.4; }
+    .step { position: relative; z-index: 1; text-align: center; flex: 1; min-width: 140px; }
+    .step-number { width: 48px; height: 48px; border-radius: 50%; background: var(--interior-gold); color: var(--interior-charcoal); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-weight: 700; font-family: 'Josefin Sans', sans-serif; }
+    .step h4 { font-family: 'Jost', sans-serif; font-weight: 500; margin-bottom: 6px; font-size: 1.05rem; }
+    .step p { font-size: 0.85rem; opacity: 0.7; max-width: 100%; }
+
+    .before-after-section { padding: 96px 0; background: rgba(0,0,0,0.15); }
+    .ba-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
+    @media (min-width: 900px) { .ba-grid { grid-template-columns: repeat(2, 1fr); } }
+    .ba-card { border-radius: 24px; overflow: hidden; position: relative; aspect-ratio: 4 / 3; }
+    .ba-card img { width: 100%; height: 100%; object-fit: cover; }
+    .ba-card .tag { position: absolute; top: 16px; left: 16px; background: var(--interior-gold); color: var(--interior-charcoal); padding: 6px 14px; border-radius: 999px; font-family: 'Josefin Sans', sans-serif; font-weight: 600; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; }
+
+    .services-section { padding: 96px 0; }
+    .services-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
+    @media (min-width: 900px) { .services-grid { grid-template-columns: repeat(3, 1fr); } }
+    .service-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(201,168,76,0.2); border-radius: 16px; padding: 32px; text-align: center; transition: transform 0.3s var(--ease-out), border-color 0.3s; }
+    .service-card:hover { transform: translateY(-5px); border-color: var(--interior-gold); }
+    .service-icon { color: var(--interior-gold); font-size: 2.4rem; margin-bottom: 16px; }
+    .service-card h3 { font-family: 'Jost', sans-serif; font-weight: 500; font-size: 1.25rem; margin-bottom: 10px; }
+    .service-card p { font-size: 0.95rem; opacity: 0.75; max-width: 100%; }
+
+    .about-section { padding: 96px 0; background: rgba(0,0,0,0.15); }
+    .about-grid { display: grid; gap: 48px; align-items: center; }
+    @media (min-width: 900px) { .about-grid { grid-template-columns: 1fr 1fr; } }
+    .about-image { border-radius: 24px; overflow: hidden; aspect-ratio: 3 / 4; box-shadow: 0 24px 60px rgba(0,0,0,0.35); }
+    .about-image img { width: 100%; height: 100%; object-fit: cover; }
+    .about-content h2 { margin-bottom: 16px; }
+    .about-content p { opacity: 0.8; margin-bottom: 16px; font-size: 1.05rem; max-width: 100%; }
+    .signature { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; color: var(--interior-gold); margin-top: 24px; }
+
+    .cta-section { padding: 120px 0; background: linear-gradient(180deg, rgba(0,0,0,0.3), var(--interior-charcoal)); text-align: center; }
+    .cta-section h2 { font-size: clamp(2.2rem, 5vw, 3.5rem); margin-bottom: 12px; }
+    .cta-section p { opacity: 0.8; margin-bottom: 36px; margin-left: auto; margin-right: auto; }
+    .consult-form { max-width: 720px; margin: 0 auto; background: rgba(0,0,0,0.3); padding: 40px; border: 1px solid rgba(201,168,76,0.25); border-radius: 24px; }
+    .consult-form .submit-btn { background: var(--interior-gold); color: var(--interior-charcoal); font-weight: 600; font-family: 'Josefin Sans', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
+    .form-success { background: rgba(201,168,76,0.15); color: var(--interior-gold); border: 1px solid rgba(201,168,76,0.3); }
+    .form-note a { color: var(--interior-gold); }
+
+    .footer-note { text-align: center; padding: 40px 0; color: rgba(240,237,230,0.5); font-size: 0.9rem; }
+.sticky-footer { background: rgba(30,30,30,0.95); border-top: 1px solid rgba(201,168,76,0.2); }
+    .sticky-footer .btn-primary { background: var(--interior-gold); color: var(--interior-charcoal); }
+    .sticky-footer .btn-secondary { background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+  </style>
+</head>
+<body>
+<section class="hero">
+    <div class="container">
+      <span class="label reveal">Indore Interior Studio</span>
+      <h1 class="reveal">Spaces That Tell Your Story</h1>
+      <p class="reveal">Premium interior design and architecture services for homes, offices, and commercial spaces that inspire.</p>
+      <a href="#gallery" class="btn btn-lg btn-gold reveal" data-track="interior_hero_work">View Our Work</a>
+    </div>
+  </section>
+
+  <section id="gallery" class="gallery-section">
+    <div class="container">
+      <h2 class="section-title reveal">Featured Projects</h2>
+      <p class="section-subtitle reveal">Curated spaces crafted with attention to every detail.</p>
+      <div class="masonry reveal-stagger">
+        <div class="project-card reveal">
+          <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&q=80" alt="Luxury residential living room interior" width="800" height="1000" loading="lazy" decoding="async">
+          <div class="overlay"><h3>Malhar Residence</h3><span>Residential</span></div>
+        </div>
+        <div class="project-card reveal">
+          <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80" alt="Modern office interior design" width="800" height="600" loading="lazy" decoding="async">
+          <div class="overlay"><h3>Vertex Office</h3><span>Commercial</span></div>
+        </div>
+        <div class="project-card reveal">
+          <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80" alt="Upscale cafe interior design" width="800" height="600" loading="lazy" decoding="async">
+          <div class="overlay"><h3>Café Noir</h3><span>Hospitality</span></div>
+        </div>
+        <div class="project-card reveal">
+          <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80" alt="Luxury villa interior design" width="800" height="1000" loading="lazy" decoding="async">
+          <div class="overlay"><h3>Urvashi Villa</h3><span>Residential</span></div>
+        </div>
+        <div class="project-card reveal">
+          <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&q=80" alt="Boutique hotel interior" width="1200" height="600" loading="lazy" decoding="async">
+          <div class="overlay"><h3>Hotel Indore</h3><span>Hospitality</span></div>
+        </div>
+        <div class="project-card reveal">
+          <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80" alt="Creative studio interior" width="800" height="600" loading="lazy" decoding="async">
+          <div class="overlay"><h3>Creative Studio</h3><span>Office</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="process-section">
+    <div class="container">
+      <h2 class="section-title text-center reveal">Our Process</h2>
+      <p class="section-subtitle text-center reveal" style="margin-left:auto;margin-right:auto;">A refined four-step journey from vision to reality.</p>
+      <div class="process-steps reveal">
+        <div class="step reveal"><div class="step-number">1</div><h4>Discovery</h4><p>We understand your lifestyle and space.</p></div>
+        <div class="step reveal"><div class="step-number">2</div><h4>Design</h4><p>Concepts, renders, and material selection.</p></div>
+        <div class="step reveal"><div class="step-number">3</div><h4>Execution</h4><p>Quality construction and installation.</p></div>
+        <div class="step reveal"><div class="step-number">4</div><h4>Handover</h4><p>Final walkthrough and support.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="before-after-section">
+    <div class="container">
+      <h2 class="section-title reveal">Transformation</h2>
+      <p class="section-subtitle reveal">See how we reimagine spaces.</p>
+      <div class="ba-grid reveal-stagger">
+        <div class="ba-card reveal">
+          <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&q=80" alt="Interior before renovation" width="800" height="600" loading="lazy" decoding="async">
+          <span class="tag">Before</span>
+        </div>
+        <div class="ba-card reveal">
+          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80" alt="Interior after renovation" width="800" height="600" loading="lazy" decoding="async">
+          <span class="tag">After</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="services-section">
+    <div class="container">
+      <h2 class="section-title reveal">Services</h2>
+      <p class="section-subtitle reveal">End-to-end design solutions for discerning clients.</p>
+      <div class="services-grid reveal-stagger">
+        <div class="service-card reveal">
+          <div class="service-icon">◆</div>
+          <h3>Interior Design</h3>
+          <p>Complete interior styling, furniture, and finishes for residential and commercial spaces.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon">▣</div>
+          <h3>Architecture</h3>
+          <p>Spatial planning, structural guidance, and design documentation for new builds.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon">◈</div>
+          <h3>3D Visualization</h3>
+          <p>Photorealistic renders and walkthroughs before construction begins.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-section">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-image reveal">
+          <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80" alt="Interior studio founder portrait" width="800" height="1067" loading="lazy" decoding="async">
+        </div>
+        <div class="about-content reveal">
+          <h2>About the Studio</h2>
+          <p>Founded in Indore, we specialize in creating timeless interiors that balance beauty and function. Every project is a collaboration between our clients and our design team.</p>
+          <p>From luxury apartments to boutique offices, we bring editorial precision to every square foot.</p>
+          <div class="signature">— Riya Mehta, Founder</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="consult" class="cta-section">
+    <div class="container">
+      <h2 class="reveal">Let's Design Your Dream Space</h2>
+      <p class="reveal">Book a free consultation and share your vision with us.</p>
+      <form class="consult-form reveal" data-demo="interior">
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="interior-name">Name</label>
+            <input id="interior-name" type="text" class="form-control" placeholder="Your name" required>
+          </div>
+          <div class="form-group">
+            <label for="interior-phone">Phone</label>
+            <input id="interior-phone" type="tel" class="form-control" placeholder="Your phone" pattern="[0-9]{10}" required>
+          </div>
+          <div class="form-group">
+            <label for="interior-type">Project Type</label>
+            <select id="interior-type" class="form-control" required>
+              <option value="">Select Type</option>
+              <option>Residential</option>
+              <option>Commercial</option>
+              <option>Hospitality</option>
+              <option>Office</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="interior-budget">Budget Range</label>
+            <select id="interior-budget" class="form-control" required>
+              <option value="">Select Range</option>
+              <option>Under ₹5 Lakh</option>
+              <option>₹5 - 15 Lakh</option>
+              <option>₹15 - 50 Lakh</option>
+              <option>₹50 Lakh+</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn no-arrow" data-track="interior_form_submit">Schedule Consultation</button>
+        <p class="form-note">Prefer WhatsApp? <a href="#" data-whatsapp="I saw your interior demo, interested!" data-demo="interior">Chat directly</a></p>
+      </form>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    <div class="container">© 2025 MistHustlers Indore — Interior Design Demo</div>
+  </div>
+  <div class="sticky-footer">
+    <div class="container">
+      <span class="text">Want this for your business?</span>
+      <a href="tel:XXXXXXXXXX" class="btn btn-sm btn-secondary no-arrow" data-track="interior_footer_call">Call</a>
+      <a href="#" class="btn btn-sm btn-primary no-arrow" data-whatsapp="I saw your interior demo, interested!" data-demo="interior" data-track="interior_footer_whatsapp">WhatsApp</a>
+    </div>
+  </div>
+
+  <script src="../js/shared.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+node_modules/
+dist/
+.wrangler/
+.wrangler-functions-build/
+.env
+*.local
+*.log
+*.pem
+*service-role*
+*service_role*
+.DS_Store
+Thumbs.db
+
+# Local QA / generated reports
+cover_agent_unit_test_runs.db
+test_results.html
+tmp-qa/
+
+# Local Figma / design export files
+figma/
+figma-exports/
+ui-to-figma/
+*.fig
+*.figma
